@@ -11,9 +11,9 @@ load_dotenv(find_dotenv())
 class HttpMethods:
 
     @staticmethod
-    def get(link: str, data=None, headers: dict = None):
+    def get(link: str, params=None, headers: dict = None):
         with allure.step(f"GET requests to URL '{link}'"):
-            return HttpMethods._send(link, data, headers, 'GET')
+            return HttpMethods._send(link, params, headers, 'GET')
 
     @staticmethod
     def post(link: str, data=None, headers: dict = None):

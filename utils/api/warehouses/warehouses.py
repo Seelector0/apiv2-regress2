@@ -9,30 +9,34 @@ class ApiWarehouse:
     @staticmethod
     def json_warehouse(fullname: str):
         """Json создания склада"""
-        warehouse = json.dumps({
-            "name": f"{randrange(100000, 999999)}",
-            "address": {
-                "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
-            },
-            "pickup": False,
-            "contact": {
-                "fullName": fullname,
-                "phone": f"+7910{randrange(1000000, 9999999)}",
-                "email": "test@email.ru"
+        warehouse = json.dumps(
+            {
+                "name": f"{randrange(100000, 999999)}",
+                "address": {
+                    "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
+                },
+                "pickup": False,
+                "contact": {
+                    "fullName": fullname,
+                    "phone": f"+7910{randrange(1000000, 9999999)}",
+                    "email": "test@email.ru"
+                }
             }
-        })
+        )
         return warehouse
 
     @staticmethod
     def json_field_changes(field: str, new_value):
         """Json для редактирования полей склада"""
-        body = json.dumps([
-            {
-                "op": "replace",
-                "path": field,
-                "value": new_value
-            }
-        ])
+        body = json.dumps(
+            [
+                {
+                    "op": "replace",
+                    "path": field,
+                    "value": new_value
+                }
+            ]
+        )
         return body
 
     @staticmethod

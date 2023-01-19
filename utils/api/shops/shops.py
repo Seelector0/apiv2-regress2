@@ -8,18 +8,19 @@ class ApiShop:
 
     @staticmethod
     def json_shop(shop_name: str):
-        """Json создания магазина"""
-        shop = json.dumps({
-            "name": shop_name,
-            "uri": f"integration-shop{randrange(1000, 9999)}.ru",
-            "phone": f"7916{randrange(1000000, 9999999)}",
-            "sender": "Иванов Иван Иванович"
-        })
+        shop = json.dumps(
+            {
+                "name": shop_name,
+                "uri": f"integration-shop{randrange(1000, 9999)}.ru",
+                "phone": f"7916{randrange(1000000, 9999999)}",
+                "sender": "Иванов Иван Иванович"
+            }
+        )
         return shop
 
     @staticmethod
     def create_shop(headers: dict, shop_name: str):
-        """Метод создания нового магазина"""
+        """Создание магазина"""
         shop = ApiShop.json_shop(shop_name=shop_name)
         result_post_shop = HttpMethods.post(link="/customer/shops", data=shop, headers=headers)
         return result_post_shop
