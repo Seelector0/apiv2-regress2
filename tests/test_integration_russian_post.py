@@ -55,13 +55,3 @@ class TestOrder:
         orders = connections.get_orders_list()
         result_parcel = ApiParcel.create_parcel(order_id=[i.order_id for i in orders], headers=token)
         Checking.check_status_code(response=result_parcel, expected_status_code=207)
-
-
-    def test_clear_all_database(self, customer_api, connections, tracking_api):
-        shops = connections.get_shops_list()
-        for i in shops:
-            customer_api.delete_connection(shop_id=i.shop_id)
-        orders = connections.get_orders_list()
-        for i in orders:
-            tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
-        connections.delete_all_setting()

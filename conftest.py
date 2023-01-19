@@ -10,7 +10,7 @@ import os
 load_dotenv(find_dotenv())
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="class")
 def token():
     """Функция для получения токена для работы по Api"""
     data = f"grant_type=client_credentials&client_id={os.getenv('CLIENT_ID')}&client_secret={os.getenv('CLIENT_SECRET')}"
@@ -27,7 +27,7 @@ def token():
     return token
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
 def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
     database_customer = DataBaseCustomerApi(host=os.getenv("HOST"), database=os.getenv("CUSTOMER-API"),
@@ -38,7 +38,7 @@ def customer_api(request):
     return database_customer
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
 def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
     database_connections = DataBaseConnections(host=os.getenv("HOST"), database=os.getenv("CONNECTIONS"),
@@ -49,7 +49,7 @@ def connections(request):
     return database_connections
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
 def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
     database_tracking = DataBaseTrackingApi(host=os.getenv("HOST"), database=os.getenv("TRACKING_API"),
@@ -60,10 +60,17 @@ def tracking_api(request):
     return database_tracking
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
 def stop(request):
     """Фикстура для завершения сессии"""
     def fin():
+        shops = connections.get_shops_list()
+        for i in shops:
+            customer_api.delete_connection(shop_id=i.shop_id)
+        orders = connections.get_orders_list()
+        for i in orders:
+            tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
+        connections.delete_all_setting()
         session = requests.Session()
         session.close()
     request.addfinalizer(finalizer=fin)
