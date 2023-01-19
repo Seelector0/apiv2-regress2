@@ -6,16 +6,19 @@ import allure
 @allure.epic("Создание, просмотр, изменение, удаление складов")
 class TestWarehouses:
 
+
     @allure.description("Создание склада")
     def test_create_new_warehouse(self, token, connections):
         result_post = ApiWarehouse.create_warehouse(fullname="Виктор Викторович", headers=token)
         Checking.check_status_code(response=result_post, expected_status_code=201)
         Checking.checking_json_key(response=result_post, expected_value=['id', 'type', 'url', 'status'])
 
+
     @allure.description("Получение списка магазинов")
     def test_get_warehouses(self, token):
         result_get = ApiWarehouse.get_warehouses(headers=token)
         Checking.check_status_code(response=result_get, expected_status_code=200)
+
 
     @allure.description("Получение склада по его 'id'")
     def test_get_warehouse_by_id(self, connections, token):
@@ -26,6 +29,7 @@ class TestWarehouses:
             Checking.checking_json_key(response=result_by_id, expected_value=['id', 'number', 'name', 'visibility',
                                                                               'address', 'contact', 'workingTime',
                                                                               'pickup', 'dpdPickupNum', 'comment'])
+
 
     @allure.description("Обновление склада")
     def test_put_warehouse(self, connections, token):
@@ -46,12 +50,3 @@ class TestWarehouses:
             Checking.check_status_code(response=result_delete, expected_status_code=204)
             result_get_by_id = ApiWarehouse.get_warehouse_by_id(warehouse_id=uuid, headers=token)
             Checking.check_status_code(response=result_get_by_id, expected_status_code=404)
-
-    def test_clear_all_database(self, customer_api, connections, tracking_api):
-        shops = connections.get_shops_list()
-        for i in shops:
-            customer_api.delete_connection(shop_id=i.shop_id)
-        orders = connections.get_orders_list()
-        for i in orders:
-            tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
-        connections.delete_all_setting()
