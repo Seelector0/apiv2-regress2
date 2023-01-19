@@ -60,10 +60,12 @@ def tracking_api(request):
     return database_tracking
 
 
-@pytest.fixture(scope="class")
-def stop(request):
+@pytest.fixture(scope="class", autouse=True)
+def stop(request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
+        session = requests.Session()
+        session.close()
         shops = connections.get_shops_list()
         for i in shops:
             customer_api.delete_connection(shop_id=i.shop_id)
@@ -71,6 +73,4 @@ def stop(request):
         for i in orders:
             tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
         connections.delete_all_setting()
-        session = requests.Session()
-        session.close()
     request.addfinalizer(finalizer=fin)
