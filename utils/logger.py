@@ -1,3 +1,4 @@
+import requests
 from requests import Response
 import datetime
 import os
