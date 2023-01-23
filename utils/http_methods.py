@@ -10,33 +10,30 @@ load_dotenv(find_dotenv())
 
 class HttpMethods:
 
-    @staticmethod
-    def get(link: str, params=None, headers: dict = None):
+    def __init__(self, app):
+        self.app = app
+
+    def get(self, link: str, params=None, headers: dict = None):
         with allure.step(f"GET requests to URL '{link}'"):
-            return HttpMethods._send(link, params, headers, 'GET')
+            return self._send(link, params, headers, 'GET')
 
-    @staticmethod
-    def post(link: str, data=None, headers: dict = None):
+    def post(self, link: str, data=None, headers: dict = None):
         with allure.step(f"POST requests to URL '{link}'"):
-            return HttpMethods._send(link, data, headers, 'POST')
+            return self._send(link, data, headers, 'POST')
 
-    @staticmethod
-    def patch(link: str, data=None, headers: dict = None):
+    def patch(self, link: str, data=None, headers: dict = None):
         with allure.step(f"POST requests to URL '{link}'"):
-            return HttpMethods._send(link, data, headers, 'PATCH')
+            return self._send(link, data, headers, 'PATCH')
 
-    @staticmethod
-    def put(link: str, data=None, headers: dict = None):
+    def put(self, link: str, data=None, headers: dict = None):
         with allure.step(f"PUT requests to URL '{link}'"):
-            return HttpMethods._send(link, data, headers, 'PUT')
+            return self._send(link, data, headers, 'PUT')
 
-    @staticmethod
-    def delete(link: str, data=None, headers: dict = None):
+    def delete(self, link: str, data=None, headers: dict = None):
         with allure.step(f"DELETE requests to URL '{link}'"):
-            return HttpMethods._send(link, data, headers, 'DELETE')
+            return self._send(link, data, headers, 'DELETE')
 
-    @staticmethod
-    def _send(link: str, data, headers: dict, method: str):
+    def _send(self, link: str, data, headers: dict, method: str):
         link = f"{os.getenv('URL')}/v2{link}"
         if headers is None:
             headers = {}

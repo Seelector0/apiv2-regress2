@@ -1,27 +1,35 @@
+from fixture.application import Application
 from databases.database_connections import DataBaseConnections
 from databases.database_customer_api import DataBaseCustomerApi
 from databases.database_tracking_api import DataBaseTrackingApi
 from dotenv import load_dotenv, find_dotenv
-import requests
 import pytest
 import os
 
 
 load_dotenv(find_dotenv())
+fixture = None
 
 
 @pytest.fixture(scope="class")
-def token():
-    """Функция для получения токена для работы по Api"""
+def session():
+    """Фикстура для открытия сессии по Api"""
+    global fixture
     data = f"grant_type=client_credentials&client_id={os.getenv('CLIENT_ID')}&client_secret={os.getenv('CLIENT_SECRET')}"
     headers = {
         "Content-Type": "application/x-www-form-urlencoded"
     }
-    session = requests.Session()
-    response = session.post(url=f"{os.getenv('URL')}{'/auth/access_token'}", data=data, headers=headers)
-    body = response.json()
+    if fixture is None:
+        fixture = Application(base_url=f"{os.getenv('URL')}{'/auth/access_token'}")
+    fixture.open_session(data=data, headers=headers)
+    return fixture
+
+
+@pytest.fixture(scope="class")
+def token():
+    """Фикстура для получения токена для работы по Api"""
     token = {
-        "Authorization": f"Bearer {body['access_token']}",
+        "Authorization": f"Bearer {fixture.response.json()['access_token']}",
         "Content-Type": "application/json"
     }
     return token
@@ -34,7 +42,7 @@ def customer_api(request):
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
     def fin():
         database_customer.connection_close()
-    request.addfinalizer(fin)
+    request.addfinalizer(finalizer=fin)
     return database_customer
 
 
@@ -45,7 +53,7 @@ def connections(request):
                                                user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
     def fin():
         database_connections.connection_close()
-    request.addfinalizer(fin)
+    request.addfinalizer(finalizer=fin)
     return database_connections
 
 
@@ -56,16 +64,15 @@ def tracking_api(request):
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
     def fin():
         database_tracking.connection_close()
-    request.addfinalizer(fin)
+    request.addfinalizer(finalizer=fin)
     return database_tracking
 
 
 @pytest.fixture(scope="class", autouse=True)
-def stop(request, connections, customer_api, tracking_api):
+def stop(session, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
-        session = requests.Session()
-        session.close()
+        session.close_session()
         shops = connections.get_shops_list()
         for i in shops:
             customer_api.delete_connection(shop_id=i.shop_id)

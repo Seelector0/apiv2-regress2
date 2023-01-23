@@ -1,17 +1,19 @@
 from utils.http_methods import HttpMethods
 import datetime
+import time
 import json
 
 
 class ApiParcel:
 
     @staticmethod
-    def create_parcel(order_id: list, headers):
+    def create_parcel(order_ids: list, headers: dict, sec: float = 2):
+        time.sleep(sec)
         """Метод создания партии"""
         json_create_parcel = json.dumps(
             {
-                "orderIds": order_id,
-                "shipmentDate": "2023-01-19"
+                "orderIds": order_ids,
+                "shipmentDate": f"{datetime.date.today()}"
             }
         )
         result_post_parcel = HttpMethods.post(link="/parcels", data=json_create_parcel, headers=headers)

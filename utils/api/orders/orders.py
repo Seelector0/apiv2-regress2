@@ -84,7 +84,7 @@ class ApiOrder:
         return result_create_order
 
     @staticmethod
-    def get_orders_list(headers: dict):
+    def get_orders(headers: dict):
         """Метод возвращает список заказов"""
         result_get_order_list = HttpMethods.get(link="/orders", headers=headers)
         return result_get_order_list

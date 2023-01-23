@@ -3,15 +3,12 @@ from model.warehouses import Warehouse
 from model.orders import Order
 from model.parcels import Parcel
 from model.shops import Shop
-import psycopg2
 
 
 class DataBaseConnections(DataBase):
 
     def __init__(self, host, database, user, password):
         super().__init__(host, database, user, password)
-        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password)
-        self.user_id = "3172df65-83b6-4a02-aa2c-7a4ae5297ed6"
 
     def delete_cabinet_settings(self):
         """Функция удаляет настройки кабинета из таблицы 'cabinet'"""
