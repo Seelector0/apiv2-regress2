@@ -1,6 +1,7 @@
 from requests import Response
 import allure
 import json
+import os
 
 
 class Checking:
@@ -51,3 +52,14 @@ class Checking:
         with allure.step("Сортировка списков и проверка их на равенство"):
             assert sorted(old_list, key=key) == sorted(new_list, key=key), \
                 f"FAILED! Старый список {old_list}, Новый список {new_list}"
+
+    @staticmethod
+    def download_file_false(directory, file):
+        with allure.step("Проверяю что данного файла нет в директории"):
+            assert os.path.exists(f"{directory}/{file}") is False
+
+    @staticmethod
+    def download_file_true(directory, file):
+        with allure.step("Проверяю что данного файла есть в директории"):
+            assert os.path.exists(f"{directory}/{file}") is True
+
