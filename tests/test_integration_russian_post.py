@@ -1,12 +1,8 @@
-from utils.api.delivery_serviches.delivery_services import ApiDeliveryServices
-from utils.api.orders.orders import ApiOrder
-from utils.api.parcels.parcels import ApiParcel
-from utils.api.shops.shops import ApiShop
-from utils.api.warehouses.warehouses import ApiWarehouse
 from utils.checking import Checking
-from random import randrange, choice
+from random import choice
 import pytest
 import allure
+import json
 
 
 @allure.epic("Тесты Почты России по Интеграции")
@@ -14,37 +10,102 @@ class TestOrder:
 
 
     @allure.description("Создание магазина")
-    def test_create_integration_shop(self, session):
+    def test_create_integration_shop(self, app, token):
         global result_new_shop
-        result_new_shop = ApiShop.create_shop(shop_name=f"INT{randrange(100000, 999999)}", headers=session)
+        result_new_shop = app.shop.create_shop(headers=token)
         Checking.check_status_code(response=result_new_shop, expected_status_code=201)
         Checking.checking_json_key(response=result_new_shop, expected_value=['id', 'type', 'url', 'status'])
 
 
     @allure.description("Создание склада")
-    def test_create_new_warehouse(self, session):
+    def test_create_new_warehouse(self, app, token):
         global result_new_warehouse
-        result_new_warehouse = ApiWarehouse.create_warehouse(fullname="Виктор Викторович", headers=session)
+        result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович", headers=token)
         Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
         Checking.checking_json_key(response=result_new_warehouse, expected_value=['id', 'type', 'url', 'status'])
 
 
-
     @allure.description("Подключение настроек Почты России")
-    def test_integration_russian_post(self, session):
-        result_russian_post = ApiDeliveryServices.delivery_services_russian_post(connection_type="integration",
-                                                                                 shop_id=result_new_shop.json()["id"],
-                                                                                 headers=session)
+    def test_integration_russian_post(self, app, token):
+        result_russian_post = app.service.delivery_services_russian_post(connection_type="integration",
+                                                                         shop_id=result_new_shop.json()["id"],
+                                                                         headers=token)
         Checking.check_status_code(response=result_russian_post, expected_status_code=201)
         Checking.checking_json_key(response=result_russian_post, expected_value=['id', 'type', 'url', 'status'])
 
 
     @allure.description("Создание заказа")
     @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-    def test_create_order_russian_post(self, payment_type, session):
-        result_order = ApiOrder.create_order(warehouse_id=result_new_warehouse.json()["id"],
+    def test_create_order_russian_post(self, payment_type, app, token):
+        result_order = app.order.create_order(warehouse_id=result_new_warehouse.json()["id"],
                                              shop_id=result_new_shop.json()["id"], payment_type=payment_type,
                                              type_ds="PostOffice", service="RussianPost", tariff="4", price=1000,
-                                             declared_value=1500, headers=session)
+                                             declared_value=1500, headers=token)
         Checking.check_status_code(response=result_order, expected_status_code=201)
         Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
+
+
+    @allure.description("Создание партии")
+    def test_create_parcel(self, app, token):
+        global result_create_parcel
+        orders_id = app.order.get_orders_id(headers=token)
+        result_create_parcel = app.parcel.create_parcel(order_id=choice(orders_id), headers=token)
+        Checking.check_status_code(response=result_create_parcel, expected_status_code=207)
+
+
+    @allure.description("Редактирование партии(Добавление заказов)")
+    def test_add_order_in_parcel(self, app, token):
+        orders_id = app.order.get_orders_id(headers=token)
+        for order in orders_id:
+            result_parcel_add = app.parcel.change_parcel_orders(order_id=order,
+                                                                parcel_id=result_create_parcel.json()[0]["id"],
+                                                                op="add", headers=token)
+            Checking.check_status_code(response=result_parcel_add, expected_status_code=200)
+
+
+    @allure.description("Получение этикетки")
+    def test_label_download(self, app, token):
+        result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"],
+                                                                headers=token)
+        for order_id in result_order_in_parcel:
+            Checking.download_file_false(directory=app.download_directory, file=f"Этикетки-Почта_России-{order_id}.pdf")
+            result_label = app.order.get_label(order_id=order_id, headers=token)
+            app.download_file(name="Этикетки-Почта_России", value_id=order_id, expansion="pdf", response=result_label)
+            Checking.download_file_true(directory=app.download_directory, file=f"Этикетки-Почта_России-{order_id}.pdf")
+
+    @allure.description("Получение АПП")
+    def test_app_download(self, app, token):
+        result_parcel_list = app.parcel.get_parcel_id(headers=token)
+        for parcel_id in result_parcel_list:
+            Checking.download_file_false(directory=app.download_directory, file=f"Акт-{parcel_id}.pdf")
+            result_app = app.parcel.get_app(parcel_id=parcel_id, headers=token)
+            app.download_file(name="Акт", value_id=parcel_id, expansion="pdf", response=result_app)
+            Checking.download_file_true(directory=app.download_directory, file=f"Акт-{parcel_id}.pdf")
+
+
+    @allure.description("Получение документов")
+    def test_documents_download(self, app, token):
+        result_parcel_list = app.parcel.get_parcel_id(headers=token)
+        for parcel_id in result_parcel_list:
+            Checking.download_file_false(directory=app.download_directory, file=f"Документы-{parcel_id}.zip")
+            result_documents = app.parcel.get_documents(parcel_id=parcel_id, headers=token)
+            app.download_file(name="Документы", value_id=parcel_id, expansion="zip", response=result_documents)
+            Checking.download_file_true(directory=app.download_directory, file=f"Документы-{parcel_id}.zip")
+
+
+    @allure.description("Редактирование партии(Удаление заказа)")
+    def test_remove_order_in_parcel(self, app, token):
+        result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"],
+                                                                headers=token)
+        result_parcel_remove = app.parcel.change_parcel_orders(order_id=choice(result_order_in_parcel),
+                                                               parcel_id=result_create_parcel.json()[0]["id"],
+                                                               op="remove", headers=token)
+        Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
+
+
+    @allure.description("Удаление заказа")
+    def test_delete_order(self, app, token):
+        orders_id_list = app.order.get_orders_id(headers=token)
+        order_id = choice(orders_id_list)
+        result_delete_order = app.order.delete_order(order_id=order_id, headers=token)
+        Checking.check_status_code(response=result_delete_order, expected_status_code=204)

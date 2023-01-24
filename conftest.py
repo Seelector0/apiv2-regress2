@@ -12,7 +12,7 @@ fixture = None
 
 
 @pytest.fixture(scope="class")
-def session():
+def app():
     """Фикстура для открытия сессии по Api"""
     global fixture
     data = f"grant_type=client_credentials&client_id={os.getenv('CLIENT_ID')}&client_secret={os.getenv('CLIENT_SECRET')}"
@@ -69,10 +69,10 @@ def tracking_api(request):
 
 
 @pytest.fixture(scope="class", autouse=True)
-def stop(session, request, connections, customer_api, tracking_api):
+def stop(app, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
-        session.close_session()
+        app.close_session()
         shops = connections.get_shops_list()
         for i in shops:
             customer_api.delete_connection(shop_id=i.shop_id)
