@@ -1,5 +1,4 @@
 import datetime
-import time
 import json
 
 
@@ -60,8 +59,10 @@ class ApiParcel:
                                                                  headers=headers)
             return result_add_parcel_order
 
-    def change_parcel_shipment_date(self, parcel_id: str, data: str, headers: dict):
+    def change_parcel_shipment_date(self, parcel_id: str, headers: dict, day):
         """Метод изменения даты доставки партии"""
+        data: datetime.date = datetime.date.today()
+        data += datetime.timedelta(days=day)
         json_change_parcel_shipment_date = json.dumps(
             [
                 {
@@ -75,27 +76,6 @@ class ApiParcel:
                                                                         data=json_change_parcel_shipment_date,
                                                                         headers=headers)
         return result_change_parcel_shipment_date
-
-    def get_labels_from_parcel(self, parcel_id: str, order_ids: list, headers:dict):
-        """Метод получения этикеток из партии"""
-        json_get_labels_from_parcel = json.dumps(
-            {
-                "orderIds": order_ids
-            }
-        )
-        result_get_labels_from_parcel = self.app.http_method.post(link=f"/parcels/{parcel_id}/labels",
-                                                                  data=json_get_labels_from_parcel, headers=headers)
-        return result_get_labels_from_parcel
-
-    def get_app(self, parcel_id, headers):
-        """Метод получения АПП"""
-        result_get_app = self.app.http_method.get(link=f"/v2/parcels/{parcel_id}/acceptance", headers=headers)
-        return result_get_app
-
-    def get_documents(self, parcel_id, headers):
-        """Получение документов"""
-        result_get_files = self.app.http_method.get(link=f"/v2/parcels/{parcel_id}/files", headers=headers)
-        return result_get_files
 
     def get_order_in_parcel(self, parcel_id, headers):
         """Получение списка заказов в партии"""

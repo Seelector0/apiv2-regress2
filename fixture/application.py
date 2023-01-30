@@ -1,4 +1,7 @@
 from utils.api.delivery_serviches.delivery_services import ApiDeliveryServices
+from utils.api.documents.documents import Document
+from utils.api.info.info import ApiInfo
+from utils.api.offers.offers import ApiOffers
 from utils.api.orders.orders import ApiOrder
 from utils.api.parcels.parcels import ApiParcel
 from utils.api.warehouses.warehouses import ApiWarehouse
@@ -17,19 +20,25 @@ class Application:
         self.session = requests.Session()
         self.response = response
         self.http_method = HttpMethods(self)
+        self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
         self.service = ApiDeliveryServices(self)
+        self.offers = ApiOffers(self)
         self.order = ApiOrder(self)
         self.parcel = ApiParcel(self)
+        self.document = Document(self)
 
-    def open_session(self, data, headers):
+    def open_session(self, data, headers: dict):
+        """Функция для открытия сесиии"""
         self.response = self.session.post(url=self.base_url, data=data, headers=headers)
         return self.response
 
     def download_file(self, name: str, value_id: str, expansion: str,  response):
+        """Функция для скачивания файлов"""
         with open(file=f"{self.download_directory}/{name}-{value_id}.{expansion}", mode="wb") as label:
             return label.write(response.content)
 
     def close_session(self):
+        """Функция для закрытия сессии"""
         self.session.close()
