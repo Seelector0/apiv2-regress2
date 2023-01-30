@@ -1,5 +1,6 @@
 from random import randrange, randint
 import json
+import time
 
 
 class ApiOrder:
@@ -8,8 +9,8 @@ class ApiOrder:
         self.app = app
 
     def json_order(self, warehouse_id: str, shop_id: str, payment_type: str, type_ds: str, service: str, tariff: str,
-                   price: float, declared_value: float, delivery_point_code=None, weight: float = randint(3, 10),
-                   length: float = randint(15, 50), width: float = randint(15, 50), height: float = randint(15, 50)):
+                   price: float, declared_value: float, delivery_point_code=None, weight: float = randint(3, 5),
+                   length: float = randint(10, 30), width: float = randint(10, 50), height: float = randint(10, 50)):
         """Json создания заказа"""
         json_create_order = json.dumps(
             {
@@ -46,7 +47,7 @@ class ApiOrder:
                     "fullName": "Филипенко Юрий Павлович",
                     "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                     "address": {
-                        "raw": "115035, г Москва, р-н Замоскворечье, Садовническая наб, д 14 стр 2"
+                        "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
                     }
                 },
                 "comment": "",
@@ -74,12 +75,14 @@ class ApiOrder:
         return search_order
 
     def create_order(self, warehouse_id, shop_id, payment_type, type_ds, service, tariff, price, declared_value, headers,
-                     delivery_point_code=None):
+                     delivery_point_code=None, length: float = randint(10, 30), width: float = randint(10, 50),
+                     height: float = randint(10, 50), sec: float = 4):
         """Метод создания заказа"""
         order = self.json_order(warehouse_id=warehouse_id, shop_id=shop_id, payment_type=payment_type,
-                                    type_ds=type_ds, service=service, tariff=tariff, price=price,
-                                    declared_value=declared_value, delivery_point_code=delivery_point_code)
+                                type_ds=type_ds, service=service, tariff=tariff, price=price,
+                                declared_value=declared_value, length=length, width=width, height=height, delivery_point_code=delivery_point_code)
         result_create_order = self.app.http_method.post(link="/orders", data=order, headers=headers)
+        time.sleep(sec)
         return result_create_order
 
     def get_orders(self, headers: dict):
@@ -87,18 +90,18 @@ class ApiOrder:
         result_get_order_list = self.app.http_method.get(link="/orders", headers=headers)
         return result_get_order_list
 
-    def get_order_by_id(self, headers: dict, order_id: str):
+    def get_order_by_id(self, order_id: str,  headers: dict):
         """Метод получения информации о заказе по его id"""
         result_get_odre_by_id = self.app.http_method.get(link=f"/orders/{order_id}", headers=headers)
         return result_get_odre_by_id
 
     def update_order(self, order_id: str, headers: dict):
-        """Метод обновления заказ"""
+        """Метод обновления заказ (PUT)"""
         # Todo надо будет дописать метод
         pass
 
     def update_fields_order(self, order_id: str, headers: dict):
-        """Метод обновления поля в заказе"""
+        """Метод обновления поля в заказе (PATCH)"""
         # Todo надо будет дописать метод
         pass
 
@@ -121,11 +124,6 @@ class ApiOrder:
         """Получение подробной информации о заказе"""
         result_get_order_details = self.app.http_method.get(link=f"/orders/{order_id}/details", headers=headers)
         return result_get_order_details
-
-    def get_label(self, order_id: str, headers: dict):
-        """Метод получения этикетки заказа"""
-        result_get_label = self.app.http_method.get(link=f"/orders/{order_id}/label", headers=headers)
-        return result_get_label
 
     def get_orders_id(self, headers):
         """Метод получения id заказов не в партии"""
