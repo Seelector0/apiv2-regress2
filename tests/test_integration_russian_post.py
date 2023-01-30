@@ -33,16 +33,37 @@ class TestRussianPostIntegration:
         Checking.checking_json_key(response=result_russian_post, expected_value=['id', 'type', 'url', 'status'])
 
 
-    @allure.description("Получение оферов по Почте России")
+    @allure.description("Получение оферов по Почте России (Courier)")
     @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-    @pytest.mark.parametrize("types", ["Courier", "DeliveryPoint","PostOffice"])
-    def test_offers(self, app, payment_type, types, token):
+    def test_offers_courier(self, app, payment_type, token):
         # Todo проработать вопрос с WIDGET OFFERS
-        result_offers = app.offers.get_offers(warehouse_id=result_new_warehouse.json()["id"],
-                                              shop_id=result_new_shop.json()["id"],
-                                              payment_type=payment_type, types=types, delivery_service_code="RussianPost",
-                                              headers=token)
-        Checking.check_status_code(response=result_offers, expected_status_code=200)
+        result_offers_courier = app.offers.get_offers(warehouse_id=result_new_warehouse.json()["id"],
+                                              shop_id=result_new_shop.json()["id"], payment_type=payment_type,
+                                              types="Courier", delivery_service_code="RussianPost", headers=token)
+        Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
+        Checking.checking_json_key(response=result_offers_courier, expected_value=['Courier'])
+
+
+    @allure.description("Получение оферов по Почте России (DeliveryPoint)")
+    @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+    def test_offers_delivery_point(self, app, payment_type, token):
+        result_offers_delivery_point = app.offers.get_offers(warehouse_id=result_new_warehouse.json()["id"],
+                                                      shop_id=result_new_shop.json()["id"], payment_type=payment_type,
+                                                      types="DeliveryPoint", delivery_service_code="RussianPost",
+                                                      headers=token)
+        Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
+        Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['PostOffice'])
+
+
+    @allure.description("Получение оферов по Почте России (PostOffice)")
+    @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+    def test_offers_russian_post(self, app, payment_type, token):
+        result_offers_delivery_point = app.offers.get_offers(warehouse_id=result_new_warehouse.json()["id"],
+                                                      shop_id=result_new_shop.json()["id"], payment_type=payment_type,
+                                                      types="PostOffice", delivery_service_code="RussianPost",
+                                                      headers=token)
+        Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
+        Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['PostOffice'])
 
 
     @allure.description("Создание Courier заказа по Почте России")
@@ -72,7 +93,7 @@ class TestRussianPostIntegration:
         Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
 
-
+    #
     @allure.description("Создание PostOffice заказа по Почте России")
     @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
     def test_create_order_russian_post_post_office(self, app, payment_type, token):
@@ -143,44 +164,37 @@ class TestRussianPostIntegration:
         result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"],
                                                                 headers=token)
         for order_id in result_order_in_parcel:
-            Checking.download_file_false(directory=app.download_directory, file=f"Этикетки-Почта_России-{order_id}.pdf")
             result_label = app.document.get_label(order_id=order_id, headers=token)
             Checking.check_status_code(response=result_label, expected_status_code=200)
-            app.download_file(name="Этикетки-Почта_России", value_id=order_id, expansion="pdf", response=result_label)
-            Checking.download_file_true(directory=app.download_directory, file=f"Этикетки-Почта_России-{order_id}.pdf")
 
 
     @allure.description("Получение АПП")
     def test_app_download(self, app, token):
         result_parcel_list = app.parcel.get_parcel_id(headers=token)
         for parcel_id in result_parcel_list:
-            Checking.download_file_false(directory=app.download_directory, file=f"Акт-{parcel_id}.pdf")
             result_app = app.document.get_app(parcel_id=parcel_id, headers=token)
             Checking.check_status_code(response=result_app, expected_status_code=200)
-            app.download_file(name="Акт", value_id=parcel_id, expansion="pdf", response=result_app)
-            Checking.download_file_true(directory=app.download_directory, file=f"Акт-{parcel_id}.pdf")
 
 
     @allure.description("Получение документов")
     def test_documents_download(self, app, token):
         result_parcel_list = app.parcel.get_parcel_id(headers=token)
         for parcel_id in result_parcel_list:
-            Checking.download_file_false(directory=app.download_directory, file=f"Документы-{parcel_id}.zip")
             result_documents = app.document.get_documents(parcel_id=parcel_id, headers=token)
             Checking.check_status_code(response=result_documents, expected_status_code=200)
-            app.download_file(name="Документы", value_id=parcel_id, expansion="zip", response=result_documents)
-            Checking.download_file_true(directory=app.download_directory, file=f"Документы-{parcel_id}.zip")
 
 
     @allure.description("Редактирование партии(Удаление заказа)")
     def test_remove_order_in_parcel(self, app, token):
-        # Todo Дописать проверки обязательных полей
+        old_list_order = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"], headers=token)
         result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"],
                                                                 headers=token)
         result_parcel_remove = app.parcel.change_parcel_orders(order_id=choice(result_order_in_parcel),
                                                                parcel_id=result_create_parcel.json()[0]["id"],
                                                                op="remove", headers=token)
+        new_list_order = app.parcel.get_order_in_parcel(parcel_id=result_create_parcel.json()[0]["id"], headers=token)
         Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
+        Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
 
 
     @allure.description("Удаление заказа")

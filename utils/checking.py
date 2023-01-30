@@ -63,16 +63,6 @@ class Checking:
                 f"FAILED! Старый список {old_list}, Новый список {new_list}"
 
     @staticmethod
-    def download_file_false(directory, file):
-        with allure.step("Проверяю что данного файла нет в директории"):
-            assert os.path.exists(f"{directory}/{file}") is False
-
-    @staticmethod
-    def download_file_true(directory, file):
-        with allure.step("Проверяю что данного файла есть в директории"):
-            assert os.path.exists(f"{directory}/{file}") is True
-
-    @staticmethod
     def check_date_change(calendar_date, number_of_days: int):
         with allure.step("Проверка, что дата отправки изменилась"):
             day = datetime.date.today()

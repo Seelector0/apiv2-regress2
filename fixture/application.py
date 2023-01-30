@@ -7,15 +7,12 @@ from utils.api.parcels.parcels import ApiParcel
 from utils.api.warehouses.warehouses import ApiWarehouse
 from utils.http_methods import HttpMethods
 from utils.api.shops.shops import ApiShop
-from pathlib import Path
 import requests
 
 
 class Application:
 
     def __init__(self, base_url=None, response=None):
-        self.download_directory = str(Path(Path.home(), "PycharmProjects", "Apiv2-regress-version2", "file"))
-        self.logs_directory = str(Path(Path.home(), "PycharmProjects", "Apiv2-regress-version2", "logs"))
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
@@ -30,14 +27,9 @@ class Application:
         self.document = Document(self)
 
     def open_session(self, data, headers: dict):
-        """Функция для открытия сесиии"""
+        """Функция для открытия сессии"""
         self.response = self.session.post(url=self.base_url, data=data, headers=headers)
         return self.response
-
-    def download_file(self, name: str, value_id: str, expansion: str,  response):
-        """Функция для скачивания файлов"""
-        with open(file=f"{self.download_directory}/{name}-{value_id}.{expansion}", mode="wb") as label:
-            return label.write(response.content)
 
     def close_session(self):
         """Функция для закрытия сессии"""

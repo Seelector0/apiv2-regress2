@@ -1,12 +1,10 @@
 allure-pytest==2.10.0
 allure-python-commons==2.10.0
-apturl==0.5.2
 async-generator==1.10
 attrs==21.2.0
 beautifulsoup4==4.10.0
 blinker==1.4
 cached-property==1.5.2
-catfish==4.16.3
 certifi==2022.6.15.2
 cffi==1.15.0
 chardet==4.0.0
@@ -18,7 +16,6 @@ cupshelpers==1.0
 dbus-python==1.2.18
 defer==1.0.6
 distro==1.7.0
-distro-info===1.1build1
 docker==5.0.3
 docker-compose==1.29.2
 dockerpty==0.4.1
