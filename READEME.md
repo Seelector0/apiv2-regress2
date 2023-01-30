@@ -6,6 +6,7 @@
 
 1. Клонировать проект в любую удобную директорию
 2. Скопировать содержимое файла .env.example в .env.
-3. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
-4. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
-5. Формирование отчёта allure serve result
+3. В корне проекта создать папки logs и file
+4. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
+5. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
+6. Формирование отчёта allure serve result
