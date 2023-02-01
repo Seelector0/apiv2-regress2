@@ -28,7 +28,7 @@ class ApiShop:
         result_post_shop = self.app.http_method.post(link="/customer/shops", data=new_shop, headers=headers)
         return result_post_shop
 
-    def get_shop(self, headers: dict):
+    def get_shops(self, headers: dict):
         """Метод получения списка магазинов"""
         result_get_shop = self.app.http_method.get(link="/customer/shops", headers=headers)
         return result_get_shop
@@ -57,3 +57,11 @@ class ApiShop:
         )
         result_patch = self.app.http_method.patch(link=f"/customer/shops/{shop_id}", data=body, headers=headers)
         return result_patch
+
+    def get_shops_id(self, headers):
+        """Метод получения id магазинов"""
+        shops_id_list = []
+        shops_list = self.get_shops(headers=headers)
+        for shop in shops_list.json():
+            shops_id_list.append(shop["id"])
+        return shops_id_list
