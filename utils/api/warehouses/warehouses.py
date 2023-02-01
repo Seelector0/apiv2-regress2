@@ -71,3 +71,11 @@ class ApiWarehouse:
         """Метод удаления склада"""
         result_delete = self.app.http_method.delete(link=f"/customer/warehouses/{warehouse_id}", headers=headers)
         return result_delete
+    
+    def get_warehouses_id(self, headers):
+        """Метод получения id заказов не в партии"""
+        warehouses_id_list = []
+        warehouses_list = self.get_warehouses(headers=headers)
+        for warehouse in warehouses_list.json():
+            warehouses_id_list.append(warehouse["id"])
+        return warehouses_id_list
