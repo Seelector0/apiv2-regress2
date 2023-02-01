@@ -19,7 +19,6 @@ class ApiOffers:
             "paymentType": payment_type,
             "types[0]": types,
             "deliveryServiceCode": delivery_service_code,
-
         }
         result_offers = self.app.http_method.get(link="/offers", params=body, headers=headers)
         return result_offers

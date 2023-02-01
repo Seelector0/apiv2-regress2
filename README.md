@@ -9,4 +9,4 @@
 3. В корне проекта создать папку logs
 4. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
 5. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
-6. Формирование отчёта allure serve result
+6. Формирование отчёта командой allure serve result
