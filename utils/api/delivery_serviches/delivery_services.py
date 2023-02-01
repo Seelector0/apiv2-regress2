@@ -1,5 +1,4 @@
 from dotenv import load_dotenv, find_dotenv
-from utils.http_methods import HttpMethods
 import json
 import os
 

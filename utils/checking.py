@@ -25,9 +25,20 @@ class Checking:
 
     @staticmethod
     def checking_json_value(response: Response, key_name: str, expected_value, field = None):
-        """Метод для проверки обязательных полей (значений) в ответе"""
+        """Метод для проверки обязательного ключа в ответе"""
         with allure.step(f"Проверяю что в ответе есть значение {expected_value}"):
             check = response.json()
+            if field is None:
+                assert check.get(key_name) == expected_value, \
+                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {check.get(key_name)}"
+            else:
+                assert check.get(key_name)[field] == expected_value, \
+                    f"FAILED! У ключа {check.get(key_name)[field]} фактическое значение {expected_value}"
+
+    @staticmethod
+    def checking_big_json(response: Response, key_name: str, expected_value, field = None):
+        with allure.step(f"Проверяю что в ответе есть значение {expected_value}"):
+            check = response.json()["data"]["request"]
             if field is None:
                 assert check.get(key_name) == expected_value, \
                     f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {check.get(key_name)}"
@@ -64,7 +75,7 @@ class Checking:
 
     @staticmethod
     def check_date_change(calendar_date, number_of_days: int):
-        with allure.step("Проверка, что дата отправки изменилась"):
+        with allure.step(f"Проверка, что дата отправки изменилась на {number_of_days} день/дней"):
             day = datetime.date.today()
             day += datetime.timedelta(days=number_of_days)
             assert calendar_date == str(day), f"{calendar_date} не равна дате {day}"

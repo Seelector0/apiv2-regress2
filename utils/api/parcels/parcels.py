@@ -85,7 +85,7 @@ class ApiParcel:
             order_in_parcel.append(order)
         return order_in_parcel
 
-    def get_parcel_id(self, headers):
+    def get_parcels_id(self, headers):
         """Получение списка id партий"""
         list_parcel_id = []
         parcel_list = self.get_parcels(headers=headers)

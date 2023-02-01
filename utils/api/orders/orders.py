@@ -44,7 +44,9 @@ class ApiOrder:
                     "deliveryPointCode": delivery_point_code
                 },
                 "recipient": {
-                    "fullName": "Филипенко Юрий Павлович",
+                    "familyName": "Филипенко",
+                    "firstName": "Юрий",
+                    "secondName": "Павлович",
                     "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                     "address": {
                         "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
@@ -95,15 +97,32 @@ class ApiOrder:
         result_get_odre_by_id = self.app.http_method.get(link=f"/orders/{order_id}", headers=headers)
         return result_get_odre_by_id
 
-    def update_order(self, order_id: str, headers: dict):
+    def update_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
+                     family_name: str, headers: dict):
         """Метод обновления заказ (PUT)"""
-        # Todo надо будет дописать метод
-        pass
+        result_get_order_by_id = self.get_order_by_id(order_id=order_id, headers=headers)
+        body_order = result_get_order_by_id.json()["data"]["request"]
+        body_order["weight"] = weight
+        body_order["dimension"]["length"] = length
+        body_order["dimension"]["width"] = width
+        body_order["dimension"]["height"] = height
+        body_order["payment"]["declaredValue"] = declared_value
+        body_order["recipient"]["familyName"] = family_name
+        payload = json.dumps(body_order)
+        result_put_order = self.app.http_method.put(link=f"/orders/{order_id}", data=payload, headers=headers)
+        return result_put_order
 
-    def update_fields_order(self, order_id: str, headers: dict):
+    def update_field_order(self, order_id: str, path: str, value, headers: dict):
         """Метод обновления поля в заказе (PATCH)"""
-        # Todo надо будет дописать метод
-        pass
+        json_path_order = json.dumps(
+            {
+                "op": "replace",
+                "path": path,
+                "value": value
+            }
+        )
+        result_path = self.app.http_method.patch(link=f"/v2/orders/{order_id}", data=json_path_order, headers=headers)
+        return result_path
 
     def delete_order(self, order_id: str, headers: dict):
         """Метод удаления заказа"""
