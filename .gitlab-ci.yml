@@ -1,0 +1,25 @@
+stages:
+  - build
+
+.setup_werf_version: &setup_werf_version
+  - type multiwerf && . $(multiwerf use 1.2 ea --as-file)
+  - type werf && source $(werf ci-env gitlab --as-file)
+
+.before_script: &before_script
+  - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+
+Build:
+  stage: build
+  before_script:
+    - *before_script
+  script:
+    - *setup_werf_version
+    - werf build
+      ${EXTRA_VARS}
+  tags:
+    - werf-berushiptor-stage
+  except:
+    - schedules
+  only:
+    - master
+
