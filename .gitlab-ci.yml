@@ -15,6 +15,7 @@ Build:
   script:
     - *setup_werf_version
     - werf build
+      --add-custom-tag=master
       ${EXTRA_VARS}
   tags:
     - werf-berushiptor-stage
