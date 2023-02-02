@@ -8,7 +8,7 @@ import os
 load_dotenv(find_dotenv())
 
 
-class HttpMethods:
+class HttpMethod:
 
     def __init__(self, app):
         self.app = app
@@ -35,7 +35,7 @@ class HttpMethods:
 
     def _send(self, link: str, data, headers: dict, method: str):
         link = f"{os.getenv('URL')}/v2{link}"
-        Logger.add_request(link, data, headers, method)
+        # Logger.add_request(link, data, headers, method)
         if method == 'GET':
             response = requests.get(url=link, params=data, headers=headers)
         elif method == 'POST':
@@ -48,5 +48,5 @@ class HttpMethods:
             response = requests.delete(url=link, data=data, headers=headers)
         else:
             raise Exception(f"Получен неверный HTTP метод '{method}'")
-        Logger.add_response(response)
+        # Logger.add_response(response)
         return response
