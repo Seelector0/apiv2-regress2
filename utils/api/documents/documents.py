@@ -1,7 +1,7 @@
 import json
 
 
-class Document:
+class ApiDocument:
 
     def __init__(self, app):
         self.app = app
