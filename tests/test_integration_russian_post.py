@@ -12,12 +12,19 @@ class TestRussianPostIntegration:
         result_new_shop = app.shop.create_shop(headers=token)
         Checking.check_status_code(response=result_new_shop, expected_status_code=201)
         Checking.checking_json_key(response=result_new_shop, expected_value=['id', 'type', 'url', 'status'])
+        result_get_new_shop = app.shop.get_shop_by_id(shop_id=result_new_shop.json()["id"], headers=token)
+        Checking.check_status_code(response=result_get_new_shop, expected_status_code=200)
+        Checking.checking_json_value(response=result_get_new_shop, key_name="visibility", expected_value=True)
 
     @allure.description("Создание склада")
     def test_create_new_warehouse(self, app, token):
         result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович", headers=token)
         Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
         Checking.checking_json_key(response=result_new_warehouse, expected_value=['id', 'type', 'url', 'status'])
+        result_get_new_warehouse = app.warehouse.get_warehouse_by_id(warehouse_id=result_new_warehouse.json()["id"],
+                                                                     headers=token)
+        Checking.check_status_code(response=result_get_new_warehouse, expected_status_code=200)
+        Checking.checking_json_value(response=result_get_new_warehouse, key_name="visibility", expected_value=True)
 
     @allure.description("Подключение настроек Почты России")
     def test_integration_russian_post(self, app, token):
@@ -26,6 +33,12 @@ class TestRussianPostIntegration:
                                                                          shop_id=shop_id[0], headers=token)
         Checking.check_status_code(response=result_russian_post, expected_status_code=201)
         Checking.checking_json_key(response=result_russian_post, expected_value=['id', 'type', 'url', 'status'])
+        result_get_russian_post = app.service.get_delivery_services_code(shop_id=shop_id[0], code="RussianPost",
+                                                                         headers=token)
+        Checking.check_status_code(response=result_get_russian_post, expected_status_code=200)
+        Checking.checking_json_value(response=result_get_russian_post, key_name="code", expected_value="RussianPost")
+        Checking.checking_json_value(response=result_get_russian_post, key_name="credentials", field="visibility",
+                                     expected_value=True)
 
     @allure.description("Получение списка ПВЗ СД Почты России")
     def test_delivery_service_points(self, app, token):

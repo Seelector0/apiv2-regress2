@@ -249,6 +249,12 @@ class ApiDeliveryServices:
                                                          headers=headers)
         return get_delivery_services
 
+    def get_delivery_services_code(self, shop_id: str, code: str, headers: dict):
+        """Получение настроек подключения к СД по id магазина"""
+        result_delivery_services_code = self.app.http_method.get(
+            link=f"/customer/shops/{shop_id}/delivery_services/{code}", headers=headers)
+        return result_delivery_services_code
+
     def editing_fields_delivery_services(self, shop_id: str, code: str, headers: dict, value: bool):
         """Метод изменения полей СД"""
         json_editing_fields_delivery_services = json.dumps(
@@ -260,7 +266,19 @@ class ApiDeliveryServices:
                 }
             ]
         )
-        editing_fields_delivery_services = self.app.http_method.patch(
+        result_editing_fields_delivery_services = self.app.http_method.patch(
             link=f"/v2/customer/shops/{shop_id}/delivery_services/{code}",
             data=json_editing_fields_delivery_services, headers=headers)
-        return editing_fields_delivery_services
+        return result_editing_fields_delivery_services
+
+    def activate_delivery_service(self, shop_id: str, code: str, headers: dict):
+        """Активация настроек подключения к СД по id магазина"""
+        result_activate_delivery_service = self.app.http_method.post(
+            link=f"/customer/shops/{shop_id}/delivery_services/{code}/activate", headers=headers)
+        return result_activate_delivery_service
+
+    def deactivate_delivery_service(self, shop_id: str, code: str, headers: dict):
+        """Деактивация настроек подключения к СД по id магазина"""
+        result_deactivate_delivery_service = self.app.http_method.post(
+            link=f"/customer/shops/{shop_id}/delivery_services/{code}/activate", headers=headers)
+        return result_deactivate_delivery_service
