@@ -1,11 +1,13 @@
 from utils.api.delivery_serviches.delivery_services import ApiDeliveryServices
-from utils.api.documents.documents import Document
+from utils.api.documents.documents import ApiDocument
 from utils.api.info.info import ApiInfo
 from utils.api.offers.offers import ApiOffers
 from utils.api.orders.orders import ApiOrder
 from utils.api.parcels.parcels import ApiParcel
 from utils.api.warehouses.warehouses import ApiWarehouse
-from utils.http_methods import HttpMethods
+from utils.api.webhooks.webhooks import ApiWebhook
+from utils.api.widgets.widgets import ApiWidget
+from utils.http_methods import HttpMethod
 from utils.api.shops.shops import ApiShop
 import requests
 
@@ -16,7 +18,7 @@ class Application:
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
-        self.http_method = HttpMethods(self)
+        self.http_method = HttpMethod(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
@@ -24,7 +26,9 @@ class Application:
         self.offers = ApiOffers(self)
         self.order = ApiOrder(self)
         self.parcel = ApiParcel(self)
-        self.document = Document(self)
+        self.document = ApiDocument(self)
+        self.widget = ApiWidget(self)
+        self.webhook = ApiWebhook(self)
 
     def open_session(self, data, headers: dict):
         """Функция для открытия сессии"""
