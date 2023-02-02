@@ -1,9 +1,7 @@
 import datetime
-import time
 from requests import Response
 import allure
 import json
-import os
 
 
 class Checking:
@@ -24,7 +22,7 @@ class Checking:
                 f"Не ожидаемые ключи! Ожидаемые {list(token)}. Фактические {expected_value}"
 
     @staticmethod
-    def checking_json_value(response: Response, key_name: str, expected_value, field = None):
+    def checking_json_value(response: Response, key_name: str, expected_value, field=None):
         """Метод для проверки обязательного ключа в ответе"""
         with allure.step(f"Проверяю что в ответе есть значение {expected_value}"):
             check = response.json()
@@ -36,7 +34,7 @@ class Checking:
                     f"FAILED! У ключа {check.get(key_name)[field]} фактическое значение {expected_value}"
 
     @staticmethod
-    def checking_big_json(response: Response, key_name: str, expected_value, field = None):
+    def checking_big_json(response: Response, key_name: str, expected_value, field=None):
         with allure.step(f"Проверяю что в ответе есть значение {expected_value}"):
             check = response.json()["data"]["request"]
             if field is None:
@@ -50,7 +48,7 @@ class Checking:
     def checking_in_list_json_value(response: Response, key_name, expected_value):
         with allure.step(f"Проверяю что в списке есть значение {expected_value}"):
             for element in response.json():
-                assert  element[key_name] == expected_value, \
+                assert element[key_name] == expected_value, \
                     f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {element[key_name]}"
 
     @staticmethod
