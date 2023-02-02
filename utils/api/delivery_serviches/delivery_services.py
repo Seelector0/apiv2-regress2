@@ -11,9 +11,8 @@ class ApiDeliveryServices:
     def __init__(self, app):
         self.app = app
 
-    def delivery_services_russian_post(self, connection_type, shop_id, headers,
-                                       token: str =f"{os.getenv('RP_TOKEN')}",
-                                       secret: str =f"{os.getenv('RP_SECRET')}"):
+    def delivery_services_russian_post(self, connection_type, shop_id, headers, token: str = f"{os.getenv('RP_TOKEN')}",
+                                       secret: str = f"{os.getenv('RP_SECRET')}"):
         """Настройки подключения службы доставки Почты России к магазину"""
         if connection_type == "integration":
             json_russian_post_integration = json.dumps(
@@ -28,7 +27,7 @@ class ApiDeliveryServices:
                 }
             )
             integration_russian_post = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                        data=json_russian_post_integration, headers=headers)
+                                                                 data=json_russian_post_integration, headers=headers)
             return integration_russian_post
         elif connection_type == "aggregation":
             json_russian_post_aggregation = json.dumps(
@@ -41,7 +40,7 @@ class ApiDeliveryServices:
                 }
             )
             aggregation_russian_post = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                        data=json_russian_post_aggregation, headers=headers)
+                                                                 data=json_russian_post_aggregation, headers=headers)
             return aggregation_russian_post
 
     def delivery_services_topdelivery(self, connection_type: str, shop_id: str, headers: dict):
@@ -60,7 +59,7 @@ class ApiDeliveryServices:
                 }
             )
             integration_topdelivery = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                       data=json_topdelivery_integration, headers=headers)
+                                                                data=json_topdelivery_integration, headers=headers)
             return integration_topdelivery
         elif connection_type == "aggregation":
             json_topdelivery_aggregation = json.dumps(
@@ -72,7 +71,7 @@ class ApiDeliveryServices:
                 }
             )
             aggregation_topdelivery = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                       data=json_topdelivery_aggregation, headers=headers)
+                                                                data=json_topdelivery_aggregation, headers=headers)
             return aggregation_topdelivery
 
     def delivery_services_boxberry(self, connection_type: str, shop_id: str, headers: dict):
@@ -88,7 +87,7 @@ class ApiDeliveryServices:
                     }
                 })
             integration_boxberry = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                    data=json_boxberry_integration, headers=headers)
+                                                             data=json_boxberry_integration, headers=headers)
             return integration_boxberry
         elif connection_type == "aggregation":
             json_boxberry_aggregation = json.dumps(
@@ -101,7 +100,7 @@ class ApiDeliveryServices:
                 }
             )
             aggregation_boxberry = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                    data=json_boxberry_aggregation, headers=headers)
+                                                             data=json_boxberry_aggregation, headers=headers)
             return aggregation_boxberry
 
     def delivery_services_cdek(self, connection_type: str, shop_id: str, headers: dict):
@@ -119,7 +118,7 @@ class ApiDeliveryServices:
                 }
             )
             integration_cdek = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                data=json_cdek_integration, headers=headers)
+                                                         data=json_cdek_integration, headers=headers)
             return integration_cdek
         elif connection_type == "aggregation":
             json_cdek_aggregation = json.dumps(
@@ -132,7 +131,7 @@ class ApiDeliveryServices:
                 }
             )
             aggregation_cdek = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                                data=json_cdek_aggregation, headers=headers)
+                                                         data=json_cdek_aggregation, headers=headers)
             return aggregation_cdek
 
     def delivery_services_drh_logistic(self, shop_id: str, headers: dict):
@@ -147,7 +146,7 @@ class ApiDeliveryServices:
             }
         )
         drh_logistic = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                        data=json_drh_logistic, headers=headers)
+                                                 data=json_drh_logistic, headers=headers)
         return drh_logistic
 
     def delivery_services_dpd(self, connection_type: str, shop_id: str, headers: dict):
@@ -165,7 +164,7 @@ class ApiDeliveryServices:
                 }
             )
             integration_dpd = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                               data=json_dpd_integration, headers=headers)
+                                                        data=json_dpd_integration, headers=headers)
             return integration_dpd
         elif connection_type == "aggregation":
             json_dpd_aggregation = json.dumps(
@@ -178,7 +177,7 @@ class ApiDeliveryServices:
                 }
             )
             aggregation_dpd = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
-                                               data=json_dpd_aggregation, headers=headers)
+                                                        data=json_dpd_aggregation, headers=headers)
             return aggregation_dpd
 
     def delivery_services_cse(self, shop_id: str, headers: dict):
@@ -246,7 +245,8 @@ class ApiDeliveryServices:
 
     def get_delivery_services(self, shop_id: str, headers: dict):
         """Метод получения списка выполненных настроек СД к магазину"""
-        get_delivery_services = self.app.http_method.get(link=f"/customer/shops/{shop_id}/delivery_services", headers=headers)
+        get_delivery_services = self.app.http_method.get(link=f"/customer/shops/{shop_id}/delivery_services",
+                                                         headers=headers)
         return get_delivery_services
 
     def editing_fields_delivery_services(self, shop_id: str, code: str, headers: dict, value: bool):
@@ -262,5 +262,5 @@ class ApiDeliveryServices:
         )
         editing_fields_delivery_services = self.app.http_method.patch(
             link=f"/v2/customer/shops/{shop_id}/delivery_services/{code}",
-            data= json_editing_fields_delivery_services, headers=headers)
+            data=json_editing_fields_delivery_services, headers=headers)
         return editing_fields_delivery_services
