@@ -31,5 +31,6 @@ class Logger:
         data_to_add = f"Response code: {response.status_code}\n"
         data_to_add += f"Response text: {response.text}\n"
         data_to_add += f"Response headers: {headers_as_dict}\n"
+        data_to_add += f"X-Trace-Id: {response.request.headers['x-trace-id']}\n"
         data_to_add += "\n-----\n"
         cls._write_log_to_file(data_to_add)
