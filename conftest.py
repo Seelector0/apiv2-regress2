@@ -3,6 +3,7 @@ from databases.database_connections import DataBaseConnections
 from databases.database_customer_api import DataBaseCustomerApi
 from databases.database_tracking_api import DataBaseTrackingApi
 from dotenv import load_dotenv, find_dotenv
+import uuid
 import pytest
 import os
 
@@ -29,6 +30,7 @@ def app():
 def token():
     """Фикстура для получения токена для работы по Api"""
     token = {
+        "x-trace-id": str(uuid.uuid4()),
         "Authorization": f"Bearer {fixture.response.json()['access_token']}",
         "Content-Type": "application/json"
     }
@@ -40,6 +42,7 @@ def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
     database_customer = DataBaseCustomerApi(host=os.getenv("HOST"), database=os.getenv("CUSTOMER-API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+
     def fin():
         database_customer.connection_close()
     request.addfinalizer(finalizer=fin)
@@ -51,6 +54,7 @@ def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
     database_connections = DataBaseConnections(host=os.getenv("HOST"), database=os.getenv("CONNECTIONS"),
                                                user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+
     def fin():
         database_connections.connection_close()
     request.addfinalizer(finalizer=fin)
@@ -62,6 +66,7 @@ def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
     database_tracking = DataBaseTrackingApi(host=os.getenv("HOST"), database=os.getenv("TRACKING_API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+
     def fin():
         database_tracking.connection_close()
     request.addfinalizer(finalizer=fin)

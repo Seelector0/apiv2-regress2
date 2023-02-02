@@ -27,6 +27,52 @@ class TestRussianPostIntegration:
         Checking.check_status_code(response=result_russian_post, expected_status_code=201)
         Checking.checking_json_key(response=result_russian_post, expected_value=['id', 'type', 'url', 'status'])
 
+    @allure.description("Получение списка ПВЗ СД Почты России")
+    def test_delivery_service_points(self, app, token):
+        shop_id = app.shop.get_shops_id(headers=token)
+        result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="RussianPost",
+                                                                          shop_id=shop_id[0], headers=token)
+        Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
+        Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
+                                             expected_value="RussianPost")
+
+    @allure.description("Получение списка точек сдачи СД Почты России")
+    def test_intake_offices(self, app, token):
+        result_intake_offices = app.info.intake_offices(delivery_service_code="RussianPost", limit=10, headers=token)
+        Checking.check_status_code(response=result_intake_offices, expected_status_code=200)
+        Checking.checking_in_list_json_value(response=result_intake_offices, key_name="deliveryServiceCode",
+                                             expected_value="RussianPost")
+
+    @allure.description("Получения сроков доставки по Почте России")
+    def test_delivery_time_schedules(self, app, token):
+        result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="RussianPost",
+                                                                          headers=token)
+        Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
+        Checking.checking_json_key(response=result_delivery_time_schedules, expected_value=['schedule', 'intervals'])
+
+    @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Почта России")
+    def test_info_vats(self, app, token):
+        result_info_vats = app.info.info_vats(delivery_service_code="RussianPost", headers=token)
+        Checking.check_status_code(response=result_info_vats, expected_status_code=200)
+        Checking.checking_json_key(response=result_info_vats, expected_value=[{'code': 'NO_VAT', 'name': 'Без НДС'},
+                                                                              {'code': '0', 'name': 'НДС 0%'},
+                                                                              {'code': '10', 'name': 'НДС 10%'},
+                                                                              {'code': '20', 'name': 'НДС 20%'},
+                                                                              {'code': '10/110', 'name': 'НДС 10/110'},
+                                                                              {'code': '20/120', 'name': 'НДС 20/120'}])
+
+    @allure.description("Получение актуального списка возможных статусов заказа СД Почта России")
+    def test_info_statuses(self, app, token):
+        result_info_delivery_service_services = app.info.info_delivery_service_services(code="RussianPost",
+                                                                                        headers=token)
+        Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
+        Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
+            {'name': 'no-return', 'title': 'Возврату не подлежит', 'description': 'Возврату не подлежит'},
+            {'name': 'open', 'title': 'Можно вскрывать до получения оплаты с клиента',
+             'description': 'Можно вскрывать до получения оплаты с клиента'},
+            {'name': 'pay-by-card', 'title': 'COD (картой или наличными)', 'description': 'COD (картой или наличными)'},
+            {'name': 'sms', 'title': 'SMS информирование', 'description': 'SMS уведомление получателя'}])
+
     @allure.description("Получение оферов по Почте России (Courier)")
     @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
     def test_offers_courier(self, app, payment_type, token):
@@ -44,10 +90,9 @@ class TestRussianPostIntegration:
     def test_offers_delivery_point(self, app, payment_type, token):
         shop_id = app.shop.get_shops_id(headers=token)
         warehouse_id = app.warehouse.get_warehouses_id(headers=token)
-        result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0],
-                                                             shop_id=shop_id[0], payment_type=payment_type,
-                                                             types="DeliveryPoint", delivery_service_code="RussianPost",
-                                                             headers=token)
+        result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
+                                                             payment_type=payment_type, types="DeliveryPoint",
+                                                             delivery_service_code="RussianPost", headers=token)
         Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
         Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['PostOffice'])
 
@@ -67,7 +112,7 @@ class TestRussianPostIntegration:
         shop_id = app.shop.get_shops_id(headers=token)
         warehouse_id = app.warehouse.get_warehouses_id(headers=token)
         result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type="Paid",
-                                              type_ds="Courier", service="RussianPost", tariff="24",price=1000,
+                                              type_ds="Courier", service="RussianPost", tariff="24", price=1000,
                                               declared_value=1500, headers=token)
         Checking.check_status_code(response=result_order, expected_status_code=201)
         Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
@@ -121,11 +166,13 @@ class TestRussianPostIntegration:
                                                   declared_value=2500, family_name="Иванов", headers=token)
         Checking.check_status_code(response=result_order_put, expected_status_code=200)
         Checking.checking_big_json(response=result_order_put, key_name="weight", expected_value=5)
-        Checking.checking_big_json(response=result_order_put, key_name="payment", field="declaredValue", expected_value=2500)
+        Checking.checking_big_json(response=result_order_put, key_name="payment", field="declaredValue",
+                                   expected_value=2500)
         Checking.checking_big_json(response=result_order_put, key_name="dimension", field="length", expected_value=12)
         Checking.checking_big_json(response=result_order_put, key_name="dimension", field="width", expected_value=14)
         Checking.checking_big_json(response=result_order_put, key_name="dimension", field="height", expected_value=11)
-        Checking.checking_big_json(response=result_order_put, key_name="recipient", field="familyName", expected_value="Иванов")
+        Checking.checking_big_json(response=result_order_put, key_name="recipient", field="familyName",
+                                   expected_value="Иванов")
 
     @allure.description("Получение информации об истории изменения статусов заказа")
     def test_order_status(self, app, token):
@@ -133,7 +180,8 @@ class TestRussianPostIntegration:
         for order_id in order_list_id:
             result_order_status = app.order.get_order_statuses(order_id=order_id, headers=token)
             Checking.check_status_code(response=result_order_status, expected_status_code=200)
-            Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
+            Checking.checking_in_list_json_value(response=result_order_status, key_name="status",
+                                                 expected_value="created")
 
     @allure.description("Получение подробной информации о заказе")
     def test_order_details(self, app, token):
