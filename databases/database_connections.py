@@ -14,7 +14,7 @@ class DataBaseConnections(DataBase):
         """Функция удаляет настройки кабинета из таблицы 'cabinet'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute("DELETE FROM connections.cabinet.setting "
+            cursor.execute(f"DELETE FROM {self.db_connections}.cabinet.setting "
                            f"""WHERE setting.user_id = '{self.user_id}'""")
             cursor.connection.commit()
         finally:
@@ -25,7 +25,7 @@ class DataBaseConnections(DataBase):
         db_list_shop = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute("SELECT name, id FROM connections.customer.shop "
+            cursor.execute(f"SELECT name, id FROM {self.db_connections}.customer.shop "
                            f"""WHERE shop.user_id = '{self.user_id}'""")
             for row in cursor:
                 (name, shop_id) = row
@@ -38,7 +38,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'customer.shop'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute("DELETE FROM connections.customer.shop "
+            cursor.execute(f"DELETE FROM {self.db_connections}.customer.shop "
                            f"WHERE shop.user_id = '{self.user_id}'")
             cursor.connection.commit()
         finally:
@@ -49,7 +49,7 @@ class DataBaseConnections(DataBase):
         db_list_warehouse = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute("SELECT name, id FROM connections.customer.warehouse "
+            cursor.execute(f"SELECT name, id FROM {self.db_connections}.customer.warehouse "
                            f"""WHERE warehouse.user_id = '{self.user_id}'""")
             for row in cursor:
                 (name, warehouse_id) = row
@@ -62,7 +62,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'customer.warehouse'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute("DELETE FROM connections.customer.warehouse "
+            cursor.execute(f"DELETE FROM {self.db_connections}.customer.warehouse "
                            f"WHERE warehouse.user_id = '{self.user_id}'")
             cursor.connection.commit()
         finally:
@@ -73,7 +73,7 @@ class DataBaseConnections(DataBase):
         db_list_delivery_service = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute("SELECT order_id, type FROM connections.customer.credential"
+            cursor.execute(f"SELECT order_id, type FROM {self.db_connections}.customer.credential"
                            f"""WHERE customer.shop.user_id = '{self.user_id}'""")
         finally:
             cursor.close()
@@ -83,7 +83,7 @@ class DataBaseConnections(DataBase):
         """Функция чисти таблицу 'customer.credential'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute("DELETE FROM connections.customer.credential "
+            cursor.execute(f"DELETE FROM {self.db_connections}.customer.credential "
                            f"WHERE credential.user_id = '{self.user_id}'")
             cursor.connection.commit()
         finally:
@@ -94,7 +94,7 @@ class DataBaseConnections(DataBase):
         db_list_order = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute('SELECT id FROM connections."order".draft '
+            cursor.execute(f'SELECT id FROM {self.db_connections}."order".draft '
                            f"""WHERE draft.user_id = = '{self.user_id}'""")
             for row in cursor:
                 (order_id, shop_number) = row
@@ -107,7 +107,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.draft'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order".draft '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order".draft '
                            f"""WHERE draft.user_id = '{self.user_id}'""")
             cursor.connection.commit()
         finally:
@@ -118,7 +118,7 @@ class DataBaseConnections(DataBase):
         db_list_order = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute('SELECT id, shop_number FROM connections."order"."order" '
+            cursor.execute(f'SELECT id, shop_number FROM {self.db_connections}."order"."order" '
                            f"""WHERE "order".user_id = '{self.user_id}'""")
             for row in cursor:
                 (order_id, shop_number) = row
@@ -131,7 +131,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.order'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order"."order" '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order"."order" '
                            f"""WHERE "order".user_id = '{self.user_id}'""")
             cursor.connection.commit()
         finally:
@@ -142,7 +142,7 @@ class DataBaseConnections(DataBase):
         db_list_parcel = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute('SELECT id, SUBSTRING(rid, 3) FROM connections."order".parcel '
+            cursor.execute(f'SELECT id, SUBSTRING(rid, 3) FROM {self.db_connections}."order".parcel '
                            f"""WHERE parcel.user_id = '{self.user_id}'""")
             for row in cursor:
                 (parcel_id, rid) = row
@@ -155,7 +155,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.parcel'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order".parcel '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order".parcel '
                            f"""WHERE parcel.user_id = '{self.user_id}'""")
             cursor.connection.commit()
         finally:
@@ -165,7 +165,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.order_document'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order".order_document '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order".order_document '
                            f"""WHERE order_document.order_id = '{order_id}'""")
             cursor.connection.commit()
         finally:
@@ -175,7 +175,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.order_parcel'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order".order_parcel '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order".order_parcel '
                            f"""WHERE order_parcel.parcel_id = '{parcel_id}'""")
             cursor.connection.commit()
         finally:
@@ -185,7 +185,7 @@ class DataBaseConnections(DataBase):
         """Функция чистит таблицу 'order.order_path'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute('DELETE FROM connections."order".order_patch '
+            cursor.execute(f'DELETE FROM {self.db_connections}."order".order_patch '
                            f"""WHERE order_patch.user_id = '{self.user_id}'""")
             cursor.connection.commit()
         finally:

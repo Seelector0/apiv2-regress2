@@ -82,7 +82,8 @@ class ApiOrder:
         """Метод создания заказа"""
         order = self.json_order(warehouse_id=warehouse_id, shop_id=shop_id, payment_type=payment_type,
                                 type_ds=type_ds, service=service, tariff=tariff, price=price,
-                                declared_value=declared_value, length=length, width=width, height=height, delivery_point_code=delivery_point_code)
+                                declared_value=declared_value, length=length, width=width, height=height,
+                                delivery_point_code=delivery_point_code)
         result_create_order = self.app.http_method.post(link="/orders", data=order, headers=headers)
         time.sleep(sec)
         return result_create_order

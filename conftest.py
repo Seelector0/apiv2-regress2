@@ -2,13 +2,11 @@ from fixture.application import Application
 from databases.database_connections import DataBaseConnections
 from databases.database_customer_api import DataBaseCustomerApi
 from databases.database_tracking_api import DataBaseTrackingApi
-from dotenv import load_dotenv, find_dotenv
+from environment import ENV_OBJECT
 import uuid
 import pytest
-import os
 
 
-load_dotenv(find_dotenv())
 fixture = None
 
 
@@ -16,12 +14,16 @@ fixture = None
 def app():
     """Фикстура для открытия сессии по Api"""
     global fixture
-    data = f"grant_type=client_credentials&client_id={os.getenv('CLIENT_ID')}&client_secret={os.getenv('CLIENT_SECRET')}"
+    data = {
+        "grant_type": "client_credentials",
+        "client_id": f"{ENV_OBJECT.client_id()}",
+        "client_secret": f"{ENV_OBJECT.client_secret()}"
+    }
     headers = {
         "Content-Type": "application/x-www-form-urlencoded"
     }
     if fixture is None:
-        fixture = Application(base_url=f"{os.getenv('URL')}{'/auth/access_token'}")
+        fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
     fixture.open_session(data=data, headers=headers)
     return fixture
 
@@ -40,8 +42,8 @@ def token():
 @pytest.fixture(scope="class")
 def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
-    database_customer = DataBaseCustomerApi(host=os.getenv("HOST"), database=os.getenv("CUSTOMER-API"),
-                                            user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+    database_customer = DataBaseCustomerApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_customer_api(),
+                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def fin():
         database_customer.connection_close()
@@ -52,8 +54,8 @@ def customer_api(request):
 @pytest.fixture(scope="class")
 def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
-    database_connections = DataBaseConnections(host=os.getenv("HOST"), database=os.getenv("CONNECTIONS"),
-                                               user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+    database_connections = DataBaseConnections(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
+                                               user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def fin():
         database_connections.connection_close()
@@ -64,8 +66,8 @@ def connections(request):
 @pytest.fixture(scope="class")
 def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
-    database_tracking = DataBaseTrackingApi(host=os.getenv("HOST"), database=os.getenv("TRACKING_API"),
-                                            user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
+    database_tracking = DataBaseTrackingApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_tracking_api(),
+                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def fin():
         database_tracking.connection_close()
@@ -74,10 +76,10 @@ def tracking_api(request):
 
 
 @pytest.fixture(scope="class", autouse=True)
-def stop(request, connections, customer_api, tracking_api):
+def stop(app, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
-        fixture.close_session()
+        app.close_session()
         shops = connections.get_shops_list()
         for i in shops:
             customer_api.delete_connection(shop_id=i.shop_id)
