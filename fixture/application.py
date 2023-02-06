@@ -14,10 +14,11 @@ import requests
 
 class Application:
 
-    def __init__(self, base_url=None, response=None):
+    def __init__(self, base_url=None, response=None, headers=None):
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
+        self.headers = headers
         self.http_method = HttpMethod(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
