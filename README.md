@@ -11,8 +11,8 @@
 
 Смена тестового стенда (По умолчанию dev стенд):
 
-1. В консоле ввести echo $ENV - для OS Linux или echo %ENV% - для OS Windows. local - local стенд, dev - develop стенд.
-2. В консоле ввести export ENV=local или export ENV=dev - для OS Linux, set ENV=local или set ENV=dev - для OS Windows
+1. В консоль ввести echo $ENV - для OS Linux или echo %ENV% - для OS Windows. local - local стенд, dev - develop стенд.
+2. В консоль ввести export ENV=local или export ENV=dev - для OS Linux, set ENV=local или set ENV=dev - для OS Windows
 
 Запуск тестов:
 
