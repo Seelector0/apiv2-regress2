@@ -10,16 +10,6 @@ class DataBaseConnections(DataBase):
     def __init__(self, host, database, user, password):
         super().__init__(host, database, user, password)
 
-    def delete_cabinet_settings(self):
-        """Функция удаляет настройки кабинета из таблицы 'cabinet'"""
-        cursor = self.connection.cursor()
-        try:
-            cursor.execute(f"DELETE FROM {self.db_connections}.cabinet.setting "
-                           f"""WHERE setting.user_id = '{self.user_id}'""")
-            cursor.connection.commit()
-        finally:
-            cursor.close()
-
     def get_shops_list(self):
         """Функция собирает (возвращает) список магазинов из таблицы 'customer.shop'"""
         db_list_shop = []
@@ -193,7 +183,6 @@ class DataBaseConnections(DataBase):
 
     def delete_all_setting(self):
         """Функция удаляет всё выше перечисленное"""
-        self.delete_cabinet_settings()
         self.delete_shops_list()
         self.delete_warehouses_list()
         self.delete_delivery_services_list()
