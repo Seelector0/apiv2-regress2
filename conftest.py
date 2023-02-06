@@ -26,11 +26,11 @@ def app():
     return fixture
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def token():
     """Фикстура для получения токена для работы по Api"""
     token = {
-        # "x-trace-id": str(uuid.uuid4()),
+        "x-trace-id": str(uuid.uuid4()),
         "Authorization": f"Bearer {fixture.response.json()['access_token']}",
         "Content-Type": "application/json"
     }
@@ -40,7 +40,7 @@ def token():
 @pytest.fixture(scope="class")
 def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
-    database_customer = DataBaseCustomerApi(host=os.getenv("HOST"), database=os.getenv("CUSTOMER-API"),
+    database_customer = DataBaseCustomerApi(host=os.getenv("HOST_DEV"), database=os.getenv("CUSTOMER-API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
@@ -52,7 +52,7 @@ def customer_api(request):
 @pytest.fixture(scope="class")
 def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
-    database_connections = DataBaseConnections(host=os.getenv("HOST"), database=os.getenv("CONNECTIONS"),
+    database_connections = DataBaseConnections(host=os.getenv("HOST_DEV"), database=os.getenv("CONNECTIONS"),
                                                user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
@@ -64,7 +64,7 @@ def connections(request):
 @pytest.fixture(scope="class")
 def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
-    database_tracking = DataBaseTrackingApi(host=os.getenv("HOST"), database=os.getenv("TRACKING_API"),
+    database_tracking = DataBaseTrackingApi(host=os.getenv("HOST_DEV"), database=os.getenv("TRACKING_API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
@@ -74,10 +74,10 @@ def tracking_api(request):
 
 
 @pytest.fixture(scope="class", autouse=True)
-def stop(app, request, connections, customer_api, tracking_api):
+def stop(request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
-        app.close_session()
+        fixture.close_session()
         shops = connections.get_shops_list()
         for i in shops:
             customer_api.delete_connection(shop_id=i.shop_id)
