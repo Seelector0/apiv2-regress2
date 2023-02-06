@@ -1,5 +1,5 @@
+from environment import ENV_OBJECT
 import psycopg2
-import os
 
 
 class DataBase:
@@ -11,7 +11,8 @@ class DataBase:
         self.user = user
         self.password = password
         self.connection = psycopg2.connect(host=host, database=database, user=user, password=password)
-        self.user_id = os.getenv("USER_ID")
+        self.user_id = ENV_OBJECT.user_id()
+        self.db_connections = ENV_OBJECT.db_connections()
 
     def connection_close(self):
         """Выход из базы данных"""
