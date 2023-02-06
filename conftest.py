@@ -40,7 +40,7 @@ def token():
 @pytest.fixture(scope="class")
 def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
-    database_customer = DataBaseCustomerApi(host=os.getenv("HOST_DEV"), database=os.getenv("CUSTOMER-API"),
+    database_customer = DataBaseCustomerApi(host=os.getenv("HOST"), database=os.getenv("CUSTOMER-API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
@@ -52,7 +52,7 @@ def customer_api(request):
 @pytest.fixture(scope="class")
 def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
-    database_connections = DataBaseConnections(host=os.getenv("HOST_DEV"), database=os.getenv("CONNECTIONS"),
+    database_connections = DataBaseConnections(host=os.getenv("HOST"), database=os.getenv("CONNECTIONS"),
                                                user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
@@ -64,7 +64,7 @@ def connections(request):
 @pytest.fixture(scope="class")
 def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
-    database_tracking = DataBaseTrackingApi(host=os.getenv("HOST_DEV"), database=os.getenv("TRACKING_API"),
+    database_tracking = DataBaseTrackingApi(host=os.getenv("HOST"), database=os.getenv("TRACKING_API"),
                                             user=os.getenv("CONNECTIONS"), password=os.getenv("DATABASE_PASSWORD"))
 
     def fin():
