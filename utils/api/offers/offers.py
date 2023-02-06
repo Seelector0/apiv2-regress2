@@ -7,7 +7,8 @@ class ApiOffers:
         self.app = app
 
     def get_offers(self, warehouse_id, shop_id, payment_type, types, delivery_service_code, headers):
-        body = {
+        """Метод для получения списка офферов"""
+        body_offers = {
             "address":  "г Москва, пр-кт Мира, д 45 стр 2",
             "declaredValue": randrange(1000, 5000),
             "height": randrange(10, 45),
@@ -20,5 +21,5 @@ class ApiOffers:
             "types[0]": types,
             "deliveryServiceCode": delivery_service_code,
         }
-        result_offers = self.app.http_method.get(link="/offers", params=body, headers=headers)
+        result_offers = self.app.http_method.get(link="/offers", params=body_offers, headers=headers)
         return result_offers
