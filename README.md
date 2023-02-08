@@ -8,15 +8,14 @@
 1. Клонировать проект в любую удобную директорию
 2. Скопировать содержимое файла .env.example в .env
 3. В корне проекта создать папку logs
+4. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
 
 Смена тестового стенда (По умолчанию dev стенд):
 
-1. В консоль ввести export ENV=local или export ENV=dev - для Linux или Мac OS, set ENV=local или set ENV=dev - для OS Windows
-2. В консоль ввести echo $ENV - для для Linux или Мac OS, echo %ENV% - для OS Windows. local - local стенд, dev - develop стенд
-
+1. В консоль ввести export ENV=local или export ENV=dev - для Linux и Мac OS, set ENV=local или set ENV=dev - для OS Windows
+2. В консоль ввести echo $ENV - для для Linux и Мac OS, echo %ENV% - для OS Windows. local - local стенд, dev - develop стенд
 
 Запуск тестов:
 
-1. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
-2. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
-3. Формирование отчёта командой allure serve result
+1. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
+2. Формирование отчёта командой allure serve result

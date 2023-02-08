@@ -60,7 +60,7 @@ class Environment:
         DEVELOP: f"{os.getenv('USER_ID')}"
     }
 
-    error_massage = "Неизвестное значение переменной ENV"
+    error_massage = "Неизвестное значение переменной ENV:"
 
     def __init__(self):
         try:
@@ -83,8 +83,8 @@ class Environment:
             raise Exception(f"{Environment.error_massage} {self.env}")
 
     def client_secret(self):
+        """Метод для получения client_secret для работы за определённым стендом"""
         if self.env in self.CLIENT_SECRETS:
-            """Метод для получения client_secret для работы за определённым стендом"""
             return self.CLIENT_SECRETS[self.env]
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
