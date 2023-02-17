@@ -7,7 +7,8 @@ class ApiShop:
     def __init__(self, app):
         self.app = app
 
-    def json_shop(self, shop_name: str = f"INT{randrange(100000, 999999)}",
+    @staticmethod
+    def json_shop(shop_name: str = f"INT{randrange(100000, 999999)}",
                   url_shop: str = f"integration-shop{randrange(1000, 9999)}.ru",
                   phone: str = f"7916{randrange(1000000, 9999999)}",
                   contact_person: str = "Иванов Иван Иванович"):

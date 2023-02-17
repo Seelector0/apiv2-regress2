@@ -7,7 +7,8 @@ class ApiWarehouse:
     def __init__(self, app):
         self.app = app
 
-    def json_warehouse(self, fullname: str):
+    @staticmethod
+    def json_warehouse(fullname: str):
         """Json создания склада"""
         warehouse = json.dumps(
             {
@@ -25,7 +26,8 @@ class ApiWarehouse:
         )
         return warehouse
 
-    def json_field_changes(self, field: str, new_value):
+    @staticmethod
+    def json_field_changes(field: str, new_value):
         """Json для редактирования полей склада"""
         body = json.dumps(
             [
