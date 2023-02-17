@@ -3,10 +3,9 @@ import json
 import os
 
 
-load_dotenv(find_dotenv())
-
-
 class ApiDeliveryServices:
+
+    load_dotenv(find_dotenv())
 
     def __init__(self, app):
         self.app = app
@@ -19,10 +18,10 @@ class ApiDeliveryServices:
                 {
                     "deliveryServiceCode": "RussianPost",
                     "data": {
-                    "token": token,
-                    "secret": secret,
-                    "type": "integration",
-                    "intakePostOfficeCode": "101000"
+                        "token": token,
+                        "secret": secret,
+                        "type": "integration",
+                        "intakePostOfficeCode": "101000"
                     }
                 }
             )
@@ -50,11 +49,11 @@ class ApiDeliveryServices:
                 {
                     "deliveryServiceCode": "TopDelivery",
                     "data": {
-                    "username": f"{os.getenv('TD_USER_NAME')}",
-                    "password": f"{os.getenv('TD_PASSWORD')}",
-                    "basicLogin": f"{os.getenv('TD_BASIC_LOGIN')}",
-                    "basicPassword": f"{os.getenv('TD_BASIC_PASSWORD')}",
-                    "type": "integration"
+                        "username": f"{os.getenv('TD_USER_NAME')}",
+                        "password": f"{os.getenv('TD_PASSWORD')}",
+                        "basicLogin": f"{os.getenv('TD_BASIC_LOGIN')}",
+                        "basicPassword": f"{os.getenv('TD_BASIC_PASSWORD')}",
+                        "type": "integration"
                     }
                 }
             )
@@ -267,7 +266,7 @@ class ApiDeliveryServices:
             ]
         )
         result_editing_fields_delivery_services = self.app.http_method.patch(
-            link=f"/v2/customer/shops/{shop_id}/delivery_services/{code}",
+            link=f"/customer/shops/{shop_id}/delivery_services/{code}",
             data=json_editing_fields_delivery_services, headers=headers)
         return result_editing_fields_delivery_services
 
