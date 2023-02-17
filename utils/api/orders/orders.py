@@ -8,17 +8,18 @@ class ApiOrder:
     def __init__(self, app):
         self.app = app
 
-    def json_order(self, warehouse_id: str, shop_id: str, payment_type: str, type_ds: str, service: str, tariff: str,
+    @staticmethod
+    def json_order(warehouse_id: str, shop_id: str, payment_type: str, type_ds: str, service: str, tariff: str,
                    price: float, declared_value: float, delivery_point_code=None, weight: float = randint(3, 5),
                    length: float = randint(10, 30), width: float = randint(10, 50), height: float = randint(10, 50)):
         """Json создания заказа"""
         json_create_order = json.dumps(
             {
                 "warehouse": {
-                    "id": f"{warehouse_id}",
+                    "id": warehouse_id,
                 },
                 "shop": {
-                    "id": f"{shop_id}",
+                    "id": shop_id,
                     "number": f"{randrange(100000, 999999)}"
                 },
                 "payment": {
