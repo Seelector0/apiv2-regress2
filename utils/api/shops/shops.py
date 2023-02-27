@@ -34,7 +34,7 @@ class ApiShop:
         result_get_shop = self.app.http_method.get(link="/customer/shops", headers=headers)
         return result_get_shop
 
-    def get_shop_by_id(self , headers: dict, shop_id: str):
+    def get_shop_by_id(self, headers: dict, shop_id: str):
         """Метод получения магазина по его id"""
         result_get_shop_by_id = self.app.http_method.get(link=f"/customer/shops/{shop_id}", headers=headers)
         return result_get_shop_by_id
