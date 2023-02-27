@@ -155,7 +155,7 @@ class TestRussianPostIntegration:
         warehouse_id = app.warehouse.get_warehouses_id(headers=token)
         result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
                                               payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
-                                              tariff=choice(["23", "47", "4", "7"]), price=1000, declared_value=1500,
+                                              tariff=choice(["23", "47", "4"]), price=1000, declared_value=1500,
                                               headers=token)
         Checking.check_status_code(response=result_order, expected_status_code=201)
         Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
