@@ -10,16 +10,15 @@ class ApiDeliveryServices:
     def __init__(self, app):
         self.app = app
 
-    def delivery_services_russian_post(self, connection_type, shop_id, headers, token: str = f"{os.getenv('RP_TOKEN')}",
-                                       secret: str = f"{os.getenv('RP_SECRET')}"):
+    def delivery_services_russian_post(self, connection_type, shop_id, headers):
         """Настройки подключения службы доставки Почты России к магазину"""
         if connection_type == "integration":
             json_russian_post_integration = json.dumps(
                 {
                     "deliveryServiceCode": "RussianPost",
                     "data": {
-                        "token": token,
-                        "secret": secret,
+                        "token": f"{os.getenv('RP_TOKEN')}",
+                        "secret": f"{os.getenv('RP_SECRET')}",
                         "type": "integration",
                         "intakePostOfficeCode": "101000"
                     }
@@ -81,10 +80,11 @@ class ApiDeliveryServices:
                     "deliveryServiceCode": "Boxberry",
                     "data": {
                         "type": "integration",
-                        "intakeDeliveryPointCode": "97341",
+                        "intakeDeliveryPointCode": "00127",
                         "token": "d6f33e419c16131e5325cbd84d5d6000"
                     }
-                })
+                }
+            )
             integration_boxberry = self.app.http_method.post(link=f"/customer/shops/{shop_id}/delivery_services",
                                                              data=json_boxberry_integration, headers=headers)
             return integration_boxberry

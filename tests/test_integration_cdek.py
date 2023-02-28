@@ -25,148 +25,155 @@ def test_create_warehouse(app, token):
     Checking.checking_json_value(response=result_get_new_warehouse, key_name="visibility", expected_value=True)
 
 
-@allure.description("Подключение настроек службы доставки Почты России")
-def test_integration_russian_post(app, token):
+@allure.description("Подключение настроек СД Cdek")
+def test_integration_cdek(app, token):
     shop_id = app.shop.get_shops_id(headers=token)
-    result_russian_post = app.service.delivery_services_russian_post(connection_type="integration",
-                                                                     shop_id=shop_id[0], headers=token)
-    Checking.check_status_code(response=result_russian_post, expected_status_code=201)
-    Checking.checking_json_key(response=result_russian_post, expected_value=['id', 'type', 'url', 'status'])
-    result_get_russian_post = app.service.get_delivery_services_code(shop_id=shop_id[0], code="RussianPost",
-                                                                     headers=token)
-    Checking.check_status_code(response=result_get_russian_post, expected_status_code=200)
-    Checking.checking_json_value(response=result_get_russian_post, key_name="code", expected_value="RussianPost")
-    Checking.checking_json_value(response=result_get_russian_post, key_name="credentials", field="visibility",
+    result_cdek = app.service.delivery_services_cdek(connection_type="integration", shop_id=shop_id[0],
+                                                     headers=token)
+    Checking.check_status_code(response=result_cdek, expected_status_code=201)
+    Checking.checking_json_key(response=result_cdek, expected_value=['id', 'type', 'url', 'status'])
+    result_get_cdek = app.service.get_delivery_services_code(shop_id=shop_id[0], code="Cdek", headers=token)
+    Checking.check_status_code(response=result_get_cdek, expected_status_code=200)
+    Checking.checking_json_value(response=result_get_cdek, key_name="code", expected_value="Cdek")
+    Checking.checking_json_value(response=result_get_cdek, key_name="credentials", field="visibility",
                                  expected_value=True)
 
 
-@allure.description("Получение списка ПВЗ СД Почты России")
+@allure.description("Получение списка ПВЗ СД Cdek")
 def test_delivery_service_points(app, token):
     shop_id = app.shop.get_shops_id(headers=token)
-    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="RussianPost",
+    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cdek",
                                                                       shop_id=shop_id[0], headers=token)
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
-                                         expected_value="RussianPost")
+                                         expected_value="Cdek")
 
 
-@allure.description("Получение списка точек сдачи СД Почты России")
+@allure.description("Получение списка точек сдачи СД Cdek")
 def test_intake_offices(app, token):
-    result_intake_offices = app.info.intake_offices(delivery_service_code="RussianPost", limit=10, headers=token)
+    result_intake_offices = app.info.intake_offices(delivery_service_code="Cdek", limit=10, headers=token)
     Checking.check_status_code(response=result_intake_offices, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_intake_offices, key_name="deliveryServiceCode",
-                                         expected_value="RussianPost")
+                                         expected_value="Cdek")
 
 
-@allure.description("Получения сроков доставки по Почте России")
+@allure.description("Получения сроков доставки по СД Cdek")
 def test_delivery_time_schedules(app, token):
-    result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="RussianPost",
+    result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Cdek",
                                                                       headers=token)
     Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
     Checking.checking_json_key(response=result_delivery_time_schedules, expected_value=['schedule', 'intervals'])
 
 
-@allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Почта России")
+@allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Cdek")
 def test_info_vats(app, token):
-    result_info_vats = app.info.info_vats(delivery_service_code="RussianPost", headers=token)
+    result_info_vats = app.info.info_vats(delivery_service_code="Cdek", headers=token)
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{'code': 'NO_VAT', 'name': 'Без НДС'},
-                                                                          {'code': '0', 'name': 'НДС 0%'},
-                                                                          {'code': '10', 'name': 'НДС 10%'},
-                                                                          {'code': '20', 'name': 'НДС 20%'},
-                                                                          {'code': '10/110', 'name': 'НДС 10/110'},
-                                                                          {'code': '20/120', 'name': 'НДС 20/120'}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "NO_VAT", "name": "Без НДС"},
+                                                                          {"code": "0", "name": "НДС 0%"},
+                                                                          {"code": "10", "name": "НДС 10%"},
+                                                                          {"code": "20", "name": "НДС 20%"}])
 
 
-@allure.description("Получение актуального списка возможных статусов заказа СД Почта России")
+@allure.description("Получение актуального списка возможных сервисов заказа СД Cdek")
 def test_info_statuses(app, token):
-    result_info_delivery_service_services = app.info.info_delivery_service_services(code="RussianPost",
+    result_info_delivery_service_services = app.info.info_delivery_service_services(code="Cdek",
                                                                                     headers=token)
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
     Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {'name': 'no-return', 'title': 'Возврату не подлежит', 'description': 'Возврату не подлежит'},
-        {'name': 'open', 'title': 'Можно вскрывать до получения оплаты с клиента',
-         'description': 'Можно вскрывать до получения оплаты с клиента'},
-        {'name': 'pay-by-card', 'title': 'COD (картой или наличными)', 'description': 'COD (картой или наличными)'},
-        {'name': 'sms', 'title': 'SMS информирование', 'description': 'SMS уведомление получателя'}])
+        {'name': 'lifting-elevator', 'title': 'Подъем на этаж (лифт)', 'description': 'Подъем на этаж (лифт)'},
+        {'name': 'lifting-freight', 'title': 'Подъем на этаж (грузовой лифт)', 'description': 'Подъем на этаж (грузовой лифт)'},
+        {'name': 'lifting-manual', 'title': 'Подъем на этаж (ручной)', 'description': 'Подъем на этаж (ручной)'},
+        {'name': 'no-autocall', 'title': 'Отключение автоматического звонка клиенту', 'description': 'Отключение автоматического звонка клиенту'},
+        {'name': 'not-open', 'title': 'Не вскрывать до получения оплаты с клиента', 'description': 'Не вскрывать до получения оплаты с клиента'},
+        {'name': 'reverse', 'title': 'Обратный заказ на доставку от получателя до отправителя', 'description': 'Обратный заказ на доставку от получателя до отправителя'}])
 
 
-@allure.description("Получение оферов по Почте России (Courier)")
+@allure.description("Получение оферов по СД Cdek (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type, token):
     shop_id = app.shop.get_shops_id(headers=token)
     warehouse_id = app.warehouse.get_warehouses_id(headers=token)
     result_offers_courier = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
                                                   payment_type=payment_type, types="Courier",
-                                                  delivery_service_code="RussianPost", headers=token)
+                                                  delivery_service_code="Cdek", headers=token)
     Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_courier, expected_value=['Courier'])
 
 
-@allure.description("Получение оферов по Почте России (DeliveryPoint)")
+@allure.description("Получение оферов по СД Cdek (DeliveryPoint)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
     shop_id = app.shop.get_shops_id(headers=token)
     warehouse_id = app.warehouse.get_warehouses_id(headers=token)
     result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
                                                          payment_type=payment_type, types="DeliveryPoint",
-                                                         delivery_service_code="RussianPost", headers=token)
+                                                         delivery_service_code="Cdek", headers=token)
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
-    Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['PostOffice'])
+    Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['DeliveryPoint'])
 
 
-@allure.description("Получение оферов по Почте России (PostOffice)")
+@allure.description("Создание Courier многоместного заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_russian_post(app, payment_type, token):
+def test_create_multi_order_cdek_courier(app, token, payment_type):
     shop_id = app.shop.get_shops_id(headers=token)
     warehouse_id = app.warehouse.get_warehouses_id(headers=token)
-    result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                         payment_type=payment_type, types="PostOffice",
-                                                         delivery_service_code="RussianPost", headers=token)
-    Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
-    Checking.checking_json_key(response=result_offers_delivery_point, expected_value=['PostOffice'])
-
-
-@allure.description("Создание Courier заказа по Почте России")
-def test_create_order_russian_post_courier(app, token):
-    shop_id = app.shop.get_shops_id(headers=token)
-    warehouse_id = app.warehouse.get_warehouses_id(headers=token)
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type="Paid",
-                                          type_ds="Courier", service="RussianPost", tariff="24", price=1000,
-                                          declared_value=1500, headers=token)
-    Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], headers=token)
+    result_multi_order = app.order.create_multi_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
+                                                      payment_type=payment_type, type_ds="Courier", service="Cdek",
+                                                      tariff=choice(["137", "139", "480", "482"]), price_1=1000,
+                                                      declared_value=1500, headers=token, sec=6)
+    Checking.check_status_code(response=result_multi_order, expected_status_code=201)
+    Checking.checking_json_key(response=result_multi_order, expected_value=['id', 'type', 'url', 'status'])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], headers=token)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Создание DeliveryPoint заказа по Почте России")
-def test_create_order_russian_post_delivery_point(app, token):
-    shop_id = app.shop.get_shops_id(headers=token)
-    warehouse_id = app.warehouse.get_warehouses_id(headers=token)
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type="Paid",
-                                          length=15, width=15, height=15, type_ds="DeliveryPoint",
-                                          service="RussianPost", tariff="23", delivery_point_code="914841",
-                                          price=1000, declared_value=1500, headers=token)
-    Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], headers=token)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
-    Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
-    Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
-
-
-@allure.description("Создание PostOffice заказа по Почте России")
+@allure.description("Создание DeliveryPoint многоместного заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_russian_post_post_office(app, payment_type, token):
+def test_create_multi_order_cdek_delivery_point(app, token, payment_type):
     shop_id = app.shop.get_shops_id(headers=token)
     warehouse_id = app.warehouse.get_warehouses_id(headers=token)
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                          payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
-                                          tariff=choice(["23", "47", "4"]), price=1000, declared_value=1500,
-                                          headers=token)
+    result_multi_order = app.order.create_multi_order(
+        warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type, type_ds="DeliveryPoint",
+        service="Cdek", tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
+        delivery_point_code="VNG2", price_1=1000, declared_value=1500, headers=token, sec=6)
+    Checking.check_status_code(response=result_multi_order, expected_status_code=201)
+    Checking.checking_json_key(response=result_multi_order, expected_value=['id', 'type', 'url', 'status'])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], headers=token)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Добавление items в многоместный заказ")
+def test_patch_multi_order(app, token):
+    list_order_id = app.order.get_orders_id(headers=token)
+    choice_order_id = choice(list_order_id)
+    old_len_order_list = app.order.get_order_by_id(order_id=choice_order_id, headers=token)
+    result_patch_order = app.order.update_field_order(headers=token, order_id=choice_order_id, path="places")
+    Checking.check_status_code(response=result_patch_order, expected_status_code=200)
+    Checking.checking_json_value(response=result_patch_order, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=result_patch_order, key_name="state",
+                                 expected_value="editing-external-processing")
+    new_len_order_list = app.order.get_order_by_id(order_id=choice_order_id, headers=token)
+    Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
+    Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
+    Checking.checking_sum_len_lists(old_list=old_len_order_list.json()["data"]["request"]["places"],
+                                    new_list=new_len_order_list.json()["data"]["request"]["places"])
+
+
+@allure.description("Создание Courier заказа по CД Cdek")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_order_cdek_courier(app, token, payment_type):
+    shop_id = app.shop.get_shops_id(headers=token)
+    warehouse_id = app.warehouse.get_warehouses_id(headers=token)
+    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
+                                          type_ds="Courier", service="Cdek",
+                                          tariff=choice(["137", "139", "480", "482"]), price=1000, declared_value=1500,
+                                          headers=token, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], headers=token)
@@ -175,29 +182,39 @@ def test_create_order_russian_post_post_office(app, payment_type, token):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Попытка получения этикетки Почты России вне партии")
-def test_get_label_russian_post_out_of_parcel(app, token):
+@allure.description("Создание DeliveryPoint заказа по CД Cdek")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_order_cdek_delivery_point(app, token, payment_type):
+    shop_id = app.shop.get_shops_id(headers=token)
+    warehouse_id = app.warehouse.get_warehouses_id(headers=token)
+    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
+                                          type_ds="DeliveryPoint", service="Cdek",
+                                          tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
+                                          delivery_point_code="VNG2", price=1000, declared_value=1500, headers=token,
+                                          sec=7)
+    Checking.check_status_code(response=result_order, expected_status_code=201)
+    Checking.checking_json_key(response=result_order, expected_value=['id', 'type', 'url', 'status'])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], headers=token)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Получения этикетки Cdek вне партии")
+def test_get_label_cdek_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id(headers=token)
     for order_id in list_order_id:
         result_label = app.document.get_label(order_id=order_id, headers=token)
-        Checking.check_status_code(response=result_label, expected_status_code=404)
+        Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
-@allure.description("Редактирование заказа")
+@allure.description("Попытка редактирования заказа СД Cdek")
 def test_editing_order(app, token):
     order_list_id = app.order.get_orders_id(headers=token)
     random_order = choice(order_list_id)
     result_order_put = app.order.update_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                               declared_value=2500, family_name="Иванов", headers=token)
-    Checking.check_status_code(response=result_order_put, expected_status_code=200)
-    Checking.checking_big_json(response=result_order_put, key_name="weight", expected_value=5)
-    Checking.checking_big_json(response=result_order_put, key_name="payment", field="declaredValue",
-                               expected_value=2500)
-    Checking.checking_big_json(response=result_order_put, key_name="dimension", field="length", expected_value=12)
-    Checking.checking_big_json(response=result_order_put, key_name="dimension", field="width", expected_value=14)
-    Checking.checking_big_json(response=result_order_put, key_name="dimension", field="height", expected_value=11)
-    Checking.checking_big_json(response=result_order_put, key_name="recipient", field="familyName",
-                               expected_value="Иванов")
+    Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
 
 @allure.description("Получение информации об истории изменения статусов заказа")
@@ -244,13 +261,11 @@ def test_add_order_in_parcel(app, token):
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
-@allure.description("Редактирование партии(Изменение даты отправки партии)")
+@allure.description("Редактирование партии(Попытка изменение даты отправки партии)")
 def test_change_shipment_date(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_shipment_date = app.parcel.change_parcel_shipment_date(parcel_id=parcel_id[0], day=5, headers=token)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=200)
-    new_date = result_shipment_date.json()["data"]["request"]["shipmentDate"]
-    Checking.check_date_change(calendar_date=new_date, number_of_days=5)
+    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
 @allure.description("Получение этикетки")
@@ -273,10 +288,11 @@ def test_create_app(app, token):
 def test_create_documents(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_documents = app.document.get_documents(parcel_id=parcel_id[0], headers=token)
+
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
-@allure.description("Редактирование партии(Удаление заказа из партии)")
+@allure.description("Редактирование партии(Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     old_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0], headers=token)

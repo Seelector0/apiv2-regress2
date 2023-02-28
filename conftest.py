@@ -3,14 +3,14 @@ from databases.database_connections import DataBaseConnections
 from databases.database_customer_api import DataBaseCustomerApi
 from databases.database_tracking_api import DataBaseTrackingApi
 from environment import ENV_OBJECT
-import uuid
 import pytest
+import uuid
 
 
 fixture = None
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def app():
     """Фикстура для открытия сессии по Api"""
     global fixture
@@ -19,12 +19,9 @@ def app():
         "client_id": f"{ENV_OBJECT.client_id()}",
         "client_secret": f"{ENV_OBJECT.client_secret()}"
     }
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded"
-    }
     if fixture is None:
         fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
-    fixture.open_session(data=data, headers=headers)
+    fixture.open_session(data=data, headers=fixture.headers)
     return fixture
 
 
@@ -39,7 +36,7 @@ def token():
     return token
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def customer_api(request):
     """Фикстура для подключения к базе данных 'customer-api'"""
     database_customer = DataBaseCustomerApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_customer_api(),
@@ -51,7 +48,7 @@ def customer_api(request):
     return database_customer
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def connections(request):
     """Фикстура для подключения к базе данных 'connections'"""
     database_connections = DataBaseConnections(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
@@ -63,7 +60,7 @@ def connections(request):
     return database_connections
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def tracking_api(request):
     """Фикстура для подключения к базе данных 'tracking-api'"""
     database_tracking = DataBaseTrackingApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_tracking_api(),
@@ -75,7 +72,7 @@ def tracking_api(request):
     return database_tracking
 
 
-@pytest.fixture(scope="class", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def stop(app, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():

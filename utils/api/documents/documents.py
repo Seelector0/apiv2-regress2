@@ -11,7 +11,7 @@ class ApiDocument:
         result_get_label = self.app.http_method.get(link=f"/orders/{order_id}/label", headers=headers)
         return result_get_label
 
-    def get_labels_from_parcel(self, parcel_id: str, order_ids: list, headers:dict):
+    def get_labels_from_parcel(self, parcel_id: str, order_ids: list, headers: dict):
         """Метод получения этикеток из партии"""
         json_get_labels_from_parcel = json.dumps(
             {

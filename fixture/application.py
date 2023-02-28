@@ -14,11 +14,11 @@ import requests
 
 class Application:
 
-    def __init__(self, base_url=None, response=None, headers=None):
+    def __init__(self, base_url=None, response=None):
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
-        self.headers = headers
+        self.headers = {"Content-Type": "application/x-www-form-urlencoded"}
         self.http_method = HttpMethod(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
