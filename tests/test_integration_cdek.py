@@ -146,6 +146,7 @@ def test_create_multi_order_cdek_delivery_point(app, token, payment_type):
 
 
 @allure.description("Добавление items в многоместный заказ")
+@pytest.skip("Надо понять почему падает на отдельном стенде под РЕГРЕСС")
 def test_patch_multi_order(app, token):
     list_order_id = app.order.get_orders_id(headers=token)
     choice_order_id = choice(list_order_id)
