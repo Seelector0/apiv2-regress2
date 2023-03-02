@@ -285,7 +285,6 @@ def test_create_app(app, token):
 def test_create_documents(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_documents = app.document.get_documents(parcel_id=parcel_id[0], headers=token)
-
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
