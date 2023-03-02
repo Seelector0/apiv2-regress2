@@ -7,16 +7,26 @@ class ApiParcel:
     def __init__(self, app):
         self.app = app
 
-    def create_parcel(self, order_id: list, headers: dict):
+    def create_parcel(self, order_id: str, headers: dict, all_orders: bool = False):
         """Метод создания партии"""
-        json_create_parcel = json.dumps(
-            {
-                "orderIds": [order_id],
-                "shipmentDate": f"{datetime.date.today()}"
-            }
-        )
-        result_post_parcel = self.app.http_method.post(link="/parcels", data=json_create_parcel, headers=headers)
-        return result_post_parcel
+        if all_orders:
+            json_create_parcel = json.dumps(
+                {
+                    "orderIds": [*order_id],
+                    "shipmentDate": f"{datetime.date.today()}"
+                }
+            )
+            result_post_parcel = self.app.http_method.post(link="/parcels", data=json_create_parcel, headers=headers)
+            return result_post_parcel
+        else:
+            json_create_parcel = json.dumps(
+                {
+                    "orderIds": [order_id],
+                    "shipmentDate": f"{datetime.date.today()}"
+                }
+            )
+            result_post_parcel = self.app.http_method.post(link="/parcels", data=json_create_parcel, headers=headers)
+            return result_post_parcel
 
     def get_parcels(self, headers: dict):
         """Метод получения списка партий"""
