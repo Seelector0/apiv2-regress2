@@ -9,9 +9,9 @@ class ApiOrder:
         self.app = app
 
     def create_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value, type_ds: str,
-                     service: str, tariff: str, price: float, headers: dict, length: float = randint(10, 30),
+                     service: str, price: float, headers: dict, data=None, length: float = randint(10, 30),
                      width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
-                     delivery_point_code: str = None, delivery_time: dict = None, sec: float = 4):
+                     delivery_point_code: str = None, tariff: str = None, delivery_time: dict = None, sec: float = 4):
         """Создание заказа"""
         json_order = json.dumps(
             {
@@ -37,7 +37,7 @@ class ApiOrder:
                     "type": type_ds,
                     "service": service,
                     "tariff": tariff,
-                    "date": None,
+                    "date": data,
                     "time": delivery_time,
                     "deliveryPointCode": delivery_point_code
                 },
@@ -72,7 +72,7 @@ class ApiOrder:
         return result_create_order
 
     def create_multi_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value: float,
-                           type_ds: str, service: str, tariff: str, price_1: float,  headers: dict,
+                           type_ds: str, service: str, tariff: str, price_1: float,  headers: dict, data=None,
                            delivery_point_code: str = None, delivery_time: dict = None, length: float = randint(10, 30),
                            width: float = randint(10, 50), height: float = randint(10, 50),
                            weight_1: float = randint(1, 5), weight_2: float = randint(1, 5), shop_number: str = None,
@@ -103,7 +103,7 @@ class ApiOrder:
                     "deliveryPointCode": delivery_point_code,
                     "service": service,
                     "tariff": tariff,
-                    "date": None,
+                    "date": data,
                     "time": delivery_time
                 },
                 "recipient": {

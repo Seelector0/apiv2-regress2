@@ -81,7 +81,7 @@ class ApiDeliveryServices:
                     "data": {
                         "type": "integration",
                         "intakeDeliveryPointCode": "00127",
-                        "token": "d6f33e419c16131e5325cbd84d5d6000"
+                        "token": f"{os.getenv('BB_API_TOKEN')}"
                     }
                 }
             )
@@ -94,7 +94,7 @@ class ApiDeliveryServices:
                     "deliveryServiceCode": "Boxberry",
                     "data": {
                         "type": "aggregation",
-                        "intakeDeliveryPointCode": "97341"
+                        "intakeDeliveryPointCode": "00127"
                     }
                 }
             )
@@ -140,7 +140,7 @@ class ApiDeliveryServices:
                 "deliveryServiceCode": "Drhl",
                 "data": {
                     "type": "integration",
-                    "apiKey": f"{os.getenv('DRH_API_TOKEN')}"
+                    "apiKey": f"{os.getenv('DRHL_API_TOKEN')}"
                 }
             }
         )
