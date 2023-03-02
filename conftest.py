@@ -22,6 +22,7 @@ def app():
     if fixture is None:
         fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
     fixture.open_session(data=data, headers=fixture.headers)
+    fixture.clearing_directory()
     return fixture
 
 
@@ -50,7 +51,7 @@ def customer_api(request):
 
 @pytest.fixture(scope="module")
 def connections(request):
-    """Фикстура для подключения к базе данных 'connections'"""
+    """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'"""
     database_connections = DataBaseConnections(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
                                                user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
