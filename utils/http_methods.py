@@ -5,10 +5,9 @@ import requests
 import allure
 
 
-load_dotenv(find_dotenv())
-
-
 class HttpMethod:
+
+    load_dotenv(find_dotenv())
 
     def __init__(self, app):
         self.app = app
@@ -33,7 +32,8 @@ class HttpMethod:
         with allure.step(f"DELETE requests to URL '{link}'"):
             return self._send(link, data, headers, 'DELETE')
 
-    def _send(self, link: str, data, headers: dict, method: str):
+    @staticmethod
+    def _send(link: str, data, headers: dict, method: str):
         link = f"{ENV_OBJECT.get_base_url()}/v2{link}"
         Logger.add_request(link, data, headers, method)
         if method == 'GET':
