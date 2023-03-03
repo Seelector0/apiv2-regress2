@@ -3,6 +3,8 @@ from random import choice
 import pytest
 import allure
 
+# Todo разобраться с widget offers
+
 
 @allure.description("Создание магазина")
 def test_create_integration_shop(app, token):
@@ -199,8 +201,18 @@ def test_create_order_cdek_delivery_point(app, token, payment_type):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Получения этикетки Cdek вне партии")
-def test_get_label_cdek_out_of_parcel(app, token):
+@allure.description("Удаление заказа")
+def test_delete_order(app, token):
+    orders_id_list = app.order.get_orders_id(headers=token)
+    random_order_id = choice(orders_id_list)
+    result_delete_order = app.order.delete_order(order_id=random_order_id, headers=token)
+    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
+    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id, headers=token)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
+
+
+@allure.description("Получения этикеток Cdek вне партии")
+def test_get_labels_cdek_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id(headers=token)
     for order_id in list_order_id:
         result_label = app.document.get_label(order_id=order_id, headers=token)
@@ -265,8 +277,8 @@ def test_change_shipment_date(app, token):
     Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
-@allure.description("Получение этикетки")
-def test_create_label(app, token):
+@allure.description("Получение этикеток")
+def test_get_label(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0], headers=token)
     for order_id in result_order_in_parcel:
@@ -274,15 +286,24 @@ def test_create_label(app, token):
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
+@allure.description("Получение этикеток заказов из партии")
+def get_labels_from_parcel(app, token):
+    parcel_id = app.parcel.get_parcels_id(headers=token)
+    order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0], headers=token)
+    result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel,
+                                                                    headers=token)
+    Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
+
+
 @allure.description("Получение АПП")
-def test_create_app(app, token):
+def test_get_app(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_app = app.document.get_app(parcel_id=parcel_id[0], headers=token)
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов")
-def test_create_documents(app, token):
+def test_get_documents(app, token):
     parcel_id = app.parcel.get_parcels_id(headers=token)
     result_documents = app.document.get_documents(parcel_id=parcel_id[0], headers=token)
     Checking.check_status_code(response=result_documents, expected_status_code=200)
@@ -298,13 +319,3 @@ def test_remove_order_in_parcel(app, token):
     new_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0], headers=token)
     Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
-
-
-@allure.description("Удаление заказа")
-def test_delete_order(app, token):
-    orders_id_list = app.order.get_orders_id(headers=token)
-    random_order_id = choice(orders_id_list)
-    result_delete_order = app.order.delete_order(order_id=random_order_id, headers=token)
-    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
-    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id, headers=token)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
