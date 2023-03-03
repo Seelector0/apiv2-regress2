@@ -11,25 +11,25 @@ class HttpMethod:
     def __init__(self, app):
         self.app = app
 
-    def get(self, link: str, params=None, headers: dict = None):
+    def get(self, link: str, params=None):
         with allure.step(f"GET requests to URL '{link}'"):
-            return self._send(link=link, data=params, headers=headers, method='GET')
+            return self._send(link=link, data=params, headers=self.app.token, method='GET')
 
-    def post(self, link: str, data=None, headers: dict = None):
+    def post(self, link: str, data=None):
         with allure.step(f"POST requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=headers, method='POST')
+            return self._send(link=link, data=data, headers=self.app.token, method='POST')
 
-    def patch(self, link: str, data=None, headers: dict = None):
+    def patch(self, link: str, data=None):
         with allure.step(f"POST requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=headers, method='PATCH')
+            return self._send(link=link, data=data, headers=self.app.token, method='PATCH')
 
-    def put(self, link: str, data=None, headers: dict = None):
+    def put(self, link: str, data=None):
         with allure.step(f"PUT requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=headers, method='PUT')
+            return self._send(link=link, data=data, headers=self.app.token, method='PUT')
 
-    def delete(self, link: str, data=None, headers: dict = None):
+    def delete(self, link: str, data=None):
         with allure.step(f"DELETE requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=headers, method='DELETE')
+            return self._send(link=link, data=data, headers=self.app.token, method='DELETE')
 
     def _send(self, link: str, data, headers: dict, method: str):
         link = f"{ENV_OBJECT.get_base_url()}/v2{link}"
