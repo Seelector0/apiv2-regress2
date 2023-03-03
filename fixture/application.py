@@ -17,11 +17,12 @@ import os
 
 class Application:
 
-    def __init__(self, base_url=None, response=None):
+    def __init__(self, base_url=None, response=None, token=None):
         self.logs_directory = str(Path(Path.home(), "PycharmProjects", "Apiv2-regress-version2", "logs"))
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
+        self.token = token
         self.headers = {"Content-Type": "application/x-www-form-urlencoded"}
         self.http_method = HttpMethod(self)
         self.logger = Logger(self)
