@@ -10,7 +10,7 @@ import allure
 def test_create_integration_shop(app, token):
     result_new_shop = app.shop.create_shop(headers=token)
     Checking.check_status_code(response=result_new_shop, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_shop, expected_value=['id', 'type', 'url', 'status'])
+    Checking.checking_json_key(response=result_new_shop, expected_value=["id", "type", "url", "status"])
     result_get_new_shop = app.shop.get_shop_by_id(shop_id=result_new_shop.json()["id"], headers=token)
     Checking.check_status_code(response=result_get_new_shop, expected_status_code=200)
     Checking.checking_json_value(response=result_get_new_shop, key_name="visibility", expected_value=True)
@@ -20,7 +20,7 @@ def test_create_integration_shop(app, token):
 def test_create_warehouse(app, token):
     result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович", headers=token)
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_warehouse, expected_value=['id', 'type', 'url', 'status'])
+    Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
     result_get_new_warehouse = app.warehouse.get_warehouse_by_id(warehouse_id=result_new_warehouse.json()["id"],
                                                                  headers=token)
     Checking.check_status_code(response=result_get_new_warehouse, expected_status_code=200)
@@ -33,7 +33,7 @@ def test_integration_boxberry(app, token):
     result_boxberry = app.service.delivery_services_boxberry(connection_type="integration", shop_id=shop_id[0],
                                                              headers=token)
     Checking.check_status_code(response=result_boxberry, expected_status_code=201)
-    Checking.checking_json_key(response=result_boxberry, expected_value=['id', 'type', 'url', 'status'])
+    Checking.checking_json_key(response=result_boxberry, expected_value=["id", "type", "url", "status"])
     result_get_boxberry = app.service.get_delivery_services_code(shop_id=shop_id[0], code="Boxberry", headers=token)
     Checking.check_status_code(response=result_get_boxberry, expected_status_code=200)
     Checking.checking_json_value(response=result_get_boxberry, key_name="code", expected_value="Boxberry")
@@ -63,7 +63,7 @@ def test_intake_offices(app, token):
 def test_delivery_time_schedules(app, token):
     result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Boxberry", headers=token)
     Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_key(response=result_delivery_time_schedules, expected_value=['schedule', 'intervals'])
+    Checking.checking_json_key(response=result_delivery_time_schedules, expected_value=["schedule", "intervals"])
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Boxberry")
@@ -101,7 +101,7 @@ def test_offers_courier(app, payment_type, token):
                                                   payment_type=payment_type, types="Courier",
                                                   delivery_service_code="Boxberry", headers=token)
     Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
-    Checking.checking_json_key(response=result_offers_courier, expected_value=['Courier'])
+    Checking.checking_json_key(response=result_offers_courier, expected_value=["Courier"])
 
 
 @allure.description("Получение оферов по СД Boxberry (DeliveryPoint)")
