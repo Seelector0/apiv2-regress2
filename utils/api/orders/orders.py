@@ -9,7 +9,7 @@ class ApiOrder:
         self.app = app
 
     def create_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value, type_ds: str,
-                     service: str, price: float, headers: dict, data=None, length: float = randint(10, 30),
+                     service: str, price: float, data=None, length: float = randint(10, 30),
                      width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
                      delivery_point_code: str = None, tariff: str = None, delivery_time: dict = None, sec: float = 4):
         """Создание заказа"""
@@ -67,12 +67,12 @@ class ApiOrder:
                 ]
             }
         )
-        result_create_order = self.app.http_method.post(link="/orders", data=json_order, headers=headers)
+        result_create_order = self.app.http_method.post(link="/orders", data=json_order)
         time.sleep(sec)
         return result_create_order
 
     def create_multi_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value: float,
-                           type_ds: str, service: str, tariff: str, price_1: float,  headers: dict, data=None,
+                           type_ds: str, service: str, tariff: str, price_1: float,  data=None,
                            delivery_point_code: str = None, delivery_time: dict = None, length: float = randint(10, 30),
                            width: float = randint(10, 50), height: float = randint(10, 50),
                            weight_1: float = randint(1, 5), weight_2: float = randint(1, 5), shop_number: str = None,
@@ -152,11 +152,11 @@ class ApiOrder:
                 ]
             }
         )
-        result_create_multi_order = self.app.http_method.post(link="/orders", data=json_multi_order, headers=headers)
+        result_create_multi_order = self.app.http_method.post(link="/orders", data=json_multi_order)
         time.sleep(sec)
         return result_create_multi_order
 
-    def create_order_from_file(self, shop_id: str, warehouse_id: str, headers: dict, format_file: str = None):
+    def create_order_from_file(self, shop_id: str, warehouse_id: str, format_file: str = None):
         """Метод создания заказа из файла XLSX формата Почта России или формата MetaShip"""
         if format_file == "russian_post":
             body_requests = {
@@ -169,7 +169,7 @@ class ApiOrder:
                           "application/vnd.ms-excel"))
             ]
             result_order_from_file_russian_post = self.app.http_method.post(link="/import/orders", data=body_requests,
-                                                                            files=file, headers=headers)
+                                                                            files=file)
             return result_order_from_file_russian_post
         else:
             body_requests = {
@@ -181,31 +181,31 @@ class ApiOrder:
                           "application/vnd.ms-excel"))
             ]
             result_order_from_file_metaship = self.app.http_method.post(link="/import/orders", data=body_requests,
-                                                                        files=file, headers=headers)
+                                                                        files=file)
             return result_order_from_file_metaship
 
-    def search_order(self, query: str, headers: dict):
+    def search_order(self, query: str):
         """Метод поиска по заказам"""
         search = {
             "query": query
         }
-        search_order = self.app.http_method.get(link="/orders/search", params=search, headers=headers)
+        search_order = self.app.http_method.get(link="/orders/search", params=search)
         return search_order
 
-    def get_orders(self, headers: dict):
+    def get_orders(self):
         """Метод возвращает список заказов"""
-        result_get_order_list = self.app.http_method.get(link="/orders", headers=headers)
+        result_get_order_list = self.app.http_method.get(link="/orders")
         return result_get_order_list
 
-    def get_order_by_id(self, order_id: str,  headers: dict):
+    def get_order_by_id(self, order_id: str):
         """Метод получения информации о заказе по его id"""
-        result_get_odre_by_id = self.app.http_method.get(link=f"/orders/{order_id}", headers=headers)
+        result_get_odre_by_id = self.app.http_method.get(link=f"/orders/{order_id}")
         return result_get_odre_by_id
 
     def update_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
-                     family_name: str, headers: dict):
+                     family_name: str):
         """Метод обновления заказ (PUT)"""
-        result_get_order_by_id = self.get_order_by_id(order_id=order_id, headers=headers)
+        result_get_order_by_id = self.get_order_by_id(order_id=order_id)
         body_order = result_get_order_by_id.json()["data"]["request"]
         body_order["weight"] = weight
         body_order["dimension"]["length"] = length
@@ -214,13 +214,13 @@ class ApiOrder:
         body_order["payment"]["declaredValue"] = declared_value
         body_order["recipient"]["familyName"] = family_name
         payload = json.dumps(body_order)
-        result_put_order = self.app.http_method.put(link=f"/orders/{order_id}", data=payload, headers=headers)
+        result_put_order = self.app.http_method.put(link=f"/orders/{order_id}", data=payload, )
         return result_put_order
 
-    def update_field_order(self, order_id: str, path: str, headers: dict, shop_number: str = None,
+    def update_field_order(self, order_id: str, path: str, shop_number: str = None,
                            weight_3: float = randint(1, 5), dimension: dict = None, sec=1):
         """Метод обновления поля в заказе и добавление места (PATCH)"""
-        result_get_order_by_id = self.get_order_by_id(order_id=order_id, headers=headers)
+        result_get_order_by_id = self.get_order_by_id(order_id=order_id)
         items_1 = result_get_order_by_id.json()["data"]["request"]["places"]
         if path == "places":
             json_path_order = json.dumps(
@@ -251,33 +251,33 @@ class ApiOrder:
                 ]
             )
             time.sleep(sec)
-            result_path = self.app.http_method.patch(link=f"/orders/{order_id}", data=json_path_order, headers=headers)
+            result_path = self.app.http_method.patch(link=f"/orders/{order_id}", data=json_path_order)
             return result_path
 
-    def delete_order(self, order_id: str, headers: dict):
+    def delete_order(self, order_id: str):
         """Метод удаления заказа"""
-        result_delete_order = self.app.http_method.delete(link=f"/orders/{order_id}", headers=headers)
+        result_delete_order = self.app.http_method.delete(link=f"/orders/{order_id}")
         return result_delete_order
 
-    def get_order_patches(self, order_id: str, headers: dict):
+    def get_order_patches(self, order_id: str):
         """Получение PATCH изменений по заказу"""
-        result_get_order_patches = self.app.http_method.get(link=f"/orders/{order_id}/patches", headers=headers)
+        result_get_order_patches = self.app.http_method.get(link=f"/orders/{order_id}/patches")
         return result_get_order_patches
 
-    def get_order_statuses(self, order_id: str, headers: dict):
+    def get_order_statuses(self, order_id: str):
         """Получение информации об истории изменения статусов заказа"""
-        result_get_order_statuses = self.app.http_method.get(link=f"/orders/{order_id}/statuses", headers=headers)
+        result_get_order_statuses = self.app.http_method.get(link=f"/orders/{order_id}/statuses")
         return result_get_order_statuses
 
-    def get_order_details(self, order_id: str, headers: dict):
+    def get_order_details(self, order_id: str):
         """Получение подробной информации о заказе"""
-        result_get_order_details = self.app.http_method.get(link=f"/orders/{order_id}/details", headers=headers)
+        result_get_order_details = self.app.http_method.get(link=f"/orders/{order_id}/details")
         return result_get_order_details
 
-    def get_orders_id(self, headers):
+    def get_orders_id(self):
         """Метод получения id заказов не в партии"""
         orders_id_list = []
-        order_list = self.get_orders(headers=headers)
+        order_list = self.get_orders()
         for order in order_list.json():
             if order["status"] == "created":
                 orders_id_list.append(order["id"])

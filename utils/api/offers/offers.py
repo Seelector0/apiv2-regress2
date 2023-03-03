@@ -6,7 +6,7 @@ class ApiOffers:
     def __init__(self, app):
         self.app = app
 
-    def get_offers(self, warehouse_id: str, shop_id: str, types: str, headers: dict, delivery_service_code: str = None,
+    def get_offers(self, warehouse_id: str, shop_id: str, types: str, delivery_service_code: str = None,
                    payment_type: str = None, format_: str = None):
         """Метод для получения списка офферов"""
         if format_ == "widget":
@@ -22,7 +22,7 @@ class ApiOffers:
                 "types[0]": types,
                 "format": "widget"
             }
-            result_offers = self.app.http_method.get(link="/offers", params=body_offers, headers=headers)
+            result_offers = self.app.http_method.get(link="/offers", params=body_offers)
             return result_offers
         else:
             body_offers = {
@@ -38,5 +38,5 @@ class ApiOffers:
                 "types[0]": types,
                 "deliveryServiceCode": delivery_service_code,
             }
-            result_offers = self.app.http_method.get(link="/offers", params=body_offers, headers=headers)
+            result_offers = self.app.http_method.get(link="/offers", params=body_offers)
             return result_offers

@@ -40,46 +40,43 @@ class ApiWarehouse:
         )
         return body
 
-    def create_warehouse(self, headers: dict, fullname: str):
+    def create_warehouse(self, fullname: str):
         """Метод создания нового магазина"""
         warehouse = self.json_warehouse(fullname=fullname)
-        result_post_warehouse = self.app.http_method.post(link="/customer/warehouses", data=warehouse, headers=headers)
+        result_post_warehouse = self.app.http_method.post(link="/customer/warehouses", data=warehouse)
         return result_post_warehouse
 
-    def get_warehouses(self, headers: dict):
+    def get_warehouses(self):
         """Метод получения списка складов"""
-        result_get_warehouse = self.app.http_method.get(link="/customer/warehouses", headers=headers)
+        result_get_warehouse = self.app.http_method.get(link="/customer/warehouses")
         return result_get_warehouse
 
-    def get_warehouse_by_id(self, headers: dict, warehouse_id: str):
+    def get_warehouse_by_id(self, warehouse_id: str):
         """Метод получения склада по его id"""
-        result_get_warehouse_by_id = self.app.http_method.get(link=f"/customer/warehouses/{warehouse_id}",
-                                                              headers=headers)
+        result_get_warehouse_by_id = self.app.http_method.get(link=f"/customer/warehouses/{warehouse_id}")
         return result_get_warehouse_by_id
 
-    def put_warehouse(self, headers: dict, warehouse_id: str, fullname: str):
+    def put_warehouse(self, warehouse_id: str, fullname: str):
         """Метод редактирования склада"""
         warehouse = self.json_warehouse(fullname=fullname)
-        result_put_warehouse = self.app.http_method.put(link=f"/customer/warehouses/{warehouse_id}", data=warehouse,
-                                                        headers=headers)
+        result_put_warehouse = self.app.http_method.put(link=f"/customer/warehouses/{warehouse_id}", data=warehouse)
         return result_put_warehouse
 
-    def patch_warehouse_by_id(self, headers: dict, warehouse_id: str):
+    def patch_warehouse_by_id(self, warehouse_id: str):
         """Метод делает склад не активным"""
         body = self.json_field_changes(field="visibility", new_value=False)
-        result_patch = self.app.http_method.patch(link=f"/customer/warehouses/{warehouse_id}", data=body,
-                                                  headers=headers)
+        result_patch = self.app.http_method.patch(link=f"/customer/warehouses/{warehouse_id}", data=body)
         return result_patch
 
-    def delete_warehouse(self, headers: dict, warehouse_id: str):
+    def delete_warehouse(self, warehouse_id: str):
         """Метод удаления склада"""
-        result_delete = self.app.http_method.delete(link=f"/customer/warehouses/{warehouse_id}", headers=headers)
+        result_delete = self.app.http_method.delete(link=f"/customer/warehouses/{warehouse_id}")
         return result_delete
     
-    def get_warehouses_id(self, headers):
+    def get_warehouses_id(self):
         """Метод получения id заказов не в партии"""
         warehouses_id_list = []
-        warehouses_list = self.get_warehouses(headers=headers)
+        warehouses_list = self.get_warehouses()
         for warehouse in warehouses_list.json():
             warehouses_id_list.append(warehouse["id"])
         return warehouses_id_list

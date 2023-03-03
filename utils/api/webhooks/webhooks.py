@@ -6,7 +6,7 @@ class ApiWebhook:
     def __init__(self, app):
         self.app = app
 
-    def create_webhook(self, shop_id, headers):
+    def create_webhook(self, shop_id: str):
         """Создание веб-хука"""
         json_webhook = json.dumps(
             {
@@ -17,20 +17,20 @@ class ApiWebhook:
                 "secret": "string"
             }
         )
-        result_webhook = self.app.http_method.post(link="/webhook", data=json_webhook, headers=headers)
+        result_webhook = self.app.http_method.post(link="/webhook", data=json_webhook)
         return result_webhook
 
-    def get_webhooks(self, headers):
+    def get_webhooks(self):
         """Получение списка веб-хуков"""
-        result_get_webhooks = self.app.http_method.get(link="/webhook", headers=headers)
+        result_get_webhooks = self.app.http_method.get(link="/webhook")
         return result_get_webhooks
 
-    def get_webhook_by_id(self, webhook_id, headers):
+    def get_webhook_by_id(self, webhook_id: str):
         """Получение веб-хука по его id"""
-        result_get_webhook_by_id = self.app.http_method.get(link=f"/webhook/{webhook_id}", headers=headers)
+        result_get_webhook_by_id = self.app.http_method.get(link=f"/webhook/{webhook_id}")
         return result_get_webhook_by_id
 
-    def webhook_to_change_order_status(self, url, shop_id, headers):
+    def webhook_to_change_order_status(self, url: str, shop_id: str):
         """Веб-хук на смену статуса заказа"""
         json_change_order_status = json.dumps(
             {
@@ -41,6 +41,5 @@ class ApiWebhook:
                 "secret": "string"
             }
         )
-        result_webhook_to_change_order_status = self.app.http_method.post(link=f"/{url}", data=json_change_order_status,
-                                                                          headers=headers)
+        result_webhook_to_change_order_status = self.app.http_method.post(link=f"/{url}", data=json_change_order_status)
         return result_webhook_to_change_order_status

@@ -23,29 +23,29 @@ class ApiShop:
         )
         return json_create_shop
 
-    def create_shop(self, headers: dict):
+    def create_shop(self):
         """Создание магазина"""
         new_shop = self.json_shop()
-        result_post_shop = self.app.http_method.post(link="/customer/shops", data=new_shop, headers=headers)
+        result_post_shop = self.app.http_method.post(link="/customer/shops", data=new_shop)
         return result_post_shop
 
-    def get_shops(self, headers: dict):
+    def get_shops(self):
         """Метод получения списка магазинов"""
-        result_get_shop = self.app.http_method.get(link="/customer/shops", headers=headers)
+        result_get_shop = self.app.http_method.get(link="/customer/shops")
         return result_get_shop
 
-    def get_shop_by_id(self, headers: dict, shop_id: str):
+    def get_shop_by_id(self, shop_id: str):
         """Метод получения магазина по его id"""
-        result_get_shop_by_id = self.app.http_method.get(link=f"/customer/shops/{shop_id}", headers=headers)
+        result_get_shop_by_id = self.app.http_method.get(link=f"/customer/shops/{shop_id}")
         return result_get_shop_by_id
 
-    def put_shop(self, headers: dict, shop_id: str, json_shop):
+    def put_shop(self, shop_id: str, json_shop):
         """Метод редактирования магазина"""
         shop = self.json_shop(json_shop)
-        result_put = self.app.http_method.put(link=f"/customer/shops/{shop_id}", data=shop, headers=headers)
+        result_put = self.app.http_method.put(link=f"/customer/shops/{shop_id}", data=shop)
         return result_put
 
-    def patch_shop(self, headers: dict, shop_id: str, value: bool):
+    def patch_shop(self, shop_id: str, value: bool):
         """Метод делает магазин видимым или не видимым для ЛК"""
         body = json.dumps(
             [
@@ -56,13 +56,13 @@ class ApiShop:
                 }
             ]
         )
-        result_patch = self.app.http_method.patch(link=f"/customer/shops/{shop_id}", data=body, headers=headers)
+        result_patch = self.app.http_method.patch(link=f"/customer/shops/{shop_id}", data=body)
         return result_patch
 
-    def get_shops_id(self, headers):
+    def get_shops_id(self):
         """Метод получения id магазинов"""
         shops_id_list = []
-        shops_list = self.get_shops(headers=headers)
+        shops_list = self.get_shops()
         for shop in shops_list.json():
             shops_id_list.append(shop["id"])
         return shops_id_list
