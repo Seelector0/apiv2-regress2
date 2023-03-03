@@ -279,5 +279,5 @@ class ApiDeliveryServices:
     def deactivate_delivery_service(self, shop_id: str, code: str, headers: dict):
         """Деактивация настроек подключения к СД по id магазина"""
         result_deactivate_delivery_service = self.app.http_method.post(
-            link=f"/customer/shops/{shop_id}/delivery_services/{code}/activate", headers=headers)
+            link=f"/customer/shops/{shop_id}/delivery_services/{code}/deactivate", headers=headers)
         return result_deactivate_delivery_service
