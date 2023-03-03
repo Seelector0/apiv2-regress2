@@ -2,6 +2,7 @@ from fixture.application import Application
 from databases.database_connections import DataBaseConnections
 from databases.database_customer_api import DataBaseCustomerApi
 from databases.database_tracking_api import DataBaseTrackingApi
+from utils.checking import Checking
 from environment import ENV_OBJECT
 import pytest
 import uuid
@@ -22,6 +23,7 @@ def app():
     if fixture is None:
         fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
     fixture.open_session(data=data, headers=fixture.headers)
+    Checking.check_status_code(response=fixture.response, expected_status_code=200)
     fixture.clearing_directory()
     return fixture
 
@@ -29,12 +31,12 @@ def app():
 @pytest.fixture(scope="function")
 def token():
     """Фикстура для получения токена для работы по Api"""
-    token = {
+    fixture.token = {
         "x-trace-id": str(uuid.uuid4()),
         "Authorization": f"Bearer {fixture.response.json()['access_token']}",
         "Content-Type": "application/json"
     }
-    return token
+    return fixture.token
 
 
 @pytest.fixture(scope="module")
