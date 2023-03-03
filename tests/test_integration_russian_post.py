@@ -3,6 +3,8 @@ from random import choice
 import pytest
 import allure
 
+# Todo разобраться с widget offers
+
 
 @allure.description("Создание магазина")
 def test_create_integration_shop(app, token):
@@ -174,6 +176,16 @@ def test_create_order_russian_post_post_office(app, payment_type, token):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Удаление заказа")
+def test_delete_order(app, token):
+    orders_id_list = app.order.get_orders_id(headers=token)
+    random_order_id = choice(orders_id_list)
+    result_delete_order = app.order.delete_order(order_id=random_order_id, headers=token)
+    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
+    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id, headers=token)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
+
+
 @allure.description("Попытка получения этикетки Почты России вне партии")
 def test_get_label_russian_post_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id(headers=token)
@@ -285,13 +297,3 @@ def test_remove_order_in_parcel(app, token):
     new_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0], headers=token)
     Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
-
-
-@allure.description("Удаление заказа")
-def test_delete_order(app, token):
-    orders_id_list = app.order.get_orders_id(headers=token)
-    random_order_id = choice(orders_id_list)
-    result_delete_order = app.order.delete_order(order_id=random_order_id, headers=token)
-    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
-    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id, headers=token)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
