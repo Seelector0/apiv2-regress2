@@ -24,6 +24,7 @@ class Application:
         self.response = response
         self.headers = {"Content-Type": "application/x-www-form-urlencoded"}
         self.http_method = HttpMethod(self)
+        self.logger = Logger(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
