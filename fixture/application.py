@@ -18,7 +18,7 @@ import os
 class Application:
 
     def __init__(self, base_url=None, response=None, token=None):
-        self.logs_directory = str(Path(Path.home(), "PycharmProjects", "Apiv2-regress-version2", "logs"))
+        # self.logs_directory = str(Path(Path.home(), "PycharmProjects", "Apiv2-regress-version2", "logs"))
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
@@ -42,10 +42,10 @@ class Application:
         self.response = self.session.post(url=self.base_url, data=data, headers=headers)
         return self.response
 
-    def clearing_directory(self):
-        """Метод для чистки директории с логами"""
-        for file in os.listdir(self.logs_directory):
-            os.remove(os.path.join(self.logs_directory, file))
+    # def clearing_directory(self):
+    #     """Метод для чистки директории с логами"""
+    #     for file in os.listdir(self.logs_directory):
+    #         os.remove(os.path.join(self.logs_directory, file))
 
     def close_session(self):
         """Метод для закрытия сессии"""
