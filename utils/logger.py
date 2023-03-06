@@ -7,7 +7,7 @@ class Logger:
 
     def __init__(self, app):
         self.app = app
-        self.file_name = f"{self.app.logs_directory}/log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+        # self.file_name = f"{self.app.logs_directory}/log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
     def _write_log_to_file(self, data: str):
         """Метод создаёт файл и записывает в него информацию"""
