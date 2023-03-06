@@ -5,16 +5,16 @@ import os
 
 class Logger:
 
-    def __init__(self, app):
-        self.app = app
-        # self.file_name = f"{self.app.logs_directory}/log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+    file_name = f"logs/log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-    def _write_log_to_file(self, data: str):
+    @classmethod
+    def _write_log_to_file(cls, data: str):
         """Метод создаёт файл и записывает в него информацию"""
-        with open(self.file_name, mode='a', encoding='utf-8') as logger_file:
+        with open(cls.file_name, mode='a', encoding='utf-8') as logger_file:
             logger_file.write(data)
 
-    def add_request(self, url: str, data: dict, headers: dict, method: str):
+    @classmethod
+    def add_request(cls, url: str, data: dict, headers: dict, method: str):
         """Метод возвращает и записывает requests"""
         test_name = os.environ.get('PYTEST_CURRENT_TEST')
         data_to_add = f"\n-----\n"
@@ -25,9 +25,10 @@ class Logger:
         data_to_add += f"Request data: {data}\n"
         data_to_add += f"Request headers: {headers}\n"
         data_to_add += "\n"
-        self._write_log_to_file(data_to_add)
+        cls._write_log_to_file(data_to_add)
 
-    def add_response(self, response: Response):
+    @classmethod
+    def add_response(cls, response: Response):
         """Метод возвращает и записывает response"""
         headers_as_dict = dict(response.headers)
         data_to_add = f"Response code: {response.status_code}\n"
@@ -35,4 +36,4 @@ class Logger:
         data_to_add += f"Response headers: {headers_as_dict}\n"
         data_to_add += f"X-Trace-Id: {response.request.headers['x-trace-id']}\n"
         data_to_add += "\n-----\n"
-        self._write_log_to_file(data_to_add)
+        cls._write_log_to_file(data_to_add)
