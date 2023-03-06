@@ -198,6 +198,15 @@ def test_create_order_cdek_delivery_point(app, token, payment_type):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Получение информации об истории изменения статусов заказа")
+def test_order_status(app, token):
+    order_list_id = app.order.get_orders_id()
+    for order_id in order_list_id:
+        result_order_status = app.order.get_order_statuses(order_id=order_id)
+        Checking.check_status_code(response=result_order_status, expected_status_code=200)
+        Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
+
+
 @allure.description("Удаление заказа")
 def test_delete_order(app, token):
     orders_id_list = app.order.get_orders_id()
@@ -223,15 +232,6 @@ def test_editing_order_cdek(app, token):
     result_order_put = app.order.update_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                               declared_value=2500, family_name="Иванов")
     Checking.check_status_code(response=result_order_put, expected_status_code=400)
-
-
-@allure.description("Получение информации об истории изменения статусов заказа")
-def test_order_status(app, token):
-    order_list_id = app.order.get_orders_id()
-    for order_id in order_list_id:
-        result_order_status = app.order.get_order_statuses(order_id=order_id)
-        Checking.check_status_code(response=result_order_status, expected_status_code=200)
-        Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
 
 
 @allure.description("Получение подробной информации о заказе")
