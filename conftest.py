@@ -24,7 +24,7 @@ def app():
         fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
     fixture.open_session(data=data, headers=fixture.headers)
     Checking.check_status_code(response=fixture.response, expected_status_code=200)
-    fixture.clearing_directory()
+    # fixture.clearing_directory()
     return fixture
 
 
