@@ -8,18 +8,20 @@ class ApiOrder:
     def __init__(self, app):
         self.app = app
 
-    def create_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value, type_ds: str,
-                     service: str, price: float, data=None, length: float = randint(10, 30),
-                     width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
-                     delivery_point_code: str = None, tariff: str = None, delivery_time: dict = None, sec: float = 4):
+    def create_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float, data=None,
+                     length: float = randint(10, 30), width: float = randint(10, 50), height: float = randint(10, 50),
+                     weight: float = randint(1, 5), delivery_point_code: str = None, pickup_time_period: str = None,
+                     date_pickup: str = None, tariff: str = None, delivery_time: dict = None, sec: float = 4):
         """Создание заказа"""
+        shop_id = self.app.shop.get_shops_id()
+        warehouse_id = self.app.warehouse.get_warehouses_id()
         json_order = json.dumps(
             {
                 "warehouse": {
-                    "id": warehouse_id,
+                    "id": warehouse_id[0],
                 },
                 "shop": {
-                    "id": shop_id,
+                    "id": shop_id[0],
                     "number": f"{randrange(100000, 999999)}"
                 },
                 "payment": {
@@ -51,6 +53,8 @@ class ApiOrder:
                     }
                 },
                 "comment": "",
+                "pickupTimePeriod": pickup_time_period,
+                "datePickup": date_pickup,
                 "places": [
                     {
                         "items": [
@@ -71,21 +75,22 @@ class ApiOrder:
         time.sleep(sec)
         return result_create_order
 
-    def create_multi_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value: float,
-                           type_ds: str, service: str, price_1: float, data=None, tariff: str = None,
-                           delivery_point_code: str = None, delivery_time: dict = None, length: float = randint(10, 30),
-                           width: float = randint(10, 50), height: float = randint(10, 50),
-                           weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
-                           shop_number_1: str = f"{randrange(100000, 999999)}",
+    def create_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, price_1: float,
+                           data=None, tariff: str = None, delivery_point_code: str = None, delivery_time: dict = None,
+                           length: float = randint(10, 30), width: float = randint(10, 50),
+                           height: float = randint(10, 50), weight_1: float = randint(1, 5),
+                           weight_2: float = randint(1, 5), shop_number_1: str = f"{randrange(100000, 999999)}",
                            shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None, sec: float = 4):
         """Создание многоместного заказа"""
+        shop_id = self.app.shop.get_shops_id()
+        warehouse_id = self.app.warehouse.get_warehouses_id()
         json_multi_order = json.dumps(
             {
                 "warehouse": {
-                    "id": warehouse_id
+                    "id": warehouse_id[0]
                 },
                 "shop": {
-                    "id": shop_id,
+                    "id": shop_id[0],
                     "number": f"{randrange(100000, 999999)}"
                 },
                 "payment": {
