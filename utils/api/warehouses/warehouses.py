@@ -8,7 +8,7 @@ class ApiWarehouse:
         self.app = app
 
     @staticmethod
-    def json_warehouse(fullname: str):
+    def json_warehouse(fullname: str = "Виктор Викторович"):
         """Json создания склада"""
         warehouse = json.dumps(
             {
@@ -16,7 +16,7 @@ class ApiWarehouse:
                 "address": {
                     "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
                 },
-                "pickup": False,
+                "pickup": True,
                 "contact": {
                     "fullName": fullname,
                     "phone": f"+7910{randrange(1000000, 9999999)}",
@@ -40,7 +40,7 @@ class ApiWarehouse:
         )
         return body
 
-    def create_warehouse(self, fullname: str):
+    def create_warehouse(self, fullname: str = "Виктор Викторович"):
         """Метод создания нового магазина"""
         warehouse = self.json_warehouse(fullname=fullname)
         result_post_warehouse = self.app.http_method.post(link="/customer/warehouses", data=warehouse)
