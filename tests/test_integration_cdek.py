@@ -1,9 +1,8 @@
-import time
-
 from utils.checking import Checking
 from random import choice
 import pytest
 import allure
+import time
 
 # Todo разобраться с widget offers
 
@@ -20,7 +19,7 @@ def test_create_integration_shop(app, token):
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, token):
-    result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович")
+    result_new_warehouse = app.warehouse.create_warehouse()
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
     result_get_new_warehouse = app.warehouse.get_warehouse_by_id(warehouse_id=result_new_warehouse.json()["id"])
@@ -30,11 +29,10 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек СД СДЭК")
 def test_integration_delivery_services(app, token):
-    shop_id = app.shop.get_shops_id()
-    result_cdek = app.service.delivery_services_cdek(connection_type="integration", shop_id=shop_id[0])
+    result_cdek = app.service.delivery_services_cdek(connection_type="integration")
     Checking.check_status_code(response=result_cdek, expected_status_code=201)
     Checking.checking_json_key(response=result_cdek, expected_value=["id", "type", "url", "status"])
-    result_get_cdek = app.service.get_delivery_services_code(shop_id=shop_id[0], code="Cdek")
+    result_get_cdek = app.service.get_delivery_services_code(code="Cdek")
     Checking.check_status_code(response=result_get_cdek, expected_status_code=200)
     Checking.checking_json_value(response=result_get_cdek, key_name="code", expected_value="Cdek")
     Checking.checking_json_value(response=result_get_cdek, key_name="credentials", field="visibility",
@@ -44,7 +42,7 @@ def test_integration_delivery_services(app, token):
 @allure.description("Получение списка ПВЗ СД СДЭК")
 def test_delivery_service_points(app, token):
     shop_id = app.shop.get_shops_id()
-    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cdek", shop_id=shop_id[0])
+    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cdek")
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
                                          expected_value="Cdek")
@@ -91,10 +89,7 @@ def test_info_statuses(app, token):
 @allure.description("Получение оферов по СД СДЭК (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_courier = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                  payment_type=payment_type, types="Courier",
+    result_offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
                                                   delivery_service_code="Cdek")
     Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_courier, expected_value=["Courier"])
@@ -103,10 +98,7 @@ def test_offers_courier(app, payment_type, token):
 @allure.description("Получение оферов по СД Cdek (DeliveryPoint)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                         payment_type=payment_type, types="DeliveryPoint",
+    result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                          delivery_service_code="Cdek")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["DeliveryPoint"])
@@ -115,10 +107,7 @@ def test_offers_delivery_point(app, payment_type, token):
 @allure.description("Создание Courier многоместного заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_multi_order = app.order.create_multi_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                      payment_type=payment_type, type_ds="Courier", service="Cdek",
+    result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
                                                       tariff=choice(["137", "139", "480", "482"]), price_1=1000,
                                                       declared_value=1500, sec=6)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
@@ -132,10 +121,8 @@ def test_create_multi_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint многоместного заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_delivery_point(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
     result_multi_order = app.order.create_multi_order(
-        warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type, type_ds="DeliveryPoint",
+        payment_type=payment_type, type_ds="DeliveryPoint",
         service="Cdek", tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
         delivery_point_code="VNG2", price_1=1000, declared_value=1500, sec=6)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
@@ -168,10 +155,7 @@ def test_patch_multi_order(app, token):
 @allure.description("Создание Courier заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
-                                          type_ds="Courier", service="Cdek",
+    result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
                                           tariff=choice(["137", "139", "480", "482"]), price=1000, declared_value=1500,
                                           sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
@@ -185,13 +169,9 @@ def test_create_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
-                                          type_ds="DeliveryPoint", service="Cdek",
+    result_order = app.order.create_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
                                           tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
-                                          delivery_point_code="VNG2", price=1000, declared_value=1500,
-                                          sec=7)
+                                          delivery_point_code="VNG2", price=1000, declared_value=1500, sec=7)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -230,8 +210,7 @@ def test_get_labels_out_of_parcel(app, token):
 @allure.description("Попытка редактирования заказа СД СДЭК")
 def test_editing_order(app, token):
     order_list_id = app.order.get_orders_id()
-    random_order = choice(order_list_id)
-    result_order_put = app.order.update_order(order_id=random_order, weight=5, length=12, width=14, height=11,
+    result_order_put = app.order.update_order(order_id=choice(order_list_id), weight=5, length=12, width=14, height=11,
                                               declared_value=2500, family_name="Иванов")
     Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
@@ -275,7 +254,7 @@ def test_change_shipment_date(app, token):
     Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
-@allure.description("Получение этикетокСД СДЭК")
+@allure.description("Получение этикеток СД СДЭК")
 def test_get_label(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
@@ -285,7 +264,7 @@ def test_get_label(app, token):
 
 
 @allure.description("Получение этикеток заказов из партии СД СДЭК")
-def get_labels_from_parcel(app):
+def test_get_labels_from_parcel(app):
     parcel_id = app.parcel.get_parcels_id()
     order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
     result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel)

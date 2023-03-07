@@ -18,7 +18,7 @@ def test_create_integration_shop(app, token):
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, token):
-    result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович")
+    result_new_warehouse = app.warehouse.create_warehouse()
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
     result_get_new_warehouse = app.warehouse.get_warehouse_by_id(warehouse_id=result_new_warehouse.json()["id"])
@@ -28,11 +28,10 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек СД Boxberry")
 def test_integration_delivery_services(app, token):
-    shop_id = app.shop.get_shops_id()
-    result_boxberry = app.service.delivery_services_boxberry(connection_type="integration", shop_id=shop_id[0])
+    result_boxberry = app.service.delivery_services_boxberry(connection_type="integration")
     Checking.check_status_code(response=result_boxberry, expected_status_code=201)
     Checking.checking_json_key(response=result_boxberry, expected_value=["id", "type", "url", "status"])
-    result_get_boxberry = app.service.get_delivery_services_code(shop_id=shop_id[0], code="Boxberry")
+    result_get_boxberry = app.service.get_delivery_services_code(code="Boxberry")
     Checking.check_status_code(response=result_get_boxberry, expected_status_code=200)
     Checking.checking_json_value(response=result_get_boxberry, key_name="code", expected_value="Boxberry")
     Checking.checking_json_value(response=result_get_boxberry, key_name="credentials", field="visibility",
@@ -41,9 +40,7 @@ def test_integration_delivery_services(app, token):
 
 @allure.description("Получение списка ПВЗ СД Boxberry")
 def test_delivery_service_points(app, token):
-    shop_id = app.shop.get_shops_id()
-    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Boxberry",
-                                                                      shop_id=shop_id[0])
+    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
                                          expected_value="Boxberry")
@@ -93,10 +90,7 @@ def test_info_statuses(app, token):
 @allure.description("Получение оферов по СД Boxberry (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_courier = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                  payment_type=payment_type, types="Courier",
+    result_offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
                                                   delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_courier, expected_value=["Courier"])
@@ -107,8 +101,7 @@ def test_offers_courier(app, payment_type, token):
 def test_offers_delivery_point(app, payment_type, token):
     shop_id = app.shop.get_shops_id()
     warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                         payment_type=payment_type, types="DeliveryPoint",
+    result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                          delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["DeliveryPoint"])
@@ -117,10 +110,8 @@ def test_offers_delivery_point(app, payment_type, token):
 @allure.description("Создание Courier заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
-                                          type_ds="Courier", service="Boxberry", price=1000, declared_value=1500)
+    result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Boxberry", price=1000,
+                                          declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -132,9 +123,7 @@ def test_create_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
+    result_order = app.order.create_order(payment_type=payment_type,
                                           type_ds="DeliveryPoint", service="Boxberry", delivery_point_code="00199",
                                           price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
