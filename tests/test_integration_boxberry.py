@@ -27,7 +27,7 @@ def test_create_warehouse(app, token):
 
 
 @allure.description("Подключение настроек СД Boxberry")
-def test_integration_boxberry(app, token):
+def test_integration_delivery_services(app, token):
     shop_id = app.shop.get_shops_id()
     result_boxberry = app.service.delivery_services_boxberry(connection_type="integration", shop_id=shop_id[0])
     Checking.check_status_code(response=result_boxberry, expected_status_code=201)
@@ -116,7 +116,7 @@ def test_offers_delivery_point(app, payment_type, token):
 
 @allure.description("Создание Courier заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_boxberry_courier(app, token, payment_type):
+def test_create_order_courier(app, token, payment_type):
     shop_id = app.shop.get_shops_id()
     warehouse_id = app.warehouse.get_warehouses_id()
     result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
@@ -131,7 +131,7 @@ def test_create_order_boxberry_courier(app, token, payment_type):
 
 @allure.description("Создание DeliveryPoint заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_boxberry_delivery_point(app, token, payment_type):
+def test_create_order_delivery_point(app, token, payment_type):
     shop_id = app.shop.get_shops_id()
     warehouse_id = app.warehouse.get_warehouses_id()
     result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type=payment_type,
@@ -145,7 +145,7 @@ def test_create_order_boxberry_delivery_point(app, token, payment_type):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Удаление заказа")
+@allure.description("Удаление заказа CД Boxberry")
 def test_delete_order(app, token):
     orders_id_list = app.order.get_orders_id()
     random_order_id = choice(orders_id_list)
@@ -156,7 +156,7 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получения этикетки Boxberry вне партии")
-def test_get_label_boxberry_out_of_parcel(app, token):
+def test_get_label_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
         result_label = app.document.get_label(order_id=order_id)
@@ -164,14 +164,14 @@ def test_get_label_boxberry_out_of_parcel(app, token):
 
 
 @allure.description("Попытка редактирования заказа СД Boxberry")
-def test_editing_order_boxberry(app, token):
+def test_editing_order(app, token):
     order_list_id = app.order.get_orders_id()
     result_order_put = app.order.update_order(order_id=choice(order_list_id), weight=5, length=12, width=14, height=11,
                                               declared_value=2500, family_name="Иванов")
     Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
 
-@allure.description("Получение информации об истории изменения статусов заказа")
+@allure.description("Получение информации об истории изменения статусов заказа CД Boxberry")
 def test_order_status(app, token):
     order_list_id = app.order.get_orders_id()
     for order_id in order_list_id:
@@ -180,7 +180,7 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
 
 
-@allure.description("Получение подробной информации о заказе")
+@allure.description("Получение подробной информации о заказе CД Boxberry")
 def test_order_details(app, token):
     order_list_id = app.order.get_orders_id()
     for order_id in order_list_id:
@@ -192,7 +192,7 @@ def test_order_details(app, token):
                                                                                   "storageDateEnd"])
 
 
-@allure.description("Создание партии")
+@allure.description("Создание партии CД Boxberry")
 def test_create_parcel(app, token):
     orders_id = app.order.get_orders_id()
     result_create_parcel = app.parcel.create_parcel(all_orders=True, order_id=orders_id)
@@ -200,14 +200,14 @@ def test_create_parcel(app, token):
     Checking.checking_in_list_json_value(response=result_create_parcel, key_name="type", expected_value="Parcel")
 
 
-@allure.description("Редактирование партии(Попытка изменения даты отправки партии)")
+@allure.description("Редактирование партии CД Boxberry(Попытка изменения даты отправки партии)")
 def test_change_shipment_date(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_shipment_date = app.parcel.change_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
     Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
-@allure.description("Получение этикетки")
+@allure.description("Получение этикетки CД Boxberry")
 def test_get_labels(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
@@ -216,21 +216,21 @@ def test_get_labels(app, token):
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
-@allure.description("Получение АПП")
+@allure.description("Получение АПП CД Boxberry")
 def test_get_app(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_app = app.document.get_app(parcel_id=parcel_id[0])
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
-@allure.description("Получение документов")
+@allure.description("Получение документов CД Boxberry")
 def test_get_documents(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_documents = app.document.get_documents(parcel_id=parcel_id[0])
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
-@allure.description("Попытка Редактирование партии(Удаление заказа)")
+@allure.description("Попытка Редактирование партии CД Boxberry(Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
