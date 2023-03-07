@@ -100,7 +100,7 @@ def test_create_order_courier(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                           tariff=choice(["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY",
                                                          "MXO"]), date_pickup=f"{datetime.date.today()}",
-                                          pickup_time_period="9-18", price=1000, declared_value=1500)
+                                          pickup_time_period="9-18", price=1000, declared_value=1500, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -114,7 +114,7 @@ def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                           tariff=choice(["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "MXO"]),
                                           date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
-                                          delivery_point_code="007K", price=1000, declared_value=1500)
+                                          delivery_point_code="007K", price=1000, declared_value=1500, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
