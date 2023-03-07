@@ -18,7 +18,7 @@ def test_create_integration_shop(app, token):
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, token):
-    result_new_warehouse = app.warehouse.create_warehouse(fullname="Виктор Викторович")
+    result_new_warehouse = app.warehouse.create_warehouse()
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
     result_get_new_warehouse = app.warehouse.get_warehouse_by_id(warehouse_id=result_new_warehouse.json()["id"])
@@ -28,11 +28,10 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек службы доставки СД Почта России")
 def test_integration_delivery_services(app, token):
-    shop_id = app.shop.get_shops_id()
-    result_russian_post = app.service.delivery_services_russian_post(connection_type="integration", shop_id=shop_id[0])
+    result_russian_post = app.service.delivery_services_russian_post(connection_type="integration")
     Checking.check_status_code(response=result_russian_post, expected_status_code=201)
     Checking.checking_json_key(response=result_russian_post, expected_value=["id", "type", "url", "status"])
-    result_get_russian_post = app.service.get_delivery_services_code(shop_id=shop_id[0], code="RussianPost")
+    result_get_russian_post = app.service.get_delivery_services_code(code="RussianPost")
     Checking.check_status_code(response=result_get_russian_post, expected_status_code=200)
     Checking.checking_json_value(response=result_get_russian_post, key_name="code", expected_value="RussianPost")
     Checking.checking_json_value(response=result_get_russian_post, key_name="credentials", field="visibility",
@@ -41,9 +40,7 @@ def test_integration_delivery_services(app, token):
 
 @allure.description("Получение списка ПВЗ СД Почта России")
 def test_delivery_service_points(app, token):
-    shop_id = app.shop.get_shops_id()
-    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="RussianPost",
-                                                                      shop_id=shop_id[0])
+    result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
                                          expected_value="RussianPost")
@@ -91,10 +88,7 @@ def test_info_statuses(app, token):
 @allure.description("Получение оферов по СД Почта России (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_courier = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                  payment_type=payment_type, types="Courier",
+    result_offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
                                                   delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_courier, expected_value=["Courier"])
@@ -103,10 +97,7 @@ def test_offers_courier(app, payment_type, token):
 @allure.description("Получение оферов по СД Почта России (DeliveryPoint)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                         payment_type=payment_type, types="DeliveryPoint",
+    result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                          delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["PostOffice"])
@@ -115,10 +106,7 @@ def test_offers_delivery_point(app, payment_type, token):
 @allure.description("Получение оферов по СД Почта России (PostOffice)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_russian_post(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_offers_delivery_point = app.offers.get_offers(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                                         payment_type=payment_type, types="PostOffice",
+    result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="PostOffice",
                                                          delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["PostOffice"])
@@ -126,11 +114,8 @@ def test_offers_russian_post(app, payment_type, token):
 
 @allure.description("Создание Courier заказа по СД Почта России")
 def test_create_order_courier(app, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type="Paid",
-                                          type_ds="Courier", service="RussianPost", tariff="24", price=1000,
-                                          declared_value=1500)
+    result_order = app.order.create_order(payment_type="Paid", type_ds="Courier", service="RussianPost", tariff="24",
+                                          price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -141,10 +126,7 @@ def test_create_order_courier(app, token):
 
 @allure.description("Создание DeliveryPoint заказа по СД Почта России")
 def test_create_delivery_point(app, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0], payment_type="Paid",
-                                          length=15, width=15, height=15, type_ds="DeliveryPoint",
+    result_order = app.order.create_order(payment_type="Paid", length=15, width=15, height=15, type_ds="DeliveryPoint",
                                           service="RussianPost", tariff="23", delivery_point_code="914841",
                                           price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
@@ -158,10 +140,7 @@ def test_create_delivery_point(app, token):
 @allure.description("Создание PostOffice заказа по СД Почта России")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_post_office(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
-    result_order = app.order.create_order(warehouse_id=warehouse_id[0], shop_id=shop_id[0],
-                                          payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
+    result_order = app.order.create_order(payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
                                           tariff=choice(["23", "47", "4"]), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
