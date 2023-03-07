@@ -13,11 +13,12 @@ class ApiInfo:
         result_delivery_time_schedules = self.app.http_method.get(link="/info/delivery_time_schedules", params=params)
         return result_delivery_time_schedules
 
-    def delivery_service_points(self, delivery_service_code: str, shop_id: str, city_raw="г. Москва"):
+    def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
+        shop_id = self.app.shop.get_shops_id()
         """Получение списка ПВЗ конкретной СД"""
         params = {
             "deliveryServiceCode": delivery_service_code,
-            "shopId": shop_id,
+            "shopId": shop_id[0],
             "cityRaw": city_raw
         }
         result_delivery_service_points = self.app.http_method.get(link="/customer/info/delivery_service_points",
