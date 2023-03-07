@@ -72,11 +72,12 @@ class ApiOrder:
         return result_create_order
 
     def create_multi_order(self, warehouse_id: str, shop_id: str, payment_type: str, declared_value: float,
-                           type_ds: str, service: str, tariff: str, price_1: float,  data=None,
+                           type_ds: str, service: str, price_1: float, data=None, tariff: str = None,
                            delivery_point_code: str = None, delivery_time: dict = None, length: float = randint(10, 30),
                            width: float = randint(10, 50), height: float = randint(10, 50),
-                           weight_1: float = randint(1, 5), weight_2: float = randint(1, 5), shop_number: str = None,
-                           dimension: dict = None, sec: float = 4):
+                           weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
+                           shop_number_1: str = f"{randrange(100000, 999999)}",
+                           shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None, sec: float = 4):
         """Создание многоместного заказа"""
         json_multi_order = json.dumps(
             {
@@ -129,7 +130,7 @@ class ApiOrder:
                             }
                         ],
                         "barcode": f"Box_1{randrange(100000, 999999)}",
-                        "shopNumber": shop_number,
+                        "shopNumber": shop_number_1,
                         "weight": weight_1,
                         "dimension": dimension
                     },
@@ -145,7 +146,7 @@ class ApiOrder:
                             }
                         ],
                         "barcode": f"Box_2{randrange(100000, 999999)}",
-                        "shopNumber": shop_number,
+                        "shopNumber": shop_number_2,
                         "weight": weight_2,
                         "dimension": dimension
                     }
@@ -217,7 +218,7 @@ class ApiOrder:
         result_put_order = self.app.http_method.put(link=f"/orders/{order_id}", data=payload, )
         return result_put_order
 
-    def update_field_order(self, order_id: str, path: str, shop_number: str = None,
+    def update_field_order(self, order_id: str, path: str, shop_number_3: str = f"{randrange(100000, 999999)}",
                            weight_3: float = randint(1, 5), dimension: dict = None, sec=1):
         """Метод обновления поля в заказе и добавление места (PATCH)"""
         result_get_order_by_id = self.get_order_by_id(order_id=order_id)
@@ -242,7 +243,7 @@ class ApiOrder:
                                     }
                                 ],
                                 "barcode": f"Box_3{randrange(100000, 999999)}",
-                                "shopNumber": shop_number,
+                                "shopNumber": shop_number_3,
                                 "weight": weight_3,
                                 "dimension": dimension
                             }
