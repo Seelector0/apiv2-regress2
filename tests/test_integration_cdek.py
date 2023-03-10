@@ -29,7 +29,7 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек СД СДЭК")
 def test_integration_delivery_services(app, token):
-    result_cdek = app.service.delivery_services_cdek(connection_type="integration")
+    result_cdek = app.service.delivery_services_cdek()
     Checking.check_status_code(response=result_cdek, expected_status_code=201)
     Checking.checking_json_key(response=result_cdek, expected_value=["id", "type", "url", "status"])
     result_get_cdek = app.service.get_delivery_services_code(code="Cdek")
@@ -41,7 +41,6 @@ def test_integration_delivery_services(app, token):
 
 @allure.description("Получение списка ПВЗ СД СДЭК")
 def test_delivery_service_points(app, token):
-    shop_id = app.shop.get_shops_id()
     result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cdek")
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_delivery_service_points, key_name="deliveryServiceCode",
@@ -50,7 +49,7 @@ def test_delivery_service_points(app, token):
 
 @allure.description("Получение списка точек сдачи СД СДЭК")
 def test_intake_offices(app, token):
-    result_intake_offices = app.info.intake_offices(delivery_service_code="Cdek", limit=10)
+    result_intake_offices = app.info.intake_offices(delivery_service_code="Cdek")
     Checking.check_status_code(response=result_intake_offices, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_intake_offices, key_name="deliveryServiceCode",
                                          expected_value="Cdek")
@@ -108,8 +107,8 @@ def test_offers_delivery_point(app, payment_type, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
-                                                      tariff=choice(["137", "139", "480", "482"]), price_1=1000,
-                                                      declared_value=1500, sec=6)
+                                                      tariff=choice(["137", "139", "480", "482"]),
+                                                      declared_value=1500, sec=7)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
@@ -124,7 +123,7 @@ def test_create_multi_order_delivery_point(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(
         payment_type=payment_type, type_ds="DeliveryPoint",
         service="Cdek", tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
-        delivery_point_code="VNG2", price_1=1000, declared_value=1500, sec=6)
+        delivery_point_code="VNG2", declared_value=1500, sec=6)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
