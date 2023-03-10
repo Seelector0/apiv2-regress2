@@ -334,8 +334,8 @@ class ApiDeliveryServices:
                 "deliveryServiceCode": "DostavkaGuru",
                 "data": {
                     "type": "integration",
-                    "login": f"{os.getenv('GURU_LOGIN')}",
-                    "pass": f"{os.getenv('GURU_PASSWORD')}"
+                    "partnerId": int(f"{os.getenv('GURU_PARTNER_ID')}"),
+                    "key": f"{os.getenv('GURU_KEY')}"
                 }
             }
         )
