@@ -6,6 +6,7 @@ class ApiParcel:
 
     def __init__(self, app):
         self.app = app
+        self.link = "/parcels"
 
     def create_parcel(self, order_id: str, all_orders: bool = False):
         """Метод создания партии"""
@@ -16,8 +17,7 @@ class ApiParcel:
                     "shipmentDate": f"{datetime.date.today()}"
                 }
             )
-            result_post_parcel = self.app.http_method.post(link="/parcels", data=json_create_parcel)
-            return result_post_parcel
+            result_post_parcel = self.app.http_method.post(link=self.link, data=json_create_parcel)
         else:
             json_create_parcel = json.dumps(
                 {
@@ -25,17 +25,17 @@ class ApiParcel:
                     "shipmentDate": f"{datetime.date.today()}"
                 }
             )
-            result_post_parcel = self.app.http_method.post(link="/parcels", data=json_create_parcel)
-            return result_post_parcel
+            result_post_parcel = self.app.http_method.post(link=self.link, data=json_create_parcel)
+        return result_post_parcel
 
     def get_parcels(self):
         """Метод получения списка партий"""
-        result_get_parcels = self.app.http_method.get(link="/parcels")
+        result_get_parcels = self.app.http_method.get(link=self.link)
         return result_get_parcels
 
     def get_parcel_by_id(self, parcel_id: str):
         """Получение партии по её id"""
-        result_get_parcel_by_id = self.app.http_method.get(link=f"/parcels/{parcel_id}")
+        result_get_parcel_by_id = self.app.http_method.get(link=f"{self.link}/{parcel_id}")
         return result_get_parcel_by_id
 
     def change_parcel_orders(self, op: str, order_id, parcel_id: str):
@@ -50,9 +50,8 @@ class ApiParcel:
                     }
                 ]
             )
-            result_add_parcel_order = self.app.http_method.patch(link=f"/parcels/{parcel_id}",
-                                                                 data=json_add_parcel_order)
-            return result_add_parcel_order
+            result_add_parcel = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_add_parcel_order)
+            return result_add_parcel
         elif op == "remove":
             json_remove_parcel_order = json.dumps(
                 [
@@ -63,9 +62,9 @@ class ApiParcel:
                     }
                 ]
             )
-            result_add_parcel_order = self.app.http_method.patch(link=f"/parcels/{parcel_id}",
-                                                                 data=json_remove_parcel_order)
-            return result_add_parcel_order
+            result_remove_parcel = self.app.http_method.patch(link=f"{self.link}/{parcel_id}",
+                                                              data=json_remove_parcel_order)
+            return result_remove_parcel
 
     def change_parcel_shipment_date(self, parcel_id: str, day):
         """Метод изменения даты доставки партии"""
@@ -80,7 +79,7 @@ class ApiParcel:
                 }
             ]
         )
-        result_change_parcel_shipment_date = self.app.http_method.patch(link=f"/parcels/{parcel_id}",
+        result_change_parcel_shipment_date = self.app.http_method.patch(link=f"{self.link}/{parcel_id}",
                                                                         data=json_change_parcel_shipment_date)
         return result_change_parcel_shipment_date
 
