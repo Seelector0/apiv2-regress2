@@ -5,6 +5,7 @@ class ApiOffers:
 
     def __init__(self, app):
         self.app = app
+        self.link = "/offers"
 
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None, format_: str = None):
         """Метод для получения списка офферов"""
@@ -23,8 +24,7 @@ class ApiOffers:
                 "types[0]": types,
                 "format": "widget"
             }
-            result_offers = self.app.http_method.get(link="/offers", params=body_offers)
-            return result_offers
+            result_offers = self.app.http_method.get(link=self.link, params=body_offers)
         else:
             body_offers = {
                 "address":  "г Москва, пр-кт Мира, д 45 стр 2",
@@ -39,5 +39,5 @@ class ApiOffers:
                 "types[0]": types,
                 "deliveryServiceCode": delivery_service_code,
             }
-            result_offers = self.app.http_method.get(link="/offers", params=body_offers)
-            return result_offers
+            result_offers = self.app.http_method.get(link=self.link, params=body_offers)
+        return result_offers
