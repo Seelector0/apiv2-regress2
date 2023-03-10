@@ -6,6 +6,7 @@ class ApiShop:
 
     def __init__(self, app):
         self.app = app
+        self.link = "/customer/shops"
 
     @staticmethod
     def json_shop(shop_name: str = f"INT{randrange(100000, 999999)}",
@@ -26,23 +27,23 @@ class ApiShop:
     def create_shop(self):
         """Создание магазина"""
         new_shop = self.json_shop()
-        result_post_shop = self.app.http_method.post(link="/customer/shops", data=new_shop)
+        result_post_shop = self.app.http_method.post(link=self.link, data=new_shop)
         return result_post_shop
 
     def get_shops(self):
         """Метод получения списка магазинов"""
-        result_get_shop = self.app.http_method.get(link="/customer/shops")
+        result_get_shop = self.app.http_method.get(link=self.link)
         return result_get_shop
 
     def get_shop_by_id(self, shop_id: str):
         """Метод получения магазина по его id"""
-        result_get_shop_by_id = self.app.http_method.get(link=f"/customer/shops/{shop_id}")
+        result_get_shop_by_id = self.app.http_method.get(link=f"{self.link}/{shop_id}")
         return result_get_shop_by_id
 
     def put_shop(self, shop_id: str, json_shop):
         """Метод редактирования магазина"""
         shop = self.json_shop(json_shop)
-        result_put = self.app.http_method.put(link=f"/customer/shops/{shop_id}", data=shop)
+        result_put = self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
         return result_put
 
     def patch_shop(self, shop_id: str, value: bool):
@@ -56,7 +57,7 @@ class ApiShop:
                 }
             ]
         )
-        result_patch = self.app.http_method.patch(link=f"/customer/shops/{shop_id}", data=body)
+        result_patch = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=body)
         return result_patch
 
     def get_shops_id(self):

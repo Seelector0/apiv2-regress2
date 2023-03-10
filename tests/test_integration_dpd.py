@@ -27,7 +27,7 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек СД Dpd")
 def test_integration_delivery_services(app, token):
-    result_dpd = app.service.delivery_services_dpd(connection_type="integration")
+    result_dpd = app.service.delivery_services_dpd()
     Checking.check_status_code(response=result_dpd, expected_status_code=201)
     Checking.checking_json_key(response=result_dpd, expected_value=["id", "type", "url", "status"])
     result_get_dpd = app.service.get_delivery_services_code(code="Dpd")
@@ -132,16 +132,6 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
 
 
-@allure.description("Удаление заказа СД Dpd")
-def test_delete_order(app, token):
-    orders_id_list = app.order.get_orders_id()
-    random_order_id = choice(orders_id_list)
-    result_delete_order = app.order.delete_order(order_id=random_order_id)
-    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
-    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
-
-
 @allure.description("Получения этикеток CД Dpd вне партии")
 def test_get_labels_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id()
@@ -219,3 +209,25 @@ def test_get_documents(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_documents = app.document.get_documents(parcel_id=parcel_id[0])
     Checking.check_status_code(response=result_documents, expected_status_code=200)
+
+
+@allure.description("Редактирование партии СД Dpd (Удаление заказа)")
+def test_remove_order_in_parcel(app, token):
+    parcel_id = app.parcel.get_parcels_id()
+    old_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_parcel_remove = app.parcel.change_parcel_orders(order_id=choice(result_order_in_parcel),
+                                                           parcel_id=parcel_id[0], op="remove")
+    new_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
+    Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
+
+
+@allure.description("Удаление заказа СД Dpd")
+def test_delete_order(app, token):
+    orders_id_list = app.order.get_orders_id()
+    random_order_id = choice(orders_id_list)
+    result_delete_order = app.order.delete_order(order_id=random_order_id)
+    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
+    result_get_order_by_id = app.order.get_order_by_id(order_id=random_order_id)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)

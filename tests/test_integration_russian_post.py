@@ -28,7 +28,7 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек службы доставки СД Почта России")
 def test_integration_delivery_services(app, token):
-    result_russian_post = app.service.delivery_services_russian_post(connection_type="integration")
+    result_russian_post = app.service.delivery_services_russian_post()
     Checking.check_status_code(response=result_russian_post, expected_status_code=201)
     Checking.checking_json_key(response=result_russian_post, expected_value=["id", "type", "url", "status"])
     result_get_russian_post = app.service.get_delivery_services_code(code="RussianPost")
@@ -48,7 +48,7 @@ def test_delivery_service_points(app, token):
 
 @allure.description("Получение списка точек сдачи СД Почты России")
 def test_intake_offices(app, token):
-    result_intake_offices = app.info.intake_offices(delivery_service_code="RussianPost", limit=10)
+    result_intake_offices = app.info.intake_offices(delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_intake_offices, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_intake_offices, key_name="deliveryServiceCode",
                                          expected_value="RussianPost")
@@ -82,6 +82,7 @@ def test_info_statuses(app, token):
         {"name": "open", "title": "Можно вскрывать до получения оплаты с клиента",
          "description": "Можно вскрывать до получения оплаты с клиента"},
         {"name": "pay-by-card", "title": "COD (картой или наличными)", "description": "COD (картой или наличными)"},
+        {"name": "shelf-life-days", "title": "Срок хранения заказа в ОПС", "description": "Срок хранения заказа в ОПС"},
         {"name": "sms", "title": "SMS информирование", "description": "SMS уведомление получателя"}])
 
 

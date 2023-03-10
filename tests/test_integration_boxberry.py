@@ -28,7 +28,7 @@ def test_create_warehouse(app, token):
 
 @allure.description("Подключение настроек СД Boxberry")
 def test_integration_delivery_services(app, token):
-    result_boxberry = app.service.delivery_services_boxberry(connection_type="integration")
+    result_boxberry = app.service.delivery_services_boxberry()
     Checking.check_status_code(response=result_boxberry, expected_status_code=201)
     Checking.checking_json_key(response=result_boxberry, expected_value=["id", "type", "url", "status"])
     result_get_boxberry = app.service.get_delivery_services_code(code="Boxberry")
@@ -48,7 +48,7 @@ def test_delivery_service_points(app, token):
 
 @allure.description("Получение списка точек сдачи СД Boxberry")
 def test_intake_offices(app, token):
-    result_intake_offices = app.info.intake_offices(delivery_service_code="Boxberry", limit=10)
+    result_intake_offices = app.info.intake_offices(delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_intake_offices, expected_status_code=200)
     Checking.checking_in_list_json_value(response=result_intake_offices, key_name="deliveryServiceCode",
                                          expected_value="Boxberry")
@@ -99,12 +99,38 @@ def test_offers_courier(app, payment_type, token):
 @allure.description("Получение оферов по СД Boxberry (DeliveryPoint)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
-    shop_id = app.shop.get_shops_id()
-    warehouse_id = app.warehouse.get_warehouses_id()
     result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                          delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["DeliveryPoint"])
+
+
+@allure.description("Создание Courier многоместного заказа по CД Boxberry")
+@pytest.mark.skip("Проблемы с печатью этикеток для многоместного заказа")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_multi_order_courier(app, token, payment_type):
+    result_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
+                                                declared_value=1500)
+    Checking.check_status_code(response=result_order, expected_status_code=201)
+    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Создание DeliveryPoint многоместного заказа по CД Boxberry")
+@pytest.mark.skip("Проблемы с печатью этикеток для многоместного заказа")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_order_multi_delivery_point(app, token, payment_type):
+    result_order = app.order.create_multi_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
+                                                delivery_point_code="00199", declared_value=1500)
+    Checking.check_status_code(response=result_order, expected_status_code=201)
+    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание Courier заказа по CД Boxberry")
@@ -203,6 +229,14 @@ def test_get_labels(app, token):
     for order_id in result_order_in_parcel:
         result_label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=result_label, expected_status_code=200)
+
+
+@allure.description("Получение этикеток заказов из партии СД Boxberry")
+def test_get_labels_from_parcel(app, token):
+    parcel_id = app.parcel.get_parcels_id()
+    order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel)
+    Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
 
 @allure.description("Получение АПП CД Boxberry")

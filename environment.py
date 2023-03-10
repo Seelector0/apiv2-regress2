@@ -2,10 +2,9 @@ from dotenv import load_dotenv, find_dotenv
 import os
 
 
-load_dotenv(find_dotenv())
-
-
 class Environment:
+
+    load_dotenv(find_dotenv())
 
     LOCAL = 'local'
     DEVELOP = 'dev'

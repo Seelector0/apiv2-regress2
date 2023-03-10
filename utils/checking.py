@@ -19,19 +19,18 @@ class Checking:
         with allure.step(f"Проверяю что в ответе есть ключи {expected_value}"):
             token = json.loads(response.text)
             assert list(token) == expected_value, \
-                f"Не ожидаемые ключи! Ожидаемые {list(token)}. Фактические {expected_value}"
+                f"Не ожидаемые ключи! Ожидаемые {expected_value}. Фактические {list(token)}"
 
     @staticmethod
     def checking_json_value(response: Response, key_name: str, expected_value, field=None):
         """Метод для проверки обязательного ключа в ответе"""
         with allure.step(f"Проверяю что в ответе есть значение {expected_value}"):
-            check = response.json()
             if field is None:
-                assert check.get(key_name) == expected_value, \
-                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {check.get(key_name)}"
+                assert response.json()[key_name] == expected_value, \
+                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {response.json()[key_name]}"
             else:
-                assert check.get(key_name)[field] == expected_value, \
-                    f"FAILED! У ключа {check.get(key_name)[field]} фактическое значение {expected_value}"
+                assert response.json()[key_name][field] == expected_value, \
+                    f"FAILED! У ключа {response.json()[key_name][field]} фактическое значение {expected_value}"
 
     @staticmethod
     def checking_big_json(response: Response, key_name: str, expected_value, field=None):
