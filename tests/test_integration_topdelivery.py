@@ -207,7 +207,7 @@ def test_editing_order(app, token):
     Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
 
-@allure.description("Получение подробной информации о заказе СД  TopDelivery")
+@allure.description("Получение подробной информации о заказе СД TopDelivery")
 def test_order_details(app, token):
     order_list_id = app.order.get_orders_id()
     for order_id in order_list_id:
