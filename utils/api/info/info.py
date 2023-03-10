@@ -33,11 +33,10 @@ class ApiInfo:
         result_info_vats = self.app.http_method.get(link="/info/vats", params=params)
         return result_info_vats
 
-    def intake_offices(self, delivery_service_code: str, limit: str):
+    def intake_offices(self, delivery_service_code: str):
         """Получение списка точек сдачи"""
         params = {
-            "deliveryServiceCode": delivery_service_code,
-            "limit": f"{limit}",
+            "deliveryServiceCode": delivery_service_code
         }
         result_intake_offices = self.app.http_method.get(link="/info/intake_offices", params=params)
         return result_intake_offices
