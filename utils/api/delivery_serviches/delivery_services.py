@@ -221,6 +221,95 @@ class ApiDeliveryServices:
             five_post = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_five_post_integration)
         return five_post
 
+    def delivery_services_pick_point(self):
+        """Настройки подключения службы доставки PickPoint к магазину"""
+        shop_id = self.app.shop.get_shops_id()
+        json_pick_point = json.dumps(
+            {
+                "deliveryServiceCode": "PickPoint",
+                "data": {
+                    "intakePointCode": None,
+                    "login": f"{os.getenv('PICK_POINT_LOGIN')}",
+                    "password": f"{os.getenv('PICK_POINT_PASSWORD')}",
+                    "agreementNumber": f"{os.getenv('PICK_POINT_AGREEMENT_NUMBER')}",
+                    "clientNumber": None
+                }
+            }
+        )
+        pick_point = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_pick_point)
+        return pick_point
+
+    def delivery_services_svyaznoy(self):
+        """Настройки подключения службы доставки Svyaznoy к магазину"""
+        shop_id = self.app.shop.get_shops_id()
+        json_svyaznoy = json.dumps(
+            {
+                "deliveryServiceCode": "Svyaznoy",
+                "data": {
+                    "login": f"{os.getenv('SL_LOGIN')}",
+                    "password": f"{os.getenv('SL_PASSWORD')}"
+                }
+            }
+        )
+        svyaznoy = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_svyaznoy)
+        return svyaznoy
+
+    def delivery_services_yandex_go(self, connection_type: str = "integration"):
+        """Настройки подключения службы доставки YandexGo к магазину"""
+        shop_id = self.app.shop.get_shops_id()
+        if connection_type == "aggregation":
+            json_yandex_go_aggregation = json.dumps(
+                {
+                    "deliveryServiceCode": "YandexGo",
+                    "data": {
+                        "type": "aggregation"
+                    }
+                }
+            )
+            yandex_go = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_yandex_go_aggregation)
+        else:
+            json_yandex_go_integration = json.dumps(
+                {
+                    "deliveryServiceCode": "YandexGo",
+                    "data": {
+                        "token": f"{os.getenv('YANDEX_TOKEN')}",
+                        "type": "integration"
+                    }
+                }
+            )
+            yandex_go = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_yandex_go_integration)
+        return yandex_go
+
+    def delivery_services_yandex_delivery(self, connection_type: str = "integration"):
+        """Настройки подключения службы доставки YandexDelivery к магазину"""
+        shop_id = self.app.shop.get_shops_id()
+        if connection_type == "aggregation":
+            json_yandex_delivery_aggregation = json.dumps(
+                {
+                    "deliveryServiceCode": "YandexDelivery",
+                    "data": {
+                        "type": "aggregation",
+                        "intakePointCode": "807655"
+                    }
+                }
+            )
+            yandex_delivery = self.app.http_method.post(link=self.link(shop_id=shop_id[0]),
+                                                        data=json_yandex_delivery_aggregation)
+        else:
+            json_yandex_delivery_integration = json.dumps(
+                {
+                    "deliveryServiceCode": "YandexDelivery",
+                    "data": {
+                        "token": f"{os.getenv('YANDEX_TOKEN')}",
+                        "type": "integration",
+                        "intakePointCode": "807655"
+                    }
+                }
+            )
+            yandex_delivery = self.app.http_method.post(link=self.link(shop_id=shop_id[0]),
+                                                        data=json_yandex_delivery_integration)
+        return yandex_delivery
+
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину"""
         shop_id = self.app.shop.get_shops_id()
@@ -236,6 +325,22 @@ class ApiDeliveryServices:
         )
         dostavka_club = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_dostavka_club)
         return dostavka_club
+
+    def delivery_services_dostavka_guru(self):
+        """Настройки подключения службы доставки DostavkaGuru к магазину"""
+        shop_id = self.app.shop.get_shops_id()
+        json_dostavka_guru = json.dumps(
+            {
+                "deliveryServiceCode": "DostavkaGuru",
+                "data": {
+                    "type": "integration",
+                    "login": f"{os.getenv('GURU_LOGIN')}",
+                    "pass": f"{os.getenv('GURU_PASSWORD')}"
+                }
+            }
+        )
+        dostavka_guru = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_dostavka_guru)
+        return dostavka_guru
 
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину"""
@@ -268,13 +373,11 @@ class ApiDeliveryServices:
     def activate_delivery_service(self, code: str):
         """Активация настроек подключения к СД по id магазина"""
         shop_id = self.app.shop.get_shops_id()
-        result_activate_delivery_service = self.app.http_method.post(
-            link=f"{self.link(shop_id=shop_id[0])}/{code}/activate")
-        return result_activate_delivery_service
+        result_activate = self.app.http_method.post(link=f"{self.link(shop_id=shop_id[0])}/{code}/activate")
+        return result_activate
 
     def deactivate_delivery_service(self, code: str):
         """Деактивация настроек подключения к СД по id магазина"""
         shop_id = self.app.shop.get_shops_id()
-        result_deactivate_delivery_service = self.app.http_method.post(
-            link=f"{self.link(shop_id=shop_id[0])}/{code}/deactivate")
-        return result_deactivate_delivery_service
+        result_deactivate = self.app.http_method.post(link=f"{self.link(shop_id=shop_id[0])}/{code}/deactivate")
+        return result_deactivate
