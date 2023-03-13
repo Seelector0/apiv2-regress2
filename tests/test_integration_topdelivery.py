@@ -97,7 +97,8 @@ def test_offers_courier(app, payment_type, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
     result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
-                                                         delivery_service_code="TopDelivery")
+                                                         delivery_service_code="TopDelivery",
+                                                         delivery_point_number="55")
     Checking.check_status_code(response=result_offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=result_offers_delivery_point, expected_value=["DeliveryPoint"])
 
