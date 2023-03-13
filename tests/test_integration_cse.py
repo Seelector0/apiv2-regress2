@@ -143,7 +143,7 @@ def test_patch_multi_order(app, token):
 def test_create_order_courier(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Cse", tariff="64",
                                           date_pickup=f"{datetime.date.today()}", price=1000, declared_value=1500,
-                                          sec=8)
+                                          sec=9)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -157,7 +157,7 @@ def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Cse", tariff="64",
                                           date_pickup=f"{datetime.date.today()}",
                                           delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951",
-                                          price=1000, declared_value=1500, sec=6)
+                                          price=1000, declared_value=1500, sec=8)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
