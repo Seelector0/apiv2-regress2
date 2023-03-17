@@ -65,7 +65,7 @@ class ApiOrder:
                                 "price": price,
                                 "count": 1,
                                 "weight": weight,
-                                "vat": "NO_VAT"
+                                "vat": "0"
                             }
                         ]
                     }
@@ -77,10 +77,11 @@ class ApiOrder:
         return result_create_order
 
     def create_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, data=None,
-                           tariff: str = None, delivery_point_code: str = None, delivery_time: dict = None,
-                           date_pickup: str = None, length: float = randint(10, 30), width: float = randint(10, 50),
-                           height: float = randint(10, 50), weight_1: float = randint(1, 5),
-                           weight_2: float = randint(1, 5), shop_number_1: str = f"{randrange(100000, 999999)}",
+                           tariff: str = None, delivery_point_code: str = None, pickup_time_period: str = None,
+                           delivery_time: dict = None, date_pickup: str = None, length: float = randint(10, 30),
+                           width: float = randint(10, 50), height: float = randint(10, 50),
+                           weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
+                           shop_number_1: str = f"{randrange(100000, 999999)}",
                            shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None, sec: float = 4):
         """Создание многоместного заказа"""
         shop_id = self.app.shop.get_shops_id()
@@ -123,6 +124,7 @@ class ApiOrder:
                     }
                 },
                 "comment": "",
+                "pickupTimePeriod": pickup_time_period,
                 "datePickup": date_pickup,
                 "places": [
                     {
@@ -133,7 +135,7 @@ class ApiOrder:
                                 "price": 1000,
                                 "count": 1,
                                 "weight": weight_1,
-                                "vat": "NO_VAT"
+                                "vat": "0"
                             }
                         ],
                         "barcode": f"Box_1{randrange(100000, 999999)}",
@@ -149,7 +151,7 @@ class ApiOrder:
                                 "price": 1000,
                                 "count": 1,
                                 "weight": weight_2,
-                                "vat": "NO_VAT"
+                                "vat": "0"
                             }
                         ],
                         "barcode": f"Box_2{randrange(100000, 999999)}",
@@ -260,8 +262,6 @@ class ApiOrder:
                 ]
             )
             result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-            time.sleep(sec)
-            return result_patch
         elif path == "add":
             json_path_order = json.dumps(
                 [
@@ -292,8 +292,8 @@ class ApiOrder:
                 ]
             )
             result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-            time.sleep(sec)
-            return result_patch
+        time.sleep(sec)
+        return result_patch
 
     def delete_order(self, order_id: str):
         """Метод удаления заказа"""
