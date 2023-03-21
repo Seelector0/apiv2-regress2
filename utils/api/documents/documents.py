@@ -33,12 +33,16 @@ class ApiDocument:
                                                                   data=json_labels_from_parcel)
         return result_get_labels_from_parcel
 
-    def get_app(self, parcel_id: str):
+    def get_app(self):
         """Метод получения АПП"""
-        result_get_app = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/acceptance")
-        return result_get_app
+        parcels_ids = self.app.parcel.get_parcels_id()
+        for parcel_id in parcels_ids:
+            result_get_app = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/acceptance")
+            return result_get_app
 
-    def get_documents(self, parcel_id: str):
+    def get_documents(self):
         """Получение документов"""
-        result_get_files = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/files")
-        return result_get_files
+        parcels_ids = self.app.parcel.get_parcels_id()
+        for parcel_id in parcels_ids:
+            result_get_files = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/files")
+            return result_get_files
