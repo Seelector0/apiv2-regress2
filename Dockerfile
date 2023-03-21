@@ -9,5 +9,4 @@ RUN cd /app && \
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["pytest", "-s", "-v", "tests/", "--alluredir=result"]
-
+ENTRYPOINT ["pytest", "-x", "-s", "-v", "tests/"]

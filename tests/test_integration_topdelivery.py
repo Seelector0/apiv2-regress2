@@ -4,6 +4,7 @@ import pytest
 import allure
 
 # Todo разобраться с widget offers и с добавлением items в многоместный заказ почему затираются созданные items
+#  Добавить получение этикетки от службы параметризировать тесты с этикеткой
 
 
 @allure.description("Создание магазина")
@@ -196,7 +197,7 @@ def test_delete_order(app, token):
 def test_get_labels_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
@@ -240,7 +241,7 @@ def test_get_label(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
     for order_id in result_order_in_parcel:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
@@ -254,15 +255,13 @@ def test_get_labels_from_parcel(app, token):
 
 @allure.description("Получение АПП СД TopDelivery")
 def test_get_app(app, token):
-    parcel_id = app.parcel.get_parcels_id()
-    result_app = app.document.get_app(parcel_id=parcel_id[0])
+    result_app = app.document.get_app()
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов СД TopDelivery")
 def test_get_documents(app, token):
-    parcel_id = app.parcel.get_parcels_id()
-    result_documents = app.document.get_documents(parcel_id=parcel_id[0])
+    result_documents = app.document.get_documents()
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
