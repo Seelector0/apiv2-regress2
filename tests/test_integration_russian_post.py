@@ -248,15 +248,13 @@ def test_get_label(app, token):
 
 @allure.description("Получение АПП СД Почта России")
 def test_get_app(app, token):
-    parcel_id = app.parcel.get_parcels_id()
-    result_app = app.document.get_app(parcel_id=parcel_id[0])
+    result_app = app.document.get_app()
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов СД Почта России")
 def test_get_documents(app, token):
-    parcel_id = app.parcel.get_parcels_id()
-    result_documents = app.document.get_documents(parcel_id=parcel_id[0])
+    result_documents = app.document.get_documents()
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
