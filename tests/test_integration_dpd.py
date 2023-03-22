@@ -1,5 +1,5 @@
 from utils.checking import Checking
-from random import choice
+from random import choice, randrange
 import datetime
 import pytest
 import allure
@@ -98,6 +98,7 @@ def test_offers_delivery_point(app, payment_type, token):
 @allure.description("Создание Courier заказа по CД Dpd")
 def test_create_order_courier(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="Courier", service="Dpd",
+                                          barcode=f"{randrange(100000000, 999999999)}",
                                           tariff=choice(["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY",
                                                          "MXO"]), date_pickup=f"{datetime.date.today()}",
                                           pickup_time_period="9-18", price=1000, declared_value=1500, sec=6)
@@ -112,6 +113,7 @@ def test_create_order_courier(app, token):
 @allure.description("Создание DeliveryPoint заказа по CД Dpd")
 def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
+                                          barcode=f"{randrange(100000000, 999999999)}",
                                           tariff=choice(["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "MXO"]),
                                           date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
                                           delivery_point_code="007K", price=1000, declared_value=1500, sec=6)
@@ -133,10 +135,11 @@ def test_order_status(app, token):
 
 
 @allure.description("Получения этикеток CД Dpd вне партии")
-def test_get_labels_out_of_parcel(app, token):
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_labels_out_of_parcel(app, token, labels):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
@@ -189,7 +192,8 @@ def test_change_shipment_date(app, token):
 
 
 @allure.description("Получение этикеток СД Dpd")
-def test_get_label(app, token):
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_label(app, token, labels):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
     for order_id in result_order_in_parcel:

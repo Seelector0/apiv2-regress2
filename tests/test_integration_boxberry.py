@@ -149,9 +149,8 @@ def test_create_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
-    result_order = app.order.create_order(payment_type=payment_type,
-                                          type_ds="DeliveryPoint", service="Boxberry", delivery_point_code="00199",
-                                          price=1000, declared_value=1500)
+    result_order = app.order.create_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
+                                          delivery_point_code="00199", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -171,10 +170,11 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получения этикетки Boxberry вне партии")
-def test_get_label_out_of_parcel(app, token):
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_label_out_of_parcel(app, token, labels):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
@@ -223,11 +223,12 @@ def test_change_shipment_date(app, token):
 
 
 @allure.description("Получение этикетки CД Boxberry")
-def test_get_labels(app, token):
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_labels(app, token, labels):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
     for order_id in result_order_in_parcel:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
