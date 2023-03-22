@@ -1,5 +1,6 @@
 from utils.checking import Checking
 from random import choice
+from utils.enums.global_enums import OtherInfo
 import pytest
 import allure
 
@@ -65,25 +66,15 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "NO_VAT", "name": "Без НДС"},
-                                                                          {"code": "0", "name": "НДС 0%"},
-                                                                          {"code": "10", "name": "НДС 10%"},
-                                                                          {"code": "20", "name": "НДС 20%"},
-                                                                          {"code": "10/110", "name": "НДС 10/110"},
-                                                                          {"code": "20/120", "name": "НДС 20/120"}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.RP_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД Почта России")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="RussianPost")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {"name": "no-return", "title": "Возврату не подлежит", "description": "Возврату не подлежит"},
-        {"name": "open", "title": "Можно вскрывать до получения оплаты с клиента",
-         "description": "Можно вскрывать до получения оплаты с клиента"},
-        {"name": "pay-by-card", "title": "COD (картой или наличными)", "description": "COD (картой или наличными)"},
-        {"name": "shelf-life-days", "title": "Срок хранения заказа в ОПС", "description": "Срок хранения заказа в ОПС"},
-        {"name": "sms", "title": "SMS информирование", "description": "SMS уведомление получателя"}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.RP_SERVICES.value)
 
 
 @allure.description("Получение оферов по СД Почта России (Courier)")
@@ -142,7 +133,7 @@ def test_create_delivery_point(app, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_post_office(app, payment_type, token):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
-                                          tariff=choice(["23", "47", "4"]), price=1000, declared_value=1500)
+                                          tariff=choice(OtherInfo.RP_PO_TARIFFS.value), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -201,11 +192,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate",
-                                                                                  "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии СД Почта России")

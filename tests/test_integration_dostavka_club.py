@@ -1,4 +1,5 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice
 import pytest
 import allure
@@ -43,28 +44,23 @@ def test_integration_delivery_services(app, token):
 def test_delivery_time_schedules(app, token):
     result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="DostavkaClub")
     Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_value(response=result_delivery_time_schedules, key_name="intervals", expected_value=[
-        {'from': '10:00', 'to': '14:00'}, {'from': '14:00', 'to': '18:00'}, {'from': '18:00', 'to': '22:00'},
-        {'from': '10:00', 'to': '18:00'}])
+    Checking.checking_json_value(response=result_delivery_time_schedules, key_name="intervals",
+                                 expected_value=OtherInfo.CLUB_INTERVALS.value)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД DostavkaClub")
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="DostavkaClub")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "0", "name": "НДС 0%"},
-                                                                          {"code": "10", "name": "НДС 10%"},
-                                                                          {"code": "20", "name": "НДС 20%"}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.CLUB_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД DostavkaClub")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="DostavkaClub")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {"name": "lifting-elevator", "title": "Подъем на этаж (лифт)", "description": "Подъем на этаж (лифт)"},
-        {"name": "lifting-freight", "title": "Подъем на этаж (грузовой лифт)", "description": "Подъем на этаж (грузовой лифт)"},
-        {"name": "lifting-manual", "title": "Подъем на этаж (ручной)", "description": "Подъем на этаж (ручной)"}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.CLUB_SERVICES.value)
 
 
 @allure.description("Получение оферов по DostavkaClub (Courier)")
@@ -81,8 +77,7 @@ def test_offers_courier(app, payment_type, token):
 def test_create_multi_order_courier(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier",
                                                       service="DostavkaClub",
-                                                      tariff=choice(["1", "2", "3", "4", "5", "6", "10", "11"]),
-                                                      declared_value=1500)
+                                                      tariff=choice(OtherInfo.CLUB_TARIFFS.value), declared_value=1500)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
@@ -95,8 +90,7 @@ def test_create_multi_order_courier(app, token, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="DostavkaClub",
-                                          tariff=choice(["1", "2", "3", "4", "5", "6", "10", "11"]), price=1000,
-                                          declared_value=1500)
+                                          tariff=choice(OtherInfo.CLUB_TARIFFS.value), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -136,10 +130,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии CД DostavkaClub")

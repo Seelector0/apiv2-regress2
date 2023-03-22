@@ -1,7 +1,9 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice
 import pytest
 import allure
+
 
 # Todo разобраться с widget offers и с добавлением items в многоместный заказ почему затираются созданные items
 #  Добавить получение этикетки от службы параметризировать тесты с этикеткой
@@ -66,23 +68,15 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="TopDelivery")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{'code': 'NO_VAT', 'name': 'Без НДС'},
-                                                                          {'code': '0', 'name': 'НДС 0%'},
-                                                                          {'code': '10', 'name': 'НДС 10%'},
-                                                                          {'code': '20', 'name': 'НДС 20%'}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.TOPDELIVERY_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД TopDelivery")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="TopDelivery")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {'name': 'find-closest-delivery-interval', 'title': 'Поиск ближайшего интервала доставки', 'description': 'Поиск ближайшего интервала доставки'},
-        {'name': 'lifting-elevator', 'title': 'Подъем на этаж (лифт)', 'description': 'Подъем на этаж (лифт)'},
-        {'name': 'lifting-freight', 'title': 'Подъем на этаж (грузовой лифт)', 'description': 'Подъем на этаж (грузовой лифт)'},
-        {'name': 'lifting-manual', 'title': 'Подъем на этаж (ручной)', 'description': 'Подъем на этаж (ручной)'},
-        {'name': 'not-open', 'title': 'Не вскрывать до получения оплаты с клиента', 'description': 'Не вскрывать до получения оплаты с клиента'},
-        {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.TOPDELIVERTY_SERVICES.value)
 
 
 @allure.description("Получение оферов по TopDelivery (Courier)")
@@ -216,10 +210,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии СД TopDelivery")
