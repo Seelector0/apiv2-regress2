@@ -9,10 +9,11 @@ class ApiOrder:
         self.app = app
         self.link = "/orders"
 
-    def create_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float, data=None,
-                     length: float = randint(10, 30), width: float = randint(10, 50), height: float = randint(10, 50),
-                     weight: float = randint(1, 5), delivery_point_code: str = None, pickup_time_period: str = None,
-                     date_pickup: str = None, tariff: str = None, delivery_time: dict = None, sec: float = 5):
+    def create_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
+                     barcode=None, data=None, length: float = randint(10, 30), width: float = randint(10, 50),
+                     height: float = randint(10, 50), weight: float = randint(1, 5), delivery_point_code: str = None,
+                     pickup_time_period: str = None, date_pickup: str = None, tariff: str = None,
+                     delivery_time: dict = None, sec: float = 5):
         """Создание заказа"""
         shop_id = self.app.shop.get_shops_id()
         warehouse_id = self.app.warehouse.get_warehouses_id()
@@ -23,7 +24,8 @@ class ApiOrder:
                 },
                 "shop": {
                     "id": shop_id[0],
-                    "number": f"{randrange(1000000, 9999999)}"
+                    "number": f"{randrange(1000000, 9999999)}",
+                    "barcode": barcode,
                 },
                 "payment": {
                     "type": payment_type,
@@ -93,7 +95,8 @@ class ApiOrder:
                 },
                 "shop": {
                     "id": shop_id[0],
-                    "number": f"{randrange(1000000, 9999999)}"
+                    "number": f"{randrange(1000000, 9999999)}",
+                    "barcode": f"{randrange(100000000, 999999999)}",
                 },
                 "payment": {
                     "type": payment_type,

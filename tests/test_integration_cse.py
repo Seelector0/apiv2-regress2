@@ -98,7 +98,7 @@ def test_create_multi_order_courier(app, token, payment_type):
                                                           "width": randint(10, 50),
                                                           "height": randint(10, 50)
                                                       },
-                                                      date_pickup=f"{datetime.date.today()}", sec=8)
+                                                      date_pickup=f"{datetime.date.today()}", sec=9)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
@@ -186,10 +186,11 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получения этикеток CД Cse вне партии")
-def test_get_labels_out_of_parcel(app, token):
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_labels_out_of_parcel(app, token, labels):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
-        result_label = app.document.get_label(order_id=order_id)
+        result_label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 

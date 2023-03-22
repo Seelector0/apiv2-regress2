@@ -194,6 +194,7 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получения этикеток СД TopDelivery вне партии")
+# @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:
@@ -237,6 +238,7 @@ def test_change_shipment_date(app, token):
 
 
 @allure.description("Получение этикеток СД TopDelivery")
+# @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label(app, token):
     parcel_id = app.parcel.get_parcels_id()
     result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
