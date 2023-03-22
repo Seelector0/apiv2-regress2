@@ -1,4 +1,5 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice, randrange
 import datetime
 import pytest
@@ -56,25 +57,15 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="Dpd")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "NO_VAT", "name": "Без НДС"},
-                                                                          {"code": "0", "name": "НДС 0%"},
-                                                                          {"code": "10", "name": "НДС 10%"},
-                                                                          {"code": "20", "name": "НДС 20%"}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.DPD_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД Dpd")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="Dpd")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {'name': 'barcode-generation', 'title': 'Генерация штрихкода на стороне Меташипа', 'description': 'Генерация штрихкода на стороне Меташипа'},
-        {'name': 'dress-fitting', 'title': 'Имеется возможность примерки', 'description': 'Имеется возможность примерки'},
-        {'name': 'open', 'title': 'Можно вскрывать до получения оплаты с клиента', 'description': 'Можно вскрывать до получения оплаты с клиента'},
-        {'name': 'open-test', 'title': 'Можно вскрывать до получения оплаты с клиента для проверки работоспособности', 'description': 'Можно вскрывать до получения оплаты с клиента для проверки работоспособности'},
-        {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'},
-        {'name': 'sms', 'title': 'SMS информирование', 'description': 'SMS уведомление получателя'},
-        {'name': 'weekend-delivery', 'title': 'Доставка в выходные дни', 'description': 'Доставка в выходные дни'},
-        {'name': 'weekend-pickup', 'title': 'Приём в выходные дни', 'description': 'Приём в выходные дни'}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.DPD_SERVICES.value)
 
 
 @allure.description("Получение оферов по СД Dpd (Courier)")
@@ -99,9 +90,9 @@ def test_offers_delivery_point(app, payment_type, token):
 def test_create_order_courier(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                           barcode=f"{randrange(100000000, 999999999)}",
-                                          tariff=choice(["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY",
-                                                         "MXO"]), date_pickup=f"{datetime.date.today()}",
-                                          pickup_time_period="9-18", price=1000, declared_value=1500, sec=6)
+                                          tariff=choice(OtherInfo.DPD_COURIER_TARIFFS.value),
+                                          date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
+                                          price=1000, declared_value=1500, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -114,7 +105,7 @@ def test_create_order_courier(app, token):
 def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                           barcode=f"{randrange(100000000, 999999999)}",
-                                          tariff=choice(["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "MXO"]),
+                                          tariff=choice(OtherInfo.DPD_DS_TARIFFS.value),
                                           date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
                                           delivery_point_code="007K", price=1000, declared_value=1500, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
@@ -158,10 +149,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии СД Dpd")

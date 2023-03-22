@@ -1,4 +1,5 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice, randint
 import datetime
 import pytest
@@ -64,19 +65,15 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="Cse")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{'code': 'NO_VAT', 'name': 'Без НДС'},
-                                                                          {'code': '0', 'name': 'НДС 0%'},
-                                                                          {'code': '10', 'name': 'НДС 10%'},
-                                                                          {'code': '18', 'name': 'НДС 18%'},
-                                                                          {'code': '20', 'name': 'НДС 20%'}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.CSE_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД Cse")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="Cse")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.CSE_SERVICES.value)
 
 
 @allure.description("Получение оферов по СД Cse (Courier)")
@@ -117,7 +114,7 @@ def test_create_multi_order_delivery_point(app, token):
                                                     "height": randint(10, 50)
                                                 },
                                                 delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951",
-                                                declared_value=1500, sec=8)
+                                                declared_value=1500, sec=9)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -209,10 +206,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии СД Cse")

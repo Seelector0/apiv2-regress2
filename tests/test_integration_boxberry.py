@@ -1,7 +1,9 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice
 import pytest
 import allure
+
 
 # Todo разобраться с widget offers, добавить создание многоместных заказов после того как решиться вопрос с этикетками
 
@@ -58,33 +60,23 @@ def test_intake_offices(app, token):
 def test_delivery_time_schedules(app, token):
     result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_key(response=result_delivery_time_schedules, expected_value=["schedule", "intervals"])
+    Checking.checking_json_value(response=result_delivery_time_schedules, key_name="intervals",
+                                 expected_value=OtherInfo.BOXBERRY_INTERVALS.value)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Boxberry")
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="Boxberry")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "NO_VAT", "name": "Без НДС"},
-                                                                          {"code": "0", "name": "НДС 0%"},
-                                                                          {"code": "10", "name": "НДС 10%"},
-                                                                          {"code": "20", "name": "НДС 20%"}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.BOXBERRY_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД Boxberry")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="Boxberry")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {"name": "not-open",
-         "title": "Не вскрывать до получения оплаты с клиента",
-         "description": "Не вскрывать до получения оплаты с клиента"},
-        {"name": "open-test",
-         "title": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
-         "description": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности"},
-        {"name": "partial-sale",
-         "title": "Частичная реализация",
-         "description": "Частичная реализация"}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.BOXBERRY_SERVICES.value)
 
 
 @allure.description("Получение оферов по СД Boxberry (Courier)")
@@ -201,10 +193,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.DETAILS.value)
 
 
 @allure.description("Создание партии CД Boxberry")

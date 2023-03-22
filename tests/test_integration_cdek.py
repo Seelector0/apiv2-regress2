@@ -1,8 +1,10 @@
 from utils.checking import Checking
+from utils.enums.global_enums import OtherInfo
 from random import choice
 import pytest
 import allure
 import time
+
 
 # Todo разобраться с widget offers
 
@@ -66,23 +68,15 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="Cdek")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=[{"code": "NO_VAT", "name": "Без НДС"},
-                                                                          {"code": "0", "name": "НДС 0%"},
-                                                                          {"code": "10", "name": "НДС 10%"},
-                                                                          {"code": "20", "name": "НДС 20%"}])
+    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.CDEK_VATS.value)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД СДЭК")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="Cdek")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=[
-        {"name": "lifting-elevator", "title": "Подъем на этаж (лифт)", "description": "Подъем на этаж (лифт)"},
-        {"name": "lifting-freight", "title": "Подъем на этаж (грузовой лифт)", "description": "Подъем на этаж (грузовой лифт)"},
-        {"name": "lifting-manual", "title": "Подъем на этаж (ручной)", "description": "Подъем на этаж (ручной)"},
-        {"name": "no-autocall", "title": "Отключение автоматического звонка клиенту", "description": "Отключение автоматического звонка клиенту"},
-        {"name": "not-open", "title": "Не вскрывать до получения оплаты с клиента", "description": "Не вскрывать до получения оплаты с клиента"},
-        {"name": "reverse", "title": "Обратный заказ на доставку от получателя до отправителя", "description": "Обратный заказ на доставку от получателя до отправителя"}])
+    Checking.checking_json_key(response=result_info_delivery_service_services,
+                               expected_value=OtherInfo.CDEK_SERVICES.value)
 
 
 @allure.description("Получение оферов по СД СДЭК (Courier)")
@@ -107,7 +101,7 @@ def test_offers_delivery_point(app, payment_type, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
-                                                      tariff=choice(["137", "139", "480", "482"]),
+                                                      tariff=choice(OtherInfo.CDEK_COURIER_TARIFFS.value),
                                                       declared_value=1500, sec=7)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
@@ -120,10 +114,9 @@ def test_create_multi_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint многоместного заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_delivery_point(app, token, payment_type):
-    result_multi_order = app.order.create_multi_order(
-        payment_type=payment_type, type_ds="DeliveryPoint",
-        service="Cdek", tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
-        delivery_point_code="VNG2", declared_value=1500, sec=6)
+    result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="DeliveryPoint",
+                                                      service="Cdek", tariff=choice(OtherInfo.CDEK_DS_TARIFFS.value),
+                                                      delivery_point_code="VNG2", declared_value=1500, sec=6)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
@@ -155,8 +148,8 @@ def test_patch_multi_order(app, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
-                                          tariff=choice(["137", "139", "480", "482"]), price=1000, declared_value=1500,
-                                          sec=6)
+                                          tariff=choice(OtherInfo.CDEK_COURIER_TARIFFS.value), price=1000,
+                                          declared_value=1500, sec=6)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -169,8 +162,8 @@ def test_create_order_courier(app, token, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
-                                          tariff=choice(["136", "138", "366", "368", "481", "483", "485", "486"]),
-                                          delivery_point_code="VNG2", price=1000, declared_value=1500, sec=7)
+                                          tariff=choice(OtherInfo.CDEK_DS_TARIFFS.value), delivery_point_code="VNG2",
+                                          price=1000, declared_value=1500, sec=7)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
@@ -221,10 +214,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=["returnItems", "returnReason",
-                                                                                  "delayReason", "paymentType",
-                                                                                  "pickupDate", "declaredDeliveryDate",
-                                                                                  "storageDateEnd"])
+        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
 
 
 @allure.description("Создание партии СД СДЭК")
