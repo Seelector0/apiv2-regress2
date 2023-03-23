@@ -182,7 +182,6 @@ class ApiOrder:
                 ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
                           "application/vnd.ms-excel"))
             ]
-            result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
         else:
             json_order_from_file = {
                 "shopId": shop_id[0],
@@ -192,7 +191,7 @@ class ApiOrder:
                 ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
                           "application/vnd.ms-excel"))
             ]
-            result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
+        result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
         return result_order_from_file
 
     def search_order(self, query: str):
@@ -262,8 +261,7 @@ class ApiOrder:
                     }
                 ]
             )
-            result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-        elif path == "add":
+        else:
             json_path_order = json.dumps(
                 [
                     {
@@ -292,7 +290,7 @@ class ApiOrder:
                     }
                 ]
             )
-            result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
         return result_patch
 
     def delete_order(self, order_id: str):
