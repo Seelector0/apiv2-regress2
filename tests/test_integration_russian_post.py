@@ -110,7 +110,7 @@ def test_create_order_courier(app, token):
                                           price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -119,11 +119,11 @@ def test_create_order_courier(app, token):
 @allure.description("Создание DeliveryPoint заказа по СД Почта России")
 def test_create_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", length=15, width=15, height=15, type_ds="DeliveryPoint",
-                                          service="RussianPost", tariff="23", delivery_point_code="914841",
-                                          price=1000, declared_value=1500)
+                                          service="RussianPost", tariff=OtherInfo.RP_PO_TARIFFS.value[0],
+                                          delivery_point_code="914841", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -136,7 +136,7 @@ def test_create_order_post_office(app, payment_type, token):
                                           tariff=choice(OtherInfo.RP_PO_TARIFFS.value), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")

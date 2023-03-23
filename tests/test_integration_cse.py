@@ -95,10 +95,10 @@ def test_create_multi_order_courier(app, token, payment_type):
                                                           "width": randint(10, 50),
                                                           "height": randint(10, 50)
                                                       },
-                                                      date_pickup=f"{datetime.date.today()}", sec=9)
+                                                      date_pickup=f"{datetime.date.today()}")
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], sec=9)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -114,10 +114,10 @@ def test_create_multi_order_delivery_point(app, token):
                                                     "height": randint(10, 50)
                                                 },
                                                 delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951",
-                                                declared_value=1500, sec=9)
+                                                declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=9)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -139,11 +139,10 @@ def test_patch_multi_order(app, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Cse", tariff="64",
-                                          date_pickup=f"{datetime.date.today()}", price=1000, declared_value=1500,
-                                          sec=9)
+                                          date_pickup=f"{datetime.date.today()}", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=9)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -154,10 +153,10 @@ def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Cse", tariff="64",
                                           date_pickup=f"{datetime.date.today()}",
                                           delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951",
-                                          price=1000, declared_value=1500, sec=8)
+                                          price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=8)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
