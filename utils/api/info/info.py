@@ -1,3 +1,4 @@
+import datetime
 
 
 class ApiInfo:
@@ -5,11 +6,20 @@ class ApiInfo:
     def __init__(self, app):
         self.app = app
 
-    def delivery_time_schedules(self, delivery_service_code: str):
+    def delivery_time_schedules(self, delivery_service_code: str, day: str = None):
         """Получение интервалов доставки конкретной СД"""
-        params = {
-            "deliveryServiceCode": delivery_service_code,
-        }
+        if day == "today":
+            shop_id = self.app.shop.get_shops_id()
+            params = {
+                "deliveryServiceCode": delivery_service_code,
+                "deliveryDate": f"{datetime.date.today()}",
+                "shopId": shop_id[0],
+                "postalCode": "101000"
+            }
+        else:
+            params = {
+                "deliveryServiceCode": delivery_service_code,
+            }
         result_delivery_time_schedules = self.app.http_method.get(link="/info/delivery_time_schedules", params=params)
         return result_delivery_time_schedules
 
