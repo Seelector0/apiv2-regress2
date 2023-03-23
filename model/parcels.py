@@ -22,6 +22,7 @@ class Parcel:
         else:
             return maxsize
 
+
 class OrdersInParcel:
 
     def __init__(self, shop_number=None, ds_number=None):

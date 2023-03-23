@@ -92,10 +92,10 @@ def test_create_order_courier(app, token):
                                           barcode=f"{randrange(100000000, 999999999)}",
                                           tariff=choice(OtherInfo.DPD_COURIER_TARIFFS.value),
                                           date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
-                                          price=1000, declared_value=1500, sec=6)
+                                          price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=6)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -107,10 +107,10 @@ def test_create_order_delivery_point(app, token):
                                           barcode=f"{randrange(100000000, 999999999)}",
                                           tariff=choice(OtherInfo.DPD_DS_TARIFFS.value),
                                           date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
-                                          delivery_point_code="007K", price=1000, declared_value=1500, sec=6)
+                                          delivery_point_code="007K", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=6)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")

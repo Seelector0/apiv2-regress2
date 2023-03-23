@@ -13,7 +13,7 @@ class ApiOrder:
                      barcode=None, data=None, length: float = randint(10, 30), width: float = randint(10, 50),
                      height: float = randint(10, 50), weight: float = randint(1, 5), delivery_point_code: str = None,
                      pickup_time_period: str = None, date_pickup: str = None, tariff: str = None,
-                     delivery_time: dict = None, sec: float = 5):
+                     delivery_time: dict = None):
         """Создание заказа"""
         shop_id = self.app.shop.get_shops_id()
         warehouse_id = self.app.warehouse.get_warehouses_id()
@@ -75,7 +75,6 @@ class ApiOrder:
             }
         )
         result_create_order = self.app.http_method.post(link=self.link, data=json_order)
-        time.sleep(sec)
         return result_create_order
 
     def create_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, data=None,
@@ -84,7 +83,7 @@ class ApiOrder:
                            width: float = randint(10, 50), height: float = randint(10, 50),
                            weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
                            shop_number_1: str = f"{randrange(100000, 999999)}",
-                           shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None, sec: float = 4):
+                           shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         """Создание многоместного заказа"""
         shop_id = self.app.shop.get_shops_id()
         warehouse_id = self.app.warehouse.get_warehouses_id()
@@ -166,16 +165,15 @@ class ApiOrder:
             }
         )
         result_create_multi_order = self.app.http_method.post(link=self.link, data=json_multi_order)
-        time.sleep(sec)
         return result_create_multi_order
 
     def create_order_from_file(self, format_file: str = None):
-        """Метод создания заказа из файла XLSX формата Почта России или формата MetaShip"""
+        """Метод создания заказа из файла XLSX и XLS формата Почта России или формата MetaShip"""
         link = f"/import{self.link}"
         shop_id = self.app.shop.get_shops_id()
         warehouse_id = self.app.warehouse.get_warehouses_id()
         if format_file == "russian_post":
-            body_requests = {
+            json_order_from_file = {
                 "shopId": shop_id[0],
                 "warehouseId": warehouse_id[0],
                 "type": "russian_post"
@@ -184,9 +182,9 @@ class ApiOrder:
                 ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
                           "application/vnd.ms-excel"))
             ]
-            result_order_from_file = self.app.http_method.post(link=link, data=body_requests, files=file)
+            result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
         else:
-            body_requests = {
+            json_order_from_file = {
                 "shopId": shop_id[0],
                 "warehouseId": warehouse_id[0]
             }
@@ -194,7 +192,7 @@ class ApiOrder:
                 ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
                           "application/vnd.ms-excel"))
             ]
-            result_order_from_file = self.app.http_method.post(link=link, data=body_requests, files=file)
+            result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
         return result_order_from_file
 
     def search_order(self, query: str):
@@ -210,8 +208,9 @@ class ApiOrder:
         result_get_order_list = self.app.http_method.get(link=self.link)
         return result_get_order_list
 
-    def get_order_by_id(self, order_id: str):
+    def get_order_by_id(self, order_id: str, sec: float = 0):
         """Метод получения информации о заказе по его id"""
+        time.sleep(sec)
         result_get_odre_by_id = self.app.http_method.get(link=f"{self.link}/{order_id}")
         return result_get_odre_by_id
 
@@ -231,8 +230,7 @@ class ApiOrder:
         return result_put_order
 
     def update_field_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
-                           weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None,
-                           sec=1):
+                           weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
         """Метод обновления поля в заказе и добавление места (PATCH)"""
         result_get_order_by_id = self.get_order_by_id(order_id=order_id)
         items_1 = result_get_order_by_id.json()["data"]["request"]["places"]
@@ -295,7 +293,6 @@ class ApiOrder:
                 ]
             )
             result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-        time.sleep(sec)
         return result_patch
 
     def delete_order(self, order_id: str):

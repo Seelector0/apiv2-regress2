@@ -80,7 +80,7 @@ def test_create_multi_order_courier(app, token, payment_type):
                                                       tariff=choice(OtherInfo.CLUB_TARIFFS.value), declared_value=1500)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -93,7 +93,7 @@ def test_create_order_courier(app, token, payment_type):
                                           tariff=choice(OtherInfo.CLUB_TARIFFS.value), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -108,7 +108,7 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
 
 
-@allure.description("Получения этикетки DostavkaClub")
+@allure.description("Попытка получения этикетки DostavkaClub")
 def test_get_label_out_of_parcel(app, token):
     list_order_id = app.order.get_orders_id()
     for order_id in list_order_id:

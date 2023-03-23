@@ -5,7 +5,8 @@ class OtherInfo(Enum):
 
     DETAILS = [
         "returnItems", "returnReason", "delayReason", "paymentType", "pickupDate", "declaredDeliveryDate",
-        "storageDateEnd"]
+        "storageDateEnd"
+    ]
 
     RP_VATS = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"},
@@ -47,12 +48,8 @@ class OtherInfo(Enum):
     CDEK_DS_TARIFFS = ["136", "138", "366", "368", "481", "483", "485", "486"]
 
     BOXBERRY_INTERVALS = [
-        {"from": "09:00", "to": "13:00"},
-        {"from": "12:00", "to": "15:00"},
-        {"from": "15:00", "to": "18:00"},
-        {"from": "18:00", "to": "22:00"},
-        {"from": "09:00", "to": "18:00"},
-        {"from": "09:00", "to": "15:00"},
+        {"from": "09:00", "to": "13:00"}, {"from": "12:00", "to": "15:00"}, {"from": "15:00", "to": "18:00"},
+        {"from": "18:00", "to": "22:00"}, {"from": "09:00", "to": "18:00"}, {"from": "09:00", "to": "15:00"},
         {"from": "15:00", "to": "22:00"}
     ]
 
@@ -70,11 +67,8 @@ class OtherInfo(Enum):
     ]
 
     CSE_VATS = [
-        {'code': 'NO_VAT', 'name': 'Без НДС'},
-        {'code': '0', 'name': 'НДС 0%'},
-        {'code': '10', 'name': 'НДС 10%'},
-        {'code': '18', 'name': 'НДС 18%'},
-        {'code': '20', 'name': 'НДС 20%'}
+        {'code': 'NO_VAT', 'name': 'Без НДС'}, {'code': '0', 'name': 'НДС 0%'}, {'code': '10', 'name': 'НДС 10%'},
+        {'code': '18', 'name': 'НДС 18%'}, {'code': '20', 'name': 'НДС 20%'}
     ]
 
     CSE_SERVICES = [
@@ -82,16 +76,12 @@ class OtherInfo(Enum):
     ]
 
     CLUB_INTERVALS = [
-        {'from': '10:00', 'to': '14:00'},
-        {'from': '14:00', 'to': '18:00'},
-        {'from': '18:00', 'to': '22:00'},
+        {'from': '10:00', 'to': '14:00'}, {'from': '14:00', 'to': '18:00'}, {'from': '18:00', 'to': '22:00'},
         {'from': '10:00', 'to': '18:00'}
     ]
 
     CLUB_VATS = [
-        {"code": "0", "name": "НДС 0%"},
-        {"code": "10", "name": "НДС 10%"},
-        {"code": "20", "name": "НДС 20%"}
+        {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"}
     ]
 
     CLUB_SERVICES = [
@@ -104,9 +94,7 @@ class OtherInfo(Enum):
     CLUB_TARIFFS = ["1", "2", "3", "4", "5", "6", "10", "11"]
 
     DPD_VATS = [
-        {"code": "NO_VAT", "name": "Без НДС"},
-        {"code": "0", "name": "НДС 0%"},
-        {"code": "10", "name": "НДС 10%"},
+        {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
         {"code": "20", "name": "НДС 20%"}
     ]
 
@@ -127,18 +115,14 @@ class OtherInfo(Enum):
 
     DPD_COURIER_TARIFFS = ["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY", "MXO"]
 
-    DPD_DS_TARIFFS = ["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "MXO"]
+    DPD_DS_TARIFFS = ["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
 
     FIVE_POST_VATS = [
-        {"code": "NO_VAT", "name": "Без НДС"},
-        {"code": "10", "name": "НДС 10%"},
-        {"code": "20", "name": "НДС 20%"}
+        {"code": "NO_VAT", "name": "Без НДС"}, {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"}
     ]
 
     TOPDELIVERY_VATS = [
-        {'code': 'NO_VAT', 'name': 'Без НДС'},
-        {'code': '0', 'name': 'НДС 0%'},
-        {'code': '10', 'name': 'НДС 10%'},
+        {'code': 'NO_VAT', 'name': 'Без НДС'}, {'code': '0', 'name': 'НДС 0%'}, {'code': '10', 'name': 'НДС 10%'},
         {'code': '20', 'name': 'НДС 20%'}
     ]
 

@@ -3,7 +3,6 @@ from utils.enums.global_enums import OtherInfo
 from random import choice
 import pytest
 import allure
-import time
 
 
 # Todo разобраться с widget offers
@@ -102,10 +101,10 @@ def test_offers_delivery_point(app, payment_type, token):
 def test_create_multi_order_courier(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
                                                       tariff=choice(OtherInfo.CDEK_COURIER_TARIFFS.value),
-                                                      declared_value=1500, sec=7)
+                                                      declared_value=1500)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], sec=7)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -116,10 +115,10 @@ def test_create_multi_order_courier(app, token, payment_type):
 def test_create_multi_order_delivery_point(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="DeliveryPoint",
                                                       service="Cdek", tariff=choice(OtherInfo.CDEK_DS_TARIFFS.value),
-                                                      delivery_point_code="VNG2", declared_value=1500, sec=6)
+                                                      delivery_point_code="VNG2", declared_value=1500)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_multi_order.json()["id"], sec=6)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -135,8 +134,7 @@ def test_patch_multi_order(app, token):
     Checking.checking_json_value(response=result_patch_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_patch_order, key_name="state",
                                  expected_value="editing-external-processing")
-    time.sleep(6)
-    new_len_order_list = app.order.get_order_by_id(order_id=choice_order_id)
+    new_len_order_list = app.order.get_order_by_id(order_id=choice_order_id, sec=7)
     Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
     Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
     Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
@@ -149,10 +147,10 @@ def test_patch_multi_order(app, token):
 def test_create_order_courier(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
                                           tariff=choice(OtherInfo.CDEK_COURIER_TARIFFS.value), price=1000,
-                                          declared_value=1500, sec=6)
+                                          declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=7)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
@@ -163,10 +161,10 @@ def test_create_order_courier(app, token, payment_type):
 def test_create_order_delivery_point(app, token, payment_type):
     result_order = app.order.create_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
                                           tariff=choice(OtherInfo.CDEK_DS_TARIFFS.value), delivery_point_code="VNG2",
-                                          price=1000, declared_value=1500, sec=7)
+                                          price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"])
+    result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=7)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
