@@ -10,10 +10,11 @@ class ApiOrder:
         self.link = "/orders"
 
     def create_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
-                     barcode=None, data=None, length: float = randint(10, 30), width: float = randint(10, 50),
-                     height: float = randint(10, 50), weight: float = randint(1, 5), delivery_point_code: str = None,
-                     pickup_time_period: str = None, date_pickup: str = None, tariff: str = None,
-                     delivery_time: dict = None):
+                     barcode: str = None, data: str = None, length: float = randint(10, 30),
+                     width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
+                     delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
+                     routes: list = None, tariff: str = None, delivery_time: dict = None,
+                     items_declared_value: int = None):
         """Создание заказа"""
         shop_id = self.app.shop.get_shops_id()
         warehouse_id = self.app.warehouse.get_warehouses_id()
@@ -58,6 +59,7 @@ class ApiOrder:
                 "comment": "",
                 "pickupTimePeriod": pickup_time_period,
                 "datePickup": date_pickup,
+                "routes": routes,
                 "places": [
                     {
                         "items": [
@@ -67,7 +69,8 @@ class ApiOrder:
                                 "price": price,
                                 "count": 1,
                                 "weight": weight,
-                                "vat": "0"
+                                "vat": "0",
+                                "declaredValue": items_declared_value,
                             }
                         ]
                     }

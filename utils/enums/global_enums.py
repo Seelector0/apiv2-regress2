@@ -137,3 +137,17 @@ class OtherInfo(Enum):
          'description': 'Не вскрывать до получения оплаты с клиента'},
         {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'}
     ]
+
+    GURU_VATS = [
+        {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
+        {"code": "20", "name": "НДС 20%"}
+    ]
+
+    GURU_INTERVALS = [
+        {"from": "10:00", "to": "14:00"}, {"from": "14:00", "to": "18:00"}, {"from": "18:00", "to": "22:00"},
+        {"from": "10:00", "to": "18:00"}
+    ]
+
+    GURU_SERVICES = [
+        {"name": "partial-sale", "title": "Частичная реализация", "description": "Частичная реализация"}
+    ]

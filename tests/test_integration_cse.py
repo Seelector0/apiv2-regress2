@@ -89,7 +89,7 @@ def test_offers_courier(app, payment_type, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, token, payment_type):
     result_multi_order = app.order.create_multi_order(payment_type=payment_type, type_ds="Courier", service="Cse",
-                                                      tariff="0", declared_value=1500, dimension=
+                                                      tariff="64", declared_value=1500, dimension=
                                                       {
                                                           "length": randint(10, 30),
                                                           "width": randint(10, 50),
@@ -151,9 +151,8 @@ def test_create_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint заказа по CД Cse")
 def test_create_order_delivery_point(app, token):
     result_order = app.order.create_order(payment_type="Paid", type_ds="DeliveryPoint", service="Cse", tariff="64",
-                                          date_pickup=f"{datetime.date.today()}",
-                                          delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951",
-                                          price=1000, declared_value=1500)
+                                          date_pickup=f"{datetime.date.today()}", price=1000, declared_value=1500,
+                                          delivery_point_code="0299ca01-ed73-11e8-80c9-7cd30aebf951")
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_by_id(order_id=result_order.json()["id"], sec=8)
