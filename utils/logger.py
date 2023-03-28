@@ -10,7 +10,7 @@ class Logger:
     @classmethod
     def _write_log_to_file(cls, data: str):
         """Метод создаёт файл и записывает в него информацию"""
-        with open(cls.file_name, mode="a", encoding="utf-8") as logger_file:
+        with open(file=cls.file_name, mode="a", encoding="utf-8") as logger_file:
             logger_file.write(data)
 
     @classmethod
