@@ -24,7 +24,7 @@ class ApiShop:
         )
         return json_create_shop
 
-    def create_shop(self):
+    def post_shop(self):
         """Создание магазина"""
         new_shop = self.json_shop()
         result_post_shop = self.app.http_method.post(link=self.link, data=new_shop)
@@ -35,7 +35,7 @@ class ApiShop:
         result_get_shop = self.app.http_method.get(link=self.link)
         return result_get_shop
 
-    def get_shop_by_id(self, shop_id: str):
+    def get_shop_id(self, shop_id: str):
         """Метод получения магазина по его id"""
         result_get_shop_by_id = self.app.http_method.get(link=f"{self.link}/{shop_id}")
         return result_get_shop_by_id
@@ -60,7 +60,7 @@ class ApiShop:
         result_patch = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=body)
         return result_patch
 
-    def get_shops_id(self):
+    def getting_list_shop_ids(self):
         """Метод получения id магазинов"""
         shops_id_list = []
         shops_list = self.get_shops()

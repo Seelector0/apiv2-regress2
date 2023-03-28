@@ -10,8 +10,8 @@ class ApiOffers:
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
         """Метод для получения списка офферов"""
-        shop_id = self.app.shop.get_shops_id()
-        warehouse_id = self.app.warehouse.get_warehouses_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
+        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         if format_ == "widget":
             body_offers = {
                 "warehouseId": warehouse_id[0],
@@ -25,7 +25,6 @@ class ApiOffers:
                 "types[0]": types,
                 "format": "widget"
             }
-            result_offers = self.app.http_method.get(link=self.link, params=body_offers)
         else:
             body_offers = {
                 "warehouseId": warehouse_id[0],
@@ -41,5 +40,5 @@ class ApiOffers:
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryPointNumber": delivery_point_number
             }
-            result_offers = self.app.http_method.get(link=self.link, params=body_offers)
+        result_offers = self.app.http_method.get(link=self.link, params=body_offers)
         return result_offers

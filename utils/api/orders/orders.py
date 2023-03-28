@@ -9,15 +9,15 @@ class ApiOrder:
         self.app = app
         self.link = "/orders"
 
-    def create_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
-                     barcode: str = None, data: str = None, length: float = randint(10, 30),
-                     width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
-                     delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
-                     routes: list = None, tariff: str = None, delivery_time: dict = None,
-                     items_declared_value: int = None):
+    def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
+                   barcode: str = None, data: str = None, length: float = randint(10, 30),
+                   width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
+                   delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
+                   routes: list = None, tariff: str = None, delivery_time: dict = None,
+                   items_declared_value: int = None):
         """Создание заказа"""
-        shop_id = self.app.shop.get_shops_id()
-        warehouse_id = self.app.warehouse.get_warehouses_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
+        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_order = json.dumps(
             {
                 "warehouse": {
@@ -80,16 +80,16 @@ class ApiOrder:
         result_create_order = self.app.http_method.post(link=self.link, data=json_order)
         return result_create_order
 
-    def create_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, data=None,
-                           tariff: str = None, delivery_point_code: str = None, pickup_time_period: str = None,
-                           delivery_time: dict = None, date_pickup: str = None, length: float = randint(10, 30),
-                           width: float = randint(10, 50), height: float = randint(10, 50),
-                           weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
-                           shop_number_1: str = f"{randrange(100000, 999999)}",
-                           shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
+    def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, data=None,
+                         tariff: str = None, delivery_point_code: str = None, pickup_time_period: str = None,
+                         delivery_time: dict = None, date_pickup: str = None, length: float = randint(10, 30),
+                         width: float = randint(10, 50), height: float = randint(10, 50),
+                         weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
+                         shop_number_1: str = f"{randrange(100000, 999999)}",
+                         shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         """Создание многоместного заказа"""
-        shop_id = self.app.shop.get_shops_id()
-        warehouse_id = self.app.warehouse.get_warehouses_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
+        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_multi_order = json.dumps(
             {
                 "warehouse": {
@@ -170,11 +170,12 @@ class ApiOrder:
         result_create_multi_order = self.app.http_method.post(link=self.link, data=json_multi_order)
         return result_create_multi_order
 
-    def create_order_from_file(self, format_file: str = None):
-        """Метод создания заказа из файла XLSX и XLS формата Почта России или формата MetaShip"""
+    def post_import_order(self, format_file: str = None, file_name: str = None):
+        """Метод создания заказа из файла XLSX или XLS формата Почта России или формата MetaShip"""
         link = f"/import{self.link}"
-        shop_id = self.app.shop.get_shops_id()
-        warehouse_id = self.app.warehouse.get_warehouses_id()
+        directory = "folder_with_orders/"
+        shop_id = self.app.shop.getting_list_shop_ids()
+        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         if format_file == "russian_post":
             json_order_from_file = {
                 "shopId": shop_id[0],
@@ -182,8 +183,7 @@ class ApiOrder:
                 "type": "russian_post"
             }
             file = [
-                ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
-                          "application/vnd.ms-excel"))
+                ("file", (f"{file_name}", open(file=f"{directory}{file_name}", mode="rb"), "application/vnd.ms-excel"))
             ]
         else:
             json_order_from_file = {
@@ -191,13 +191,12 @@ class ApiOrder:
                 "warehouseId": warehouse_id[0]
             }
             file = [
-                ("file", ("ПочтаПартия_20220614_.xls", open("/home/fox140/тесты/ПочтаПартия_20220614_.xls", "rb"),
-                          "application/vnd.ms-excel"))
+                ("file", (f"{file_name}", open(file=f"{directory}{file_name}", mode="rb"), "application/vnd.ms-excel"))
             ]
         result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
         return result_order_from_file
 
-    def search_order(self, query: str):
+    def get_order_search(self, query: str):
         """Метод поиска по заказам"""
         search = {
             "query": query
@@ -210,16 +209,16 @@ class ApiOrder:
         result_get_order_list = self.app.http_method.get(link=self.link)
         return result_get_order_list
 
-    def get_order_by_id(self, order_id: str, sec: float = 0):
+    def get_order_id(self, order_id: str, sec: float = 0):
         """Метод получения информации о заказе по его id"""
         time.sleep(sec)
         result_get_odre_by_id = self.app.http_method.get(link=f"{self.link}/{order_id}")
         return result_get_odre_by_id
 
-    def update_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
-                     family_name: str):
+    def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
+                  family_name: str):
         """Метод обновления заказ (PUT)"""
-        result_get_order_by_id = self.get_order_by_id(order_id=order_id)
+        result_get_order_by_id = self.get_order_id(order_id=order_id)
         body_order = result_get_order_by_id.json()["data"]["request"]
         body_order["weight"] = weight
         body_order["dimension"]["length"] = length
@@ -231,10 +230,10 @@ class ApiOrder:
         result_put_order = self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
         return result_put_order
 
-    def update_field_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
-                           weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
+    def patch_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
+                    weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
         """Метод обновления поля в заказе и добавление места (PATCH)"""
-        result_get_order_by_id = self.get_order_by_id(order_id=order_id)
+        result_get_order_by_id = self.get_order_id(order_id=order_id)
         items_1 = result_get_order_by_id.json()["data"]["request"]["places"]
         if path == "places":
             json_path_order = json.dumps(
@@ -316,7 +315,7 @@ class ApiOrder:
         result_order_details = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
         return result_order_details
 
-    def get_orders_id(self):
+    def getting_order_id_out_parcel(self):
         """Метод получения id заказов не в партии"""
         orders_id_list = []
         order_list = self.get_orders()

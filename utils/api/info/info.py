@@ -9,7 +9,7 @@ class ApiInfo:
     def delivery_time_schedules(self, delivery_service_code: str, day: str = None):
         """Получение интервалов доставки конкретной СД"""
         if day == "today":
-            shop_id = self.app.shop.get_shops_id()
+            shop_id = self.app.shop.getting_list_shop_ids()
             params = {
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryDate": f"{datetime.date.today()}",
@@ -24,7 +24,7 @@ class ApiInfo:
         return result_delivery_time_schedules
 
     def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
-        shop_id = self.app.shop.get_shops_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
         """Получение списка ПВЗ конкретной СД"""
         params = {
             "deliveryServiceCode": delivery_service_code,

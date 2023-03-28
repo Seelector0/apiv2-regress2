@@ -9,7 +9,7 @@ class ApiWidget:
 
     def create_widget_tokens(self):
         """Создание токена для виджета"""
-        shop_id = self.app.shop.get_shops_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
         body = json.dumps(
             {
                 "shopId": shop_id[0]
@@ -23,7 +23,7 @@ class ApiWidget:
         result_widget_tokens = self.app.http_method.get(link=self.link)
         return result_widget_tokens
 
-    def get_widget_tokens_by_id(self, widget_id: str):
+    def get_widget_tokens_id(self, widget_id: str):
         """Получение виджета"""
         result_widget_tokens_by_id = self.app.http_method.get(link=f"{self.link}/{widget_id}")
         return result_widget_tokens_by_id

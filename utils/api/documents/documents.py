@@ -35,14 +35,14 @@ class ApiDocument:
 
     def get_app(self):
         """Метод получения АПП"""
-        parcels_ids = self.app.parcel.get_parcels_id()
+        parcels_ids = self.app.parcel.getting_list_of_parcels_ids()
         for parcel_id in parcels_ids:
             result_get_app = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/acceptance")
             return result_get_app
 
     def get_documents(self):
         """Получение документов"""
-        parcels_ids = self.app.parcel.get_parcels_id()
+        parcels_ids = self.app.parcel.getting_list_of_parcels_ids()
         for parcel_id in parcels_ids:
             result_get_files = self.app.http_method.get(link=f"{self.link(parcel_id=parcel_id)}/files")
             return result_get_files

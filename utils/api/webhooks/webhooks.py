@@ -26,14 +26,14 @@ class ApiWebhook:
         result_get_webhooks = self.app.http_method.get(link=self.link)
         return result_get_webhooks
 
-    def get_webhook_by_id(self, webhook_id: str):
+    def get_webhook_id(self, webhook_id: str):
         """Получение веб-хука по его id"""
         result_get_webhook_by_id = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
         return result_get_webhook_by_id
 
     def webhook_to_change_order_status(self, url: str):
         """Веб-хук на смену статуса заказа"""
-        shop_id = self.app.shop.get_shops_id()
+        shop_id = self.app.shop.getting_list_shop_ids()
         json_change_order_status = json.dumps(
             {
                 "shopId": shop_id[0],

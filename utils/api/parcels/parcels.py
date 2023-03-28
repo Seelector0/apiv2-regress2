@@ -8,7 +8,7 @@ class ApiParcel:
         self.app = app
         self.link = "/parcels"
 
-    def create_parcel(self, order_id: str, all_orders: bool = False):
+    def post_parcel(self, order_id: str, all_orders: bool = False):
         """Метод создания партии"""
         if all_orders:
             json_create_parcel = json.dumps(
@@ -33,12 +33,12 @@ class ApiParcel:
         result_get_parcels = self.app.http_method.get(link=self.link)
         return result_get_parcels
 
-    def get_parcel_by_id(self, parcel_id: str):
+    def get_parcel_id(self, parcel_id: str):
         """Получение партии по её id"""
         result_get_parcel_by_id = self.app.http_method.get(link=f"{self.link}/{parcel_id}")
         return result_get_parcel_by_id
 
-    def change_parcel_orders(self, op: str, order_id, parcel_id: str):
+    def patch_parcel(self, op: str, order_id, parcel_id: str):
         """Метод редактирования партии - добавление(add), удаление(remove) заказов"""
         if op == "add":
             json_add_parcel_order = json.dumps(
@@ -66,7 +66,7 @@ class ApiParcel:
                                                               data=json_remove_parcel_order)
             return result_remove_parcel
 
-    def change_parcel_shipment_date(self, parcel_id: str, day):
+    def patch_parcel_shipment_date(self, parcel_id: str, day):
         """Метод изменения даты доставки партии"""
         data: datetime.date = datetime.date.today()
         data += datetime.timedelta(days=day)
@@ -86,12 +86,12 @@ class ApiParcel:
     def get_order_in_parcel(self, parcel_id):
         """Получение списка заказов в партии"""
         order_in_parcel = []
-        parcel_list = self.get_parcel_by_id(parcel_id=parcel_id)
+        parcel_list = self.get_parcel_id(parcel_id=parcel_id)
         for order in parcel_list.json()["data"]["request"]["orderIds"]:
             order_in_parcel.append(order)
         return order_in_parcel
 
-    def get_parcels_id(self):
+    def getting_list_of_parcels_ids(self):
         """Получение списка id партий"""
         list_parcel_id = []
         parcel_list = self.get_parcels()
