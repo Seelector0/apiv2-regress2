@@ -129,10 +129,10 @@ def test_add_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     orders_id = app.order.getting_order_id_out_parcel()
     for order in orders_id:
-        old_list_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+        old_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
         result_parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id[0], op="add")
         Checking.check_status_code(response=result_parcel_add, expected_status_code=200)
-        new_list_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+        new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
@@ -146,7 +146,7 @@ def test_change_shipment_date(app, token):
 @allure.description("Получение этикеток СД FivePost")
 def test_get_label(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     for order_id in result_order_in_parcel:
         result_label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=result_label, expected_status_code=200)
@@ -155,7 +155,7 @@ def test_get_label(app, token):
 @allure.description("Получение этикеток заказов из партии СД FivePost")
 def test_get_labels_from_parcel(app):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel)
     Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
@@ -175,11 +175,11 @@ def test_get_documents(app, token):
 @allure.description("Редактирование партииСД FivePost (Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    old_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
-    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel),
                                                    parcel_id=parcel_id[0], op="remove")
-    new_list_order = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
 
