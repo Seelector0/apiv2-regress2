@@ -141,7 +141,7 @@ def test_change_shipment_date(app, token):
 @allure.description("Получение этикеток СД DostavkaGuru")
 def test_get_label(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     for order_id in result_order_in_parcel:
         result_label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=result_label, expected_status_code=200)
@@ -150,7 +150,7 @@ def test_get_label(app, token):
 @allure.description("Получение этикеток заказов из партии СД DostavkaGuru")
 def test_get_labels_from_parcel(app):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel)
     Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
@@ -170,7 +170,7 @@ def test_get_documents(app, token):
 @allure.description("Попытка Редактирование партии CД DostavkaGuru (Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel),
                                                    parcel_id=parcel_id[0], op="remove")
     Checking.check_status_code(response=result_parcel_remove, expected_status_code=422)

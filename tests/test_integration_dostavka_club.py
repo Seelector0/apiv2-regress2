@@ -163,7 +163,7 @@ def test_get_documents(app, token):
 @allure.description("Попытка Редактирование партии CД DostavkaClub (Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_order_in_parcel = app.parcel.get_order_in_parcel(parcel_id=parcel_id[0])
+    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel),
                                                    parcel_id=parcel_id[0], op="remove")
     Checking.check_status_code(response=result_parcel_remove, expected_status_code=422)
