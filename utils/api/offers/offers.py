@@ -5,13 +5,13 @@ class ApiOffers:
 
     def __init__(self, app):
         self.app = app
-        self.link = "/offers"
 
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
         """Метод для получения списка офферов"""
         shop_id = self.app.shop.getting_list_shop_ids()
         warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
+        link_offers = "/offers"
         if format_ == "widget":
             body_offers = {
                 "warehouseId": warehouse_id[0],
@@ -40,5 +40,4 @@ class ApiOffers:
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryPointNumber": delivery_point_number
             }
-        result_offers = self.app.http_method.get(link=self.link, params=body_offers)
-        return result_offers
+        return self.app.http_method.get(link=link_offers, params=body_offers)
