@@ -27,24 +27,20 @@ class ApiShop:
     def post_shop(self):
         """Создание магазина"""
         new_shop = self.json_shop()
-        result_post_shop = self.app.http_method.post(link=self.link, data=new_shop)
-        return result_post_shop
+        return self.app.http_method.post(link=self.link, data=new_shop)
 
     def get_shops(self):
         """Метод получения списка магазинов"""
-        result_get_shop = self.app.http_method.get(link=self.link)
-        return result_get_shop
+        return self.app.http_method.get(link=self.link)
 
     def get_shop_id(self, shop_id: str):
         """Метод получения магазина по его id"""
-        result_get_shop_by_id = self.app.http_method.get(link=f"{self.link}/{shop_id}")
-        return result_get_shop_by_id
+        return self.app.http_method.get(link=f"{self.link}/{shop_id}")
 
     def put_shop(self, shop_id: str, json_shop):
         """Метод редактирования магазина"""
         shop = self.json_shop(json_shop)
-        result_put = self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
-        return result_put
+        return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
 
     def patch_shop(self, shop_id: str, value: bool):
         """Метод делает магазин видимым или не видимым для ЛК"""
@@ -57,8 +53,7 @@ class ApiShop:
                 }
             ]
         )
-        result_patch = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=body)
-        return result_patch
+        return self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=body)
 
     def getting_list_shop_ids(self):
         """Метод получения id магазинов"""
