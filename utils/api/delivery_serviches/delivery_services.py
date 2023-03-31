@@ -10,13 +10,12 @@ class ApiDeliveryServices:
     def __init__(self, app):
         self.app = app
 
-    @staticmethod
-    def link(shop_id):
-        return f"/customer/shops/{shop_id}/delivery_services"
+    def link_shops(self):
+        shop_id = self.app.shop.getting_list_shop_ids()
+        return f"/customer/shops/{shop_id[0]}/delivery_services"
 
     def delivery_services_russian_post(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Почты России к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_russian_post = json.dumps(
                 {
@@ -39,12 +38,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        russian_post = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_russian_post)
-        return russian_post
+        return self.app.http_method.post(link=self.link_shops(), data=json_russian_post)
 
     def delivery_services_topdelivery(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки TopDelivery к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_topdelivery = json.dumps(
                 {
@@ -67,12 +64,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        topdelivery = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_topdelivery)
-        return topdelivery
+        return self.app.http_method.post(link=self.link_shops(), data=json_topdelivery)
 
     def delivery_services_boxberry(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Boxberry к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_boxberry = json.dumps(
                 {
@@ -94,12 +89,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        boxberry = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_boxberry)
-        return boxberry
+        return self.app.http_method.post(link=self.link_shops(), data=json_boxberry)
 
     def delivery_services_cdek(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Cdek к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_cdek = json.dumps(
                 {
@@ -122,12 +115,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        cdek = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_cdek)
-        return cdek
+        return self.app.http_method.post(link=self.link_shops(), data=json_cdek)
 
     def delivery_services_drh_logistic(self):
         """Настройки подключения службы доставки DRH Logistic к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_drh_logistic = json.dumps(
             {
                 "deliveryServiceCode": "Drhl",
@@ -137,12 +128,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        drh_logistic = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_drh_logistic)
-        return drh_logistic
+        return self.app.http_method.post(link=self.link_shops(), data=json_drh_logistic)
 
     def delivery_services_dpd(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Dpd к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_dpd = json.dumps(
                 {
@@ -165,12 +154,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        dpd = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_dpd)
-        return dpd
+        return self.app.http_method.post(link=self.link_shops(), data=json_dpd)
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_cse = json.dumps(
             {
                 "deliveryServiceCode": "Cse",
@@ -181,12 +168,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        cse = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_cse)
-        return cse
+        return self.app.http_method.post(link=self.link_shops(), data=json_cse)
 
     def delivery_services_five_post(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки FivePost к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_five_post = json.dumps(
                 {
@@ -208,12 +193,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        five_post = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_five_post)
-        return five_post
+        return self.app.http_method.post(link=self.link_shops(), data=json_five_post)
 
     def delivery_services_pick_point(self):
         """Настройки подключения службы доставки PickPoint к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_pick_point = json.dumps(
             {
                 "deliveryServiceCode": "PickPoint",
@@ -226,12 +209,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        pick_point = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_pick_point)
-        return pick_point
+        return self.app.http_method.post(link=self.link_shops(), data=json_pick_point)
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_svyaznoy = json.dumps(
             {
                 "deliveryServiceCode": "Svyaznoy",
@@ -241,12 +222,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        svyaznoy = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_svyaznoy)
-        return svyaznoy
+        return self.app.http_method.post(link=self.link_shops(), data=json_svyaznoy)
 
     def delivery_services_yandex_go(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки YandexGo к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_yandex_go = json.dumps(
                 {
@@ -266,12 +245,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        yandex_go = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_yandex_go)
-        return yandex_go
+        return self.app.http_method.post(link=self.link_shops(), data=json_yandex_go)
 
     def delivery_services_yandex_delivery(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки YandexDelivery к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if connection_type == "aggregation":
             json_yandex_delivery = json.dumps(
                 {
@@ -293,12 +270,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        yandex_delivery = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_yandex_delivery)
-        return yandex_delivery
+        return self.app.http_method.post(link=self.link_shops(), data=json_yandex_delivery)
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_dostavka_club = json.dumps(
             {
                 "deliveryServiceCode": "DostavkaClub",
@@ -309,12 +284,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        dostavka_club = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_dostavka_club)
-        return dostavka_club
+        return self.app.http_method.post(link=self.link_shops(), data=json_dostavka_club)
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         json_dostavka_guru = json.dumps(
             {
                 "deliveryServiceCode": "DostavkaGuru",
@@ -325,24 +298,18 @@ class ApiDeliveryServices:
                 }
             }
         )
-        dostavka_guru = self.app.http_method.post(link=self.link(shop_id=shop_id[0]), data=json_dostavka_guru)
-        return dostavka_guru
+        return self.app.http_method.post(link=self.link_shops(), data=json_dostavka_guru)
 
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        get_delivery_services = self.app.http_method.get(link=self.link(shop_id=shop_id[0]))
-        return get_delivery_services
+        return self.app.http_method.get(link=self.link_shops())
 
     def get_delivery_services_code(self, code: str):
         """Получение настроек подключения к СД по id магазина"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        result_delivery_services_code = self.app.http_method.get(link=f"{self.link(shop_id=shop_id[0])}/{code}")
-        return result_delivery_services_code
+        return self.app.http_method.get(link=f"{self.link_shops()}/{code}")
 
-    def editing_fields_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
+    def patch_fields_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
         """Метод изменения полей СД"""
-        shop_id = self.app.shop.getting_list_shop_ids()
         if path == "tariffs":
             json_editing = json.dumps(
                 [
@@ -366,17 +333,12 @@ class ApiDeliveryServices:
                     }
                 ]
             )
-        result_editing = self.app.http_method.patch(link=f"{self.link(shop_id=shop_id[0])}/{code}", data=json_editing)
-        return result_editing
+        return self.app.http_method.patch(link=f"{self.link_shops()}/{code}", data=json_editing)
 
     def activate_delivery_service(self, code: str):
         """Активация настроек подключения к СД по id магазина"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        result_activate = self.app.http_method.post(link=f"{self.link(shop_id=shop_id[0])}/{code}/activate")
-        return result_activate
+        return self.app.http_method.post(link=f"{self.link_shops()}/{code}/activate")
 
     def deactivate_delivery_service(self, code: str):
         """Деактивация настроек подключения к СД по id магазина"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        result_deactivate = self.app.http_method.post(link=f"{self.link(shop_id=shop_id[0])}/{code}/deactivate")
-        return result_deactivate
+        return self.app.http_method.post(link=f"{self.link_shops()}/{code}/deactivate")
