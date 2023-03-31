@@ -193,27 +193,23 @@ class ApiOrder:
             file = [
                 ("file", (f"{file_name}", open(file=f"{directory}{file_name}", mode="rb"), "application/vnd.ms-excel"))
             ]
-        result_order_from_file = self.app.http_method.post(link=link, data=json_order_from_file, files=file)
-        return result_order_from_file
+        return self.app.http_method.post(link=link, data=json_order_from_file, files=file)
 
     def get_order_search(self, query: str):
         """Метод поиска по заказам"""
         search = {
             "query": query
         }
-        search_order = self.app.http_method.get(link=f"{self.link}/search", params=search)
-        return search_order
+        return self.app.http_method.get(link=f"{self.link}/search", params=search)
 
     def get_orders(self):
         """Метод возвращает список заказов"""
-        result_get_order_list = self.app.http_method.get(link=self.link)
-        return result_get_order_list
+        return self.app.http_method.get(link=self.link)
 
     def get_order_id(self, order_id: str, sec: float = 0):
         """Метод получения информации о заказе по его id"""
         time.sleep(sec)
-        result_get_odre_by_id = self.app.http_method.get(link=f"{self.link}/{order_id}")
-        return result_get_odre_by_id
+        return self.app.http_method.get(link=f"{self.link}/{order_id}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
                   family_name: str):
@@ -227,8 +223,7 @@ class ApiOrder:
         body_order["payment"]["declaredValue"] = declared_value
         body_order["recipient"]["familyName"] = family_name
         body = json.dumps(body_order)
-        result_put_order = self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
-        return result_put_order
+        return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
 
     def patch_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
                     weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
@@ -292,28 +287,23 @@ class ApiOrder:
                     }
                 ]
             )
-        result_patch = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-        return result_patch
+        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
     def delete_order(self, order_id: str):
         """Метод удаления заказа"""
-        result_delete_order = self.app.http_method.delete(link=f"{self.link}/{order_id}")
-        return result_delete_order
+        return self.app.http_method.delete(link=f"{self.link}/{order_id}")
 
     def get_order_patches(self, order_id: str):
         """Получение PATCH изменений по заказу"""
-        result_order_patches = self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
-        return result_order_patches
+        return self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
 
     def get_order_statuses(self, order_id: str):
         """Получение информации об истории изменения статусов заказа"""
-        result_order_statuses = self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
-        return result_order_statuses
+        return self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
 
     def get_order_details(self, order_id: str):
         """Получение подробной информации о заказе"""
-        result_order_details = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
-        return result_order_details
+        return self.app.http_method.get(link=f"{self.link}/{order_id}/details")
 
     def getting_order_id_out_parcel(self):
         """Метод получения id заказов не в партии"""
