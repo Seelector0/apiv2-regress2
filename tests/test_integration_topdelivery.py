@@ -242,7 +242,7 @@ def test_get_label(app, token):
 def test_get_labels_from_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_labels_from_parcel = app.document.get_labels_from_parcel(parcel_id=parcel_id[0], order_ids=order_in_parcel)
+    result_labels_from_parcel = app.document.get_labels_from_parcel(order_ids=order_in_parcel)
     Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
 

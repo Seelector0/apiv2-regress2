@@ -18,18 +18,15 @@ class ApiWebhook:
                 "secret": "string"
             }
         )
-        result_webhook = self.app.http_method.post(link=self.link, data=json_webhook)
-        return result_webhook
+        return self.app.http_method.post(link=self.link, data=json_webhook)
 
     def get_webhooks(self):
         """Получение списка веб-хуков"""
-        result_get_webhooks = self.app.http_method.get(link=self.link)
-        return result_get_webhooks
+        return self.app.http_method.get(link=self.link)
 
     def get_webhook_id(self, webhook_id: str):
         """Получение веб-хука по его id"""
-        result_get_webhook_by_id = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
-        return result_get_webhook_by_id
+        return self.app.http_method.get(link=f"{self.link}/{webhook_id}")
 
     def webhook_to_change_order_status(self, url: str):
         """Веб-хук на смену статуса заказа"""
@@ -43,5 +40,4 @@ class ApiWebhook:
                 "secret": "string"
             }
         )
-        result_webhook_to_change_order_status = self.app.http_method.post(link=f"/{url}", data=json_change_order_status)
-        return result_webhook_to_change_order_status
+        return self.app.http_method.post(link=f"/{url}", data=json_change_order_status)

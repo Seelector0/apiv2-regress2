@@ -44,35 +44,29 @@ class ApiWarehouse:
     def post_warehouse(self, fullname: str = "Виктор Викторович"):
         """Метод создания нового магазина"""
         warehouse = self.json_warehouse(fullname=fullname)
-        result_post_warehouse = self.app.http_method.post(link=self.link, data=warehouse)
-        return result_post_warehouse
+        return self.app.http_method.post(link=self.link, data=warehouse)
 
     def get_warehouses(self):
         """Метод получения списка складов"""
-        result_get_warehouse = self.app.http_method.get(link=self.link)
-        return result_get_warehouse
+        return self.app.http_method.get(link=self.link)
 
     def get_warehouse_id(self, warehouse_id: str):
         """Метод получения склада по его id"""
-        result_get_warehouse_by_id = self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
-        return result_get_warehouse_by_id
+        return self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
 
     def put_warehouse(self, warehouse_id: str, fullname: str):
         """Метод редактирования склада"""
         warehouse = self.json_warehouse(fullname=fullname)
-        result_put_warehouse = self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
-        return result_put_warehouse
+        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
 
     def patch_warehouse(self, warehouse_id: str):
         """Метод делает склад не активным"""
         body = self.json_field_changes(field="visibility", new_value=False)
-        result_patch = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=body)
-        return result_patch
+        return self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=body)
 
     def delete_warehouse(self, warehouse_id: str):
         """Метод удаления склада"""
-        result_delete = self.app.http_method.delete(link=f"{self.link}/{warehouse_id}")
-        return result_delete
+        return self.app.http_method.delete(link=f"{self.link}/{warehouse_id}")
     
     def getting_list_warehouse_ids(self):
         """Метод получения id заказов не в партии"""

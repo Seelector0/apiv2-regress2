@@ -15,15 +15,12 @@ class ApiWidget:
                 "shopId": shop_id[0]
             }
         )
-        result_widget_tokens = self.app.http_method.post(link=self.link, data=body)
-        return result_widget_tokens
+        return self.app.http_method.post(link=self.link, data=body)
 
     def get_widget_tokens(self):
         """Получение списка токенов"""
-        result_widget_tokens = self.app.http_method.get(link=self.link)
-        return result_widget_tokens
+        return self.app.http_method.get(link=self.link)
 
     def get_widget_tokens_id(self, widget_id: str):
         """Получение виджета"""
-        result_widget_tokens_by_id = self.app.http_method.get(link=f"{self.link}/{widget_id}")
-        return result_widget_tokens_by_id
+        return self.app.http_method.get(link=f"{self.link}/{widget_id}")
