@@ -25,7 +25,7 @@ class ApiShop:
         return json_create_shop
 
     def post_shop(self):
-        """Создание магазина"""
+        """Метод создание магазина"""
         new_shop = self.json_shop()
         return self.app.http_method.post(link=self.link, data=new_shop)
 
