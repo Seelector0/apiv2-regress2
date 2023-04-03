@@ -67,12 +67,12 @@ def test_create_order_courier(app, token, payment_type):
     day = datetime.date.today() + datetime.timedelta(days=2)
     result_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="DostavkaGuru",
                                         price=1000, declared_value=1500, data=f"{day}", routes=
-                                          [
+                                        [
                                               {
                                                   "deliveryService": "RussianPost",
                                                   "deferred": True
                                               }
-                                          ], items_declared_value=1000, barcode=f"{randrange(1000000, 9999999)}")
+                                        ], items_declared_value=1000, barcode=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
@@ -151,19 +151,19 @@ def test_get_label(app, token):
 def test_get_labels_from_parcel(app):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_labels_from_parcel = app.document.get_labels_from_parcel(order_ids=order_in_parcel)
+    result_labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
     Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
 
 @allure.description("Получение АПП СД DostavkaGuru")
 def test_get_app(app, token):
-    result_app = app.document.get_app()
+    result_app = app.document.get_acceptance()
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов СД DostavkaGuru")
 def test_get_documents(app, token):
-    result_documents = app.document.get_documents()
+    result_documents = app.document.get_files()
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 

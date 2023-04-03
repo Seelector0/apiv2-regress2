@@ -225,19 +225,19 @@ def test_get_labels(app, token, labels):
 def test_get_labels_from_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_labels_from_parcel = app.document.get_labels_from_parcel(order_ids=order_in_parcel)
+    result_labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
     Checking.check_status_code(response=result_labels_from_parcel, expected_status_code=200)
 
 
 @allure.description("Получение АПП CД Boxberry")
 def test_get_app(app, token):
-    result_app = app.document.get_app()
+    result_app = app.document.get_acceptance()
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов CД Boxberry")
 def test_get_documents(app, token):
-    result_documents = app.document.get_documents()
+    result_documents = app.document.get_files()
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 

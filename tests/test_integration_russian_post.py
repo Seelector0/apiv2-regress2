@@ -235,13 +235,13 @@ def test_get_label(app, token):
 
 @allure.description("Получение АПП СД Почта России")
 def test_get_app(app, token):
-    result_app = app.document.get_app()
+    result_app = app.document.get_acceptance()
     Checking.check_status_code(response=result_app, expected_status_code=200)
 
 
 @allure.description("Получение документов СД Почта России")
 def test_get_documents(app, token):
-    result_documents = app.document.get_documents()
+    result_documents = app.document.get_files()
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
