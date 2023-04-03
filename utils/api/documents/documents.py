@@ -11,19 +11,19 @@ class ApiDocument:
         for parcel_id in parcels_ids:
             return f"/parcels/{parcel_id}"
 
-    def get_label(self, order_id: str, type_: str):
+    def get_label(self, order_id: str, type_: str = None):
         """Метод получения этикетки"""
         link = f"/orders/{order_id}/label"
         if type_ == "termo":
             params = {
                 "type": "termo"
             }
-        elif type_ is None or type_ == "original":
+        elif type_ == "original":
             params = {
                 "type": "original"
             }
         else:
-            raise ValueError(f"Выбран не верный тип этикетки {type_}, выберите termo или original")
+            return self.app.http_method.get(link=link)
         return self.app.http_method.get(link=link, params=params)
 
     def post_labels(self, order_ids: list):
