@@ -127,7 +127,7 @@ def test_create_multi_order_delivery_point(app, token, payment_type):
 
 @allure.description("Добавление items в многоместный заказ")
 @pytest.mark.skip("Вместо добавления items, убирает 2 items и оставляет 1")
-def test_patch_multi_order_topdelivery(app, token):
+def test_patch_multi_order(app, token):
     list_order_id = app.order.getting_order_id_out_parcel()
     choice_order_id = choice(list_order_id)
     old_len_order_list = app.order.get_order_id(order_id=choice_order_id)
