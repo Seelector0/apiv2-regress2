@@ -308,8 +308,8 @@ class ApiDeliveryServices:
         """Получение настроек подключения к СД по id магазина"""
         return self.app.http_method.get(link=f"{self.link_shops()}/{code}")
 
-    def patch_fields_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
-        """Метод изменения полей СД"""
+    def patch_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
+        """Метод редактирования полей настройки подключения к СД"""
         if path == "tariffs":
             json_editing = json.dumps(
                 [
@@ -317,7 +317,7 @@ class ApiDeliveryServices:
                         "op": "replace",
                         "path": "settings.tariffs",
                         "value": {
-                            "exclude": [tariffs],
+                            "exclude": tariffs,
                             "restrict": None
                         }
                     }
