@@ -15,7 +15,7 @@ class ApiOrder:
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
                    routes: list = None, tariff: str = None, delivery_time: dict = None,
                    items_declared_value: int = None):
-        """Создание заказа"""
+        """Метод создания заказа"""
         shop_id = self.app.shop.getting_list_shop_ids()
         warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_order = json.dumps(
@@ -77,8 +77,7 @@ class ApiOrder:
                 ]
             }
         )
-        result_create_order = self.app.http_method.post(link=self.link, data=json_order)
-        return result_create_order
+        return self.app.http_method.post(link=self.link, data=json_order)
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, data=None,
                          tariff: str = None, delivery_point_code: str = None, pickup_time_period: str = None,
@@ -87,7 +86,7 @@ class ApiOrder:
                          weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
                          shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
-        """Создание многоместного заказа"""
+        """Метод создания многоместного заказа"""
         shop_id = self.app.shop.getting_list_shop_ids()
         warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_multi_order = json.dumps(
@@ -167,8 +166,7 @@ class ApiOrder:
                 ]
             }
         )
-        result_create_multi_order = self.app.http_method.post(link=self.link, data=json_multi_order)
-        return result_create_multi_order
+        return self.app.http_method.post(link=self.link, data=json_multi_order)
 
     def post_import_order(self, format_file: str = None, file_name: str = None):
         """Метод создания заказа из файла XLSX или XLS формата Почта России или формата MetaShip"""
@@ -294,15 +292,15 @@ class ApiOrder:
         return self.app.http_method.delete(link=f"{self.link}/{order_id}")
 
     def get_order_patches(self, order_id: str):
-        """Получение PATCH изменений по заказу"""
+        """Метод получение PATCH изменений по заказу"""
         return self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
 
     def get_order_statuses(self, order_id: str):
-        """Получение информации об истории изменения статусов заказа"""
+        """Метод получение информации об истории изменения статусов заказа"""
         return self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
 
     def get_order_details(self, order_id: str):
-        """Получение подробной информации о заказе"""
+        """Метод получение подробной информации о заказе"""
         return self.app.http_method.get(link=f"{self.link}/{order_id}/details")
 
     def getting_order_id_out_parcel(self):
