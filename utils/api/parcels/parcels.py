@@ -57,7 +57,7 @@ class ApiParcel:
                 ]
             )
         else:
-            raise ValueError(f"Выбран не верная операция {op}, выберите add или remove")
+            raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
         return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
