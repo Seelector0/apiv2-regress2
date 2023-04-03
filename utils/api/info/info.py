@@ -23,11 +23,10 @@ class ApiInfo:
         return self.app.http_method.get(link="/info/delivery_time_schedules", params=params)
 
     def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
-        shop_id = self.app.shop.getting_list_shop_ids()
         """Получение списка ПВЗ конкретной СД"""
         params = {
             "deliveryServiceCode": delivery_service_code,
-            "shopId": shop_id[0],
+            "shopId": self.app.shop.getting_list_shop_ids()[0],
             "cityRaw": city_raw
         }
         return self.app.http_method.get(link="/customer/info/delivery_service_points", params=params)
