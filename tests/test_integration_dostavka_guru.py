@@ -75,7 +75,7 @@ def test_create_order_courier(app, token, payment_type):
                                         ], items_declared_value=1000, barcode=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
-    result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
+    result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=6)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")

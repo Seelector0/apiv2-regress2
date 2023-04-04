@@ -12,7 +12,7 @@ class ApiDeliveryServices:
 
     def link_delivery_services(self):
         """Метод получения ссылки для подключения СД"""
-        return f"customer/shops/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
+        return f"{self.app.shop.link}/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Почты России к магазину"""
