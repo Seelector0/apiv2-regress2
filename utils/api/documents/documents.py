@@ -8,11 +8,11 @@ class ApiDocument:
 
     def link_documents(self):
         """Метод получения ссылки для документов"""
-        return f"parcels/{self.app.parcel.getting_list_of_parcels_ids()[0]}"
+        return f"{self.app.parcel.link}/{self.app.parcel.getting_list_of_parcels_ids()[0]}"
 
     def get_label(self, order_id: str, type_: str = None):
         """Метод получения этикетки"""
-        link = f"orders/{order_id}/label"
+        link = f"{self.app.order.link}/{order_id}/label"
         if type_ == "termo":
             params = {
                 "type": "termo"
