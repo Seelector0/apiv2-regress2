@@ -5,17 +5,15 @@ class ApiOffers:
 
     def __init__(self, app):
         self.app = app
+        self.link_offers = "offers"
 
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
         """Метод для получения списка офферов"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
-        link_offers = "/offers"
         if format_ == "widget":
             body_offers = {
-                "warehouseId": warehouse_id[0],
-                "shopId": shop_id[0],
+                "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
+                "shopId": self.app.shop.getting_list_shop_ids()[0],
                 "address": "г Москва, пр-кт Мира, д 45 стр 2",
                 "declaredValue": randrange(1000, 5000),
                 "height": randrange(10, 45),
@@ -27,8 +25,8 @@ class ApiOffers:
             }
         else:
             body_offers = {
-                "warehouseId": warehouse_id[0],
-                "shopId": shop_id[0],
+                "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
+                "shopId": self.app.shop.getting_list_shop_ids()[0],
                 "address":  "г Москва, пр-кт Мира, д 45 стр 2",
                 "declaredValue": randrange(1000, 5000),
                 "height": randrange(10, 45),
@@ -40,4 +38,4 @@ class ApiOffers:
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryPointNumber": delivery_point_number
             }
-        return self.app.http_method.get(link=link_offers, params=body_offers)
+        return self.app.http_method.get(link=self.link_offers, params=body_offers)

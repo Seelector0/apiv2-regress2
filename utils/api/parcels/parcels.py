@@ -6,7 +6,7 @@ class ApiParcel:
 
     def __init__(self, app):
         self.app = app
-        self.link = "/parcels"
+        self.link = "parcels"
 
     def post_parcel(self, order_id: str, all_orders: bool = False):
         """Метод создания партии"""

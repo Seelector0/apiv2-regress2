@@ -6,7 +6,7 @@ class ApiWarehouse:
 
     def __init__(self, app):
         self.app = app
-        self.link = "/customer/warehouses"
+        self.link = "customer/warehouses"
 
     @staticmethod
     def json_warehouse(fullname: str = "Виктор Викторович"):
@@ -69,7 +69,7 @@ class ApiWarehouse:
         return self.app.http_method.delete(link=f"{self.link}/{warehouse_id}")
     
     def getting_list_warehouse_ids(self):
-        """Метод получения id заказов не в партии"""
+        """Метод получения списка id складов"""
         warehouses_id_list = []
         warehouses_list = self.get_warehouses()
         for warehouse in warehouses_list.json():

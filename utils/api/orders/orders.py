@@ -7,7 +7,7 @@ class ApiOrder:
 
     def __init__(self, app):
         self.app = app
-        self.link = "/orders"
+        self.link = "orders"
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
                    barcode: str = None, data: str = None, length: float = randint(10, 30),
@@ -16,15 +16,13 @@ class ApiOrder:
                    routes: list = None, tariff: str = None, delivery_time: dict = None,
                    items_declared_value: int = None):
         """Метод создания заказа"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_order = json.dumps(
             {
                 "warehouse": {
-                    "id": warehouse_id[0],
+                    "id": self.app.warehouse.getting_list_warehouse_ids()[0],
                 },
                 "shop": {
-                    "id": shop_id[0],
+                    "id": self.app.shop.getting_list_shop_ids()[0],
                     "number": f"{randrange(1000000, 9999999)}",
                     "barcode": barcode,
                 },
@@ -87,15 +85,13 @@ class ApiOrder:
                          shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         """Метод создания многоместного заказа"""
-        shop_id = self.app.shop.getting_list_shop_ids()
-        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
         json_multi_order = json.dumps(
             {
                 "warehouse": {
-                    "id": warehouse_id[0]
+                    "id": self.app.warehouse.getting_list_warehouse_ids()[0]
                 },
                 "shop": {
-                    "id": shop_id[0],
+                    "id": self.app.shop.getting_list_shop_ids()[0],
                     "number": f"{randrange(1000000, 9999999)}",
                     "barcode": f"{randrange(100000000, 999999999)}",
                 },
@@ -170,28 +166,25 @@ class ApiOrder:
 
     def post_import_order(self, format_file: str = None, file_name: str = None):
         """Метод создания заказа из файла XLSX или XLS формата Почта России или формата MetaShip"""
-        link = f"/import{self.link}"
-        directory = "folder_with_orders/"
-        shop_id = self.app.shop.getting_list_shop_ids()
-        warehouse_id = self.app.warehouse.getting_list_warehouse_ids()
+        directory = "folder_with_orders"
         if format_file == "russian_post":
             json_order_from_file = {
-                "shopId": shop_id[0],
-                "warehouseId": warehouse_id[0],
+                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "warehouseId": self.app.shop.getting_list_shop_ids[0],
                 "type": "russian_post"
             }
             file = [
-                ("file", (f"{file_name}", open(file=f"{directory}{file_name}", mode="rb"), "application/vnd.ms-excel"))
+                ("file", (f"{file_name}", open(file=f"{directory}/{file_name}", mode="rb"), "application/vnd.ms-excel"))
             ]
         else:
             json_order_from_file = {
-                "shopId": shop_id[0],
-                "warehouseId": warehouse_id[0]
+                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "warehouseId": self.app.shop.getting_list_shop_ids[0]
             }
             file = [
-                ("file", (f"{file_name}", open(file=f"{directory}{file_name}", mode="rb"), "application/vnd.ms-excel"))
+                ("file", (f"{file_name}", open(file=f"{directory}/{file_name}", mode="rb"), "application/vnd.ms-excel"))
             ]
-        return self.app.http_method.post(link=link, data=json_order_from_file, files=file)
+        return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
 
     def get_order_search(self, query: str):
         """Метод поиска по заказам"""
