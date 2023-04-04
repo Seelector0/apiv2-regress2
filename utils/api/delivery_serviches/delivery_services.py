@@ -10,9 +10,9 @@ class ApiDeliveryServices:
     def __init__(self, app):
         self.app = app
 
-    def link_shops(self):
-        shop_id = self.app.shop.getting_list_shop_ids()
-        return f"/customer/shops/{shop_id[0]}/delivery_services"
+    def link_delivery_services(self):
+        """Метод получения ссылки для подключения СД"""
+        return f"customer/shops/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Почты России к магазину"""
@@ -38,7 +38,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_russian_post)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
 
     def delivery_services_topdelivery(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки TopDelivery к магазину"""
@@ -64,7 +64,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_topdelivery)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
 
     def delivery_services_boxberry(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Boxberry к магазину"""
@@ -89,7 +89,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_boxberry)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
 
     def delivery_services_cdek(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Cdek к магазину"""
@@ -115,7 +115,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_cdek)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_cdek)
 
     def delivery_services_drh_logistic(self):
         """Настройки подключения службы доставки DRH Logistic к магазину"""
@@ -128,7 +128,7 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_drh_logistic)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
 
     def delivery_services_dpd(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки Dpd к магазину"""
@@ -154,7 +154,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_dpd)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dpd)
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину"""
@@ -168,7 +168,7 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_cse)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
 
     def delivery_services_five_post(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки FivePost к магазину"""
@@ -193,7 +193,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_five_post)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_five_post)
 
     def delivery_services_pick_point(self):
         """Настройки подключения службы доставки PickPoint к магазину"""
@@ -209,7 +209,7 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_pick_point)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_pick_point)
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину"""
@@ -222,7 +222,7 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_svyaznoy)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
 
     def delivery_services_yandex_go(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки YandexGo к магазину"""
@@ -245,7 +245,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_yandex_go)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
 
     def delivery_services_yandex_delivery(self, connection_type: str = "integration"):
         """Настройки подключения службы доставки YandexDelivery к магазину"""
@@ -270,7 +270,7 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_shops(), data=json_yandex_delivery)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_delivery)
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину"""
@@ -284,7 +284,7 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_dostavka_club)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_club)
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину"""
@@ -298,15 +298,15 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_shops(), data=json_dostavka_guru)
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
 
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину"""
-        return self.app.http_method.get(link=self.link_shops())
+        return self.app.http_method.get(link=self.link_delivery_services())
 
     def get_delivery_services_code(self, code: str):
         """Получение настроек подключения к СД по id магазина"""
-        return self.app.http_method.get(link=f"{self.link_shops()}/{code}")
+        return self.app.http_method.get(link=f"{self.link_delivery_services()}/{code}")
 
     def patch_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
         """Метод редактирования полей настройки подключения к СД"""
@@ -333,12 +333,12 @@ class ApiDeliveryServices:
                     }
                 ]
             )
-        return self.app.http_method.patch(link=f"{self.link_shops()}/{code}", data=json_editing)
+        return self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json_editing)
 
     def activate_delivery_service(self, code: str):
         """Активация настроек подключения к СД по id магазина"""
-        return self.app.http_method.post(link=f"{self.link_shops()}/{code}/activate")
+        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
 
     def deactivate_delivery_service(self, code: str):
         """Деактивация настроек подключения к СД по id магазина"""
-        return self.app.http_method.post(link=f"{self.link_shops()}/{code}/deactivate")
+        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")
