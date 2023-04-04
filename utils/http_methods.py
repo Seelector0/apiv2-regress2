@@ -31,7 +31,7 @@ class HttpMethod:
 
     @staticmethod
     def _send(link: str, data, headers: dict, method: str):
-        link = f"{ENV_OBJECT.get_base_url()}/v2{link}"
+        link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
         # Logger.add_request(link, data, headers, method)
         if method == 'GET':
             response = requests.get(url=link, params=data, headers=headers)
