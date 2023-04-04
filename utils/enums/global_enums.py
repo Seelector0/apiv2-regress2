@@ -115,7 +115,7 @@ class OtherInfo(Enum):
 
     DPD_COURIER_TARIFFS = ["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY", "MXO"]
 
-    DPD_DS_TARIFFS = ["NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
+    DPD_DS_TARIFFS = ["BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
 
     FIVE_POST_VATS = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"}
