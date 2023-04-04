@@ -6,7 +6,7 @@ class ApiShop:
 
     def __init__(self, app):
         self.app = app
-        self.link = "/customer/shops"
+        self.link = "customer/shops"
 
     @staticmethod
     def json_shop(shop_name: str = f"INT{randrange(100000, 999999)}",
