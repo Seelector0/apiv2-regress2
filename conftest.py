@@ -16,7 +16,7 @@ def app():
     """Фикстура для открытия сессии по Api"""
     global fixture
     if fixture is None:
-        fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}{'/auth/access_token'}")
+        fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
     fixture.open_session()
     Checking.check_status_code(response=fixture.response, expected_status_code=200)
     return fixture
