@@ -9,7 +9,10 @@ class ApiParcel:
         self.link = "parcels"
 
     def post_parcel(self, order_id: str, all_orders: bool = False):
-        """Метод создания партии"""
+        r"""Метод создания партии.
+        :param order_id: Идентификатор заказа.
+        :param all_orders: Флаг True отправляет списком заказы в партию.
+        """
         if all_orders:
             json_create_parcel = json.dumps(
                 {
@@ -27,15 +30,21 @@ class ApiParcel:
         return self.app.http_method.post(link=self.link, data=json_create_parcel)
 
     def get_parcels(self):
-        """Метод получения списка партий"""
+        """Метод получения списка партий."""
         return self.app.http_method.get(link=self.link)
 
     def get_parcel_id(self, parcel_id: str):
-        """Получение партии по её id"""
+        r"""Получение партии по её id.
+        :param parcel_id: Идентификатор партии.
+        """
         return self.app.http_method.get(link=f"{self.link}/{parcel_id}")
 
     def patch_parcel(self, op: str, order_id: str, parcel_id: str):
-        """Метод редактирования партии - добавление(add) или удаление(remove) заказов"""
+        r"""Метод редактирования партии.
+        :param op: Операция op, 'add' - добавление заказов, 'remove' - удаление заказов.
+        :param order_id: Идентификатор партии.
+        :param parcel_id: Идентификатор партии.
+        """
         if op == "add":
             json_patch_parcel = json.dumps(
                 [
@@ -61,7 +70,10 @@ class ApiParcel:
         return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
-        """Метод изменения даты доставки партии"""
+        r"""Метод изменения даты доставки партии только для почты России.
+        :param parcel_id: Идентификатор партии.
+        :param day: Количество дней.
+        """
         data: datetime.date = datetime.date.today()
         data += datetime.timedelta(days=day)
         json_patch_parcel = json.dumps(
@@ -76,7 +88,7 @@ class ApiParcel:
         return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
 
     def get_orders_in_parcel(self, parcel_id):
-        """Получение списка заказов в партии"""
+        """Получение списка заказов в партии."""
         order_in_parcel = []
         parcel_list = self.get_parcel_id(parcel_id=parcel_id)
         for order in parcel_list.json()["data"]["request"]["orderIds"]:
@@ -84,7 +96,7 @@ class ApiParcel:
         return order_in_parcel
 
     def getting_list_of_parcels_ids(self):
-        """Получение списка id партий"""
+        """Получение списка id партий."""
         list_parcel_id = []
         parcel_list = self.get_parcels()
         for parcel_id in parcel_list.json():

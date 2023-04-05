@@ -10,12 +10,31 @@ class ApiOrder:
         self.link = "orders"
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
-                   barcode: str = None, data: str = None, length: float = randint(10, 30),
+                   barcode: str = None, data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
                    width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None, tariff: str = None, delivery_time: dict = None,
+                   routes: list = None, tariff: str = None,
                    items_declared_value: int = None):
-        """Метод создания заказа"""
+        r"""Метод создания заказа.
+        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
+        :param declared_value: Объявленная стоимость.
+        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param service: Код СД.
+        :param price: Цена товарной позиции.
+        :param barcode: Штрих код заказа.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param length: Длинна.
+        :param width: Ширина.
+        :param height: Высота.
+        :param weight: Вес товарной позиции.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param pickup_time_period: Дата привоза на склад.
+        :param date_pickup: Временной интервал
+        :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
+        :param tariff: Тариф создания заказа.
+        :param items_declared_value: Цена товарной позиции.
+        """
         json_order = json.dumps(
             {
                 "warehouse": {
@@ -84,7 +103,26 @@ class ApiOrder:
                          weight_1: float = randint(1, 5), weight_2: float = randint(1, 5),
                          shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
-        """Метод создания многоместного заказа"""
+        r"""Метод создания многоместного заказа.
+        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
+        :param declared_value: Объявленная стоимость.
+        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param service: Код СД.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param length: Длинна.
+        :param width: Ширина.
+        :param height: Высота.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param pickup_time_period: Дата привоза на склад.
+        :param date_pickup: Временной интервал.
+        :param tariff: Тариф создания заказа.
+        :param weight_1: Вес первого места в заказе.
+        :param weight_2: Вес второго места в заказе.
+        :param shop_number_1: Номер в магазине первого места в заказе.
+        :param shop_number_2: Номер в магазине второго места в заказе.
+        :param dimension: Габариты места заказа.
+        """
         json_multi_order = json.dumps(
             {
                 "warehouse": {
@@ -165,7 +203,10 @@ class ApiOrder:
         return self.app.http_method.post(link=self.link, data=json_multi_order)
 
     def post_import_order(self, format_file: str = None, file_name: str = None):
-        """Метод создания заказа из файла XLSX или XLS формата Почта России или формата MetaShip"""
+        r"""Метод создания заказа из файла XLSX или XLS формата.
+        :param format_file: Формат файла 'Почта России' или 'формата MetaShip'.
+        :param file_name: Название файла.
+        """
         directory = "folder_with_orders"
         if format_file == "russian_post":
             json_order_from_file = {
@@ -187,24 +228,37 @@ class ApiOrder:
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
 
     def get_order_search(self, query: str):
-        """Метод поиска по заказам"""
+        r"""Метод поиска по заказам.
+        :param query: Метод поиска по ID, shop_number и тд.
+        """
         search = {
             "query": query
         }
         return self.app.http_method.get(link=f"{self.link}/search", params=search)
 
     def get_orders(self):
-        """Метод возвращает список заказов"""
+        """Метод возвращает список заказов."""
         return self.app.http_method.get(link=self.link)
 
     def get_order_id(self, order_id: str, sec: float = 0):
-        """Метод получения информации о заказе по его id"""
+        r"""Метод получения информации о заказе по его id.
+        :param order_id: Идентификатор заказа.
+        :param sec: Задержка перед методом для регистрации заказа в системе.
+        """
         time.sleep(sec)
         return self.app.http_method.get(link=f"{self.link}/{order_id}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
                   family_name: str):
-        """Метод обновления заказ (PUT)"""
+        r"""Метод обновления заказ.
+        :param order_id: Идентификатор заказа.
+        :param weight: Общий вес заказа.
+        :param length: Длинна.
+        :param width: Ширина.
+        :param height: Высота.
+        :param declared_value: Объявленная стоимость.
+        :param family_name: ФИО получателя.
+        """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         body_order = result_get_order_by_id.json()["data"]["request"]
         body_order["weight"] = weight
@@ -218,7 +272,14 @@ class ApiOrder:
 
     def patch_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
                     weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
-        """Метод обновления поля в заказе и добавление места (PATCH)"""
+        r"""Метод обновления поля в заказе и добавление места.
+        :param order_id: Идентификатор заказа.
+        :param path: Добавления items.
+        :param shop_number_3: Номер нового items в магазине - значение по умолчанию, можно передать своё.
+        :param weight_3: Вес нового items значение по умолчанию, можно передать своё.
+        :param weight_4: Вес нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
+        :param dimension: Габариты нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
+        """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items_1 = result_get_order_by_id.json()["data"]["request"]["places"]
         if path == "places":
@@ -281,23 +342,31 @@ class ApiOrder:
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
     def delete_order(self, order_id: str):
-        """Метод удаления заказа"""
+        r"""Метод удаления заказа.
+        :param order_id: Идентификатор заказа.
+        """
         return self.app.http_method.delete(link=f"{self.link}/{order_id}")
 
     def get_order_patches(self, order_id: str):
-        """Метод получение PATCH изменений по заказу"""
+        r"""Метод получение PATCH изменений по заказу.
+        :param order_id: Идентификатор заказа.
+        """
         return self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
 
     def get_order_statuses(self, order_id: str):
-        """Метод получение информации об истории изменения статусов заказа"""
+        r"""Метод получение информации об истории изменения статусов заказа.
+        :param order_id: Идентификатор заказа.
+        """
         return self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
 
     def get_order_details(self, order_id: str):
-        """Метод получение подробной информации о заказе"""
+        r"""Метод получение подробной информации о заказе.
+        :param order_id: Идентификатор заказа.
+        """
         return self.app.http_method.get(link=f"{self.link}/{order_id}/details")
 
     def getting_order_id_out_parcel(self):
-        """Метод получения id заказов не в партии"""
+        """Метод получения id заказов не в партии."""
         orders_id_list = []
         order_list = self.get_orders()
         for order in order_list.json():

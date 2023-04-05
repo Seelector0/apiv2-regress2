@@ -9,7 +9,13 @@ class ApiOffers:
 
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
-        """Метод для получения списка офферов"""
+        r"""Метод для получения списка офферов.
+        :param types: Тип запроса офферов 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param delivery_service_code: Код СД.
+        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
+        :param delivery_point_number: Идентификатор точки доставки.
+        :param format_: Получение в формате виджета.
+        """
         if format_ == "widget":
             body_offers = {
                 "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],

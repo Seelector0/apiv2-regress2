@@ -8,19 +8,20 @@ class ApiWidget:
         self.link = "/widgets/tokens"
 
     def create_widget_tokens(self):
-        """Создание токена для виджета"""
-        shop_id = self.app.shop.getting_list_shop_ids()
+        """Создание токена для виджета."""
         body = json.dumps(
             {
-                "shopId": shop_id[0]
+                "shopId": self.app.shop.getting_list_shop_ids()[0]
             }
         )
         return self.app.http_method.post(link=self.link, data=body)
 
     def get_widget_tokens(self):
-        """Получение списка токенов"""
+        """Получение списка токенов."""
         return self.app.http_method.get(link=self.link)
 
     def get_widget_tokens_id(self, widget_id: str):
-        """Получение виджета"""
+        r"""Получение виджета.
+        :param widget_id: Идентификатор виджета.
+        """
         return self.app.http_method.get(link=f"{self.link}/{widget_id}")
