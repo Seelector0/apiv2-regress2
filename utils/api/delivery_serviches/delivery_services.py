@@ -342,12 +342,12 @@ class ApiDeliveryServices:
 
     def activate_delivery_service(self, code: str):
         r"""Активация настроек подключения к СД по id магазина.
-        :param code: Код службы доставки.
+        :param code: Код СД.
         """
         return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
 
     def deactivate_delivery_service(self, code: str):
         r"""Деактивация настроек подключения к СД по id магазина.
-        :param code: Код службы доставки.
+        :param code: Код СД.
         """
         return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")

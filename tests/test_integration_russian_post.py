@@ -106,8 +106,9 @@ def test_offers_russian_post(app, payment_type, token):
 
 @allure.description("Создание Courier заказа по СД Почта России")
 def test_create_order_courier(app, token):
-    result_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="RussianPost", tariff="24",
-                                        price=1000, declared_value=1500)
+    result_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="RussianPost",
+                                        tariff=choice(OtherInfo.RP_COURIER_TARIFFS.value), price=1000,
+                                        declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
     Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
