@@ -9,12 +9,13 @@ from utils.api.webhooks.webhooks import ApiWebhook
 from utils.api.widgets.widgets import ApiWidget
 from utils.http_methods import HttpMethod
 from utils.api.shops.shops import ApiShop
+from requests import Response
 import requests
 
 
 class Application:
 
-    def __init__(self, base_url=None, response=None, token=None):
+    def __init__(self, base_url: str = None, response: Response = None, token: dict = None):
         self.base_url = base_url
         self.session = requests.Session()
         self.response = response
@@ -32,7 +33,7 @@ class Application:
         self.widget = ApiWidget(self)
         self.webhook = ApiWebhook(self)
 
-    def open_session(self, data, headers: dict):
+    def open_session(self, data: dict, headers: dict):
         """Метод для открытия сессии"""
         self.response = self.session.post(url=self.base_url, data=data, headers=headers)
         return self.response
