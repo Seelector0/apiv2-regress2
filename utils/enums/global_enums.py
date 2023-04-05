@@ -23,6 +23,8 @@ class OtherInfo(Enum):
         {"name": "sms", "title": "SMS информирование", "description": "SMS уведомление получателя"}
     ]
 
+    RP_COURIER_TARIFFS = ["24", "7"]
+
     RP_PO_TARIFFS = ["23", "47", "4"]
 
     CDEK_VATS = [
