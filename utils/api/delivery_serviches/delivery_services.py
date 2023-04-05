@@ -11,7 +11,7 @@ class ApiDeliveryServices:
         self.app = app
 
     def link_delivery_services(self):
-        """Метод получения ссылки для подключения СД"""
+        """Метод получения ссылки для подключения СД."""
         return f"{self.app.shop.link}/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, connection_type: str = "integration"):
@@ -40,8 +40,10 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
 
-    def delivery_services_topdelivery(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки TopDelivery к магазину"""
+    def delivery_services_topdelivery(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки TopDelivery к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_topdelivery = json.dumps(
                 {
@@ -66,8 +68,10 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
 
-    def delivery_services_boxberry(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки Boxberry к магазину"""
+    def delivery_services_boxberry(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки Boxberry к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_boxberry = json.dumps(
                 {
@@ -91,8 +95,10 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
 
-    def delivery_services_cdek(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки Cdek к магазину"""
+    def delivery_services_cdek(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки Cdek к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_cdek = json.dumps(
                 {
@@ -118,7 +124,7 @@ class ApiDeliveryServices:
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_cdek)
 
     def delivery_services_drh_logistic(self):
-        """Настройки подключения службы доставки DRH Logistic к магазину"""
+        """Настройки подключения службы доставки DRH Logistic к магазину."""
         json_drh_logistic = json.dumps(
             {
                 "deliveryServiceCode": "Drhl",
@@ -130,8 +136,10 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
 
-    def delivery_services_dpd(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки Dpd к магазину"""
+    def delivery_services_dpd(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки Dpd к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_dpd = json.dumps(
                 {
@@ -157,7 +165,7 @@ class ApiDeliveryServices:
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_dpd)
 
     def delivery_services_cse(self):
-        """Настройки подключения службы доставки Cse к магазину"""
+        """Настройки подключения службы доставки Cse к магазину."""
         json_cse = json.dumps(
             {
                 "deliveryServiceCode": "Cse",
@@ -170,8 +178,10 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
 
-    def delivery_services_five_post(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки FivePost к магазину"""
+    def delivery_services_five_post(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки FivePost к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_five_post = json.dumps(
                 {
@@ -195,24 +205,8 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_five_post)
 
-    def delivery_services_pick_point(self):
-        """Настройки подключения службы доставки PickPoint к магазину"""
-        json_pick_point = json.dumps(
-            {
-                "deliveryServiceCode": "PickPoint",
-                "data": {
-                    "intakePointCode": None,
-                    "login": f"{os.getenv('PICK_POINT_LOGIN')}",
-                    "password": f"{os.getenv('PICK_POINT_PASSWORD')}",
-                    "agreementNumber": f"{os.getenv('PICK_POINT_AGREEMENT_NUMBER')}",
-                    "clientNumber": None
-                }
-            }
-        )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_pick_point)
-
     def delivery_services_svyaznoy(self):
-        """Настройки подключения службы доставки Svyaznoy к магазину"""
+        """Настройки подключения службы доставки Svyaznoy к магазину."""
         json_svyaznoy = json.dumps(
             {
                 "deliveryServiceCode": "Svyaznoy",
@@ -224,8 +218,10 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
 
-    def delivery_services_yandex_go(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки YandexGo к магазину"""
+    def delivery_services_yandex_go(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки YandexGo к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_yandex_go = json.dumps(
                 {
@@ -247,8 +243,10 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
 
-    def delivery_services_yandex_delivery(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки YandexDelivery к магазину"""
+    def delivery_services_yandex_delivery(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки YandexDelivery к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
         if connection_type == "aggregation":
             json_yandex_delivery = json.dumps(
                 {
@@ -273,7 +271,7 @@ class ApiDeliveryServices:
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_delivery)
 
     def delivery_services_dostavka_club(self):
-        """Настройки подключения службы доставки DostavkaClub к магазину"""
+        """Настройки подключения службы доставки DostavkaClub к магазину."""
         json_dostavka_club = json.dumps(
             {
                 "deliveryServiceCode": "DostavkaClub",
@@ -287,7 +285,7 @@ class ApiDeliveryServices:
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_club)
 
     def delivery_services_dostavka_guru(self):
-        """Настройки подключения службы доставки DostavkaGuru к магазину"""
+        """Настройки подключения службы доставки DostavkaGuru к магазину."""
         json_dostavka_guru = json.dumps(
             {
                 "deliveryServiceCode": "DostavkaGuru",
@@ -301,15 +299,22 @@ class ApiDeliveryServices:
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
 
     def get_delivery_services(self):
-        """Метод получения списка выполненных настроек СД к магазину"""
+        """Метод получения списка выполненных настроек СД к магазину."""
         return self.app.http_method.get(link=self.link_delivery_services())
 
     def get_delivery_services_code(self, code: str):
-        """Получение настроек подключения к СД по id магазина"""
+        r"""Получение настроек подключения к СД по id магазина.
+        :param code: Код СД.
+        """
         return self.app.http_method.get(link=f"{self.link_delivery_services()}/{code}")
 
     def patch_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
-        """Метод редактирования полей настройки подключения к СД"""
+        r"""Метод редактирования полей настройки подключения к СД.
+        :param code: Код СД.
+        :param value: Скрытие СД из ЛК при False.
+        :param path: Изменяемое поле в СД.
+        :param tariffs: Список тарифов для редактирования.
+        """
         if path == "tariffs":
             json_editing = json.dumps(
                 [
@@ -336,9 +341,13 @@ class ApiDeliveryServices:
         return self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json_editing)
 
     def activate_delivery_service(self, code: str):
-        """Активация настроек подключения к СД по id магазина"""
+        r"""Активация настроек подключения к СД по id магазина.
+        :param code: Код службы доставки.
+        """
         return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
 
     def deactivate_delivery_service(self, code: str):
-        """Деактивация настроек подключения к СД по id магазина"""
+        r"""Деактивация настроек подключения к СД по id магазина.
+        :param code: Код службы доставки.
+        """
         return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")
