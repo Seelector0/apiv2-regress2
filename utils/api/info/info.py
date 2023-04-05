@@ -46,8 +46,7 @@ class ApiInfo:
 
     def info_statuses(self):
         """Получение полного актуального списка возможных статусов заказа"""
-        result_info_statuses = self.app.http_method.get(link="/info/statuses")
-        return result_info_statuses
+        return self.app.http_method.get(link="/info/statuses")
 
     def info_delivery_service_services(self, code: str):
         """Получение информации о дополнительных услугах поддерживаемых СД"""
