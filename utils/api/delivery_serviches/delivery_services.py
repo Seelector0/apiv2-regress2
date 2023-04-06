@@ -14,8 +14,11 @@ class ApiDeliveryServices:
         """Метод получения ссылки для подключения СД."""
         return f"{self.app.shop.link}/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
 
-    def delivery_services_russian_post(self, connection_type: str = "integration"):
-        """Настройки подключения службы доставки Почты России к магазину"""
+    def delivery_services_russian_post(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки RussianPost к магазину
+        :param connection_type: Тип подключения СД по агрегации.
+        """
+
         if connection_type == "aggregation":
             json_russian_post = json.dumps(
                 {
