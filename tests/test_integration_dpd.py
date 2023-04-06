@@ -1,5 +1,5 @@
 from utils.checking import Checking
-from utils.enums.global_enums import OtherInfo
+from utils.enums.global_enums import INFO
 from random import choice, randrange
 import datetime
 import pytest
@@ -10,7 +10,7 @@ import allure
 def test_create_integration_shop(app, token):
     result_new_shop = app.shop.post_shop()
     Checking.check_status_code(response=result_new_shop, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_shop, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_new_shop, expected_value=INFO.created_entity)
     result_get_new_shop = app.shop.get_shop_id(shop_id=result_new_shop.json()["id"])
     Checking.check_status_code(response=result_get_new_shop, expected_status_code=200)
     Checking.checking_json_value(response=result_get_new_shop, key_name="visibility", expected_value=True)
@@ -20,7 +20,7 @@ def test_create_integration_shop(app, token):
 def test_create_warehouse(app, token):
     result_new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_new_warehouse, expected_value=INFO.created_entity)
     result_get_new_warehouse = app.warehouse.get_warehouse_id(warehouse_id=result_new_warehouse.json()["id"])
     Checking.check_status_code(response=result_get_new_warehouse, expected_status_code=200)
     Checking.checking_json_value(response=result_get_new_warehouse, key_name="visibility", expected_value=True)
@@ -30,7 +30,7 @@ def test_create_warehouse(app, token):
 def test_integration_delivery_services(app, token):
     result_dpd = app.service.delivery_services_dpd()
     Checking.check_status_code(response=result_dpd, expected_status_code=201)
-    Checking.checking_json_key(response=result_dpd, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_dpd, expected_value=INFO.created_entity)
     result_get_dpd = app.service.get_delivery_services_code(code="Dpd")
     Checking.check_status_code(response=result_get_dpd, expected_status_code=200)
     Checking.checking_json_value(response=result_get_dpd, key_name="code", expected_value="Dpd")
@@ -57,15 +57,14 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="Dpd")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.DPD_VATS.value)
+    Checking.checking_json_key(response=result_info_vats, expected_value=INFO.dpd_vats)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД Dpd")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="Dpd")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services,
-                               expected_value=OtherInfo.DPD_SERVICES.value)
+    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=INFO.dpd_services)
 
 
 @allure.description("Получение оферов по СД Dpd (Courier)")
@@ -90,11 +89,11 @@ def test_offers_delivery_point(app, payment_type, token):
 def test_create_order_courier(app, token):
     result_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                         barcode=f"{randrange(100000000, 999999999)}",
-                                        tariff=choice(OtherInfo.DPD_COURIER_TARIFFS.value),
+                                        tariff=choice(INFO.dpd_courier_tariffs),
                                         date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
                                         price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_order, expected_value=INFO.created_entity)
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=7)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
@@ -105,11 +104,11 @@ def test_create_order_courier(app, token):
 def test_create_order_delivery_point(app, token):
     result_order = app.order.post_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                         barcode=f"{randrange(100000000, 999999999)}",
-                                        tariff=choice(OtherInfo.DPD_DS_TARIFFS.value),
+                                        tariff=choice(INFO.dpd_ds_tariffs),
                                         date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
                                         delivery_point_code="007K", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_order, expected_value=INFO.created_entity)
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=6)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
@@ -149,7 +148,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
+        Checking.checking_json_key(response=result_order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД Dpd")
@@ -205,11 +204,10 @@ def test_get_documents(app, token):
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel), parcel_id=parcel_id[0],
-                                                   op="remove")
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
+    Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
 
 

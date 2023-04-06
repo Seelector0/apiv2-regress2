@@ -1,5 +1,5 @@
 from utils.checking import Checking
-from utils.enums.global_enums import OtherInfo
+from utils.enums.global_enums import INFO
 from random import choice, randrange
 import datetime
 import pytest
@@ -43,22 +43,21 @@ def test_delivery_time_schedules(app, token):
     result_delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="DostavkaGuru")
     Checking.check_status_code(response=result_delivery_time_schedules, expected_status_code=200)
     Checking.checking_json_value(response=result_delivery_time_schedules, key_name="intervals",
-                                 expected_value=OtherInfo.GURU_INTERVALS.value)
+                                 expected_value=INFO.guru_intervals)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД DostavkaGuru")
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="DostavkaGuru")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.GURU_VATS.value)
+    Checking.checking_json_key(response=result_info_vats, expected_value=INFO.guru_vats)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД DostavkaGuru")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="DostavkaGuru")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services,
-                               expected_value=OtherInfo.GURU_SERVICES.value)
+    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=INFO.guru_services)
 
 
 @allure.description("Создание Courier заказа по CД DostavkaGuru")
@@ -120,7 +119,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
+        Checking.checking_json_key(response=result_order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии CД DostavkaGuru")
@@ -170,7 +169,6 @@ def test_get_documents(app, token):
 @allure.description("Попытка Редактирование партии CД DostavkaGuru (Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel), parcel_id=parcel_id[0],
-                                                   op="remove")
-    Checking.check_status_code(response=result_parcel_remove, expected_status_code=422)
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
+    Checking.check_status_code(response=parcel_remove, expected_status_code=422)

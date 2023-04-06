@@ -1,6 +1,6 @@
 from utils.checking import Checking
 from random import choice
-from utils.enums.global_enums import OtherInfo
+from utils.enums.global_enums import INFO
 import pytest
 import allure
 
@@ -11,7 +11,7 @@ import allure
 def test_create_integration_shop(app, token):
     result_new_shop = app.shop.post_shop()
     Checking.check_status_code(response=result_new_shop, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_shop, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_new_shop, expected_value=INFO.created_entity)
     result_get_new_shop = app.shop.get_shop_id(shop_id=result_new_shop.json()["id"])
     Checking.check_status_code(response=result_get_new_shop, expected_status_code=200)
     Checking.checking_json_value(response=result_get_new_shop, key_name="visibility", expected_value=True)
@@ -21,7 +21,7 @@ def test_create_integration_shop(app, token):
 def test_create_warehouse(app, token):
     result_new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=result_new_warehouse, expected_status_code=201)
-    Checking.checking_json_key(response=result_new_warehouse, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_new_warehouse, expected_value=INFO.created_entity)
     result_get_new_warehouse = app.warehouse.get_warehouse_id(warehouse_id=result_new_warehouse.json()["id"])
     Checking.check_status_code(response=result_get_new_warehouse, expected_status_code=200)
     Checking.checking_json_value(response=result_get_new_warehouse, key_name="visibility", expected_value=True)
@@ -31,7 +31,7 @@ def test_create_warehouse(app, token):
 def test_integration_delivery_services(app, token):
     result_russian_post = app.service.delivery_services_russian_post()
     Checking.check_status_code(response=result_russian_post, expected_status_code=201)
-    Checking.checking_json_key(response=result_russian_post, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_russian_post, expected_value=INFO.created_entity)
     result_get_russian_post = app.service.get_delivery_services_code(code="RussianPost")
     Checking.check_status_code(response=result_get_russian_post, expected_status_code=200)
     Checking.checking_json_value(response=result_get_russian_post, key_name="code", expected_value="RussianPost")
@@ -66,15 +66,14 @@ def test_delivery_time_schedules(app, token):
 def test_info_vats(app, token):
     result_info_vats = app.info.info_vats(delivery_service_code="RussianPost")
     Checking.check_status_code(response=result_info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_vats, expected_value=OtherInfo.RP_VATS.value)
+    Checking.checking_json_key(response=result_info_vats, expected_value=INFO.rp_vats)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД Почта России")
 def test_info_statuses(app, token):
     result_info_delivery_service_services = app.info.info_delivery_service_services(code="RussianPost")
     Checking.check_status_code(response=result_info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=result_info_delivery_service_services,
-                               expected_value=OtherInfo.RP_SERVICES.value)
+    Checking.checking_json_key(response=result_info_delivery_service_services, expected_value=INFO.rp_services)
 
 
 @allure.description("Получение оферов по СД Почта России (Courier)")
@@ -107,10 +106,9 @@ def test_offers_russian_post(app, payment_type, token):
 @allure.description("Создание Courier заказа по СД Почта России")
 def test_create_order_courier(app, token):
     result_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="RussianPost",
-                                        tariff=choice(OtherInfo.RP_COURIER_TARIFFS.value), price=1000,
-                                        declared_value=1500)
+                                        tariff=choice(INFO.rp_courier_tariffs), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_order, expected_value=INFO.created_entity)
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
@@ -120,10 +118,10 @@ def test_create_order_courier(app, token):
 @allure.description("Создание DeliveryPoint заказа по СД Почта России")
 def test_create_delivery_point(app, token):
     result_order = app.order.post_order(payment_type="Paid", length=15, width=15, height=15, type_ds="DeliveryPoint",
-                                        service="RussianPost", tariff=OtherInfo.RP_PO_TARIFFS.value[0],
+                                        service="RussianPost", tariff=INFO.rp_po_tariffs[0],
                                         delivery_point_code="914841", price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_order, expected_value=INFO.created_entity)
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
@@ -134,9 +132,9 @@ def test_create_delivery_point(app, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_post_office(app, payment_type, token):
     result_order = app.order.post_order(payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
-                                        tariff=choice(OtherInfo.RP_PO_TARIFFS.value), price=1000, declared_value=1500)
+                                        tariff=choice(INFO.rp_po_tariffs), price=1000, declared_value=1500)
     Checking.check_status_code(response=result_order, expected_status_code=201)
-    Checking.checking_json_key(response=result_order, expected_value=["id", "type", "url", "status"])
+    Checking.checking_json_key(response=result_order, expected_value=INFO.created_entity)
     result_get_order_by_id = app.order.get_order_id(order_id=result_order.json()["id"], sec=5)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
@@ -193,7 +191,7 @@ def test_order_details(app, token):
     for order_id in order_list_id:
         result_order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=result_order_details, expected_status_code=200)
-        Checking.checking_json_key(response=result_order_details, expected_value=OtherInfo.DETAILS.value)
+        Checking.checking_json_key(response=result_order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД Почта России")
@@ -250,9 +248,8 @@ def test_get_documents(app, token):
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    result_parcel_remove = app.parcel.patch_parcel(order_id=choice(result_order_in_parcel), parcel_id=parcel_id[0],
-                                                   op="remove")
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    Checking.check_status_code(response=result_parcel_remove, expected_status_code=200)
+    Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
