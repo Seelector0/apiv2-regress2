@@ -1,20 +1,21 @@
-from enum import Enum
 
 
-class OtherInfo(Enum):
+class OtherInfo:
 
-    DETAILS = [
+    created_entity = ["id", "type", "url", "status"]
+
+    details = [
         "returnItems", "returnReason", "delayReason", "paymentType", "pickupDate", "declaredDeliveryDate",
         "storageDateEnd"
     ]
 
-    RP_VATS = [
+    rp_vats = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"},
         {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"},
         {"code": "10/110", "name": "НДС 10/110"}, {"code": "20/120", "name": "НДС 20/120"}
     ]
 
-    RP_SERVICES = [
+    rp_services = [
         {"name": "no-return", "title": "Возврату не подлежит", "description": "Возврату не подлежит"},
         {"name": "open", "title": "Можно вскрывать до получения оплаты с клиента",
          "description": "Можно вскрывать до получения оплаты с клиента"},
@@ -23,16 +24,16 @@ class OtherInfo(Enum):
         {"name": "sms", "title": "SMS информирование", "description": "SMS уведомление получателя"}
     ]
 
-    RP_COURIER_TARIFFS = ["24", "7"]
+    rp_courier_tariffs = ["24", "7"]
 
-    RP_PO_TARIFFS = ["23", "47", "4"]
+    rp_po_tariffs = ["23", "47", "4"]
 
-    CDEK_VATS = [
+    cdek_vats = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
         {"code": "20", "name": "НДС 20%"}
     ]
 
-    CDEK_SERVICES = [
+    cdek_services = [
         {"name": "lifting-elevator", "title": "Подъем на этаж (лифт)", "description": "Подъем на этаж (лифт)"},
         {"name": "lifting-freight", "title": "Подъем на этаж (грузовой лифт)",
          "description": "Подъем на этаж (грузовой лифт)"},
@@ -45,22 +46,22 @@ class OtherInfo(Enum):
          "description": "Обратный заказ на доставку от получателя до отправителя"}
     ]
 
-    CDEK_COURIER_TARIFFS = ["137", "139", "480", "482"]
+    cdek_courier_tariffs = ["137", "139", "480", "482"]
 
-    CDEK_DS_TARIFFS = ["136", "138", "366", "368", "481", "483", "485", "486"]
+    cdek_ds_tariffs = ["136", "138", "366", "368", "481", "483", "485", "486"]
 
-    BOXBERRY_INTERVALS = [
+    boxberry_intervals = [
         {"from": "09:00", "to": "13:00"}, {"from": "12:00", "to": "15:00"}, {"from": "15:00", "to": "18:00"},
         {"from": "18:00", "to": "22:00"}, {"from": "09:00", "to": "18:00"}, {"from": "09:00", "to": "15:00"},
         {"from": "15:00", "to": "22:00"}
     ]
 
-    BOXBERRY_VATS = [
+    boxberry_vats = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
         {"code": "20", "name": "НДС 20%"}
     ]
 
-    BOXBERRY_SERVICES = [
+    boxberry_services = [
         {"name": "not-open", "title": "Не вскрывать до получения оплаты с клиента",
          "description": "Не вскрывать до получения оплаты с клиента"},
         {"name": "open-test",  "title": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
@@ -68,39 +69,39 @@ class OtherInfo(Enum):
         {"name": "partial-sale", "title": "Частичная реализация", "description": "Частичная реализация"}
     ]
 
-    CSE_VATS = [
+    cse_vats = [
         {'code': 'NO_VAT', 'name': 'Без НДС'}, {'code': '0', 'name': 'НДС 0%'}, {'code': '10', 'name': 'НДС 10%'},
         {'code': '18', 'name': 'НДС 18%'}, {'code': '20', 'name': 'НДС 20%'}
     ]
 
-    CSE_SERVICES = [
+    cse_services = [
         {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'}
     ]
 
-    CLUB_INTERVALS = [
+    club_intervals = [
         {'from': '10:00', 'to': '14:00'}, {'from': '14:00', 'to': '18:00'}, {'from': '18:00', 'to': '22:00'},
         {'from': '10:00', 'to': '18:00'}
     ]
 
-    CLUB_VATS = [
+    club_vats = [
         {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"}
     ]
 
-    CLUB_SERVICES = [
+    club_services = [
         {"name": "lifting-elevator", "title": "Подъем на этаж (лифт)", "description": "Подъем на этаж (лифт)"},
         {"name": "lifting-freight", "title": "Подъем на этаж (грузовой лифт)",
          "description": "Подъем на этаж (грузовой лифт)"},
         {"name": "lifting-manual", "title": "Подъем на этаж (ручной)", "description": "Подъем на этаж (ручной)"}
     ]
 
-    CLUB_TARIFFS = ["1", "2", "3", "4", "5", "6", "10", "11"]
+    club_tariffs = ["1", "2", "3", "4", "5", "6", "10", "11"]
 
-    DPD_VATS = [
+    dpd_vats = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
         {"code": "20", "name": "НДС 20%"}
     ]
 
-    DPD_SERVICES = [
+    dpd_services = [
         {'name': 'barcode-generation', 'title': 'Генерация штрихкода на стороне Меташипа',
          'description': 'Генерация штрихкода на стороне Меташипа'},
         {'name': 'dress-fitting', 'title': 'Имеется возможность примерки',
@@ -115,20 +116,20 @@ class OtherInfo(Enum):
         {'name': 'weekend-pickup', 'title': 'Приём в выходные дни', 'description': 'Приём в выходные дни'}
     ]
 
-    DPD_COURIER_TARIFFS = ["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY", "MXO"]
+    dpd_courier_tariffs = ["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY", "MXO"]
 
-    DPD_DS_TARIFFS = ["BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
+    dpd_ds_tariffs = ["BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
 
     FIVE_POST_VATS = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "10", "name": "НДС 10%"}, {"code": "20", "name": "НДС 20%"}
     ]
 
-    TOPDELIVERY_VATS = [
+    topdelivery_vats = [
         {'code': 'NO_VAT', 'name': 'Без НДС'}, {'code': '0', 'name': 'НДС 0%'}, {'code': '10', 'name': 'НДС 10%'},
         {'code': '20', 'name': 'НДС 20%'}
     ]
 
-    TOPDELIVERTY_SERVICES = [
+    topdelivery_services = [
         {'name': 'find-closest-delivery-interval', 'title': 'Поиск ближайшего интервала доставки',
          'description': 'Поиск ближайшего интервала доставки'},
         {'name': 'lifting-elevator', 'title': 'Подъем на этаж (лифт)', 'description': 'Подъем на этаж (лифт)'},
@@ -140,16 +141,19 @@ class OtherInfo(Enum):
         {'name': 'partial-sale', 'title': 'Частичная реализация', 'description': 'Частичная реализация'}
     ]
 
-    GURU_VATS = [
+    guru_vats = [
         {"code": "NO_VAT", "name": "Без НДС"}, {"code": "0", "name": "НДС 0%"}, {"code": "10", "name": "НДС 10%"},
         {"code": "20", "name": "НДС 20%"}
     ]
 
-    GURU_INTERVALS = [
+    guru_intervals = [
         {"from": "10:00", "to": "14:00"}, {"from": "14:00", "to": "18:00"}, {"from": "18:00", "to": "22:00"},
         {"from": "10:00", "to": "18:00"}
     ]
 
-    GURU_SERVICES = [
+    guru_services = [
         {"name": "partial-sale", "title": "Частичная реализация", "description": "Частичная реализация"}
     ]
+
+
+INFO = OtherInfo()
