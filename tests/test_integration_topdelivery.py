@@ -42,7 +42,6 @@ def test_integration_delivery_services(app, token):
 
 
 @allure.description("Получение списка ПВЗ СД TopDelivery")
-@pytest.mark.skip("Надо сделать прогрузку ПВЗ!!!")
 def test_delivery_service_points(app, token):
     result_delivery_service_points = app.info.delivery_service_points(delivery_service_code="TopDelivery")
     Checking.check_status_code(response=result_delivery_service_points, expected_status_code=200)
@@ -90,7 +89,6 @@ def test_offers_courier(app, payment_type, token):
 
 
 @allure.description("Получение оферов по TopDelivery (DeliveryPoint)")
-@pytest.mark.skip("Надо сделать прогрузку ПВЗ!!!")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type, token):
     result_offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
@@ -114,7 +112,6 @@ def test_create_multi_order_courier(app, token, payment_type):
 
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД TopDelivery")
-@pytest.mark.skip("Надо сделать прогрузку ПВЗ!!!")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_delivery_point(app, token, payment_type):
     result_multi_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint",
@@ -159,7 +156,6 @@ def test_create_order_courier(app, token, payment_type):
 
 
 @allure.description("Создание DeliveryPoint заказа по CД TopDelivery")
-@pytest.mark.skip("Надо сделать прогрузку ПВЗ!!!")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
     result_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="TopDelivery",
