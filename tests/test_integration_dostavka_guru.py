@@ -91,8 +91,7 @@ def test_order_status(app, token):
 
 @allure.description("Попытка удаление заказа СД DostavkaGuru")
 def test_delete_order(app, token):
-    orders_id_list = app.order.getting_order_id_out_parcel()
-    random_order_id = choice(orders_id_list)
+    random_order_id = choice(app.order.getting_order_id_out_parcel())
     result_delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=result_delete_order, expected_status_code=422)
 

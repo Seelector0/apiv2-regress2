@@ -152,8 +152,7 @@ def test_create_order_delivery_point(app, token, payment_type):
 
 @allure.description("Удаление заказа CД Boxberry")
 def test_delete_order(app, token):
-    orders_id_list = app.order.getting_order_id_out_parcel()
-    random_order_id = choice(orders_id_list)
+    random_order_id = choice(app.order.getting_order_id_out_parcel())
     result_delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=result_delete_order, expected_status_code=204)
     result_get_order_by_id = app.order.get_order_id(order_id=random_order_id)
