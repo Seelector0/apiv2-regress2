@@ -1,6 +1,5 @@
 from random import randrange, randint
 import json
-import time
 
 
 class ApiOrder:
@@ -271,7 +270,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         :param sec: Задержка перед методом для регистрации заказа в системе.
         """
-        time.sleep(sec)
+        self.app.time_sleep(sec)
         return self.app.http_method.get(link=f"{self.link}/{order_id}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
