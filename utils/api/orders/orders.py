@@ -8,6 +8,7 @@ class ApiOrder:
     def __init__(self, app):
         self.app = app
         self.link = "orders"
+        self.directory = "folder_with_orders"
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
                    barcode: str = None, data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
@@ -202,29 +203,54 @@ class ApiOrder:
         )
         return self.app.http_method.post(link=self.link, data=json_multi_order)
 
-    def post_import_order(self, format_file: str = None, file_name: str = None):
+    def post_import_order_format_russian_post(self, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS формата.
-        :param format_file: Формат файла 'Почта России' или 'формата MetaShip'.
-        :param file_name: Название файла.
+        :param file_extension: Exel файл с расширением xlsx или xls.
         """
-        directory = "folder_with_orders"
-        if format_file == "russian_post":
-            json_order_from_file = {
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
-                "warehouseId": self.app.shop.getting_list_shop_ids[0],
-                "type": "russian_post"
-            }
+        file_xls = "orders_format_russian_post.xls"
+        file_xlsx = "orders_format_russian_post.xlsx"
+        json_order_from_file = {
+            "shopId": self.app.shop.getting_list_shop_ids()[0],
+            "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
+            "type": "russian_post"
+        }
+        if file_extension == "xls":
             file = [
-                ("file", (f"{file_name}", open(file=f"{directory}/{file_name}", mode="rb"), "application/vnd.ms-excel"))
+                ("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"),
+                          "application/vnd.ms-excel"))
+            ]
+        elif file_extension == "xlsx":
+            file = [
+                ("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"),
+                          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
             ]
         else:
-            json_order_from_file = {
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
-                "warehouseId": self.app.shop.getting_list_shop_ids[0]
-            }
+            return f"Файл {file_extension} не поддерживается"
+        return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+
+    def post_import_order_format_metaship(self, delivery_services = None,file_extension: str = None):
+        r"""Метод создания заказа из файла XLSX или XLS формата.
+        :param delivery_services: Служба доставки.
+        :param file_extension: Exel файл с расширением xlsx или xls.
+        """
+        file_xls = f"orders_{delivery_services}_format_metaship.xls"
+        file_xlsx = f"orders_{delivery_services}_format_metaship.xlsx"
+        json_order_from_file = {
+            "shopId": self.app.shop.getting_list_shop_ids()[0],
+            "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0]
+        }
+        if file_extension == "xls":
             file = [
-                ("file", (f"{file_name}", open(file=f"{directory}/{file_name}", mode="rb"), "application/vnd.ms-excel"))
+                ("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"),
+                          "application/vnd.ms-excel"))
             ]
+        elif file_extension == "xlsx":
+            file = [
+                ("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"),
+                          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+            ]
+        else:
+            return f"Файл {file_extension} не поддерживается"
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
 
     def get_order_search(self, query: str):
