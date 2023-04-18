@@ -12,6 +12,7 @@ from utils.api.shops.shops import ApiShop
 from environment import ENV_OBJECT
 from requests import Response
 import requests
+import time
 
 
 class Application:
@@ -29,6 +30,7 @@ class Application:
         self.headers = {
             "Content-Type": "application/x-www-form-urlencoded"
         }
+        self.time = time
         self.http_method = HttpMethod(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
@@ -42,10 +44,16 @@ class Application:
         self.webhook = ApiWebhook(self)
 
     def open_session(self):
-        """Метод для открытия сессии"""
+        """Метод для открытия сессии."""
         self.response = self.session.post(url=self.base_url, data=self.data, headers=self.headers)
         return self.response
 
+    def time_sleep(self, sec: float = 0):
+        r"""Метод ожидания в секундах.
+        :param sec: Секунды ожидания по умолчанию 0.
+        """
+        self.time.sleep(sec)
+
     def close_session(self):
-        """Метод для закрытия сессии"""
+        """Метод для закрытия сессии."""
         self.session.close()
