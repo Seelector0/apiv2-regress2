@@ -3,8 +3,10 @@ from random import choice
 from utils.enums.global_enums import INFO
 import pytest
 import allure
+import time
 
 # Todo разобраться с widget offers
+# Todo после выкати задачи 1783 раскоментировать параметризацию создание заказа из файла.
 
 
 @allure.description("Создание магазина")
@@ -141,23 +143,6 @@ def test_create_order_post_office(app, payment_type, token):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Удаление заказа СД Почта России")
-def test_delete_order(app, token):
-    random_order_id = choice(app.order.getting_order_id_out_parcel())
-    result_delete_order = app.order.delete_order(order_id=random_order_id)
-    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
-    result_get_order_by_id = app.order.get_order_id(order_id=random_order_id)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
-
-
-@allure.description("Попытка получения этикетки СД Почта России вне партии")
-def test_get_label_of_parcel(app, token):
-    list_order_id = app.order.getting_order_id_out_parcel()
-    for order_id in list_order_id:
-        result_label = app.document.get_label(order_id=order_id)
-        Checking.check_status_code(response=result_label, expected_status_code=404)
-
-
 @allure.description("Редактирование заказа СД Почта России")
 def test_editing_order(app, token):
     order_list_id = app.order.getting_order_id_out_parcel()
@@ -173,6 +158,36 @@ def test_editing_order(app, token):
     Checking.checking_big_json(response=result_order_put, key_name="dimension", field="height", expected_value=11)
     Checking.checking_big_json(response=result_order_put, key_name="recipient", field="familyName",
                                expected_value="Иванов")
+
+
+@allure.description("Создание заказа из файла формата Почты России")
+# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file(app, token):
+    new_order = app.order.post_import_order_format_russian_post(file_extension="xls")
+    Checking.check_status_code(response=new_order, expected_status_code=200)
+    time.sleep(5)
+    for order in new_order.json().values():
+        result_get_order_by_id = app.order.get_order_id(order_id=order["id"])
+        Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
+        Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Удаление заказа СД Почта России")
+def test_delete_order(app, token):
+    random_order_id = choice(app.order.getting_order_id_out_parcel())
+    result_delete_order = app.order.delete_order(order_id=random_order_id)
+    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
+    result_get_order_by_id = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
+
+
+@allure.description("Попытка получения этикетки СД Почта России вне партии")
+def test_get_label_of_parcel(app, token):
+    list_order_id = app.order.getting_order_id_out_parcel()
+    for order_id in list_order_id:
+        result_label = app.document.get_label(order_id=order_id)
+        Checking.check_status_code(response=result_label, expected_status_code=404)
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Почта России")
