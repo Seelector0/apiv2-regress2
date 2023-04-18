@@ -27,8 +27,7 @@ def token():
     """Фикстура для получения токена для работы по Api"""
     fixture.token = {
         "x-trace-id": str(uuid.uuid4()),
-        "Authorization": f"Bearer {fixture.response.json()['access_token']}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {fixture.response.json()['access_token']}"
     }
     return fixture.token
 
