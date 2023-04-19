@@ -152,7 +152,9 @@ class DataBaseConnections(DataBase):
             cursor.close()
 
     def delete_order_document(self, order_id):
-        """Функция чистит таблицу 'order.order_document'"""
+        r"""Функция чистит таблицу 'order.order_document'.
+        :param order_id: ID заказа в БД.
+        """
         cursor = self.connection.cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".order_document '
@@ -162,7 +164,9 @@ class DataBaseConnections(DataBase):
             cursor.close()
 
     def delete_order_parcel(self, parcel_id):
-        """Функция чистит таблицу 'order.order_parcel'"""
+        r"""Функция чистит таблицу 'order.order_parcel'.
+        :param parcel_id: ID партии в БД.
+        """
         cursor = self.connection.cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".order_parcel '
@@ -187,12 +191,10 @@ class DataBaseConnections(DataBase):
         self.delete_warehouses_list()
         self.delete_delivery_services_list()
         self.delete_drafts_list()
-        orders: list = self.get_orders_list()
-        for i in orders:
+        for i in self.get_orders_list():
             self.delete_order_document(order_id=i.order_id)
         self.delete_orders_list()
-        parcels: list = self.get_parcels_list()
-        for i in parcels:
+        for i in self.get_parcels_list():
             self.delete_order_parcel(parcel_id=i.parcel_id)
         self.delete_order_path()
         self.delete_parcels_list()

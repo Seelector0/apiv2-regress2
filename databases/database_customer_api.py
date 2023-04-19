@@ -7,7 +7,9 @@ class DataBaseCustomerApi(DataBase):
         super().__init__(host, database, user, password)
 
     def delete_connection(self, shop_id):
-        """Функция чистит таблицу 'public.connection'"""
+        r"""Функция чистит таблицу 'public.connection'.
+        :param shop_id: ID магазина в БД.
+        """
         cursor = self.connection.cursor()
         try:
             cursor.execute('DELETE FROM public.connection '

@@ -7,7 +7,9 @@ class DataBaseTrackingApi(DataBase):
         super().__init__(host, database, user, password)
 
     def delete_orders_list_in_tracking(self, order_id):
-        """Функция чистит таблицу 'public.order'"""
+        r"""Функция чистит таблицу 'public.order'.
+        :param order_id: ID заказа в БД.
+        """
         cursor = self.connection.cursor()
         try:
             cursor.execute('DELETE FROM "tracking-api".public."order" '
