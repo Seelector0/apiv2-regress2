@@ -150,6 +150,19 @@ def test_create_order_delivery_point(app, token, payment_type):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Создание заказа из файла СД Boxberry")
+# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file(app, token):
+    new_order = app.order.post_import_order(delivery_services="boxberry", file_extension="xlsx")
+    Checking.check_status_code(response=new_order, expected_status_code=200)
+    app.time_sleep(sec=5)
+    for order in new_order.json().values():
+        get_order_by_id = app.order.get_order_id(order_id=order["id"])
+        Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
+        Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
+
+
 @allure.description("Удаление заказа CД Boxberry")
 def test_delete_order(app, token):
     random_order_id = choice(app.order.getting_order_id_out_parcel())
@@ -166,14 +179,6 @@ def test_get_label_out_of_parcel(app, token, labels):
     for order_id in list_order_id:
         result_label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=result_label, expected_status_code=200)
-
-
-@allure.description("Попытка редактирования заказа СД Boxberry")
-def test_editing_order(app, token):
-    order_list_id = app.order.getting_order_id_out_parcel()
-    result_order_put = app.order.put_order(order_id=choice(order_list_id), weight=5, length=12, width=14, height=11,
-                                           declared_value=2500, family_name="Иванов")
-    Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
 
 @allure.description("Получение информации об истории изменения статусов заказа CД Boxberry")

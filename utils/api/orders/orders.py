@@ -227,13 +227,13 @@ class ApiOrder:
             return f"Файл {file_extension} не поддерживается"
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
 
-    def post_import_order_format_metaship(self, delivery_services = None,file_extension: str = None):
+    def post_import_order(self, delivery_services: str = None, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS формата.
         :param delivery_services: Служба доставки.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
-        file_xls = f"orders_{delivery_services}_format_metaship.xls"
-        file_xlsx = f"orders_{delivery_services}_format_metaship.xlsx"
+        file_xls = f"orders_{delivery_services}.xls"
+        file_xlsx = f"orders_{delivery_services}.xlsx"
         json_order_from_file = {
             "shopId": self.app.shop.getting_list_shop_ids()[0],
             "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0]

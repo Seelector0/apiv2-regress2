@@ -159,9 +159,22 @@ def test_editing_order(app, token):
                                expected_value="Иванов")
 
 
-@allure.description("Создание заказа из файла формата Почты России")
+@allure.description("Создание заказа из файла СД Почты России")
 # @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, token):
+    new_order = app.order.post_import_order(delivery_services="russian_post", file_extension="xlsx")
+    Checking.check_status_code(response=new_order, expected_status_code=200)
+    app.time_sleep(sec=5)
+    for order in new_order.json().values():
+        get_order_by_id = app.order.get_order_id(order_id=order["id"])
+        Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
+        Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Создание заказа из файла формата Почты России")
+# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file_format_russian_post(app, token):
     new_order = app.order.post_import_order_format_russian_post(file_extension="xls")
     Checking.check_status_code(response=new_order, expected_status_code=200)
     app.time_sleep(sec=5)
