@@ -15,7 +15,7 @@ class ApiOrder:
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
                    routes: list = None, tariff: str = None,
                    items_declared_value: int = None):
-        r"""Метод создания заказа.
+        r"""Метод создания одноместного заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
