@@ -165,7 +165,6 @@ def test_create_order_from_file(app, token):
     new_order = app.order.post_import_order_format_russian_post(file_extension="xls")
     Checking.check_status_code(response=new_order, expected_status_code=200)
     app.time_sleep(sec=5)
-    # for order in new_order.json().values(): Todo после выкати задачи 1783
     for order in new_order.json():
         result_get_order_by_id = app.order.get_order_id(order_id=order["id"])
         Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
