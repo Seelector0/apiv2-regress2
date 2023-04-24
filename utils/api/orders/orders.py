@@ -8,6 +8,8 @@ class ApiOrder:
         self.app = app
         self.link = "orders"
         self.directory = "folder_with_orders"
+        self.method_xls = "application/vnd.ms-excel"
+        self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
                    barcode: str = None, data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
@@ -214,15 +216,9 @@ class ApiOrder:
             "type": "russian_post"
         }
         if file_extension == "xls":
-            file = [
-                ("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"),
-                          "application/vnd.ms-excel"))
-            ]
+            file = [("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"), self.method_xls))]
         elif file_extension == "xlsx":
-            file = [
-                ("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"),
-                          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-            ]
+            file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
@@ -239,15 +235,9 @@ class ApiOrder:
             "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0]
         }
         if file_extension == "xls":
-            file = [
-                ("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"),
-                          "application/vnd.ms-excel"))
-            ]
+            file = [("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"), self.method_xls))]
         elif file_extension == "xlsx":
-            file = [
-                ("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"),
-                          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-            ]
+            file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
