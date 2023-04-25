@@ -1,5 +1,5 @@
-import datetime
 from requests import Response
+import datetime
 import allure
 import json
 
