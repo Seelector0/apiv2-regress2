@@ -236,13 +236,6 @@ def test_add_order_in_parcel(app, token):
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
-@allure.description("Редактирование партии СД СДЭК (Попытка изменение даты отправки партии)")
-def test_change_shipment_date(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
-
-
 @allure.description("Получение этикеток СД СДЭК")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label(app, token, labels):

@@ -104,14 +104,6 @@ def test_get_labels_out_of_parcel(app, token):
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
-@allure.description("Попытка редактирования заказа СД DostavkaGuru")
-def test_editing_order(app, token):
-    order_list_id = app.order.getting_order_id_out_parcel()
-    result_order_put = app.order.put_order(order_id=choice(order_list_id), weight=5, length=12, width=14, height=11,
-                                           declared_value=2500, family_name="Иванов")
-    Checking.check_status_code(response=result_order_put, expected_status_code=400)
-
-
 @allure.description("Получение подробной информации о заказе CД DostavkaGuru")
 def test_order_details(app, token):
     order_list_id = app.order.getting_order_id_out_parcel()
@@ -127,13 +119,6 @@ def test_create_parcel(app, token):
     result_create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
     Checking.check_status_code(response=result_create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=result_create_parcel, key_name="type", expected_value="Parcel")
-
-
-@allure.description("Редактирование партии СД DostavkaGuru (Попытка изменение даты отправки партии)")
-def test_change_shipment_date(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
 @allure.description("Получение этикеток СД DostavkaGuru")

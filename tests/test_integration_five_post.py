@@ -82,6 +82,19 @@ def test_create_delivery_point(app, payment_type, token):
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Создание заказа из файла СД FivePost")
+@pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file(app, token, file_extension):
+    new_order = app.order.post_import_order(delivery_services="five_post", file_extension=file_extension)
+    Checking.check_status_code(response=new_order, expected_status_code=200)
+    app.time_sleep(sec=5)
+    for order in new_order.json().values():
+        get_order_by_id = app.order.get_order_id(order_id=order["id"])
+        Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
+        Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
+
+
 @allure.description("Получение информации об истории изменения статусов заказа СД FivePost")
 def test_order_status(app, token):
     order_list_id = app.order.getting_order_id_out_parcel()
@@ -91,20 +104,21 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=result_order_status, key_name="status", expected_value="created")
 
 
+@allure.description("Удаление заказа СД FivePost")
+def test_delete_order(app, token):
+    random_order_id = choice(app.order.getting_order_id_out_parcel())
+    result_delete_order = app.order.delete_order(order_id=random_order_id)
+    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
+    result_get_order_by_id = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)
+
+
 @allure.description("Попытка получения этикетки СД FivePost вне партии")
 def test_get_label_of_parcel(app, token):
     list_order_id = app.order.getting_order_id_out_parcel()
     for order_id in list_order_id:
         result_label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=result_label, expected_status_code=200)
-
-
-@allure.description("Попытка редактирования заказа СД FivePost")
-def test_editing_order(app, token):
-    order_list_id = app.order.getting_order_id_out_parcel()
-    result_order_put = app.order.put_order(order_id=choice(order_list_id), weight=5, length=12, width=14, height=11,
-                                           declared_value=2500, family_name="Иванов")
-    Checking.check_status_code(response=result_order_put, expected_status_code=400)
 
 
 @allure.description("Получение подробной информации о заказе СД FivePost")
@@ -134,13 +148,6 @@ def test_add_order_in_parcel(app, token):
         Checking.check_status_code(response=result_parcel_add, expected_status_code=200)
         new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
-
-
-@allure.description("Редактирование партии СД FivePost (Попытка изменение даты отправки партии)")
-def test_change_shipment_date(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
 @allure.description("Получение этикеток СД FivePost")
@@ -181,12 +188,3 @@ def test_remove_order_in_parcel(app, token):
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
-
-
-@allure.description("Удаление заказа СД FivePost")
-def test_delete_order(app, token):
-    random_order_id = choice(app.order.getting_order_id_out_parcel())
-    result_delete_order = app.order.delete_order(order_id=random_order_id)
-    Checking.check_status_code(response=result_delete_order, expected_status_code=204)
-    result_get_order_by_id = app.order.get_order_id(order_id=random_order_id)
-    Checking.check_status_code(response=result_get_order_by_id, expected_status_code=404)

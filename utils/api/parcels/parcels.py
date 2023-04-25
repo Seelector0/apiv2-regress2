@@ -70,7 +70,7 @@ class ApiParcel:
         return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
-        r"""Метод изменения даты доставки партии только для почты России.
+        r"""Метод изменения даты доставки партии только для СД RussianPost.
         :param parcel_id: Идентификатор партии.
         :param day: Количество дней.
         """
