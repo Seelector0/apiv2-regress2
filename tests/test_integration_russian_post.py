@@ -5,7 +5,6 @@ import pytest
 import allure
 
 # Todo разобраться с widget offers
-# Todo после выкати задачи 1783 раскоментировать параметризацию создание заказа из файла.
 
 
 @allure.description("Создание магазина")
@@ -160,9 +159,9 @@ def test_editing_order(app, token):
 
 
 @allure.description("Создание заказа из файла СД Почты России")
-# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file(app, token):
-    new_order = app.order.post_import_order(delivery_services="russian_post", file_extension="xlsx")
+@pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file(app, token, file_extension):
+    new_order = app.order.post_import_order(delivery_services="russian_post", file_extension=file_extension)
     Checking.check_status_code(response=new_order, expected_status_code=200)
     app.time_sleep(sec=5)
     for order in new_order.json().values():
@@ -173,9 +172,9 @@ def test_create_order_from_file(app, token):
 
 
 @allure.description("Создание заказа из файла формата Почты России")
-# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file_format_russian_post(app, token):
-    new_order = app.order.post_import_order_format_russian_post(file_extension="xls")
+@pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file_format_russian_post(app, token, file_extension):
+    new_order = app.order.post_import_order_format_russian_post(file_extension=file_extension)
     Checking.check_status_code(response=new_order, expected_status_code=200)
     app.time_sleep(sec=5)
     for order in new_order.json():

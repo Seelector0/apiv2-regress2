@@ -151,9 +151,9 @@ def test_create_order_delivery_point(app, token, payment_type):
 
 
 @allure.description("Создание заказа из файла СД Boxberry")
-# @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file(app, token):
-    new_order = app.order.post_import_order(delivery_services="boxberry", file_extension="xlsx")
+@pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
+def test_create_order_from_file(app, token, file_extension):
+    new_order = app.order.post_import_order(delivery_services="boxberry", file_extension=file_extension)
     Checking.check_status_code(response=new_order, expected_status_code=200)
     app.time_sleep(sec=5)
     for order in new_order.json().values():
