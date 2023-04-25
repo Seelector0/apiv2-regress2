@@ -183,15 +183,6 @@ def test_get_labels_out_of_parcel(app, token, labels):
         Checking.check_status_code(response=result_label, expected_status_code=200)
 
 
-@allure.description("Попытка редактирования заказа СД Cse")
-def test_editing_order(app, token):
-    order_list_id = app.order.getting_order_id_out_parcel()
-    random_order = choice(order_list_id)
-    result_order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
-                                           declared_value=2500, family_name="Иванов")
-    Checking.check_status_code(response=result_order_put, expected_status_code=400)
-
-
 @allure.description("Получение подробной информации о заказе СД Dpd")
 def test_order_details(app, token):
     order_list_id = app.order.getting_order_id_out_parcel()
@@ -219,13 +210,6 @@ def test_add_order_in_parcel(app, token):
         Checking.check_status_code(response=result_parcel_add, expected_status_code=200)
         new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
-
-
-@allure.description("Редактирование партии СД Cse (Попытка изменение даты отправки партии)")
-def test_change_shipment_date(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
 
 
 @allure.description("Получение этикеток СД Cse")

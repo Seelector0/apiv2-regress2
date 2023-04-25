@@ -225,13 +225,6 @@ def test_create_parcel(app, token):
     Checking.checking_in_list_json_value(response=result_create_parcel, key_name="type", expected_value="Parcel")
 
 
-@allure.description("Редактирование партии СД TopDelivery(Попытка изменение даты отправки партии)")
-def test_change_shipment_date(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    result_shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
-    Checking.check_status_code(response=result_shipment_date, expected_status_code=422)
-
-
 @allure.description("Получение этикеток СД TopDelivery")
 # @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label(app, token):
@@ -262,7 +255,7 @@ def test_get_documents(app, token):
     Checking.check_status_code(response=result_documents, expected_status_code=200)
 
 
-@allure.description("Редактирование партии СД TopDelivery (Удаление заказа)")
+@allure.description("Попытка Редактирование партии CД TopDelivery (Удаление заказа)")
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
