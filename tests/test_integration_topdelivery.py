@@ -131,7 +131,7 @@ def test_patch_multi_order(app, token):
     list_order_id = app.order.getting_order_id_out_parcel()
     choice_order_id = choice(list_order_id)
     old_len_order_list = app.order.get_order_id(order_id=choice_order_id)
-    result_patch_order = app.order.patch_order(order_id=choice_order_id, path="places")
+    result_patch_order = app.order.patch_order_add_item(order_id=choice_order_id, path="places")
     Checking.check_status_code(response=result_patch_order, expected_status_code=200)
     Checking.checking_json_value(response=result_patch_order, key_name="status", expected_value="created")
     new_len_order_list = app.order.get_order_id(order_id=choice_order_id)

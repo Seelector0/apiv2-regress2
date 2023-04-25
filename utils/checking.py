@@ -76,3 +76,8 @@ class Checking:
             day = datetime.date.today()
             day += datetime.timedelta(days=number_of_days)
             assert calendar_date == str(day), f"{calendar_date} не равна дате {day}"
+
+    @staticmethod
+    def check_value_comparison(one_value, two_value):
+        with allure.step("Проверка двух значений на равенство"):
+            assert one_value == two_value, f"FAILED! первое значение-{one_value}, второе значение-{two_value}"

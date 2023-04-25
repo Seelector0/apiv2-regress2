@@ -285,9 +285,48 @@ class ApiOrder:
         body = json.dumps(body_order)
         return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
 
-    def patch_order(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
-                    weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
-        r"""Метод обновления поля в заказе и добавление места.
+    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
+        r"""Метод редактирования поля в заказе.
+        :param order_id: Идентификатор заказа.
+        :param name: Наименование товарной позиции.
+        :param price: Цена товарной позиции.
+        :param count: Количество штук.
+        :param weight: Вес товарной позиции.
+        """
+        body = json.dumps(
+            [
+                {
+                    "op": "replace",
+                    "path": "places",
+                    "value": [
+                        {
+                            "items": [
+                                {
+                                    "article": f"ART1{randrange(1000000, 9999999)}",
+                                    "name": name,
+                                    "price": price,
+                                    "count": count,
+                                    "weight": weight,
+                                    "vat": "0"
+                                },
+                            ],
+                            "barcode": f"Box_2{randrange(100000, 999999)}",
+                            "weight": 1,
+                            "dimension": {
+                                "length": 10,
+                                "width": 10,
+                                "height": 10
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
+        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=body)
+
+    def patch_order_add_item(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
+                             weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
+        r"""Метод добавление места в заказ.
         :param order_id: Идентификатор заказа.
         :param path: Добавления items.
         :param shop_number_3: Номер нового items в магазине - значение по умолчанию, можно передать своё.
