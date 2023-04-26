@@ -131,7 +131,7 @@ def test_patch_multi_order(app, token):
     Checking.checking_json_value(response=result_patch_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_patch_order, key_name="state",
                                  expected_value="editing-external-processing")
-    new_len_order_list = app.order.get_order_id(order_id=choice_order_id, sec=7)
+    new_len_order_list = app.order.get_order_id(order_id=choice_order_id, sec=8)
     Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
     Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
     Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
@@ -150,22 +150,6 @@ def test_create_order_courier(app, token, payment_type):
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
-
-
-@allure.description("Редактирование заказа СД СДЭК")
-def test_editing_order(app, token):
-    random_order = choice(app.order.getting_order_id_out_parcel())
-    patch_order = app.order.patch_order(order_id=random_order, name="Пуфик", price=500, count=2, weight=2)
-    Checking.check_status_code(response=patch_order, expected_status_code=200)
-    order_by_id = app.order.get_order_id(order_id=random_order, sec=5)
-    Checking.check_status_code(response=order_by_id, expected_status_code=200)
-    field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
-    Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
-    Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
-    Checking.check_value_comparison(one_value=field["name"], two_value="Пуфик")
-    Checking.check_value_comparison(one_value=field["price"], two_value=500)
-    Checking.check_value_comparison(one_value=field["count"], two_value=2)
-    Checking.check_value_comparison(one_value=field["weight"], two_value=2)
 
 
 @allure.description("Создание DeliveryPoint заказа по CД СДЭК")
@@ -193,6 +177,22 @@ def test_create_order_from_file(app, token, file_extension):
         Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
         Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Редактирование заказа СД СДЭК")
+def test_editing_order(app, token):
+    random_order = choice(app.order.getting_order_id_out_parcel())
+    patch_order = app.order.patch_order(order_id=random_order, name="Пуфик", price=500, count=2, weight=2)
+    Checking.check_status_code(response=patch_order, expected_status_code=200)
+    order_by_id = app.order.get_order_id(order_id=random_order, sec=7)
+    Checking.check_status_code(response=order_by_id, expected_status_code=200)
+    field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
+    Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
+    Checking.check_value_comparison(one_value=field["name"], two_value="Пуфик")
+    Checking.check_value_comparison(one_value=field["price"], two_value=500)
+    Checking.check_value_comparison(one_value=field["count"], two_value=2)
+    Checking.check_value_comparison(one_value=field["weight"], two_value=2)
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД СДЭК")
