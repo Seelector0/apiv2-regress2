@@ -285,44 +285,56 @@ class ApiOrder:
         body = json.dumps(body_order)
         return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
 
-    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
+    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float, path: str = None):
         r"""Метод редактирования поля в заказе.
         :param order_id: Идентификатор заказа.
+        :param path: Наименования поля которое будем менять
         :param name: Наименование товарной позиции.
         :param price: Цена товарной позиции.
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        body = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": "places",
-                    "value": [
-                        {
-                            "items": [
-                                {
-                                    "article": f"ART1{randrange(1000000, 9999999)}",
-                                    "name": name,
-                                    "price": price,
-                                    "count": count,
-                                    "weight": weight,
-                                    "vat": "0"
-                                },
-                            ],
-                            "barcode": f"Box_2{randrange(100000, 999999)}",
-                            "weight": 1,
-                            "dimension": {
-                                "length": 10,
-                                "width": 10,
-                                "height": 10
+        if path == "weight":
+            json_patch_order = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "weight",
+                        "value": f"{randrange(1, 5)}"
+                    }
+                ]
+            )
+        else:
+            json_patch_order = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "places",
+                        "value": [
+                            {
+                                "items": [
+                                    {
+                                        "article": f"ART1{randrange(1000000, 9999999)}",
+                                        "name": name,
+                                        "price": price,
+                                        "count": count,
+                                        "weight": weight,
+                                        "vat": "0"
+                                    },
+                                ],
+                                "barcode": f"Box_2{randrange(100000, 999999)}",
+                                "weight": 1,
+                                "dimension": {
+                                    "length": 10,
+                                    "width": 10,
+                                    "height": 10
+                                }
                             }
-                        }
-                    ]
-                }
-            ]
-        )
-        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=body)
+                        ]
+                    }
+                ]
+            )
+        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
 
     def patch_order_add_item(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
                              weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
