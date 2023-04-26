@@ -116,7 +116,7 @@ def test_create_multi_order_delivery_point(app, token, payment_type):
                                                     delivery_point_code="VNG2", declared_value=1500)
     Checking.check_status_code(response=result_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=result_multi_order, expected_value=INFO.created_entity)
-    result_get_order_by_id = app.order.get_order_id(order_id=result_multi_order.json()["id"], sec=6)
+    result_get_order_by_id = app.order.get_order_id(order_id=result_multi_order.json()["id"], sec=7)
     Checking.check_status_code(response=result_get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=result_get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=result_get_order_by_id, key_name="state", expected_value="succeeded")
