@@ -254,8 +254,7 @@ def test_get_label(app, token, labels):
 
 @allure.description("Получение этикеток заказов из партии СД СДЭК")
 def test_get_labels_from_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
     labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
 
