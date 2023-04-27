@@ -431,11 +431,29 @@ class ApiOrder:
         """
         return self.app.http_method.get(link=f"{self.link}/{order_id}/details")
 
-    def getting_order_id_out_parcel(self):
-        """Метод получения id заказов не в партии."""
-        orders_id_list = []
+    def getting_all_order_id_out_parcel(self):
+        """Метод получения id всех заказов не в партии."""
+        list_orders_id = []
         order_list = self.get_orders()
         for order in order_list.json():
             if order["status"] == "created":
-                orders_id_list.append(order["id"])
-        return orders_id_list
+                list_orders_id.append(order["id"])
+        return list_orders_id
+
+    def getting_single_order_id_out_parcel(self):
+        """Метод получения id одноместных заказов не в партии"""
+        list_orders_id = []
+        list_orders = self.get_orders()
+        for order in list_orders.json():
+            if order["status"] == "created" and len(order["data"]["request"]["places"]) == 1:
+                list_orders_id.append(order["id"])
+        return list_orders_id
+
+    def getting_multi_order_id_out_parcel(self):
+        """Метод получения id многоместных заказов не в партии"""
+        list_orders_id = []
+        list_orders = self.get_orders()
+        for order in list_orders.json():
+            if order["status"] == "created" and len(order["data"]["request"]["places"]) > 1:
+                list_orders_id.append(order["id"])
+        return list_orders_id
