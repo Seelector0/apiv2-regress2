@@ -101,8 +101,7 @@ def test_create_multi_order_courier(app, token, payment_type):
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Cse")
 def test_create_multi_order_delivery_point(app, token):
     new_multi_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Cse",
-                                                 tariff="64", date_pickup=f"{datetime.date.today()}", dimension=
-                                                 {
+                                                 tariff="64", date_pickup=f"{datetime.date.today()}", dimension={
                                                     "length": randint(10, 30),
                                                     "width": randint(10, 50),
                                                     "height": randint(10, 50)
