@@ -73,11 +73,9 @@ def stop(app, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
         app.close_session()
-        shops = connections.get_shops_list()
-        for i in shops:
+        for i in connections.get_shops_list():
             customer_api.delete_connection(shop_id=i.shop_id)
-        orders = connections.get_orders_list()
-        for i in orders:
+        for i in connections.get_orders_list():
             tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
         connections.delete_all_setting()
     request.addfinalizer(finalizer=fin)
