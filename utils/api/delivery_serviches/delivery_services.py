@@ -18,7 +18,6 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки RussianPost к магазину
         :param connection_type: Тип подключения СД по агрегации.
         """
-
         if connection_type == "aggregation":
             json_russian_post = json.dumps(
                 {
