@@ -8,28 +8,28 @@ import pytest
 import uuid
 
 
-fixture = None
+fixture_api = None
 
 
 @pytest.fixture(scope="module")
 def app():
     """Фикстура для открытия сессии по Api"""
-    global fixture
-    if fixture is None:
-        fixture = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
-    fixture.open_session()
-    Checking.check_status_code(response=fixture.response, expected_status_code=200)
-    return fixture
+    global fixture_api
+    if fixture_api is None:
+        fixture_api = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
+    fixture_api.open_session()
+    Checking.check_status_code(response=fixture_api.response, expected_status_code=200)
+    return fixture_api
 
 
 @pytest.fixture(scope="function")
 def token():
     """Фикстура для получения токена для работы по Api"""
-    fixture.token = {
+    fixture_api.token = {
         "x-trace-id": str(uuid.uuid4()),
-        "Authorization": f"Bearer {fixture.response.json()['access_token']}"
+        "Authorization": f"Bearer {fixture_api.response.json()['access_token']}"
     }
-    return fixture.token
+    return fixture_api.token
 
 
 @pytest.fixture(scope="module")
