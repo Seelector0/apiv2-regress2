@@ -10,7 +10,8 @@ class DataBase:
         self.database = database
         self.user = user
         self.password = password
-        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password)
+        self.connection = psycopg2.connect(host=self.host, database=self.database,
+                                           user=self.user, password=self.password)
         self.user_id = ENV_OBJECT.user_id()
         self.db_connections = ENV_OBJECT.db_connections()
 
