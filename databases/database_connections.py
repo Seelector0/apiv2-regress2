@@ -7,9 +7,6 @@ from model.shops import Shop
 
 class DataBaseConnections(DataBase):
 
-    def __init__(self, host, database, user, password):
-        super().__init__(host, database, user, password)
-
     def get_shops_list(self):
         """Функция собирает (возвращает) список магазинов из таблицы 'customer.shop'"""
         db_list_shop = []

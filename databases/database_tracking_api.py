@@ -3,9 +3,6 @@ from fixture.database import DataBase
 
 class DataBaseTrackingApi(DataBase):
 
-    def __init__(self, host, database, user, password):
-        super().__init__(host, database, user, password)
-
     def delete_orders_list_in_tracking(self, order_id):
         r"""Функция чистит таблицу 'public.order'.
         :param order_id: ID заказа в БД.

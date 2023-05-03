@@ -3,9 +3,6 @@ from fixture.database import DataBase
 
 class DataBaseCustomerApi(DataBase):
 
-    def __init__(self, host, database, user, password):
-        super().__init__(host, database, user, password)
-
     def delete_connection(self, shop_id):
         r"""Функция чистит таблицу 'public.connection'.
         :param shop_id: ID магазина в БД.
