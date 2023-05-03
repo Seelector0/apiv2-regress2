@@ -7,7 +7,7 @@ class DataBaseTrackingApi(DataBase):
         r"""Функция чистит таблицу 'public.order'.
         :param order_id: ID заказа в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute('DELETE FROM "tracking-api".public."order" '
                            f"""WHERE "order".order_id = '{order_id}'""")

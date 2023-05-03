@@ -7,7 +7,7 @@ class DataBaseCustomerApi(DataBase):
         r"""Функция чистит таблицу 'public.connection'.
         :param shop_id: ID магазина в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute('DELETE FROM public.connection '
                            f"""WHERE connection.shop_id = '{shop_id}'""")

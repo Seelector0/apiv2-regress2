@@ -10,7 +10,7 @@ class DataBaseConnections(DataBase):
     def get_shops_list(self):
         """Функция собирает (возвращает) список магазинов из таблицы 'customer.shop'"""
         db_list_shop = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"SELECT name, id FROM {self.db_connections}.customer.shop "
                            f"""WHERE shop.user_id = '{self.user_id}'""")
@@ -23,7 +23,7 @@ class DataBaseConnections(DataBase):
 
     def delete_shops_list(self):
         """Функция чистит таблицу 'customer.shop'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"DELETE FROM {self.db_connections}.customer.shop "
                            f"WHERE shop.user_id = '{self.user_id}'")
@@ -34,7 +34,7 @@ class DataBaseConnections(DataBase):
     def get_warehouses_list(self):
         """Функция собирает (возвращает) список складов из таблицы 'customer.warehouse'"""
         db_list_warehouse = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"SELECT name, id FROM {self.db_connections}.customer.warehouse "
                            f"""WHERE warehouse.user_id = '{self.user_id}'""")
@@ -47,7 +47,7 @@ class DataBaseConnections(DataBase):
 
     def delete_warehouses_list(self):
         """Функция чистит таблицу 'customer.warehouse'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"DELETE FROM {self.db_connections}.customer.warehouse "
                            f"WHERE warehouse.user_id = '{self.user_id}'")
@@ -58,7 +58,7 @@ class DataBaseConnections(DataBase):
     def get_delivery_services_list(self):
         """Функция собирает (возвращает) список подключенных служб доставок из таблицы 'customer.credential'"""
         db_list_delivery_service = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"SELECT order_id, type FROM {self.db_connections}.customer.credential"
                            f"""WHERE customer.shop.user_id = '{self.user_id}'""")
@@ -68,7 +68,7 @@ class DataBaseConnections(DataBase):
 
     def delete_delivery_services_list(self):
         """Функция чисти таблицу 'customer.credential'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f"DELETE FROM {self.db_connections}.customer.credential "
                            f"WHERE credential.user_id = '{self.user_id}'")
@@ -79,7 +79,7 @@ class DataBaseConnections(DataBase):
     def get_drafts_list(self):
         """Функция собирает (возвращает) список черновиков из таблицы 'order.draft'"""
         db_list_order = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'SELECT id FROM {self.db_connections}."order".draft '
                            f"""WHERE draft.user_id = = '{self.user_id}'""")
@@ -92,7 +92,7 @@ class DataBaseConnections(DataBase):
 
     def delete_drafts_list(self):
         """Функция чистит таблицу 'order.draft'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".draft '
                            f"""WHERE draft.user_id = '{self.user_id}'""")
@@ -103,7 +103,7 @@ class DataBaseConnections(DataBase):
     def get_orders_list(self):
         """Функция собирает (возвращает) список заказов из таблицы 'order.order'"""
         db_list_order = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'SELECT id, shop_number FROM {self.db_connections}."order"."order" '
                            f"""WHERE "order".user_id = '{self.user_id}'""")
@@ -116,7 +116,7 @@ class DataBaseConnections(DataBase):
 
     def delete_orders_list(self):
         """Функция чистит таблицу 'order.order'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order"."order" '
                            f"""WHERE "order".user_id = '{self.user_id}'""")
@@ -127,7 +127,7 @@ class DataBaseConnections(DataBase):
     def get_parcels_list(self):
         """Функция собирает (возвращает) список партий из таблицы 'order.parcel'"""
         db_list_parcel = []
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'SELECT id, SUBSTRING(rid, 3) FROM {self.db_connections}."order".parcel '
                            f"""WHERE parcel.user_id = '{self.user_id}'""")
@@ -140,7 +140,7 @@ class DataBaseConnections(DataBase):
 
     def delete_parcels_list(self):
         """Функция чистит таблицу 'order.parcel'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".parcel '
                            f"""WHERE parcel.user_id = '{self.user_id}'""")
@@ -152,7 +152,7 @@ class DataBaseConnections(DataBase):
         r"""Функция чистит таблицу 'order.order_document'.
         :param order_id: ID заказа в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".order_document '
                            f"""WHERE order_document.order_id = '{order_id}'""")
@@ -164,7 +164,7 @@ class DataBaseConnections(DataBase):
         r"""Функция чистит таблицу 'order.order_parcel'.
         :param parcel_id: ID партии в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".order_parcel '
                            f"""WHERE order_parcel.parcel_id = '{parcel_id}'""")
@@ -174,7 +174,7 @@ class DataBaseConnections(DataBase):
 
     def delete_order_path(self):
         """Функция чистит таблицу 'order.order_path'"""
-        cursor = self.connection.cursor()
+        cursor = self.connection_open().cursor()
         try:
             cursor.execute(f'DELETE FROM {self.db_connections}."order".order_patch '
                            f"""WHERE order_patch.user_id = '{self.user_id}'""")
