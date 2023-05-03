@@ -9,6 +9,7 @@ import uuid
 
 
 fixture_api = None
+fixture_database = None
 
 
 @pytest.fixture(scope="module")
@@ -33,38 +34,31 @@ def token():
 
 
 @pytest.fixture(scope="module")
-def customer_api(request):
+def customer_api():
     """Фикстура для подключения к базе данных 'customer-api'"""
     database_customer = DataBaseCustomerApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_customer_api(),
                                             user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
-
-    def fin():
-        database_customer.connection_close()
-    request.addfinalizer(finalizer=fin)
+    database_customer.connection_open()
     return database_customer
 
 
 @pytest.fixture(scope="module")
-def connections(request):
+def connections():
     """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'"""
-    database_connections = DataBaseConnections(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
+    global fixture_database
+    if fixture_database is None:
+        fixture_database = DataBaseConnections(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
                                                user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
-
-    def fin():
-        database_connections.connection_close()
-    request.addfinalizer(finalizer=fin)
-    return database_connections
+    fixture_database.connection_open()
+    return fixture_database
 
 
 @pytest.fixture(scope="module")
-def tracking_api(request):
+def tracking_api():
     """Фикстура для подключения к базе данных 'tracking-api'"""
     database_tracking = DataBaseTrackingApi(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_tracking_api(),
                                             user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
-
-    def fin():
-        database_tracking.connection_close()
-    request.addfinalizer(finalizer=fin)
+    database_tracking.connection_open()
     return database_tracking
 
 
@@ -78,4 +72,7 @@ def stop(app, request, connections, customer_api, tracking_api):
         for i in connections.get_orders_list():
             tracking_api.delete_orders_list_in_tracking(order_id=i.order_id)
         connections.delete_all_setting()
+        connections.connection_close()
+        customer_api.connection_close()
+        tracking_api.connection_close()
     request.addfinalizer(finalizer=fin)
