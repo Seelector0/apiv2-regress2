@@ -8,13 +8,13 @@ import psycopg2
 class DataBase:
 
     def __init__(self, database=None):
-        self.host = ENV_OBJECT.host()
         self.database = database
+        self.host = ENV_OBJECT.host()
         self.user = ENV_OBJECT.db_connections()
         self.password = ENV_OBJECT.password()
-        self.connection = None
         self.user_id = ENV_OBJECT.user_id()
         self.db_connections = ENV_OBJECT.db_connections()
+        self.connection = None
         self.metaship = DataBaseConnections(self)
         self.customer = DataBaseCustomerApi(self)
         self.tracking = DataBaseTrackingApi(self)
