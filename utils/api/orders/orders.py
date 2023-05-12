@@ -1,3 +1,5 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 from random import randrange, randint
 import json
 
@@ -10,6 +12,7 @@ class ApiOrder:
         self.directory = "folder_with_orders"
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
                    barcode: str = None, data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
@@ -40,10 +43,10 @@ class ApiOrder:
         json_order = json.dumps(
             {
                 "warehouse": {
-                    "id": self.app.warehouse.getting_list_warehouse_ids()[0],
+                    "id": str(self.database.metaship.get_list_warehouses()[0]),
                 },
                 "shop": {
-                    "id": self.app.shop.getting_list_shop_ids()[0],
+                    "id": str(self.database.metaship.get_list_shops()[0]),
                     "number": f"{randrange(1000000, 9999999)}",
                     "barcode": barcode,
                 },
@@ -128,10 +131,10 @@ class ApiOrder:
         json_multi_order = json.dumps(
             {
                 "warehouse": {
-                    "id": self.app.warehouse.getting_list_warehouse_ids()[0]
+                    "id": str(self.database.metaship.get_list_warehouses()[0]),
                 },
                 "shop": {
-                    "id": self.app.shop.getting_list_shop_ids()[0],
+                    "id": str(self.database.metaship.get_list_shops()[0]),
                     "number": f"{randrange(1000000, 9999999)}",
                     "barcode": f"{randrange(100000000, 999999999)}",
                 },
@@ -211,8 +214,8 @@ class ApiOrder:
         file_xls = "orders_format_russian_post.xls"
         file_xlsx = "orders_format_russian_post.xlsx"
         json_order_from_file = {
-            "shopId": self.app.shop.getting_list_shop_ids()[0],
-            "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
+            "shopId": str(self.database.metaship.get_list_shops()[0]),
+            "warehouseId": str(self.database.metaship.get_list_warehouses()[0]),
             "type": "russian_post"
         }
         if file_extension == "xls":
@@ -231,8 +234,8 @@ class ApiOrder:
         file_xls = f"orders_{delivery_services}.xls"
         file_xlsx = f"orders_{delivery_services}.xlsx"
         json_order_from_file = {
-            "shopId": self.app.shop.getting_list_shop_ids()[0],
-            "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0]
+            "shopId": str(self.database.metaship.get_list_shops()[0]),
+            "warehouseId": str(self.database.metaship.get_list_warehouses()[0]),
         }
         if file_extension == "xls":
             file = [("file", (f"{file_xls}", open(file=f"{self.directory}/{file_xls}", mode="rb"), self.method_xls))]
