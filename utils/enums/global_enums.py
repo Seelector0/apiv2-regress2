@@ -36,23 +36,28 @@ class OtherInfo:
 
     rp_services = [
         {
-            "name": "no-return", "title": "Возврату не подлежит",
+            "name": "no-return",
+            "title": "Возврату не подлежит",
             "description": "Возврату не подлежит"
         },
         {
-            "name": "open", "title": "Можно вскрывать до получения оплаты с клиента",
+            "name": "open",
+            "title": "Можно вскрывать до получения оплаты с клиента",
             "description": "Можно вскрывать до получения оплаты с клиента"
         },
         {
-            "name": "pay-by-card", "title": "COD (картой или наличными)",
+            "name": "pay-by-card",
+            "title": "COD (картой или наличными)",
             "description": "COD (картой или наличными)"
         },
         {
-            "name": "shelf-life-days", "title": "Срок хранения заказа в ОПС",
+            "name": "shelf-life-days",
+            "title": "Срок хранения заказа в ОПС",
             "description": "Срок хранения заказа в ОПС"
         },
         {
-            "name": "sms", "title": "SMS информирование",
+            "name": "sms",
+            "title": "SMS информирование",
             "description": "SMS уведомление получателя"
         }
     ]
