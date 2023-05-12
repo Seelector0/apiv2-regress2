@@ -11,8 +11,8 @@ class DataBaseCustomerApi:
         """
         cursor = self.customer.connection_open().cursor()
         try:
-            cursor.execute('DELETE FROM public.connection '
-                           f"""WHERE connection.shop_id = '{shop_id}'""")
+            cursor.execute('delete from public.connection '
+                           f"""where connection.shop_id = '{shop_id}'""")
             cursor.connection.commit()
         finally:
             cursor.close()
