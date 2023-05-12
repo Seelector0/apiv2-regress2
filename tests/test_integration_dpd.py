@@ -91,14 +91,14 @@ def test_create_multi_order_courier(app, token):
                                                  declared_value=1500)
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=8)
+    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=10)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Dpd")
-def test_create_order_delivery_point(app, token):
+def test_create_multi_order_delivery_point(app, token):
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                            tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{datetime.date.today()}",
                                            pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500)
