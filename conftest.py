@@ -68,10 +68,10 @@ def stop(app, request, connections, customer_api, tracking_api):
     """Фикстура для завершения сессии"""
     def fin():
         app.close_session()
-        for i in connections.metaship.get_shops_list():
-            customer_api.customer.delete_connection(shop_id=i.shop_id)
-        for i in connections.metaship.get_orders_list():
-            tracking_api.tracking.delete_orders_list_in_tracking(order_id=i.order_id)
+        for id_ in connections.metaship.get_list_shops():
+            customer_api.customer.delete_connection(shop_id=id_)
+        for id_ in connections.metaship.get_list_orders():
+            tracking_api.tracking.delete_list_orders_in_tracking(order_id=id_)
         connections.metaship.delete_all_setting()
         connections.connection_close()
         customer_api.connection_close()
