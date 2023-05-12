@@ -1,3 +1,5 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 from random import randrange
 
 
@@ -5,7 +7,7 @@ class ApiOffers:
 
     def __init__(self, app):
         self.app = app
-        self.link_offers = "offers"
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
@@ -18,8 +20,8 @@ class ApiOffers:
         """
         if format_ == "widget":
             body_offers = {
-                "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "warehouseId": self.database.metaship.get_list_warehouses()[0],
+                "shopId": self.database.metaship.get_list_shops()[0],
                 "address": "г Москва, пр-кт Мира, д 45 стр 2",
                 "declaredValue": randrange(1000, 5000),
                 "height": randrange(10, 45),
@@ -31,8 +33,8 @@ class ApiOffers:
             }
         else:
             body_offers = {
-                "warehouseId": self.app.warehouse.getting_list_warehouse_ids()[0],
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "warehouseId": self.database.metaship.get_list_warehouses()[0],
+                "shopId": self.database.metaship.get_list_shops()[0],
                 "address":  "г Москва, пр-кт Мира, д 45 стр 2",
                 "declaredValue": randrange(1000, 5000),
                 "height": randrange(10, 45),
@@ -44,4 +46,4 @@ class ApiOffers:
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryPointNumber": delivery_point_number
             }
-        return self.app.http_method.get(link=self.link_offers, params=body_offers)
+        return self.app.http_method.get(link="offers", params=body_offers)

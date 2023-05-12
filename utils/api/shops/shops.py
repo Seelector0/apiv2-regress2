@@ -1,3 +1,5 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 from random import randrange
 import json
 
@@ -6,6 +8,7 @@ class ApiShop:
 
     def __init__(self, app):
         self.app = app
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "customer/shops"
 
     @staticmethod
@@ -47,7 +50,7 @@ class ApiShop:
     def put_shop(self):
         """Метод редактирования магазина."""
         shop = self.json_shop()
-        return self.app.http_method.put(link=f"{self.link}/{self.getting_list_shop_ids()[0]}", data=shop)
+        return self.app.http_method.put(link=f"{self.link}/{self.database.metaship.get_list_shops()[0]}", data=shop)
 
     def patch_shop(self, value: bool = True):
         r"""Метод делает магазин видимым или не видимым для ЛК.
@@ -62,7 +65,7 @@ class ApiShop:
                 }
             ]
         )
-        return self.app.http_method.patch(link=f"{self.link}/{self.getting_list_shop_ids()[0]}", data=body)
+        return self.app.http_method.patch(link=f"{self.link}/{self.database.metaship.get_list_shops()[0]}", data=body)
 
     def getting_list_shop_ids(self):
         """Метод получения id магазинов."""

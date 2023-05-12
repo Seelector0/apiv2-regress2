@@ -1,4 +1,6 @@
 from dotenv import load_dotenv, find_dotenv
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 import json
 import os
 
@@ -9,10 +11,11 @@ class ApiDeliveryServices:
 
     def __init__(self, app):
         self.app = app
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     def link_delivery_services(self):
         """Метод получения ссылки для подключения СД."""
-        return f"{self.app.shop.link}/{self.app.shop.getting_list_shop_ids()[0]}/delivery_services"
+        return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, connection_type: str = None):
         r"""Настройки подключения службы доставки RussianPost к магазину
