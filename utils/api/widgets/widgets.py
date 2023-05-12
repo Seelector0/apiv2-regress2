@@ -1,3 +1,5 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 import json
 
 
@@ -5,13 +7,14 @@ class ApiWidget:
 
     def __init__(self, app):
         self.app = app
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "/widgets/tokens"
 
     def create_widget_tokens(self):
         """Создание токена для виджета."""
         body = json.dumps(
             {
-                "shopId": self.app.shop.getting_list_shop_ids()[0]
+                "shopId": self.database.metaship.get_list_shops()[0]
             }
         )
         return self.app.http_method.post(link=self.link, data=body)

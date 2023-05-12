@@ -1,3 +1,5 @@
+from environment import ENV_OBJECT
+from fixture.database import DataBase
 import json
 
 
@@ -5,13 +7,14 @@ class ApiWebhook:
 
     def __init__(self, app):
         self.app = app
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "webhook"
 
-    def create_webhook(self, shop_id: str):
+    def create_webhook(self):
         """Создание веб-хука."""
         json_webhook = json.dumps(
             {
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "shopId": self.database.metaship.get_list_shops()[0],
                 "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
                 "name": "Подписка на обновление статусов",
                 "eventType": "StatusUpdate",
@@ -36,7 +39,7 @@ class ApiWebhook:
         """
         json_change_order_status = json.dumps(
             {
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "shopId": self.database.metaship.get_list_shops()[0],
                 "url": "https://test.test/test",
                 "name": "Подписка на обновление статусов",
                 "eventType": "StatusUpdate",
