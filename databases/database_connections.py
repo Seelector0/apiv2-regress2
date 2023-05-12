@@ -57,8 +57,10 @@ class DataBaseConnections:
         db_list_delivery_service = []
         cursor = self.metaship.connection_open().cursor()
         try:
-            cursor.execute(f"select order_id, type from {self.metaship.db_connections}.customer.credential"
+            cursor.execute(f"select id from {self.metaship.db_connections}.customer.credential "
                            f"""where customer.shop.user_id = '{self.metaship.user_id}'""")
+            for row in cursor:
+                db_list_delivery_service.append(*row)
         finally:
             cursor.close()
         return db_list_delivery_service
@@ -75,16 +77,16 @@ class DataBaseConnections:
 
     def get_list_drafts(self):
         """Функция собирает (возвращает) список черновиков из таблицы 'order.draft'"""
-        db_list_order = []
+        db_list_drafts = []
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(f'select id from {self.metaship.db_connections}."order".draft '
                            f"""where draft.user_id = = '{self.metaship.user_id}'""")
             for row in cursor:
-                db_list_order.append(*row)
+                db_list_drafts.append(*row)
         finally:
             cursor.close()
-        return db_list_order
+        return db_list_drafts
 
     def delete_list_drafts(self):
         """Функция чистит таблицу 'order.draft'"""
