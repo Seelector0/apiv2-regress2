@@ -1,3 +1,5 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 import datetime
 
 
@@ -5,6 +7,7 @@ class ApiInfo:
 
     def __init__(self, app):
         self.app = app
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     def delivery_time_schedules(self, delivery_service_code: str, day: str = None):
         r"""Получение интервалов доставки конкретной СД.
@@ -15,7 +18,7 @@ class ApiInfo:
             params = {
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryDate": f"{datetime.date.today()}",
-                "shopId": self.app.shop.getting_list_shop_ids()[0],
+                "shopId": self.database.metaship.get_list_shops()[0],
                 "postalCode": "101000"
             }
         else:
@@ -31,7 +34,7 @@ class ApiInfo:
         """
         params = {
             "deliveryServiceCode": delivery_service_code,
-            "shopId": self.app.shop.getting_list_shop_ids()[0],
+            "shopId": self.database.metaship.get_list_shops()[0],
             "cityRaw": city_raw
         }
         return self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
