@@ -73,6 +73,7 @@ class ApiOrder:
                     "familyName": "Филипенко",
                     "firstName": "Юрий",
                     "secondName": "Павлович",
+                    "email": "test@mail.ru",
                     "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                     "address": {
                         "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
@@ -161,6 +162,7 @@ class ApiOrder:
                     "familyName": "Иванов",
                     "firstName": "Иван",
                     "secondName": "Иванович",
+                    "email": "test@mail.ru",
                     "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                     "address": {
                         "raw": "603000, Нижегородская обл, г Нижний Новгород, ул Большая Покровская, д 4"
