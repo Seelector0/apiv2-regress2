@@ -472,3 +472,12 @@ class ApiOrder:
             if order["status"] == "wait-delivery" and len(order["data"]["request"]["places"]) == 1:
                 list_orders_id.append(order["id"])
         return list_orders_id
+
+    def getting_all_order_in_parcel(self):
+        """Метод получения id всех заказов не в партии."""
+        list_orders_id = []
+        order_list = self.get_orders()
+        for order in order_list.json():
+            if order["status"] == "wait-delivery":
+                list_orders_id.append(order["id"])
+        return list_orders_id
