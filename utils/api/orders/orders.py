@@ -290,7 +290,8 @@ class ApiOrder:
         body = json.dumps(body_order)
         return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
 
-    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float, path: str = None):
+    def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
+                    path: str = None):
         r"""Метод редактирования поля в заказе.
         :param order_id: Идентификатор заказа.
         :param path: Наименования поля которое будем менять
@@ -305,7 +306,7 @@ class ApiOrder:
                     {
                         "op": "replace",
                         "path": "weight",
-                        "value": f"{randrange(1, 5)}"
+                        "value": weight
                     }
                 ]
             )
@@ -460,5 +461,14 @@ class ApiOrder:
         list_orders = self.get_orders()
         for order in list_orders.json():
             if order["status"] == "created" and len(order["data"]["request"]["places"]) > 1:
+                list_orders_id.append(order["id"])
+        return list_orders_id
+
+    def getting_single_order_in_parcel(self):
+        """Метод получения id одноместных заказов в партии"""
+        list_orders_id = []
+        list_orders = self.get_orders()
+        for order in list_orders.json():
+            if order["status"] == "wait-delivery" and len(order["data"]["request"]["places"]) == 1:
                 list_orders_id.append(order["id"])
         return list_orders_id
