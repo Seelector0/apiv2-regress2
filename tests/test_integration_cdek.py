@@ -192,6 +192,15 @@ def test_editing_order(app, token):
     Checking.check_value_comparison(one_value=field["weight"], two_value=2)
 
 
+@allure.description("Редактирование веса в заказе СД СДЭК")
+def test_patch_order_weight(app, token):
+    random_order = choice(app.order.getting_single_order_id_out_parcel())
+    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"], sec=8)
+    Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+
+
 @allure.description("Получение информации об истории изменения статусов заказа СД СДЭК")
 def test_order_status(app, token):
     for order_id in app.order.getting_all_order_id_out_parcel():
@@ -230,6 +239,15 @@ def test_create_parcel(app, token):
     create_parcel = app.parcel.post_parcel(order_id=choice(app.order.getting_all_order_id_out_parcel()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+
+
+@allure.description("Редактирование веса заказа в партии СД Dpd")
+def test_patch_order_in_parcel(app, token):
+    random_order = choice(app.order.getting_single_order_in_parcel())
+    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"], sec=7)
+    Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
 
 
 @allure.description("Редактирование партии СД СДЭК (Добавление заказов)")

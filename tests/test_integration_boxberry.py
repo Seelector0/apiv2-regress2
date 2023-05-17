@@ -161,6 +161,14 @@ def test_create_order_from_file(app, token, file_extension):
         Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Редактирование веса в заказе СД Boxberry")
+def test_patch_order_weight(app, token):
+    random_order = choice(app.order.getting_all_order_id_out_parcel())
+    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
+
+
 @allure.description("Удаление заказа CД Boxberry")
 def test_delete_order(app, token):
     random_order_id = choice(app.order.getting_all_order_id_out_parcel())

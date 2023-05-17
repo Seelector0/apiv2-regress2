@@ -103,6 +103,15 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
+@allure.description("Редактирование веса в заказе СД FivePost")
+@pytest.mark.skip("Не редактируется вес заказа")
+def test_patch_order_weight(app, token):
+    random_order = choice(app.order.getting_all_order_id_out_parcel())
+    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
+
+
 @allure.description("Удаление заказа СД FivePost")
 def test_delete_order(app, token):
     random_order_id = choice(app.order.getting_all_order_id_out_parcel())
@@ -133,6 +142,15 @@ def test_create_parcel(app, token):
     create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+
+
+@allure.description("Редактирование веса заказа в партии СД FivePost")
+@pytest.mark.skip("Не редактируется вес заказа")
+def test_patch_weight_random_order_in_parcel(app, token):
+    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
+    order_patch = app.order.patch_order(order_id=choice(order_in_parcel), path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
 
 @allure.description("Редактирование партии СД FivePost (Добавление заказов)")
