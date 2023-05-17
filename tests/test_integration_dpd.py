@@ -172,6 +172,14 @@ def test_get_labels_out_of_parcel(app, token, labels):
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
+@allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6 вне партии")
+@pytest.mark.parametrize("format_", ["A5", "A6"])
+def test_get_original_labels_out_of_parcel(app, token, format_):
+    for order_id in app.order.getting_all_order_id_out_parcel():
+        label = app.document.get_label(order_id=order_id, size=True, format_=format_)
+        Checking.check_status_code(response=label, expected_status_code=200)
+
+
 @allure.description("Получение подробной информации о заказе СД Dpd")
 def test_order_details(app, token):
     for order_id in app.order.getting_all_order_id_out_parcel():
@@ -213,6 +221,14 @@ def test_get_label(app, token, labels):
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
     for order_id in order_in_parcel:
         label = app.document.get_label(order_id=order_id)
+        Checking.check_status_code(response=label, expected_status_code=200)
+
+
+@allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6")
+@pytest.mark.parametrize("format_", ["A5", "A6"])
+def test_get_original_labels(app, token, format_):
+    for order_id in app.order.getting_all_order_in_parcel():
+        label = app.document.get_label(order_id=order_id, size=True, format_=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
