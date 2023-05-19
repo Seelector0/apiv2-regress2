@@ -195,8 +195,7 @@ def test_get_documents(app, token):
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
