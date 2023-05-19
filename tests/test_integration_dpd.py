@@ -167,7 +167,8 @@ def test_delete_order(app, token):
 @allure.description("Получения этикеток CД Dpd вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels_out_of_parcel(app, token, labels):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+    order_out_parcel = app.order.getting_all_order_id_out_parcel()
+    for order_id in order_out_parcel:
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -175,7 +176,8 @@ def test_get_labels_out_of_parcel(app, token, labels):
 @allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6 вне партии")
 @pytest.mark.parametrize("format_", ["A5", "A6"])
 def test_get_original_labels_out_of_parcel(app, token, format_):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+    order_out_parcel = app.order.getting_all_order_id_out_parcel()
+    for order_id in order_out_parcel:
         label = app.document.get_label(order_id=order_id, size=True, format_=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -227,7 +229,8 @@ def test_get_label(app, token, labels):
 @allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6")
 @pytest.mark.parametrize("format_", ["A5", "A6"])
 def test_get_original_labels(app, token, format_):
-    for order_id in app.order.getting_all_order_in_parcel():
+    order_in_parcel = app.order.getting_all_order_in_parcel()
+    for order_id in order_in_parcel:
         label = app.document.get_label(order_id=order_id, size=True, format_=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -248,8 +251,7 @@ def test_get_documents(app, token):
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
