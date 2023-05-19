@@ -143,7 +143,7 @@ def test_create_order_courier(app, token, payment_type):
                                      tariff=choice(INFO.cdek_courier_tariffs), price=1000, declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=7)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -157,7 +157,7 @@ def test_create_order_delivery_point(app, token, payment_type):
                                      declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=7)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -229,7 +229,8 @@ def test_get_labels_out_of_parcel(app, token, labels):
 @allure.description("Получения оригинальных этикеток CД СДЭК в формате A4, A5, A6 вне партии")
 @pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
 def test_get_original_labels_out_of_parcel(app, token, format_):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+    order_out_parcel = app.order.getting_all_order_id_out_parcel()
+    for order_id in order_out_parcel:
         label = app.document.get_label(order_id=order_id, size=True, format_=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -249,15 +250,6 @@ def test_create_parcel(app, token):
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
-@allure.description("Редактирование веса заказа в партии СД Dpd")
-def test_patch_order_in_parcel(app, token):
-    random_order = choice(app.order.getting_single_order_in_parcel())
-    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
-    Checking.check_status_code(response=order_patch, expected_status_code=200)
-    get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"], sec=7)
-    Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
-
-
 @allure.description("Редактирование партии СД СДЭК (Добавление заказов)")
 def test_add_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
@@ -267,6 +259,15 @@ def test_add_order_in_parcel(app, token):
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
         new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
+
+
+@allure.description("Редактирование веса заказа в партии СД СДЭК")
+def test_patch_weight_random_order_in_parcel(app, token):
+    order_in_parcel = app.order.getting_single_order_in_parcel()
+    order_patch = app.order.patch_order(order_id=choice(order_in_parcel), path="weight", weight=4)
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"], sec=8)
+    Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
 
 
 @allure.description("Получение этикеток СД СДЭК")
@@ -281,7 +282,8 @@ def test_get_label(app, token, labels):
 @allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6")
 @pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
 def test_get_original_labels(app, token, format_):
-    for order_id in app.order.getting_all_order_in_parcel():
+    order_in_parcel = app.order.getting_all_order_in_parcel()
+    for order_id in order_in_parcel:
         label = app.document.get_label(order_id=order_id, size=True, format_=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -310,8 +312,7 @@ def test_get_documents(app, token):
 def test_remove_order_in_parcel(app, token):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
+    parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
