@@ -270,7 +270,7 @@ class ApiOrder:
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
                   family_name: str):
-        r"""Метод обновления заказ только для СД RussianPost.
+        r"""Метод обновления заказа для СД RussianPost и LPost.
         :param order_id: Идентификатор заказа.
         :param weight: Общий вес заказа.
         :param length: Длинна.
