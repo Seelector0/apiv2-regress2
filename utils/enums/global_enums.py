@@ -471,5 +471,48 @@ class OtherInfo:
         }
     ]
 
+    l_post_vats = [
+        {
+            "code": "0",
+            "name": "НДС 0%"
+        },
+        {
+            "code": "10",
+            "name": "НДС 10%"
+        },
+        {
+            "code": "20",
+            "name": "НДС 20%"
+        }
+    ]
+
+    l_post_services = [
+        {
+            "name": "lifting-elevator",
+            "title": "Подъем на этаж (лифт)",
+            "description": "Подъем на этаж (лифт)"
+        },
+        {
+            "name": "lifting-freight",
+            "title": "Подъем на этаж (грузовой лифт)",
+            "description": "Подъем на этаж (грузовой лифт)"
+        },
+        {
+            "name": "lifting-manual",
+            "title": "Подъем на этаж (ручной)",
+            "description": "Подъем на этаж (ручной)"
+        },
+        {
+            "name": "not-open",
+            "title": "Не вскрывать до получения оплаты с клиента",
+            "description": "Не вскрывать до получения оплаты с клиента"
+        },
+        {
+            "name": "partial-sale",
+            "title": "Частичная реализация",
+            "description": "Частичная реализация"
+        }
+    ]
+
 
 INFO = OtherInfo()
