@@ -303,6 +303,18 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
 
+    def delivery_services_l_post(self):
+        """Настройки подключения службы доставки LPost к магазину."""
+        json_l_post = json.dumps(
+            {
+                "deliveryServiceCode": "LPost",
+                "data": {
+                    "secret": f"{os.getenv('L_POST_SECRET')}"
+                }
+            }
+        )
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
+
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         return self.app.http_method.get(link=self.link_delivery_services())
