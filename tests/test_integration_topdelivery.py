@@ -203,8 +203,8 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получения этикеток СД TopDelivery вне партии")
-# @pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_labels_out_of_parcel(app, token):
+@pytest.mark.parametrize("labels", [pytest.param("original", marks=pytest.mark.xfail), "termo"])
+def test_get_labels_out_of_parcel(app, token, labels):
     for order_id in app.order.getting_all_order_id_out_parcel():
         label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=label, expected_status_code=200)
