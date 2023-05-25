@@ -17,9 +17,8 @@ class Checking:
     def checking_json_key(response: Response, expected_value: list):
         """Метод для проверки обязательных полей (ключей) в ответе"""
         with allure.step(f"Проверяю что в ответе есть ключи {expected_value}"):
-            token = json.loads(response.text)
-            assert list(token) == expected_value, \
-                f"Не ожидаемые ключи! Ожидаемые {expected_value}. Фактические {list(token)}"
+            assert list(json.loads(response.text)) == expected_value, \
+                f"Не ожидаемые ключи! Ожидаемые {expected_value}. Фактические {list(json.loads(response.text))}"
 
     @staticmethod
     def checking_json_value(response: Response, key_name: str, expected_value, field=None):
@@ -81,3 +80,10 @@ class Checking:
     def check_value_comparison(one_value, two_value):
         with allure.step("Проверка двух значений на равенство"):
             assert one_value == two_value, f"FAILED! первое значение-{one_value}, второе значение-{two_value}"
+
+    @staticmethod
+    def check_delivery_services_in_widget_offers(response: Response, delivery_service: str):
+        with allure.step(f"Проверяю что в ответе есть СД {delivery_service}"):
+            assert response.json()["features"] != [], f"Ответ {response.json()['features']}"
+            for i in response.json()["features"]:
+                assert i["point"]["deliveryServiceCode"] == delivery_service, f"В ответе нет СД {delivery_service}"

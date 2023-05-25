@@ -4,8 +4,6 @@ from utils.enums.global_enums import INFO
 import pytest
 import allure
 
-# Todo разобраться с widget offers
-
 
 @allure.description("Создание магазина")
 def test_create_integration_shop(app, token):
