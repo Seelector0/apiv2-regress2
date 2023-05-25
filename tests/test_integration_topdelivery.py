@@ -6,7 +6,6 @@ import allure
 
 
 # Todo Добавлением items в многоместный заказ почему затираются созданные items
-#  Добавить получение этикетки от службы параметризировать тесты с этикеткой
 
 
 @allure.description("Создание магазина")
@@ -228,8 +227,8 @@ def test_create_parcel(app, token):
 
 
 @allure.description("Получение этикеток СД TopDelivery")
-# @pytest.mark.parametrize("labels", ["original", "termo"]) pytest.param(7, marks=pytest.mark.xfail), 8, 9]
-def test_get_label(app, token):
+@pytest.mark.parametrize("labels", [pytest.param("original", marks=pytest.mark.xfail), "termo"])
+def test_get_label(app, token, labels):
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
     for order_id in order_in_parcel:
         label = app.document.get_label(order_id=order_id, type_="termo")
