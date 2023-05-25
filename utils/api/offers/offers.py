@@ -9,7 +9,7 @@ class ApiOffers:
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
-    def get_offers(self, types: str, delivery_service_code: str = None, payment_type: str = None,
+    def get_offers(self, types: str = None, delivery_service_code: str = None, payment_type: str = None,
                    delivery_point_number: str = None, format_: str = None):
         r"""Метод для получения списка офферов.
         :param types: Тип запроса офферов 'Courier', 'DeliveryPoint', 'PostOffice'.
@@ -28,7 +28,7 @@ class ApiOffers:
                 "length": randrange(10, 45),
                 "width": randrange(10, 45),
                 "weight": randrange(1, 10),
-                "types[0]": types,
+                "types[0]": "DeliveryPoint",
                 "format": "widget"
             }
         else:
