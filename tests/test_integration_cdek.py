@@ -5,9 +5,6 @@ import pytest
 import allure
 
 
-# Todo разобраться с widget offers
-
-
 @allure.description("Создание магазина")
 def test_create_integration_shop(app, token):
     new_shop = app.shop.post_shop()
@@ -73,6 +70,13 @@ def test_info_statuses(app, token):
     info_delivery_service_services = app.info.info_delivery_service_services(code="Cdek")
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cdek_services)
+
+
+@allure.description("Получение оферов в формате 'widget'")
+def test_offers_format_widget(app, token):
+    offers_widget = app.offers.get_offers(format_="widget")
+    Checking.check_status_code(response=offers_widget, expected_status_code=200)
+    Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Cdek")
 
 
 @allure.description("Получение оферов по СД СДЭК (Courier)")
