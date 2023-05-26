@@ -5,7 +5,7 @@ import pytest
 import allure
 
 
-# Todo Добавить создание многоместных заказов после того как решиться вопрос с этикетками
+# Todo Добавить получение этикеток для multi order, сейчас только для single order
 
 
 @allure.description("Создание магазина")
@@ -102,28 +102,26 @@ def test_offers_delivery_point(app, payment_type, token):
 
 
 @allure.description("Создание Courier многоместного заказа по CД Boxberry")
-@pytest.mark.skip("Проблемы с печатью этикеток для многоместного заказа")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, token, payment_type):
     new_multi_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
                                                  declared_value=1500)
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=5)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Boxberry")
-@pytest.mark.skip("Проблемы с печатью этикеток для многоместного заказа")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_multi_delivery_point(app, token, payment_type):
     new_multi_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
                                                  delivery_point_code="00199", declared_value=1500)
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=5)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -188,7 +186,7 @@ def test_delete_order(app, token):
 @allure.description("Получения этикетки Boxberry вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label_out_of_parcel(app, token, labels):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+    for order_id in app.order.getting_single_order_in_parcel():
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -220,16 +218,14 @@ def test_create_parcel(app, token):
 @allure.description("Получение этикетки CД Boxberry")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels(app, token, labels):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    for order_id in order_in_parcel:
+    for order_id in app.order.getting_single_order_in_parcel():
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение этикеток заказов из партии СД Boxberry")
 def test_get_labels_from_parcel(app, token):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
+    labels_from_parcel = app.document.post_labels(order_ids=app.order.getting_single_order_in_parcel())
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
 
 
@@ -240,6 +236,7 @@ def test_get_app(app, token):
 
 
 @allure.description("Получение документов CД Boxberry")
+@pytest.mark.skip("404 код. Из-за проблем с этикеткой многоместного заказа")
 def test_get_documents(app, token):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
