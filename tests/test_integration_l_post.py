@@ -94,7 +94,7 @@ def test_create_order_courier(app, token, payment_type):
                                          declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -149,8 +149,8 @@ def test_create_parcel(app, token):
 
 @allure.description("Получение АПП СД LPost")
 def test_get_app(app, token):
-    app = app.document.get_acceptance()
-    Checking.check_status_code(response=app, expected_status_code=200)
+    acceptance = app.document.get_acceptance()
+    Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Получение документов СД LPost")

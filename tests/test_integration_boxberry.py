@@ -235,8 +235,8 @@ def test_get_labels_from_parcel(app, token):
 
 @allure.description("Получение АПП CД Boxberry")
 def test_get_app(app, token):
-    app = app.document.get_acceptance()
-    Checking.check_status_code(response=app, expected_status_code=200)
+    acceptance = app.document.get_acceptance()
+    Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Получение документов CД Boxberry")
