@@ -9,4 +9,4 @@ RUN cd /app && \
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["pytest", "-x", "-s", "-v", "tests/"]
+ENTRYPOINT ["pytest", "-s", "-v", "tests/"]
