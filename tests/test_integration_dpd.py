@@ -98,7 +98,7 @@ def test_create_multi_order_courier(app, token):
                                                  declared_value=1500)
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=10)
+    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=12)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
