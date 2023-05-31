@@ -361,7 +361,7 @@ class ApiOrder:
         :param dimension: Габариты нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
-        items_1 = result_get_order_by_id.json()["data"]["request"]["places"]
+        items = result_get_order_by_id.json()["data"]["request"]["places"]
         if path == "places":
             json_path_order = json.dumps(
                 [
@@ -369,7 +369,7 @@ class ApiOrder:
                         "op": "replace",
                         "path": "places",
                         "value": [
-                            *items_1,
+                            *items,
                             {
                                 "items": [
                                     {
