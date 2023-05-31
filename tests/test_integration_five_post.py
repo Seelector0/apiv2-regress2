@@ -122,7 +122,7 @@ def test_delete_order(app, token):
 
 
 @allure.description("Попытка получения этикетки СД FivePost вне партии")
-def test_get_label_of_parcel(app, token):
+def test_get_labels_out_of_parcel(app, token):
     for order_id in app.order.getting_all_order_id_out_parcel():
         label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
