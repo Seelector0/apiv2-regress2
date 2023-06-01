@@ -14,18 +14,21 @@ class ApiOrder:
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
-    def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price: float,
-                   barcode: str = None, delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   length: float = randint(10, 30), width: float = randint(10, 50), height: float = randint(10, 50),
-                   weight: float = randint(1, 5), delivery_point_code: str = None, pickup_time_period: str = None,
-                   date_pickup: str = None, routes: list = None, tariff: str = None, items_declared_value: int = None):
+    def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price_1: float = None,
+                   price_2: float = None, price_3: float = None, barcode: str = None, delivery_sum: float = None,
+                   data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
+                   width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
+                   delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
+                   routes: list = None, tariff: str = None, items_declared_value: int = None):
         r"""Метод создания одноместного заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
-        :param price: Цена товарной позиции.
+        :param price_1: Цена первой товарной позиции.
+        :param price_2: Цена второй товарной позиции.
+        :param price_3: Цена третий товарной позиции.
         :param barcode: Штрих код заказа.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
@@ -42,6 +45,12 @@ class ApiOrder:
         """
         if delivery_sum is None:
             delivery_sum = 100.24
+        if price_1 is None:
+            price_1 = 1000
+        if price_2 is None:
+            price_2 = 1000
+        if price_3 is None:
+            price_3 = 1000
         json_order = json.dumps(
             {
                 "warehouse": {
@@ -54,7 +63,7 @@ class ApiOrder:
                 },
                 "payment": {
                     "type": payment_type,
-                    "declaredValue": declared_value,
+                    "declaredValue": declared_value + price_1 + price_2 + price_3,
                     "deliverySum": delivery_sum,
                 },
                 "dimension": {
@@ -89,9 +98,27 @@ class ApiOrder:
                     {
                         "items": [
                             {
-                                "article": f"ART{randrange(1000000, 9999999)}",
+                                "article": f"ART_1{randrange(1000000, 9999999)}",
                                 "name": "Стол",
-                                "price": price,
+                                "price": price_1,
+                                "count": 1,
+                                "weight": weight,
+                                "vat": "0",
+                                "declaredValue": items_declared_value,
+                            },
+                            {
+                                "article": f"ART_2{randrange(1000000, 9999999)}",
+                                "name": "Стол",
+                                "price": price_1,
+                                "count": 1,
+                                "weight": weight,
+                                "vat": "0",
+                                "declaredValue": items_declared_value,
+                            },
+                            {
+                                "article": f"ART_3{randrange(1000000, 9999999)}",
+                                "name": "Стол",
+                                "price": price_3,
                                 "count": 1,
                                 "weight": weight,
                                 "vat": "0",
@@ -419,6 +446,67 @@ class ApiOrder:
                     }
                 ]
             )
+        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+
+    def patch_order_ds_topdelivery(self, order_id: str):
+        r"""Создание многоместного из одноместного заказа для СД TopDelivery.
+        :param order_id: Идентификатор заказа.
+        """
+        result_get_order_by_id = self.get_order_id(order_id=order_id)
+        body = result_get_order_by_id.json()["data"]["request"]["places"]
+        list1 = []
+        for i in body:
+            for j in i["items"]:
+                list1.append(j)
+        json_path_order = json.dumps(
+            [
+                {
+                    "op": "replace",
+                    "path": "places",
+                    "value": [
+                        {
+                            "items": [
+                                list1[0]
+                            ],
+                            "barcode": f"Box_1{randrange(100000, 999999)}",
+                            "shopNumber": f"{randrange(100000, 999999)}",
+                            "weight": randint(10, 30),
+                            "dimension": {
+                                "length": randint(10, 30),
+                                "width": randint(10, 30),
+                                "height": randint(10, 30)
+                            }
+                        },
+                        {
+                            "items": [
+                                list1[1]
+                            ],
+                            "barcode": f"Box_2{randrange(100000, 999999)}",
+                            "shopNumber": f"{randrange(100000, 999999)}",
+                            "weight": randint(10, 30),
+                            "dimension": {
+                                "length": randint(10, 30),
+                                "width": randint(10, 30),
+                                "height": randint(10, 30)
+                            }
+                        },
+                        {
+                            "items": [
+                                list1[2]
+                            ],
+                            "barcode": f"Box_3{randrange(100000, 999999)}",
+                            "shopNumber": f"{randrange(100000, 999999)}",
+                            "weight": randint(10, 30),
+                            "dimension": {
+                                "length": randint(10, 30),
+                                "width": randint(10, 30),
+                                "height": randint(10, 30)
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
     def delete_order(self, order_id: str):
