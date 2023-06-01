@@ -77,7 +77,7 @@ def test_create_multi_order_courier(app, token, payment_type):
                                                      })
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=6)
+    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=10)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -87,14 +87,14 @@ def test_create_multi_order_courier(app, token, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
     if payment_type == "Paid":
-        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="LPost", price=0,
-                                         declared_value=0, delivery_sum=0)
+        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="LPost",
+                                         declared_value=0, delivery_sum=0, price_1=0, price_2=0, price_3=0)
     else:
-        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="LPost", price=1000,
+        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="LPost",
                                          declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=10)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")

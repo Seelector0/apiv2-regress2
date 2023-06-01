@@ -130,8 +130,8 @@ def test_create_order_multi_delivery_point(app, token, payment_type):
 @allure.description("Создание Courier заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
-    new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Boxberry", price=1000,
-                                     declared_value=1500)
+    new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
+                                     declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
@@ -144,7 +144,7 @@ def test_create_order_courier(app, token, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, token, payment_type):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
-                                     delivery_point_code="00199", price=1000, declared_value=1500)
+                                     delivery_point_code="00199", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)

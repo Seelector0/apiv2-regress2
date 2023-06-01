@@ -104,7 +104,7 @@ def test_offers_russian_post(app, payment_type, token):
 @allure.description("Создание Courier заказа по СД Почта России")
 def test_create_order_courier(app, token):
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="RussianPost",
-                                     tariff=choice(INFO.rp_courier_tariffs), price=1000, declared_value=1500)
+                                     tariff=choice(INFO.rp_courier_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
@@ -116,8 +116,8 @@ def test_create_order_courier(app, token):
 @allure.description("Создание DeliveryPoint заказа по СД Почта России")
 def test_create_delivery_point(app, token):
     new_order = app.order.post_order(payment_type="Paid", length=15, width=15, height=15, type_ds="DeliveryPoint",
-                                     service="RussianPost", tariff=INFO.rp_po_tariffs[0],
-                                     delivery_point_code="914841", price=1000, declared_value=1500)
+                                     service="RussianPost", tariff=INFO.rp_po_tariffs[0], delivery_point_code="914841",
+                                     declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
@@ -130,7 +130,7 @@ def test_create_delivery_point(app, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_post_office(app, payment_type, token):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
-                                     tariff=choice(INFO.rp_po_tariffs), price=1000, declared_value=1500)
+                                     tariff=choice(INFO.rp_po_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)

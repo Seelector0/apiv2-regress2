@@ -122,7 +122,7 @@ def test_create_order_courier(app, token):
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}",
                                      tariff=choice(INFO.dpd_courier_tariffs), date_pickup=f"{datetime.date.today()}",
-                                     pickup_time_period="9-18", price=1000, declared_value=1500)
+                                     pickup_time_period="9-18", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
@@ -136,7 +136,7 @@ def test_create_order_delivery_point(app, token):
     new_order = app.order.post_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}", tariff=choice(INFO.dpd_ds_tariffs),
                                      date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
-                                     delivery_point_code="007K", price=1000, declared_value=1500)
+                                     delivery_point_code="007K", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)

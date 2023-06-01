@@ -72,8 +72,7 @@ def test_offers_delivery_point(app, payment_type, token):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_delivery_point(app, payment_type, token):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="FivePost",
-                                     delivery_point_code="0014e8fe-1c2d-4429-b115-c9064ce54c30", price=1000,
-                                     declared_value=1500)
+                                     delivery_point_code="0014e8fe-1c2d-4429-b115-c9064ce54c30", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)

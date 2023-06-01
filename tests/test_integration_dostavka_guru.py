@@ -65,7 +65,7 @@ def test_info_statuses(app, token):
 def test_create_order_courier(app, token, payment_type):
     day = datetime.date.today() + datetime.timedelta(days=2)
     new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="DostavkaGuru",
-                                     price=1000, declared_value=1500, data=f"{day}", routes=[
+                                     declared_value=500, data=f"{day}", routes=[
                                          {
                                              "deliveryService": "RussianPost",
                                              "deferred": True
