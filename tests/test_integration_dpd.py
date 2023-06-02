@@ -92,9 +92,10 @@ def test_offers_delivery_point(app, payment_type, token):
 
 @allure.description("Создание Courier многоместного заказа по CД Dpd")
 def test_create_multi_order_courier(app, token):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_multi_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                                  tariff=choice(INFO.dpd_courier_tariffs),
-                                                 date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
+                                                 date_pickup=f"{tomorrow}", pickup_time_period="9-18",
                                                  declared_value=1500)
     Checking.check_status_code(response=new_multi_order, expected_status_code=201)
     Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
@@ -106,22 +107,54 @@ def test_create_multi_order_courier(app, token):
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Dpd")
 def test_create_multi_order_delivery_point(app, token):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
-                                           tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{datetime.date.today()}",
+                                           tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{tomorrow}",
                                            pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
+@allure.description("Создание одноместного заказа и многоместного СД Dpd")
+def test_patch_add_single_order_from_multi_order(app, token):
+    list_order_id = app.order.getting_multi_order_id_out_parcel()
+    random_order_id = choice(list_order_id)
+    multi_order = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=multi_order, expected_status_code=200)
+    patch_multi_order = app.order.patch_order(order_id=random_order_id, name="Пуфик", price=500, count=2, weight=2)
+    Checking.check_status_code(response=patch_multi_order, expected_status_code=200)
+    Checking.checking_json_value(response=patch_multi_order, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=patch_multi_order, key_name="state", expected_value="succeeded")
+    assert len(multi_order.json()["data"]["request"]["places"]) > \
+           len(patch_multi_order.json()["data"]["request"]["places"])
+
+
+@allure.description("Добавление items в многоместный или одноместный заказ СД Dpd")
+def test_patch_multi_order(app, token):
+    choice_order_id = choice(app.order.getting_all_order_id_out_parcel())
+    old_len_order_list = app.order.get_order_id(order_id=choice_order_id)
+    patch_order = app.order.patch_order_add_item(order_id=choice_order_id)
+    Checking.check_status_code(response=patch_order, expected_status_code=200)
+    Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=patch_order, key_name="state", expected_value="succeeded")
+    new_len_order_list = app.order.get_order_id(order_id=choice_order_id, )
+    Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
+    Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
+    Checking.checking_sum_len_lists(old_list=old_len_order_list.json()["data"]["request"]["places"],
+                                    new_list=new_len_order_list.json()["data"]["request"]["places"])
+
+
 @allure.description("Создание Courier заказа по CД Dpd")
 def test_create_order_courier(app, token):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}",
-                                     tariff=choice(INFO.dpd_courier_tariffs), date_pickup=f"{datetime.date.today()}",
+                                     tariff=choice(INFO.dpd_courier_tariffs), date_pickup=f"{tomorrow}",
                                      pickup_time_period="9-18", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
@@ -133,13 +166,14 @@ def test_create_order_courier(app, token):
 
 @allure.description("Создание DeliveryPoint заказа по CД Dpd")
 def test_create_order_delivery_point(app, token):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}", tariff=choice(INFO.dpd_ds_tariffs),
-                                     date_pickup=f"{datetime.date.today()}", pickup_time_period="9-18",
+                                     date_pickup=f"{tomorrow}", pickup_time_period="9-18",
                                      delivery_point_code="007K", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -199,8 +233,9 @@ def test_order_details(app, token):
 
 @allure.description("Создание партии СД Dpd")
 def test_create_parcel(app, token):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
+    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id), data=tomorrow)
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
