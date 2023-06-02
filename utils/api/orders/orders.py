@@ -374,71 +374,74 @@ class ApiOrder:
             )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
 
-    def patch_order_add_item(self, order_id: str, path: str = None, dimension: dict = None):
+    def patch_order_add_item(self, order_id: str, dimension: dict = None):
         r"""Метод добавление места в заказ.
         :param order_id: Идентификатор заказа.
-        :param path: Добавления items.
-        :param dimension: Габариты нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
+        :param dimension: Габариты нового грузо места значение по умолчанию, можно передать свои.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        if path == "places":
-            json_path_order = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "places",
-                        "value": [
-                            *items,
-                            {
-                                "items": [
-                                    {
-                                        "article": f"ART_3{randrange(1000000, 9999999)}",
-                                        "name": "Пуфик",
-                                        "price": 1000,
-                                        "count": 1,
-                                        "weight": randint(10, 30),
-                                        "vat": "NO_VAT"
-                                    }
-                                ],
-                                "barcode": f"Box_3{randrange(100000, 999999)}",
-                                "shopNumber": f"{randrange(100000, 999999)}",
-                                "weight": randint(1, 5),
-                                "dimension": dimension
-                            }
-                        ]
-                    }
-                ]
-            )
-        else:
-            json_path_order = json.dumps(
-                [
-                    {
-                        "op": "add",
-                        "path": "places",
-                        "value": [
-                            {
-                                "barcode": f"Box_3{randrange(100000, 999999)}",
-                                "weight": randint(10, 30),
-                                "dimension": {
-                                    "length": randint(10, 30),
-                                    "width": randint(10, 50),
-                                    "height": randint(10, 50)
+        json_path_order = json.dumps(
+            [
+                {
+                    "op": "replace",
+                    "path": "places",
+                    "value": [
+                        *items,
+                        {
+                            "items": [
+                                {
+                                    "article": f"ART_3{randrange(1000000, 9999999)}",
+                                    "name": "Пуфик",
+                                    "price": 1000,
+                                    "count": 1,
+                                    "weight": randint(10, 30),
+                                    "vat": "NO_VAT"
                                 }
-                            },
-                            {
-                                "barcode": f"Box_4{randrange(100000, 999999)}",
-                                "weight": randint(10, 30),
-                                "dimension": {
-                                    "length": randint(10, 30),
-                                    "width": randint(10, 50),
-                                    "height": randint(10, 50)
-                                }
+                            ],
+                            "barcode": f"Box_3{randrange(100000, 999999)}",
+                            "shopNumber": f"{randrange(100000, 999999)}",
+                            "weight": randint(1, 5),
+                            "dimension": dimension
+                        }
+                    ]
+                }
+            ]
+        )
+        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+
+    def patch_order_add_cargo(self, order_id: str):
+        r"""Метод для добавления грузо-мест для СД Cse.
+        :param order_id: Идентификатор заказа.
+        """
+        json_path_order = json.dumps(
+            [
+                {
+                    "op": "add",
+                    "path": "places",
+                    "value": [
+                        {
+                            "barcode": f"Box_3{randrange(100000, 999999)}",
+                            "weight": randint(10, 30),
+                            "dimension": {
+                                "length": randint(10, 30),
+                                "width": randint(10, 50),
+                                "height": randint(10, 50)
                             }
-                        ]
-                    }
-                ]
-            )
+                        },
+                        {
+                            "barcode": f"Box_4{randrange(100000, 999999)}",
+                            "weight": randint(10, 30),
+                            "dimension": {
+                                "length": randint(10, 30),
+                                "width": randint(10, 50),
+                                "height": randint(10, 50)
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
     def patch_create_multy_order(self, order_id: str):
