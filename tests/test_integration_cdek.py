@@ -127,7 +127,7 @@ def test_create_multi_order_delivery_point(app, token, payment_type):
 def test_patch_multi_order(app, token):
     choice_order_id = choice(app.order.getting_all_order_id_out_parcel())
     old_len_order_list = app.order.get_order_id(order_id=choice_order_id)
-    patch_order = app.order.patch_order_add_item(order_id=choice_order_id, path="places")
+    patch_order = app.order.patch_order_add_item(order_id=choice_order_id)
     Checking.check_status_code(response=patch_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=patch_order, key_name="state",
