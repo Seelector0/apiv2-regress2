@@ -352,7 +352,7 @@ class ApiOrder:
                             {
                                 "items": [
                                     {
-                                        "article": f"ART1{randrange(1000000, 9999999)}",
+                                        "article": f"ART_1{randrange(1000000, 9999999)}",
                                         "name": name,
                                         "price": price,
                                         "count": count,
@@ -375,7 +375,7 @@ class ApiOrder:
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
 
     def patch_order_add_item(self, order_id: str, dimension: dict = None):
-        r"""Метод добавление места в заказ.
+        r"""Метод добавление места в заказ. Для СД DPD старые места удаляются и добавляются новые
         :param order_id: Идентификатор заказа.
         :param dimension: Габариты нового грузо места значение по умолчанию, можно передать свои.
         """

@@ -8,23 +8,26 @@ class ApiParcel:
         self.app = app
         self.link = "parcels"
 
-    def post_parcel(self, order_id: str, all_orders: bool = False):
+    def post_parcel(self, order_id: str, all_orders: bool = False, data: str = None):
         r"""Метод создания партии.
         :param order_id: Идентификатор заказа.
         :param all_orders: Флаг True отправляет списком заказы в партию.
+        :param data: Дата отправки партии.
         """
+        if data is None:
+            data = datetime.date.today()
         if all_orders:
             json_create_parcel = json.dumps(
                 {
                     "orderIds": [*order_id],
-                    "shipmentDate": f"{datetime.date.today()}"
+                    "shipmentDate": f"{data}"
                 }
             )
         else:
             json_create_parcel = json.dumps(
                 {
                     "orderIds": [order_id],
-                    "shipmentDate": f"{datetime.date.today()}"
+                    "shipmentDate": f"{data}"
                 }
             )
         return self.app.http_method.post(link=self.link, data=json_create_parcel)

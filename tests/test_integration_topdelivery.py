@@ -5,9 +5,6 @@ import pytest
 import allure
 
 
-# Todo Добавлением items в многоместный заказ почему затираются созданные items
-
-
 @allure.description("Создание магазина")
 def test_create_integration_shop(app, token):
     new_shop = app.shop.post_shop()

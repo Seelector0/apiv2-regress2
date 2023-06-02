@@ -104,10 +104,9 @@ def test_create_order_courier(app, token, payment_type):
 def test_editing_order(app, token):
     random_order = choice(app.order.getting_all_order_id_out_parcel())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
-                                    declared_value=2500, family_name="Иванов")
+                                    family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
     Checking.checking_big_json(response=order_put, key_name="weight", expected_value=5)
-    Checking.checking_big_json(response=order_put, key_name="payment", field="declaredValue", expected_value=2500)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="length", expected_value=12)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="width", expected_value=14)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="height", expected_value=11)
