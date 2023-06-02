@@ -303,15 +303,13 @@ class ApiOrder:
         self.app.time_sleep(sec)
         return self.app.http_method.get(link=f"{self.link}/{order_id}")
 
-    def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, declared_value: str,
-                  family_name: str):
+    def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
         r"""Метод обновления заказа для СД RussianPost и LPost.
         :param order_id: Идентификатор заказа.
         :param weight: Общий вес заказа.
         :param length: Длинна.
         :param width: Ширина.
         :param height: Высота.
-        :param declared_value: Объявленная стоимость.
         :param family_name: ФИО получателя.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
@@ -320,7 +318,6 @@ class ApiOrder:
         body_order["dimension"]["length"] = length
         body_order["dimension"]["width"] = width
         body_order["dimension"]["height"] = height
-        body_order["payment"]["declaredValue"] = declared_value
         body_order["recipient"]["familyName"] = family_name
         body = json.dumps(body_order)
         return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
@@ -377,14 +374,10 @@ class ApiOrder:
             )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
 
-    def patch_order_add_item(self, order_id: str, path: str = None, shop_number_3: str = f"{randrange(100000, 999999)}",
-                             weight_3: float = randint(1, 5), weight_4: float = randint(1, 5), dimension: dict = None):
+    def patch_order_add_item(self, order_id: str, path: str = None, dimension: dict = None):
         r"""Метод добавление места в заказ.
         :param order_id: Идентификатор заказа.
         :param path: Добавления items.
-        :param shop_number_3: Номер нового items в магазине - значение по умолчанию, можно передать своё.
-        :param weight_3: Вес нового items значение по умолчанию, можно передать своё.
-        :param weight_4: Вес нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
         :param dimension: Габариты нового грузо места значение по умолчанию, можно передать своё (Для СД Cse).
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
@@ -404,13 +397,13 @@ class ApiOrder:
                                         "name": "Пуфик",
                                         "price": 1000,
                                         "count": 1,
-                                        "weight": weight_3,
+                                        "weight": randint(10, 30),
                                         "vat": "NO_VAT"
                                     }
                                 ],
                                 "barcode": f"Box_3{randrange(100000, 999999)}",
-                                "shopNumber": shop_number_3,
-                                "weight": weight_3,
+                                "shopNumber": f"{randrange(100000, 999999)}",
+                                "weight": randint(1, 5),
                                 "dimension": dimension
                             }
                         ]
@@ -426,7 +419,7 @@ class ApiOrder:
                         "value": [
                             {
                                 "barcode": f"Box_3{randrange(100000, 999999)}",
-                                "weight": weight_3,
+                                "weight": randint(10, 30),
                                 "dimension": {
                                     "length": randint(10, 30),
                                     "width": randint(10, 50),
@@ -435,7 +428,7 @@ class ApiOrder:
                             },
                             {
                                 "barcode": f"Box_4{randrange(100000, 999999)}",
-                                "weight": weight_4,
+                                "weight": randint(10, 30),
                                 "dimension": {
                                     "length": randint(10, 30),
                                     "width": randint(10, 50),
@@ -448,7 +441,7 @@ class ApiOrder:
             )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
-    def patch_order_ds_topdelivery(self, order_id: str):
+    def patch_create_multy_order(self, order_id: str):
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
         :param order_id: Идентификатор заказа.
         """
