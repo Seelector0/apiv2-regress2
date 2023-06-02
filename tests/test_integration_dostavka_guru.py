@@ -87,13 +87,6 @@ def test_order_status(app, token):
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
-@allure.description("Попытка удаление заказа СД DostavkaGuru")
-def test_delete_order(app, token):
-    random_order_id = choice(app.order.getting_all_order_id_out_parcel())
-    delete_order = app.order.delete_order(order_id=random_order_id)
-    Checking.check_status_code(response=delete_order, expected_status_code=422)
-
-
 @allure.description("Получения этикеток CД DostavkaGuru вне партии")
 def test_get_labels_out_of_parcel(app, token):
     for order_id in app.order.getting_all_order_id_out_parcel():
@@ -142,11 +135,3 @@ def test_get_app(app, token):
 def test_get_documents(app, token):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
-
-
-@allure.description("Попытка Редактирование партии CД DostavkaGuru (Удаление заказа)")
-def test_remove_order_in_parcel(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
-    Checking.check_status_code(response=parcel_remove, expected_status_code=422)

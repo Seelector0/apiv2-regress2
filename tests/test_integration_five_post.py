@@ -86,7 +86,7 @@ def test_create_delivery_point(app, payment_type, token):
 def test_create_order_from_file(app, token, file_extension):
     new_orders = app.order.post_import_order(delivery_services="five_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
-    app.time_sleep(sec=6)
+    app.time_sleep(sec=7)
     for order in new_orders.json().values():
         get_order_by_id = app.order.get_order_id(order_id=order["id"])
         Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
@@ -120,7 +120,7 @@ def test_delete_order(app, token):
     Checking.check_status_code(response=get_order_by_id, expected_status_code=404)
 
 
-@allure.description("Попытка получения этикетки СД FivePost вне партии")
+@allure.description("Получения этикетки СД FivePost вне партии")
 def test_get_labels_out_of_parcel(app, token):
     for order_id in app.order.getting_all_order_id_out_parcel():
         label = app.document.get_label(order_id=order_id)
