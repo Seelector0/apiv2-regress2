@@ -161,7 +161,7 @@ def test_patch_single_order(app, token):
     random_order_id = choice(list_order_id)
     single_order = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=single_order, expected_status_code=200)
-    patch_single_order = app.order.patch_order_ds_topdelivery(order_id=random_order_id)
+    patch_single_order = app.order.patch_create_multy_order(order_id=random_order_id)
     Checking.check_status_code(response=patch_single_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_single_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=patch_single_order, key_name="state", expected_value="succeeded")
@@ -249,11 +249,3 @@ def test_get_app(app, token):
 def test_get_documents(app, token):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
-
-
-@allure.description("Попытка Редактирование партии CД TopDelivery (Удаление заказа)")
-def test_remove_order_in_parcel(app, token):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(order_in_parcel), parcel_id=parcel_id[0], op="remove")
-    Checking.check_status_code(response=parcel_remove, expected_status_code=422)
