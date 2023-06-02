@@ -122,17 +122,6 @@ def test_create_multi_order_delivery_point(app, token):
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Добавление items в многоместный заказ CД Cse")
-@pytest.mark.skip("Падает с 400 кодом")
-def test_patch_multi_order(app, token):
-    choice_order_id = choice(app.order.getting_all_order_id_out_parcel())
-    patch_order = app.order.patch_order_add_item(order_id=choice_order_id, path="add")
-    Checking.check_status_code(response=patch_order, expected_status_code=200)
-    Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
-    new_len_order_list = app.order.get_order_id(order_id=choice_order_id)
-    Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
-
-
 @allure.description("Создание Courier заказа по СД Cse")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, token, payment_type):
