@@ -315,6 +315,30 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
 
+    def delivery_services_dalli(self, connection_type: str = None):
+        r"""Настройки подключения службы доставки Dalli к магазину.
+        :param connection_type: Тип подключения СД по агрегации.
+        """
+        if connection_type == "aggregation":
+            json_dalli = json.dumps(
+                {
+                    "deliveryServiceCode": "Dalli",
+                    "data": {
+                        "type": "aggregation",
+                    }
+                }
+            )
+        else:
+            json_dalli = json.dumps(
+                {
+                    "deliveryServiceCode": "Dalli",
+                    "data": {
+                        "type": "integration",
+                    }
+                }
+            )
+        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dalli)
+
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         return self.app.http_method.get(link=self.link_delivery_services())
