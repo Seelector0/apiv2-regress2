@@ -17,11 +17,11 @@ class ApiDeliveryServices:
         """Метод получения ссылки для подключения СД."""
         return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
 
-    def delivery_services_russian_post(self, connection_type: str = None):
+    def delivery_services_russian_post(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки RussianPost к магазину
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_russian_post = json.dumps(
                 {
                     "deliveryServiceCode": "RussianPost",
@@ -45,11 +45,11 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
 
-    def delivery_services_topdelivery(self, connection_type: str = None):
+    def delivery_services_topdelivery(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки TopDelivery к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_topdelivery = json.dumps(
                 {
                     "deliveryServiceCode": "TopDelivery",
@@ -73,11 +73,11 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
 
-    def delivery_services_boxberry(self, connection_type: str = None):
+    def delivery_services_boxberry(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки Boxberry к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_boxberry = json.dumps(
                 {
                     "deliveryServiceCode": "Boxberry",
@@ -100,11 +100,11 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
 
-    def delivery_services_cdek(self, connection_type: str = None):
+    def delivery_services_cdek(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки Cdek к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_cdek = json.dumps(
                 {
                     "deliveryServiceCode": "Cdek",
@@ -141,11 +141,11 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
 
-    def delivery_services_dpd(self, connection_type: str = None):
+    def delivery_services_dpd(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки Dpd к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_dpd = json.dumps(
                 {
                     "deliveryServiceCode": "Dpd",
@@ -183,11 +183,11 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
 
-    def delivery_services_five_post(self, connection_type: str = None):
+    def delivery_services_five_post(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки FivePost к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_five_post = json.dumps(
                 {
                     "deliveryServiceCode": "FivePost",
@@ -223,11 +223,11 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
 
-    def delivery_services_yandex_go(self, connection_type: str = None):
+    def delivery_services_yandex_go(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки YandexGo к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_yandex_go = json.dumps(
                 {
                     "deliveryServiceCode": "YandexGo",
@@ -248,11 +248,11 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
 
-    def delivery_services_yandex_delivery(self, connection_type: str = None):
+    def delivery_services_yandex_delivery(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки YandexDelivery к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_yandex_delivery = json.dumps(
                 {
                     "deliveryServiceCode": "YandexDelivery",
@@ -315,11 +315,11 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
 
-    def delivery_services_dalli(self, connection_type: str = None):
+    def delivery_services_dalli(self, aggregation: bool = False):
         r"""Настройки подключения службы доставки Dalli к магазину.
-        :param connection_type: Тип подключения СД по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
         """
-        if connection_type == "aggregation":
+        if aggregation is True:
             json_dalli = json.dumps(
                 {
                     "deliveryServiceCode": "Dalli",
