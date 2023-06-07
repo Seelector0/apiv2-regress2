@@ -334,7 +334,7 @@ class ApiDeliveryServices:
                     "deliveryServiceCode": "Dalli",
                     "data": {
                         "type": "integration",
-                        "token": f""
+                        "token": f"{os.getenv('DALLI_TOKEN')}"
                     }
                 }
             )
