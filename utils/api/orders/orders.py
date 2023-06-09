@@ -245,7 +245,7 @@ class ApiOrder:
         return self.app.http_method.post(link=self.link, data=json_multi_order)
 
     def post_import_order_format_russian_post(self, file_extension: str = None):
-        r"""Метод создания заказа из файла XLSX или XLS формата.
+        r"""Метод создания заказа из файла XLSX или XLS формата RussianPost.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         file_xls = "orders_format_russian_post.xls"
@@ -264,7 +264,7 @@ class ApiOrder:
         return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
 
     def post_import_order(self, delivery_services: str = None, file_extension: str = None):
-        r"""Метод создания заказа из файла XLSX или XLS формата.
+        r"""Метод создания заказа из файла XLSX или XLS.
         :param delivery_services: Служба доставки.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
