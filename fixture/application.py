@@ -46,14 +46,17 @@ class Application:
     def open_session(self):
         """Метод для открытия сессии."""
         self.response = self.session.post(url=self.base_url, data=self.data, headers=self.headers)
-        return self.response
+        if self.response.status_code == 200:
+            return self.response
+        else:
+            self.session.close()
+
+    def close_session(self):
+        """Метод для закрытия сессии."""
+        self.session.close()
 
     def time_sleep(self, sec: float = 0):
         r"""Метод ожидания в секундах.
         :param sec: Секунды ожидания по умолчанию 0.
         """
         self.time.sleep(sec)
-
-    def close_session(self):
-        """Метод для закрытия сессии."""
-        self.session.close()
