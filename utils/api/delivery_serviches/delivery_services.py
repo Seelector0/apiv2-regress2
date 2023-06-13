@@ -17,7 +17,7 @@ class ApiDeliveryServices:
         """Метод получения ссылки для подключения СД."""
         return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
 
-    def delivery_services_russian_post(self, aggregation: bool = False):
+    def delivery_services_russian_post(self, aggregation=None):
         r"""Настройки подключения службы доставки RussianPost к магазину
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -45,7 +45,7 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
 
-    def delivery_services_topdelivery(self, aggregation: bool = False):
+    def delivery_services_topdelivery(self, aggregation=None):
         r"""Настройки подключения службы доставки TopDelivery к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -73,7 +73,7 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
 
-    def delivery_services_boxberry(self, aggregation: bool = False):
+    def delivery_services_boxberry(self, aggregation=None):
         r"""Настройки подключения службы доставки Boxberry к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -100,7 +100,7 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
 
-    def delivery_services_cdek(self, aggregation: bool = False):
+    def delivery_services_cdek(self, aggregation=None):
         r"""Настройки подключения службы доставки Cdek к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -141,7 +141,7 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
 
-    def delivery_services_dpd(self, aggregation: bool = False):
+    def delivery_services_dpd(self, aggregation=None):
         r"""Настройки подключения службы доставки Dpd к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -183,7 +183,7 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
 
-    def delivery_services_five_post(self, aggregation: bool = False):
+    def delivery_services_five_post(self, aggregation=None):
         r"""Настройки подключения службы доставки FivePost к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -223,7 +223,7 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
 
-    def delivery_services_yandex_go(self, aggregation: bool = False):
+    def delivery_services_yandex_go(self, aggregation=None):
         r"""Настройки подключения службы доставки YandexGo к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -248,7 +248,7 @@ class ApiDeliveryServices:
             )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
 
-    def delivery_services_yandex_delivery(self, aggregation: bool = False):
+    def delivery_services_yandex_delivery(self, aggregation=None):
         r"""Настройки подключения службы доставки YandexDelivery к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
@@ -315,7 +315,7 @@ class ApiDeliveryServices:
         )
         return self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
 
-    def delivery_services_dalli(self, aggregation: bool = False):
+    def delivery_services_dalli(self, aggregation=None):
         r"""Настройки подключения службы доставки Dalli к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
