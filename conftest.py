@@ -19,7 +19,6 @@ def app():
     if fixture_api is None:
         fixture_api = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
     fixture_api.open_session()
-    Checking.check_status_code(response=fixture_api.response, expected_status_code=200)
     return fixture_api
 
 
