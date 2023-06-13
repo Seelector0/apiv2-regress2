@@ -19,7 +19,7 @@ class ApiWarehouse:
                 "address": {
                     "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
                 },
-                "lPostWarehouseId": "21003",
+                "lPostWarehouseId": "20537",
                 "pickup": True,
                 "contact": {
                     "fullName": fullname,
