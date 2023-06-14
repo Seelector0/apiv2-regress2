@@ -62,7 +62,7 @@ def test_info_statuses(app, token):
 
 @allure.description("Создание Courier заказа по CД DostavkaGuru")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, token, payment_type):
+def test_create_order_courier(app, token, payment_type, connections):
     day = datetime.date.today() + datetime.timedelta(days=2)
     new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="DostavkaGuru",
                                      declared_value=500, data=f"{day}", routes=[
@@ -73,7 +73,8 @@ def test_create_order_courier(app, token, payment_type):
                                      ], items_declared_value=1000, barcode=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=["id", "type", "url", "status"])
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=6)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")

@@ -102,25 +102,27 @@ def test_offers_russian_post(app, payment_type, token):
 
 
 @allure.description("Создание Courier заказа по СД Почта России")
-def test_create_order_courier(app, token):
+def test_create_order_courier(app, token, connections):
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="RussianPost",
                                      tariff=choice(INFO.rp_courier_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание DeliveryPoint заказа по СД Почта России")
-def test_create_delivery_point(app, token):
+def test_create_delivery_point(app, token, connections):
     new_order = app.order.post_order(payment_type="Paid", length=15, width=15, height=15, type_ds="DeliveryPoint",
                                      service="RussianPost", tariff=INFO.rp_po_tariffs[0], delivery_point_code="914841",
                                      declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -128,12 +130,13 @@ def test_create_delivery_point(app, token):
 
 @allure.description("Создание PostOffice заказа по СД Почта России")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_post_office(app, payment_type, token):
+def test_create_order_post_office(app, payment_type, token, connections):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="PostOffice", service="RussianPost",
                                      tariff=choice(INFO.rp_po_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -162,11 +165,11 @@ def test_patch_order_weight(app, token):
 
 @allure.description("Создание заказа из файла СД Почты России")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file(app, token, file_extension):
+def test_create_order_from_file(app, token, file_extension, connections):
     new_orders = app.order.post_import_order(delivery_services="russian_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
-    app.time_sleep(sec=5)
     for order in new_orders.json().values():
+        connections.metaship.wait_create_order(order_id=order["id"])
         get_order_by_id = app.order.get_order_id(order_id=order["id"])
         Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
@@ -175,11 +178,11 @@ def test_create_order_from_file(app, token, file_extension):
 
 @allure.description("Создание заказа из файла формата Почты России")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file_format_russian_post(app, token, file_extension):
+def test_create_order_from_file_format_russian_post(app, token, file_extension, connections):
     new_orders = app.order.post_import_order_format_russian_post(file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
-    app.time_sleep(sec=5)
     for order in new_orders.json().values():
+        connections.metaship.wait_create_order(order_id=order["id"])
         get_order_by_id = app.order.get_order_id(order_id=order["id"])
         Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
