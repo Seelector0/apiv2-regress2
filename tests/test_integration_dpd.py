@@ -1,3 +1,5 @@
+import time
+
 from utils.checking import Checking
 from utils.enums.global_enums import INFO
 from random import choice, randrange
@@ -91,35 +93,36 @@ def test_offers_delivery_point(app, payment_type, token):
 
 
 @allure.description("Создание Courier многоместного заказа по CД Dpd")
-def test_create_multi_order_courier(app, token):
+def test_create_multi_order_courier(app, token, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    new_multi_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dpd",
-                                                 tariff=choice(INFO.dpd_courier_tariffs),
-                                                 date_pickup=f"{tomorrow}", pickup_time_period="9-18",
-                                                 declared_value=1500)
-    Checking.check_status_code(response=new_multi_order, expected_status_code=201)
-    Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=12)
+    new_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dpd",
+                                           tariff=choice(INFO.dpd_courier_tariffs),
+                                           date_pickup=f"{tomorrow}", pickup_time_period="9-18", declared_value=1500)
+    Checking.check_status_code(response=new_order, expected_status_code=201)
+    Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Dpd")
-def test_create_multi_order_delivery_point(app, token):
+def test_create_multi_order_delivery_point(app, token, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                            tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{tomorrow}",
                                            pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Создание одноместного заказа и многоместного СД Dpd")
+@allure.description("Создание одноместного заказа из многоместного СД Dpd")
 def test_patch_add_single_order_from_multi_order(app, token):
     list_order_id = app.order.getting_multi_order_id_out_parcel()
     random_order_id = choice(list_order_id)
@@ -141,7 +144,7 @@ def test_patch_multi_order(app, token):
     Checking.check_status_code(response=patch_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=patch_order, key_name="state", expected_value="succeeded")
-    new_len_order_list = app.order.get_order_id(order_id=choice_order_id, )
+    new_len_order_list = app.order.get_order_id(order_id=choice_order_id)
     Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
     Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
     Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
@@ -150,7 +153,7 @@ def test_patch_multi_order(app, token):
 
 
 @allure.description("Создание Courier заказа по CД Dpd")
-def test_create_order_courier(app, token):
+def test_create_order_courier(app, token, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}",
@@ -158,14 +161,15 @@ def test_create_order_courier(app, token):
                                      pickup_time_period="9-18", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
 @allure.description("Создание DeliveryPoint заказа по CД Dpd")
-def test_create_order_delivery_point(app, token):
+def test_create_order_delivery_point(app, token, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                      barcode=f"{randrange(100000000, 999999999)}", tariff=choice(INFO.dpd_ds_tariffs),
@@ -173,7 +177,8 @@ def test_create_order_delivery_point(app, token):
                                      delivery_point_code="007K", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=8)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")

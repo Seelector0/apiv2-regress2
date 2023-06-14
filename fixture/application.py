@@ -54,9 +54,3 @@ class Application:
     def close_session(self):
         """Метод для закрытия сессии."""
         self.session.close()
-
-    def time_sleep(self, sec: float = 0):
-        r"""Метод ожидания в секундах.
-        :param sec: Секунды ожидания по умолчанию 0.
-        """
-        self.time.sleep(sec)

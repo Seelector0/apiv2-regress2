@@ -103,12 +103,13 @@ def test_offers_delivery_point(app, payment_type, token):
 
 @allure.description("Создание Courier многоместного заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_multi_order_courier(app, token, payment_type):
-    new_multi_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
-                                                 declared_value=1500)
-    Checking.check_status_code(response=new_multi_order, expected_status_code=201)
-    Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=5)
+def test_create_multi_order_courier(app, token, payment_type, connections):
+    new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
+                                           declared_value=1500)
+    Checking.check_status_code(response=new_order, expected_status_code=201)
+    Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -116,12 +117,13 @@ def test_create_multi_order_courier(app, token, payment_type):
 
 @allure.description("Создание DeliveryPoint многоместного заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_multi_delivery_point(app, token, payment_type):
-    new_multi_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
-                                                 delivery_point_code="00199", declared_value=1500)
-    Checking.check_status_code(response=new_multi_order, expected_status_code=201)
-    Checking.checking_json_key(response=new_multi_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_multi_order.json()["id"], sec=5)
+def test_create_order_multi_delivery_point(app, token, payment_type, connections):
+    new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
+                                           delivery_point_code="77717", declared_value=1500)
+    Checking.check_status_code(response=new_order, expected_status_code=201)
+    Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -129,12 +131,13 @@ def test_create_order_multi_delivery_point(app, token, payment_type):
 
 @allure.description("Создание Courier заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, token, payment_type):
+def test_create_order_courier(app, token, payment_type, connections):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Boxberry",
                                      declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -142,12 +145,13 @@ def test_create_order_courier(app, token, payment_type):
 
 @allure.description("Создание DeliveryPoint заказа по CД Boxberry")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_delivery_point(app, token, payment_type):
+def test_create_order_delivery_point(app, token, payment_type, connections):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Boxberry",
-                                     delivery_point_code="00199", declared_value=500)
+                                     delivery_point_code="77717", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"], sec=5)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
+    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
     Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
     Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
@@ -155,11 +159,11 @@ def test_create_order_delivery_point(app, token, payment_type):
 
 @allure.description("Создание заказа из файла СД Boxberry")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file(app, token, file_extension):
+def test_create_order_from_file(app, token, file_extension, connections):
     new_orders = app.order.post_import_order(delivery_services="boxberry", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
-    app.time_sleep(sec=5)
     for order in new_orders.json().values():
+        connections.metaship.wait_create_order(order_id=order["id"])
         get_order_by_id = app.order.get_order_id(order_id=order["id"])
         Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
