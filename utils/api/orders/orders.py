@@ -295,12 +295,10 @@ class ApiOrder:
         """Метод возвращает список заказов."""
         return self.app.http_method.get(link=self.link)
 
-    def get_order_id(self, order_id: str, sec: float = 0):
+    def get_order_id(self, order_id: str):
         r"""Метод получения информации о заказе по его id.
         :param order_id: Идентификатор заказа.
-        :param sec: Задержка перед методом для регистрации заказа в системе.
         """
-        self.app.time_sleep(sec)
         return self.app.http_method.get(link=f"{self.link}/{order_id}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
