@@ -8,11 +8,8 @@ class ApiWarehouse:
         self.app = app
         self.link = "customer/warehouses"
 
-    @staticmethod
-    def json_warehouse(fullname: str = "Виктор Викторович"):
-        r"""Json создания склада.
-        :param fullname: ФИО contact person по умолчанию 'Виктор Викторович'.
-        """
+    def post_warehouse(self):
+        """Json создания склада."""
         warehouse = json.dumps(
             {
                 "name": f"{randrange(100000, 999999)}",
@@ -22,36 +19,12 @@ class ApiWarehouse:
                 "lPostWarehouseId": "20537",
                 "pickup": True,
                 "contact": {
-                    "fullName": fullname,
+                    "fullName": "Виктор Викторович",
                     "phone": f"+7910{randrange(1000000, 9999999)}",
                     "email": "test@email.ru"
                 }
             }
         )
-        return warehouse
-
-    @staticmethod
-    def json_field_changes(field: str, new_value):
-        r"""Json для редактирования полей склада.
-        :param field: Изменяемое поле.
-        :param new_value: Новое значения поля.
-        """
-        body = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": field,
-                    "value": new_value
-                }
-            ]
-        )
-        return body
-
-    def post_warehouse(self, fullname: str = "Виктор Викторович"):
-        r"""Метод создания нового склада.
-        :param fullname: ФИО contact person по умолчанию 'Виктор Викторович'.
-        """
-        warehouse = self.json_warehouse(fullname=fullname)
         return self.app.http_method.post(link=self.link, data=warehouse)
 
     def get_warehouses(self):
@@ -64,19 +37,130 @@ class ApiWarehouse:
         """
         return self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
 
-    def put_warehouse(self, warehouse_id: str, fullname: str):
-        """Метод редактирования склада.
+    def put_warehouse(self, warehouse_id: str, name: str, pickup: bool, comment: str, l_post_warehouse_id: str,
+                      dpd_pickup_num: str, address: str, full_name: str, phone: str, email: str, working_time: dict):
+        r"""Метод обновления склада.
         :param warehouse_id: Идентификатор склада.
-        :param fullname: ФИО contact person.
+        :param name: Название склада.
+        :param pickup: Флаг, что службы доставки забирают заказы с этого склад.
+        :param comment: Комментарий для курьера.
+        :param l_post_warehouse_id: Id склада СД LPost нужен для создания заказов по СД LPost.
+        :param dpd_pickup_num: Номер регулярного заказа DPD.
+        :param address: Адрес склада.
+        :param full_name: ФИО контактного лица склада.
+        :param phone: Телефон контактного лица склада.
+        :param email: Email контактного лица склада.
+        :param working_time: Время работы склада.
         """
-        warehouse = self.json_warehouse(fullname=fullname)
-        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
+        get_warehouse = self.get_warehouse_id(warehouse_id=warehouse_id)
+        warehouse = get_warehouse.json()
+        warehouse["name"] = name
+        warehouse["pickup"] = pickup
+        warehouse["comment"] = comment
+        warehouse["lPostWarehouseId"] = l_post_warehouse_id
+        warehouse["dpdPickupNum"] = dpd_pickup_num
+        warehouse["address"]["raw"] = address
+        warehouse["contact"]["fullName"] = full_name
+        warehouse["contact"]["phone"] = phone
+        warehouse["contact"]["email"] = email
+        warehouse["workingTime"] = working_time
+        json_patch_warehouse = json.dumps(warehouse)
+        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=json_patch_warehouse)
 
-    def patch_warehouse(self, warehouse_id: str):
-        r"""Метод делает склад не активным.
+    def patch_warehouse(self, warehouse_id: str, path: str, value):
+        r"""Метод для редактирования полей склада.
         :param warehouse_id: Идентификатор склада.
+        :param path: Изменяемое поле.
+        :param value: Новое значение поля.
         """
-        body = self.json_field_changes(field="visibility", new_value=False)
+        if path == "visibility":
+            value: bool = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "visibility",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "comment":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "comment",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "pickup":
+            value: bool = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "pickup",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "dpdPickupNum":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "dpdPickupNum",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "fullName":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "contact.fullName",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "phone":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "contact.phone",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "email":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "contact.email",
+                        "value": value
+                    }
+                ]
+            )
+        elif path == "workingTime":
+            value: dict = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "workingTime",
+                        "value": value
+                    }
+                ]
+            )
         return self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=body)
 
     def delete_warehouse(self, warehouse_id: str):
@@ -84,11 +168,3 @@ class ApiWarehouse:
         :param warehouse_id: Идентификатор склада.
         """
         return self.app.http_method.delete(link=f"{self.link}/{warehouse_id}")
-    
-    def getting_list_warehouse_ids(self):
-        """Метод получения списка id складов."""
-        warehouses_id_list = []
-        warehouses_list = self.get_warehouses()
-        for warehouse in warehouses_list.json():
-            warehouses_id_list.append(warehouse["id"])
-        return warehouses_id_list
