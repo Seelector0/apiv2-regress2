@@ -408,40 +408,6 @@ class ApiOrder:
         )
         return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
 
-    def patch_order_add_cargo(self, order_id: str):
-        r"""Метод для добавления грузо-мест для СД Cse.
-        :param order_id: Идентификатор заказа.
-        """
-        json_path_order = json.dumps(
-            [
-                {
-                    "op": "add",
-                    "path": "places",
-                    "value": [
-                        {
-                            "barcode": f"Box_3{randrange(100000, 999999)}",
-                            "weight": randint(10, 30),
-                            "dimension": {
-                                "length": randint(10, 30),
-                                "width": randint(10, 50),
-                                "height": randint(10, 50)
-                            }
-                        },
-                        {
-                            "barcode": f"Box_4{randrange(100000, 999999)}",
-                            "weight": randint(10, 30),
-                            "dimension": {
-                                "length": randint(10, 30),
-                                "width": randint(10, 50),
-                                "height": randint(10, 50)
-                            }
-                        }
-                    ]
-                }
-            ]
-        )
-        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
-
     def patch_create_multy_order(self, order_id: str):
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
         :param order_id: Идентификатор заказа.
