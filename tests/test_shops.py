@@ -9,7 +9,7 @@ import pytest
 
 @allure.description("Создание магазина")
 @pytest.mark.parametrize("execution_number", range(5))
-def test_create_integration_shop(app, token, execution_number):
+def test_create_shop(app, token, execution_number):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
@@ -48,7 +48,7 @@ def test_put_shop(app, token,  connections):
     Checking.checking_json_value(response=assert_put_shop, key_name="phone", expected_value="79169326511")
 
 
-@allure.description("Получение магазина по его id")
+@allure.description("Редактирование полей магазина")
 def test_patch_shop(app, token, connections):
     random_shop_id = choice(connections.metaship.get_list_shops())
     patch_shop = app.shop.patch_shop(shop_id=random_shop_id, value=False)

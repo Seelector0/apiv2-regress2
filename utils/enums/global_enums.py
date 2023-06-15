@@ -6,6 +6,73 @@ class OtherInfo:
 
     entity_shops = ["id", "number", "name", "uri", "phone", "sender", "trackingTag", "visibility"]
 
+    entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
+                        "dpdPickupNum", "lPostWarehouseId", "comment"]
+
+    old_work_time_warehouse = {
+        "timezone": "+03:00",
+        "monday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "tuesday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "wednesday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "thursday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "friday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "saturday": {
+            "from": "09:00",
+            "to": "20:00"
+        },
+        "sunday": {
+            "from": "09:00",
+            "to": "20:00"
+        }
+    }
+
+    new_work_time_warehouse = {
+        "timezone": "+03:00",
+        "monday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "tuesday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "wednesday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "thursday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "friday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "saturday": {
+            "from": "09:00",
+            "to": "18:00"
+        },
+        "sunday": {
+            "from": "09:00",
+            "to": "18:00"
+        }
+    }
+
     details = ["returnItems", "returnReason", "delayReason", "paymentType", "pickupDate", "declaredDeliveryDate",
                "storageDateEnd"]
 
