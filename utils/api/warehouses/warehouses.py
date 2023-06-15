@@ -161,6 +161,19 @@ class ApiWarehouse:
                     }
                 ]
             )
+        elif path == "lPostWarehouseId":
+            value: str = value
+            body = json.dumps(
+                [
+                    {
+                        "op": "replace",
+                        "path": "lPostWarehouseId",
+                        "value": value
+                    }
+                ]
+            )
+        else:
+            raise ValueError(f"Выбрана не верная операция {path}")
         return self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=body)
 
     def delete_warehouse(self, warehouse_id: str):
