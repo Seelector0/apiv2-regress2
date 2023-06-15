@@ -118,6 +118,15 @@ def test_patch_warehouse_working_time(app, token, connections):
     Checking.checking_json_value(response=patch_warehouse, key_name="workingTime", expected_value=working_time)
 
 
+@allure.description("Редактирование полей склада(lPostWarehouseId)")
+def test_patch_warehouse_l_post_warehouse_id(app, token, connections):
+    random_warehouse_id = choice(connections.metaship.get_list_warehouses())
+    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="lPostWarehouseId",
+                                                    value="123456")
+    Checking.check_status_code(response=patch_warehouse, expected_status_code=200)
+    Checking.checking_json_value(response=patch_warehouse, key_name="lPostWarehouseId", expected_value="123456")
+
+
 @allure.description("Удаление склада по его id")
 def test_delete_warehouse_by_id(app, token, connections):
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
