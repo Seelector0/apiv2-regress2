@@ -4,6 +4,8 @@ class OtherInfo:
 
     created_entity = ["id", "type", "url", "status"]
 
+    entity_shops = ["id", "number", "name", "uri", "phone", "sender", "trackingTag", "visibility"]
+
     details = ["returnItems", "returnReason", "delayReason", "paymentType", "pickupDate", "declaredDeliveryDate",
                "storageDateEnd"]
 
