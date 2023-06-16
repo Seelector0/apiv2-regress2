@@ -1,6 +1,5 @@
 from fixture.application import Application
 from fixture.database import DataBase
-from utils.checking import Checking
 from environment import ENV_OBJECT
 import pytest
 import uuid
