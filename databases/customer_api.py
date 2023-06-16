@@ -2,8 +2,8 @@
 
 class DataBaseCustomerApi:
 
-    def __init__(self, customer):
-        self.customer = customer
+    def __init__(self, connections):
+        self.customer = connections
 
     def delete_connection(self, shop_id):
         r"""Функция чистит таблицу 'public.connection'.
