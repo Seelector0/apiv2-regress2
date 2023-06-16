@@ -8,9 +8,9 @@ class ApiWidget:
     def __init__(self, app):
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
-        self.link = "/widgets/tokens"
+        self.link = "widget/tokens"
 
-    def create_widget_tokens(self):
+    def post_widget_tokens(self):
         """Создание токена для виджета."""
         body = json.dumps(
             {
