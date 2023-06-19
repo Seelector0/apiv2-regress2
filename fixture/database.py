@@ -1,6 +1,6 @@
-from databases.database_connections import DataBaseConnections
-from databases.database_customer_api import DataBaseCustomerApi
-from databases.database_tracking_api import DataBaseTrackingApi
+from databases.connections import DataBaseConnections
+from databases.customer_api import DataBaseCustomerApi
+from databases.tracking_api import DataBaseTrackingApi
 from environment import ENV_OBJECT
 import psycopg2
 
