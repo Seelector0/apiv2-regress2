@@ -9,7 +9,7 @@ import allure
 
 
 @allure.description("Создание магазина")
-def test_create_integration_shop(app, token):
+def test_create_integration_shop(app):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
@@ -19,7 +19,7 @@ def test_create_integration_shop(app, token):
 
 
 @allure.description("Создание склада")
-def test_create_warehouse(app, token):
+def test_create_warehouse(app):
     new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
@@ -29,7 +29,7 @@ def test_create_warehouse(app, token):
 
 
 @allure.description("Подключение настроек СД DostavkaClub")
-def test_integration_delivery_services(app, token):
+def test_integration_delivery_services(app):
     dostavka_club = app.service.delivery_services_dostavka_club()
     Checking.check_status_code(response=dostavka_club, expected_status_code=201)
     Checking.checking_json_key(response=dostavka_club, expected_value=INFO.created_entity)
@@ -41,7 +41,7 @@ def test_integration_delivery_services(app, token):
 
 
 @allure.description("Получения сроков доставки по DostavkaClub")
-def test_delivery_time_schedules(app, token):
+def test_delivery_time_schedules(app):
     delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="DostavkaClub")
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
     Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
@@ -49,14 +49,14 @@ def test_delivery_time_schedules(app, token):
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД DostavkaClub")
-def test_info_vats(app, token):
+def test_info_vats(app):
     info_vats = app.info.info_vats(delivery_service_code="DostavkaClub")
     Checking.check_status_code(response=info_vats, expected_status_code=200)
     Checking.checking_json_key(response=info_vats, expected_value=INFO.club_vats)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД DostavkaClub")
-def test_info_statuses(app, token):
+def test_info_statuses(app):
     info_delivery_service_services = app.info.info_delivery_service_services(code="DostavkaClub")
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.club_services)
@@ -64,7 +64,7 @@ def test_info_statuses(app, token):
 
 @allure.description("Получение оферов по DostavkaClub (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_courier(app, payment_type, token):
+def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
                                            delivery_service_code="DostavkaClub")
     Checking.check_status_code(response=offers_courier, expected_status_code=200)
@@ -73,7 +73,7 @@ def test_offers_courier(app, payment_type, token):
 
 @allure.description("Создание Courier многоместного заказа по CД DostavkaClub")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_multi_order_courier(app, token, payment_type, connections):
+def test_create_multi_order_courier(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="DostavkaClub",
                                                  tariff=choice(INFO.club_tariffs), declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
@@ -87,7 +87,7 @@ def test_create_multi_order_courier(app, token, payment_type, connections):
 
 @allure.description("Создание Courier заказа по CД DostavkaClub")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, token, payment_type, connections):
+def test_create_order_courier(app, payment_type, connections):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="DostavkaClub",
                                      tariff=choice(INFO.club_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
@@ -100,7 +100,7 @@ def test_create_order_courier(app, token, payment_type, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД DostavkaClub")
-def test_order_status(app, token):
+def test_order_status(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
@@ -108,7 +108,7 @@ def test_order_status(app, token):
 
 
 @allure.description("Получение подробной информации о заказе CД DostavkaClub")
-def test_order_details(app, token):
+def test_order_details(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
@@ -116,7 +116,7 @@ def test_order_details(app, token):
 
 
 @allure.description("Создание партии CД DostavkaClub")
-def test_create_parcel(app, token):
+def test_create_parcel(app):
     orders_id = app.order.getting_all_order_id_out_parcel()
     create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
@@ -124,12 +124,12 @@ def test_create_parcel(app, token):
 
 
 @allure.description("Получение АПП CД DostavkaClub")
-def test_get_app(app, token):
+def test_get_app(app):
     acceptance = app.document.get_acceptance()
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Получение документов CД DostavkaClub")
-def test_get_documents(app, token):
+def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)

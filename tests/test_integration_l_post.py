@@ -6,7 +6,7 @@ import allure
 
 
 @allure.description("Создание магазина")
-def test_create_integration_shop(app, token):
+def test_create_integration_shop(app):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
@@ -16,7 +16,7 @@ def test_create_integration_shop(app, token):
 
 
 @allure.description("Создание склада")
-def test_create_warehouse(app, token):
+def test_create_warehouse(app):
     new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
@@ -26,7 +26,7 @@ def test_create_warehouse(app, token):
 
 
 @allure.description("Подключение настроек СД LPost")
-def test_integration_delivery_services(app, token):
+def test_integration_delivery_services(app):
     cdek = app.service.delivery_services_l_post()
     Checking.check_status_code(response=cdek, expected_status_code=201)
     Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
@@ -37,14 +37,14 @@ def test_integration_delivery_services(app, token):
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД LPost")
-def test_info_vats(app, token):
+def test_info_vats(app):
     info_vats = app.info.info_vats(delivery_service_code="LPost")
     Checking.check_status_code(response=info_vats, expected_status_code=200)
     Checking.checking_json_key(response=info_vats, expected_value=INFO.l_post_vats)
 
 
 @allure.description("Получение актуального списка возможных сервисов заказа СД LPost")
-def test_info_statuses(app, token):
+def test_info_statuses(app):
     info_delivery_service_services = app.info.info_delivery_service_services(code="LPost")
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.l_post_services)
@@ -52,7 +52,7 @@ def test_info_statuses(app, token):
 
 @allure.description("Получение оферов по СД LPost (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_courier(app, payment_type, token):
+def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier", delivery_service_code="LPost")
     Checking.check_status_code(response=offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=offers_courier, expected_value=["Courier"])
@@ -60,7 +60,7 @@ def test_offers_courier(app, payment_type, token):
 
 @allure.description("Создание Courier многоместного заказа по CД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_multi_order_courier(app, token, payment_type, connections):
+def test_create_multi_order_courier(app, payment_type, connections):
     if payment_type == "Paid":
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
                                                declared_value=0, delivery_sum=0, price=0, dimension={
@@ -86,7 +86,7 @@ def test_create_multi_order_courier(app, token, payment_type, connections):
 
 @allure.description("Создание Courier заказа по СД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, token, payment_type, connections):
+def test_create_order_courier(app, payment_type, connections):
     if payment_type == "Paid":
         new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="LPost",
                                          declared_value=0, delivery_sum=0, price_1=0, price_2=0, price_3=0)
@@ -103,7 +103,7 @@ def test_create_order_courier(app, token, payment_type, connections):
 
 
 @allure.description("Редактирование заказа СД LPost")
-def test_editing_order(app, token):
+def test_editing_order(app):
     random_order = choice(app.order.getting_all_order_id_out_parcel())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
@@ -116,7 +116,7 @@ def test_editing_order(app, token):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД LPost")
-def test_order_status(app, token):
+def test_order_status(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
@@ -124,7 +124,7 @@ def test_order_status(app, token):
 
 
 @allure.description("Удаление заказа LPost")
-def test_delete_order(app, token):
+def test_delete_order(app):
     random_order_id = choice(app.order.getting_all_order_id_out_parcel())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
@@ -133,7 +133,7 @@ def test_delete_order(app, token):
 
 
 @allure.description("Получение подробной информации о заказе СД LPost")
-def test_order_details(app, token):
+def test_order_details(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
@@ -141,7 +141,7 @@ def test_order_details(app, token):
 
 
 @allure.description("Создание партии CД LPost")
-def test_create_parcel(app, token):
+def test_create_parcel(app):
     orders_id = app.order.getting_all_order_id_out_parcel()
     create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
@@ -149,12 +149,12 @@ def test_create_parcel(app, token):
 
 
 @allure.description("Получение АПП СД LPost")
-def test_get_app(app, token):
+def test_get_app(app):
     acceptance = app.document.get_acceptance()
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Получение документов СД LPost")
-def test_get_documents(app, token):
+def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
