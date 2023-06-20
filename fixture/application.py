@@ -17,7 +17,7 @@ import time
 
 class Application:
 
-    def __init__(self, base_url: str = None, response: Response = None, token: dict = None):
+    def __init__(self, base_url: str = None, response: Response = None):
         self.base_url = base_url
         self.session = requests.Session()
         self.data = {
@@ -26,7 +26,6 @@ class Application:
             "client_secret": f"{ENV_OBJECT.client_secret()}"
         }
         self.response = response
-        self.token = token
         self.headers = {
             "Content-Type": "application/x-www-form-urlencoded"
         }
