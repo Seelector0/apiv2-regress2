@@ -2,7 +2,6 @@ from fixture.application import Application
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 import pytest
-import uuid
 
 
 fixture_api = None
@@ -19,16 +18,6 @@ def app():
         fixture_api = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
     fixture_api.open_session()
     return fixture_api
-
-
-@pytest.fixture(scope="function")
-def token():
-    """Фикстура для получения токена для работы по Api"""
-    fixture_api.token = {
-        "x-trace-id": str(uuid.uuid4()),
-        "Authorization": f"Bearer {fixture_api.response.json()['access_token']}"
-    }
-    return fixture_api.token
 
 
 @pytest.fixture(scope="module")
