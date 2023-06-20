@@ -21,13 +21,9 @@ class ApiDocument:
         :param format_: Формат размера этикеток A4, A5 и A6.
         """
         link = f"{self.app.order.link}/{order_id}/label"
-        if type_ == "termo":
+        if type_:
             params = {
-                "type": "termo"
-            }
-        elif type_ == "original":
-            params = {
-                "type": "original"
+                "type": type_
             }
         elif size:
             params = {
