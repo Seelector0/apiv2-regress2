@@ -48,21 +48,11 @@ class ApiParcel:
         :param order_id: Идентификатор партии.
         :param parcel_id: Идентификатор партии.
         """
-        if op == "add":
+        if op:
             json_patch_parcel = json.dumps(
                 [
                     {
-                        "op": "add",
-                        "path": "orderIds",
-                        "value": [order_id]
-                    }
-                ]
-            )
-        elif op == "remove":
-            json_patch_parcel = json.dumps(
-                [
-                    {
-                        "op": "remove",
+                        "op": op,
                         "path": "orderIds",
                         "value": [order_id]
                     }
