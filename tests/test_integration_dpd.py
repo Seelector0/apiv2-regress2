@@ -1,5 +1,3 @@
-import time
-
 from utils.checking import Checking
 from utils.enums.global_enums import INFO
 from random import choice, randrange
