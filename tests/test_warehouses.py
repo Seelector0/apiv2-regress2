@@ -64,7 +64,7 @@ def test_patch_warehouse_comment(app, connections):
 @allure.description("Редактирование полей склада(email)")
 def test_patch_warehouse_email(app, connections):
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
-    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="email",
+    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="contact.email",
                                                     value="cool_email@ya.ru")
     Checking.check_status_code(response=patch_warehouse, expected_status_code=200)
     Checking.checking_json_value(response=patch_warehouse, key_name="contact", field="email",
@@ -74,7 +74,7 @@ def test_patch_warehouse_email(app, connections):
 @allure.description("Редактирование полей склада(fullName)")
 def test_patch_warehouse_full_name(app, connections):
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
-    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="fullName",
+    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="contact.fullName",
                                                     value="Гадя Петрович Хренова")
     Checking.check_status_code(response=patch_warehouse, expected_status_code=200)
     Checking.checking_json_value(response=patch_warehouse, key_name="contact", field="fullName",
@@ -84,7 +84,7 @@ def test_patch_warehouse_full_name(app, connections):
 @allure.description("Редактирование полей склада(phone)")
 def test_patch_warehouse_phone(app, connections):
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
-    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="phone",
+    patch_warehouse = app.warehouse.patch_warehouse(warehouse_id=random_warehouse_id, path="contact.phone",
                                                     value="+79095630011")
     Checking.check_status_code(response=patch_warehouse, expected_status_code=200)
     Checking.checking_json_value(response=patch_warehouse, key_name="contact", field="phone",
