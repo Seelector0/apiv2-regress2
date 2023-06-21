@@ -73,101 +73,12 @@ class ApiWarehouse:
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        if path == "visibility":
-            value: bool = value
+        if path:
             body = json.dumps(
                 [
                     {
                         "op": "replace",
-                        "path": "visibility",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "comment":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "comment",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "pickup":
-            value: bool = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "pickup",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "dpdPickupNum":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "dpdPickupNum",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "fullName":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "contact.fullName",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "phone":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "contact.phone",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "email":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "contact.email",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "workingTime":
-            value: dict = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "workingTime",
-                        "value": value
-                    }
-                ]
-            )
-        elif path == "lPostWarehouseId":
-            value: str = value
-            body = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "lPostWarehouseId",
+                        "path": path,
                         "value": value
                     }
                 ]
