@@ -64,4 +64,3 @@ class HttpMethod:
         with allure.step(f"DELETE requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
             link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
             return requests.delete(url=link, headers=self.token())
-
