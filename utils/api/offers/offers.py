@@ -18,7 +18,7 @@ class ApiOffers:
         :param delivery_point_number: Идентификатор точки доставки.
         :param format_: Получение в формате виджета.
         """
-        if format_ == "widget":
+        if format_:
             body_offers = {
                 "warehouseId": self.database.metaship.get_list_warehouses()[0],
                 "shopId": self.database.metaship.get_list_shops()[0],
@@ -29,7 +29,7 @@ class ApiOffers:
                 "width": randrange(10, 45),
                 "weight": randrange(1, 10),
                 "types[0]": "DeliveryPoint",
-                "format": "widget"
+                "format": format_
             }
         else:
             body_offers = {
