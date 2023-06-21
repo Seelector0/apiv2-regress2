@@ -319,7 +319,7 @@ def test_get_documents(app):
     Checking.check_status_code(response=documents, expected_status_code=200)
 
 
-@allure.description("Редактирование партииСД СДЭК (Удаление заказа)")
+@allure.description("Редактирование партии СД СДЭК (Удаление заказа)")
 def test_remove_order_in_parcel(app):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
