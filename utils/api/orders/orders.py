@@ -330,12 +330,12 @@ class ApiOrder:
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        if path == "weight":
+        if path:
             json_patch_order = json.dumps(
                 [
                     {
                         "op": "replace",
-                        "path": "weight",
+                        "path": path,
                         "value": weight
                     }
                 ]
