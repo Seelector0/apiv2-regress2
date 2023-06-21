@@ -20,38 +20,48 @@ class HttpMethod:
             return token
 
     def get(self, link: str, params=None):
-        with allure.step(f"GET requests to URL '{link}'"):
-            return self._send(link=link, data=params, headers=self.token(), method='GET')
+        r"""GET запрос.
+        :param link: Ссылка на запрос.
+        :param params: Тело запроса если нужно.
+        """
+        with allure.step(f"GET requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+            link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
+            return requests.get(url=link, params=params, headers=self.token())
 
     def post(self, link: str, data=None, files=None):
-        with allure.step(f"POST requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=self.token(), method='POST', files=files)
+        r"""POST запрос.
+        :param link: Ссылка на запрос.
+        :param data: Тело запроса в формате JSON.
+        :param files: Передаваемый файл.
+        :return:
+        """
+        with allure.step(f"POST requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+            link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
+            return requests.post(url=link, data=data, headers=self.token(), files=files)
 
     def patch(self, link: str, data=None):
-        with allure.step(f"POST requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=self.token(), method='PATCH')
+        r"""PATCH запрос.
+        :param link: Ссылка на запрос.
+        :param data: Тело запроса в формате JSON.
+        """
+        with allure.step(f"POST requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+            link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
+            return requests.patch(url=link, data=data, headers=self.token())
 
     def put(self, link: str, data=None):
-        with allure.step(f"PUT requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=self.token(), method='PUT')
+        r"""PUT запрос.
+        :param link: Ссылка на запрос.
+        :param data: Тело запроса в формате JSON.
+        """
+        with allure.step(f"PUT requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+            link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
+            return requests.put(url=link, data=data, headers=self.token())
 
-    def delete(self, link: str, data=None):
-        with allure.step(f"DELETE requests to URL '{link}'"):
-            return self._send(link=link, data=data, headers=self.token(), method='DELETE')
+    def delete(self, link: str):
+        r"""DELETE запрос.
+        :param link: Ссылка на запрос.
+        """
+        with allure.step(f"DELETE requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+            link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
+            return requests.delete(url=link, headers=self.token())
 
-    @staticmethod
-    def _send(data, headers: dict, method: str, files=None, link: str = None):
-        link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
-        if method == 'GET':
-            response = requests.get(url=link, params=data, headers=headers)
-        elif method == 'POST':
-            response = requests.post(url=link, data=data, headers=headers, files=files)
-        elif method == 'PATCH':
-            response = requests.patch(url=link, data=data, headers=headers)
-        elif method == 'PUT':
-            response = requests.put(url=link, data=data, headers=headers)
-        elif method == 'DELETE':
-            response = requests.delete(url=link, data=data, headers=headers)
-        else:
-            raise Exception(f"Получен неверный HTTP метод '{method}'")
-        return response
