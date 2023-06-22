@@ -36,11 +36,28 @@ def test_put_warehouse(app, connections):
     working_time_warehouse = INFO.old_work_time_warehouse
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
     put_warehouse = app.warehouse.put_warehouse(warehouse_id=random_warehouse_id, name="офигенный склад", pickup=False,
-                                                comment="Офигенный склад", l_post_warehouse_id="99999",
+                                                comment="Такой себе склад", l_post_warehouse_id="99999",
                                                 dpd_pickup_num="8324523", address="г Москва, пер 4-й Лесной, д 4",
                                                 full_name="Виктор Виктор", phone="+79094563312",
                                                 email="new_email@ya.ru", working_time=working_time_warehouse)
     Checking.check_status_code(response=put_warehouse, expected_status_code=204)
+    assert_put_warehouse = app.warehouse.get_warehouse_id(warehouse_id=random_warehouse_id)
+    Checking.check_status_code(response=assert_put_warehouse, expected_status_code=200)
+    Checking.checking_json_key(response=assert_put_warehouse, expected_value=INFO.entity_warehouse)
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="name", expected_value="офигенный склад")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="comment", expected_value="Такой себе склад")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="lPostWarehouseId", expected_value="99999")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="dpdPickupNum", expected_value="8324523")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="contact", field="fullName",
+                                 expected_value="Виктор Виктор")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="contact", field="phone",
+                                 expected_value="+79094563312")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="contact", field="email",
+                                 expected_value="new_email@ya.ru")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="address", field="raw",
+                                 expected_value="г Москва, пер 4-й Лесной, д 4")
+    Checking.checking_json_value(response=assert_put_warehouse, key_name="workingTime",
+                                 expected_value=working_time_warehouse)
 
 
 @allure.description("Редактирование полей склада(visibility)")
@@ -127,8 +144,8 @@ def test_patch_warehouse_l_post_warehouse_id(app, connections):
     Checking.checking_json_value(response=patch_warehouse, key_name="lPostWarehouseId", expected_value="123456")
 
 
-@allure.description("Удаление склада по его id")
-def test_delete_warehouse_by_id(app, connections):
+@allure.description("Удаление склада")
+def test_delete_warehouse(app, connections):
     random_warehouse_id = choice(connections.metaship.get_list_warehouses())
     delete_warehouse = app.warehouse.delete_warehouse(warehouse_id=random_warehouse_id)
     Checking.check_status_code(response=delete_warehouse, expected_status_code=204)
