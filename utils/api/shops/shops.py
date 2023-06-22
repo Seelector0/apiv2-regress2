@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange
+import allure
 import json
 
 
@@ -12,8 +13,8 @@ class ApiShop:
         self.link = "customer/shops"
 
     def post_shop(self):
-        """Json создания магазина."""
-        json_create_shop = json.dumps(
+        """Метод создания магазина."""
+        json_shop = json.dumps(
             {
                 "name": f"INT{randrange(100000, 999999)}",
                 "uri": f"integration-shop{randrange(1000, 9999)}.ru",
@@ -21,17 +22,24 @@ class ApiShop:
                 "sender": "Иванов Иван Иванович"
             }
         )
-        return self.app.http_method.post(link=self.link, data=json_create_shop)
+        with allure.step(f"Requests: {json_shop}"):
+            result = self.app.http_method.post(link=self.link, data=json_shop)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_shops(self):
         """Метод получения списка магазинов."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_shop_id(self, shop_id: str):
         """Метод получения магазина по его id.
         :param shop_id: Идентификатор магазина.
         """
-        return self.app.http_method.get(link=f"{self.link}/{shop_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{shop_id}")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def put_shop(self, shop_id: str, shop_name: str, shop_url: str, contact_person: str, phone: str):
         r"""Метод обновления магазина.
@@ -47,15 +55,16 @@ class ApiShop:
         shop["uri"] = shop_url
         shop["sender"] = contact_person
         shop["phone"] = phone
-        json_patch_shop = json.dumps(shop)
-        return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json_patch_shop)
+        json_put_shop = json.dumps(shop)
+        with allure.step(f"Requests: {json_put_shop}"):
+            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json_put_shop)
 
     def patch_shop(self, shop_id: str, value: bool = True):
         r"""Метод обновления полей магазина.
         :param shop_id: Идентификатор магазина.
         :param value: Флаг скрывает магазин из ЛК.
         """
-        body = json.dumps(
+        json_patch_shop = json.dumps(
             [
                 {
                     "op": "replace",
@@ -64,4 +73,7 @@ class ApiShop:
                 }
             ]
         )
-        return self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=body)
+        with allure.step(f"Requests: {json_patch_shop}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=json_patch_shop)
+        with allure.step(f"Response: {result.json()}"):
+            return result

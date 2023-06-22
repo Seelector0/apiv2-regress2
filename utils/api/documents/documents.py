@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import allure
 import json
 
 
@@ -31,7 +32,8 @@ class ApiDocument:
             }
         else:
             return self.app.http_method.get(link=link)
-        return self.app.http_method.get(link=link, params=params)
+        with allure.step(f"Requests: {params}"):
+            return self.app.http_method.get(link=link, params=params)
 
     def post_labels(self, order_ids: list):
         r"""Метод получения этикеток из партии.
@@ -42,7 +44,8 @@ class ApiDocument:
                 "orderIds": order_ids
             }
         )
-        return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=json_labels_from_parcel)
+        with allure.step(f"Requests: {json_labels_from_parcel}"):
+            return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=json_labels_from_parcel)
 
     def get_acceptance(self):
         """Метод получения АПП."""

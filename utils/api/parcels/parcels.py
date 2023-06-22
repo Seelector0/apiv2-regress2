@@ -1,4 +1,5 @@
 import datetime
+import allure
 import json
 
 
@@ -30,19 +31,26 @@ class ApiParcel:
                     "shipmentDate": f"{data}"
                 }
             )
-        return self.app.http_method.post(link=self.link, data=json_create_parcel)
+        with allure.step(f"Requests: {json_create_parcel}"):
+            result = self.app.http_method.post(link=self.link, data=json_create_parcel)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_parcels(self):
         """Метод получения списка партий."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_parcel_id(self, parcel_id: str):
         r"""Получение партии по её id.
         :param parcel_id: Идентификатор партии.
         """
-        return self.app.http_method.get(link=f"{self.link}/{parcel_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{parcel_id}")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
-    def patch_parcel(self, op: str, order_id: str, parcel_id: str):
+    def patch_parcel(self, op: str, parcel_id: str, order_id: str):
         r"""Метод редактирования партии.
         :param op: Операция op, 'add' - добавление заказов, 'remove' - удаление заказов.
         :param order_id: Идентификатор партии.
@@ -60,7 +68,10 @@ class ApiParcel:
             )
         else:
             raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
-        return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        with allure.step(f"Requests: {json_patch_parcel}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
         r"""Метод изменения даты доставки партии только для СД RussianPost.
@@ -78,7 +89,10 @@ class ApiParcel:
                 }
             ]
         )
-        return self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        with allure.step(f"Requests: {json_patch_parcel}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_orders_in_parcel(self, parcel_id):
         """Получение списка заказов в партии."""

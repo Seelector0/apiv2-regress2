@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import allure
 import json
 import os
 
@@ -43,7 +44,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
+        with allure.step(f"Requests: {json_russian_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_topdelivery(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки TopDelivery к магазину.
@@ -71,7 +75,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
+        with allure.step(f"Requests: {json_topdelivery}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_boxberry(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Boxberry к магазину.
@@ -98,7 +105,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
+        with allure.step(f"Requests: {json_boxberry}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_cdek(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Cdek к магазину.
@@ -126,7 +136,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_cdek)
+        with allure.step(f"Requests: {json_cdek}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_cdek)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_drh_logistic(self):
         """Настройки подключения службы доставки DRH Logistic к магазину."""
@@ -139,7 +152,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
+        with allure.step(f"Requests: {json_drh_logistic}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_dpd(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Dpd к магазину.
@@ -167,7 +183,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dpd)
+        with allure.step(f"Requests: {json_dpd}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dpd)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину."""
@@ -181,7 +200,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
+        with allure.step(f"Requests: {json_cse}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_five_post(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки FivePost к магазину.
@@ -208,7 +230,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_five_post)
+        with allure.step(f"Requests: {json_five_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_five_post)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину."""
@@ -221,7 +246,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
+        with allure.step(f"Requests: {json_svyaznoy}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_yandex_go(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки YandexGo к магазину.
@@ -246,7 +274,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
+        with allure.step(f"Requests: {json_yandex_go}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_yandex_delivery(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки YandexDelivery к магазину.
@@ -273,7 +304,10 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_delivery)
+        with allure.step(f"Requests: {json_yandex_delivery}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_delivery)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину."""
@@ -287,7 +321,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_club)
+        with allure.step(f"Requests: {json_dostavka_club}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_club)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину."""
@@ -301,7 +338,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
+        with allure.step(f"Requests: {json_dostavka_guru}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_l_post(self):
         """Настройки подключения службы доставки LPost к магазину."""
@@ -313,7 +353,10 @@ class ApiDeliveryServices:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
+        with allure.step(f"Requests: {json_l_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_services_dalli(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Dalli к магазину.
@@ -338,17 +381,24 @@ class ApiDeliveryServices:
                     }
                 }
             )
-        return self.app.http_method.post(link=self.link_delivery_services(), data=json_dalli)
+        with allure.step(f"Requests: {json_dalli}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dalli)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
-        return self.app.http_method.get(link=self.link_delivery_services())
+        result = self.app.http_method.get(link=self.link_delivery_services())
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_delivery_services_code(self, code: str):
         r"""Получение настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
-        return self.app.http_method.get(link=f"{self.link_delivery_services()}/{code}")
+        result = self.app.http_method.get(link=f"{self.link_delivery_services()}/{code}")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def patch_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
         r"""Метод редактирования полей настройки подключения к СД.
@@ -380,16 +430,23 @@ class ApiDeliveryServices:
                     }
                 ]
             )
-        return self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json_editing)
+        with allure.step(f"Requests: {json_editing}"):
+            result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json_editing)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def activate_delivery_service(self, code: str):
         r"""Активация настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
-        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
+        result = self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def deactivate_delivery_service(self, code: str):
         r"""Деактивация настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
-        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")
+        result = self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")
+        with allure.step(f"Response: {result.json()}"):
+            return result
