@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange, randint
+import allure
 import json
 
 
@@ -129,7 +130,10 @@ class ApiOrder:
                 ]
             }
         )
-        return self.app.http_method.post(link=self.link, data=json_order)
+        with allure.step(f"Requests: {json_order}"):
+            result = self.app.http_method.post(link=self.link, data=json_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
                          delivery_sum: float = None, data=None, tariff: str = None, delivery_point_code: str = None,
@@ -242,7 +246,10 @@ class ApiOrder:
                 ]
             }
         )
-        return self.app.http_method.post(link=self.link, data=json_multi_order)
+        with allure.step(f"Requests: {json_multi_order}"):
+            result = self.app.http_method.post(link=self.link, data=json_multi_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def post_import_order_format_russian_post(self, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS формата RussianPost.
@@ -261,7 +268,10 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Requests: {json_order_from_file}"):
+            result = self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def post_import_order(self, delivery_services: str = None, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS.
@@ -280,7 +290,10 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        return self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Requests: {json_order_from_file}"):
+            result = self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_order_search(self, query: str):
         r"""Метод поиска по заказам.
@@ -289,17 +302,28 @@ class ApiOrder:
         search = {
             "query": query
         }
-        return self.app.http_method.get(link=f"{self.link}/search", params=search)
+        with allure.step(f"Requests: {search}"):
+            result = self.app.http_method.get(link=f"{self.link}/search", params=search)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_orders(self):
         """Метод возвращает список заказов."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_order_id(self, order_id: str):
         r"""Метод получения информации о заказе по его id.
         :param order_id: Идентификатор заказа.
         """
-        return self.app.http_method.get(link=f"{self.link}/{order_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{order_id}")
+        if result.status_code == 200:
+            with allure.step(f"Response: {result.json()}"):
+                return result
+        else:
+            pass
+        return result
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
         r"""Метод обновления заказа для СД RussianPost и LPost.
@@ -317,8 +341,11 @@ class ApiOrder:
         body_order["dimension"]["width"] = width
         body_order["dimension"]["height"] = height
         body_order["recipient"]["familyName"] = family_name
-        body = json.dumps(body_order)
-        return self.app.http_method.put(link=f"{self.link}/{order_id}", data=body)
+        json_put_order = json.dumps(body_order)
+        with allure.step(f"Requests: {json_put_order}"):
+            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=json_put_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
                     path: str = None):
@@ -370,7 +397,10 @@ class ApiOrder:
                     }
                 ]
             )
-        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
+        with allure.step(f"Requests: {json_patch_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def patch_order_add_item(self, order_id: str, dimension: dict = None):
         r"""Метод добавление места в заказ. Для СД DPD старые места удаляются и добавляются новые
@@ -406,7 +436,10 @@ class ApiOrder:
                 }
             ]
         )
-        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        with allure.step(f"Requests: {json_path_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def patch_create_multy_order(self, order_id: str):
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
@@ -467,7 +500,10 @@ class ApiOrder:
                 }
             ]
         )
-        return self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        with allure.step(f"Requests: {json_path_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delete_order(self, order_id: str):
         r"""Метод удаления заказа.
@@ -479,19 +515,25 @@ class ApiOrder:
         r"""Метод получение PATCH изменений по заказу.
         :param order_id: Идентификатор заказа.
         """
-        return self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
+        result = self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_order_statuses(self, order_id: str):
         r"""Метод получение информации об истории изменения статусов заказа.
         :param order_id: Идентификатор заказа.
         """
-        return self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
+        result = self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_order_details(self, order_id: str):
         r"""Метод получение подробной информации о заказе.
         :param order_id: Идентификатор заказа.
         """
-        return self.app.http_method.get(link=f"{self.link}/{order_id}/details")
+        result = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def getting_all_order_id_out_parcel(self):
         """Метод получения id всех заказов не в партии."""

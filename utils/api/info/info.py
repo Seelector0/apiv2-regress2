@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 import datetime
+import allure
 
 
 class ApiInfo:
@@ -25,7 +26,10 @@ class ApiInfo:
             params = {
                 "deliveryServiceCode": delivery_service_code,
             }
-        return self.app.http_method.get(link="info/delivery_time_schedules", params=params)
+        with allure.step(f"Requests: {params}"):
+            result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
         r"""Получение списка ПВЗ конкретной СД.
@@ -37,7 +41,10 @@ class ApiInfo:
             "shopId": self.database.metaship.get_list_shops()[0],
             "cityRaw": city_raw
         }
-        return self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
+        with allure.step(f"Requests: {params}"):
+            result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def info_vats(self, delivery_service_code: str):
         r"""Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД.
@@ -46,7 +53,10 @@ class ApiInfo:
         params = {
             "deliveryServiceCode": delivery_service_code
         }
-        return self.app.http_method.get(link="info/vats", params=params)
+        with allure.step(f"Requests: {params}"):
+            result = self.app.http_method.get(link="info/vats", params=params)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def intake_offices(self, delivery_service_code: str):
         r"""Получение списка точек сдачи.
@@ -55,7 +65,10 @@ class ApiInfo:
         params = {
             "deliveryServiceCode": delivery_service_code
         }
-        return self.app.http_method.get(link="info/intake_offices", params=params)
+        with allure.step(f"Requests: {params}"):
+            result = self.app.http_method.get(link="info/intake_offices", params=params)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def info_statuses(self):
         """Получение полного актуального списка возможных статусов заказа."""
@@ -65,17 +78,23 @@ class ApiInfo:
         """Получение информации о дополнительных услугах поддерживаемых СД.
         :param code: Код СД.
         """
-        return self.app.http_method.get(link=f"info/delivery_service/{code}/services")
+        result = self.app.http_method.get(link=f"info/delivery_service/{code}/services")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def user_clients(self):
         """Получение списка ключей."""
-        return self.app.http_method.get(link="user/clients")
+        result = self.app.http_method.get(link="user/clients")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def user_clients_id(self, user_id: str):
         r"""Получение информации о ключе подключения по id.
         :param user_id: Идентификатор клиента.
         """
-        return self.app.http_method.get(link=f"user/clients/{user_id}")
+        result = self.app.http_method.get(link=f"user/clients/{user_id}")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def info_address(self, raw: str = "101000, г Москва"):
         r"""Разбор адреса.
@@ -84,4 +103,7 @@ class ApiInfo:
         params = {
             "raw": raw
         }
-        return self.app.http_method.get(link="info/address", parsms=params)
+        with allure.step(f"Requests: {params}"):
+            result = self.app.http_method.get(link="info/address", parsms=params)
+        with allure.step(f"Response: {result.json()}"):
+            return result

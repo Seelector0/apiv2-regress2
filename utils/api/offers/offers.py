@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange
+import allure
 
 
 class ApiOffers:
@@ -46,4 +47,7 @@ class ApiOffers:
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryPointNumber": delivery_point_number
             }
-        return self.app.http_method.get(link="offers", params=body_offers)
+        with allure.step(f"Requests: {body_offers}"):
+            result = self.app.http_method.get(link="offers", params=body_offers)
+        with allure.step(f"Response: {result.json()}"):
+            return result

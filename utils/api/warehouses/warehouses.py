@@ -1,16 +1,20 @@
+import logging
 from random import randrange
+import allure
 import json
 
 
 class ApiWarehouse:
+
+    logger = logging.getLogger(__name__)
 
     def __init__(self, app):
         self.app = app
         self.link = "customer/warehouses"
 
     def post_warehouse(self):
-        """Json создания склада."""
-        warehouse = json.dumps(
+        """Метод создания склада."""
+        json_warehouse = json.dumps(
             {
                 "name": f"{randrange(100000, 999999)}",
                 "address": {
@@ -25,17 +29,28 @@ class ApiWarehouse:
                 }
             }
         )
-        return self.app.http_method.post(link=self.link, data=warehouse)
+        with allure.step(f"Requests: {json_warehouse}"):
+            result = self.app.http_method.post(link=self.link, data=json_warehouse)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_warehouses(self):
         """Метод получения списка складов."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def get_warehouse_id(self, warehouse_id: str):
         r"""Метод получения склада по его id.
         :param warehouse_id: Идентификатор склада.
         """
-        return self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
+        if result.status_code == 200:
+            with allure.step(f"Response: {result.json()}"):
+                return result
+        else:
+            pass
+        return result
 
     def put_warehouse(self, warehouse_id: str, name: str, pickup: bool, comment: str, l_post_warehouse_id: str,
                       dpd_pickup_num: str, address: str, full_name: str, phone: str, email: str, working_time: dict):
@@ -64,8 +79,9 @@ class ApiWarehouse:
         warehouse["contact"]["phone"] = phone
         warehouse["contact"]["email"] = email
         warehouse["workingTime"] = working_time
-        json_patch_warehouse = json.dumps(warehouse)
-        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=json_patch_warehouse)
+        json_put_warehouse = json.dumps(warehouse)
+        with allure.step(f"Requests: {json_put_warehouse}"):
+            return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=json_put_warehouse)
 
     def patch_warehouse(self, warehouse_id: str, path: str, value):
         r"""Метод для редактирования полей склада.
@@ -74,7 +90,7 @@ class ApiWarehouse:
         :param value: Новое значение поля.
         """
         if path:
-            body = json.dumps(
+            json_patch_warehouse = json.dumps(
                 [
                     {
                         "op": "replace",
@@ -85,7 +101,10 @@ class ApiWarehouse:
             )
         else:
             raise ValueError(f"Выбрана не верная операция {path}")
-        return self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=body)
+        with allure.step(f"Requests: {json_patch_warehouse}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=json_patch_warehouse)
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def delete_warehouse(self, warehouse_id: str):
         r"""Метод удаления склада.
