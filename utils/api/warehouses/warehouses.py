@@ -1,12 +1,9 @@
-import logging
 from random import randrange
 import allure
 import json
 
 
 class ApiWarehouse:
-
-    logger = logging.getLogger(__name__)
 
     def __init__(self, app):
         self.app = app
