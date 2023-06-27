@@ -75,7 +75,7 @@ def test_offers_courier(app, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="DostavkaClub",
-                                                 tariff=choice(INFO.club_tariffs), declared_value=1500)
+                                           tariff=choice(INFO.club_tariffs), declared_value=1500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])

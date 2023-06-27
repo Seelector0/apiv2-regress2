@@ -10,17 +10,25 @@ class ApiInfo:
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
-    def delivery_time_schedules(self, delivery_service_code: str, day: str = None):
+    def delivery_time_schedules(self, delivery_service_code: str, postal_code: str = None, tariff_id: str = None):
         r"""Получение интервалов доставки конкретной СД.
         :param delivery_service_code: Код СД.
-        :param day: Только для СД TopDelivery.
+        :param postal_code: Индекс (только для СД TopDelivery).
+        :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал (только для СД Dalli).
         """
-        if day == "today":
+        if postal_code:
             params = {
                 "deliveryServiceCode": delivery_service_code,
                 "deliveryDate": f"{datetime.date.today()}",
                 "shopId": self.database.metaship.get_list_shops()[0],
-                "postalCode": "101000"
+                "postalCode": postal_code
+            }
+        elif tariff_id:
+            params = {
+                "deliveryServiceCode": delivery_service_code,
+                "deliveryDate": f"{datetime.date.today()}",
+                "shopId": self.database.metaship.get_list_shops()[0],
+                "tariffId": tariff_id
             }
         else:
             params = {
