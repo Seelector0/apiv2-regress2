@@ -20,7 +20,7 @@ class ApiOrder:
                    data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
                    width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None, tariff: str = None, items_declared_value: int = None):
+                   routes: list = None, tariff: str = None, vat: str = None, items_declared_value: int = None):
         r"""Метод создания одноместного заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
@@ -37,6 +37,7 @@ class ApiOrder:
         :param width: Ширина.
         :param height: Высота.
         :param weight: Вес товарной позиции.
+        :param vat: Ставка НДС.
         :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал
@@ -52,6 +53,8 @@ class ApiOrder:
             price_2 = 1000
         if price_3 is None:
             price_3 = 1000
+        if vat is None:
+            vat = "0"
         json_order = json.dumps(
             {
                 "warehouse": {
@@ -104,7 +107,7 @@ class ApiOrder:
                                 "price": price_1,
                                 "count": 1,
                                 "weight": weight,
-                                "vat": "0",
+                                "vat": vat,
                                 "declaredValue": items_declared_value,
                             },
                             {
@@ -113,7 +116,7 @@ class ApiOrder:
                                 "price": price_1,
                                 "count": 1,
                                 "weight": weight,
-                                "vat": "0",
+                                "vat": vat,
                                 "declaredValue": items_declared_value,
                             },
                             {
@@ -122,7 +125,7 @@ class ApiOrder:
                                 "price": price_3,
                                 "count": 1,
                                 "weight": weight,
-                                "vat": "0",
+                                "vat": vat,
                                 "declaredValue": items_declared_value,
                             }
                         ]
@@ -136,11 +139,12 @@ class ApiOrder:
             return result
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                         delivery_sum: float = None, data=None, tariff: str = None, delivery_point_code: str = None,
-                         pickup_time_period: str = None, delivery_time: dict = None, date_pickup: str = None,
-                         length: float = randint(10, 30), width: float = randint(10, 50), price: float = None,
-                         height: float = randint(10, 50), weight_1: float = randint(1, 5),
-                         weight_2: float = randint(1, 5), shop_number_1: str = f"{randrange(100000, 999999)}",
+                         delivery_sum: float = None, data: str = None, tariff: str = None,
+                         delivery_point_code: str = None, pickup_time_period: str = None, delivery_time: dict = None,
+                         date_pickup: str = None, length: float = randint(10, 30), width: float = randint(10, 50),
+                         price: float = None, height: float = randint(10, 50), weight_1: float = randint(1, 5),
+                         vat: str = None, weight_2: float = randint(1, 5),
+                         shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
@@ -160,6 +164,7 @@ class ApiOrder:
         :param price: Цена товарной позиции.
         :param weight_1: Вес первого места в заказе.
         :param weight_2: Вес второго места в заказе.
+        :param vat: Ставка НДС.
         :param shop_number_1: Номер в магазине первого места в заказе.
         :param shop_number_2: Номер в магазине второго места в заказе.
         :param dimension: Габариты места заказа.
@@ -168,6 +173,8 @@ class ApiOrder:
             delivery_sum = 200
         if price is None:
             price = 1000
+        if vat is None:
+            vat = "0"
         json_multi_order = json.dumps(
             {
                 "warehouse": {
@@ -219,7 +226,7 @@ class ApiOrder:
                                 "price": price,
                                 "count": 1,
                                 "weight": weight_1,
-                                "vat": "0"
+                                "vat": vat
                             }
                         ],
                         "barcode": f"Box_1{randrange(100000, 999999)}",
@@ -235,7 +242,7 @@ class ApiOrder:
                                 "price": price,
                                 "count": 1,
                                 "weight": weight_2,
-                                "vat": "0"
+                                "vat": vat
                             }
                         ],
                         "barcode": f"Box_2{randrange(100000, 999999)}",
@@ -348,7 +355,7 @@ class ApiOrder:
             return result
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
-                    path: str = None):
+                    vat: str = None, path: str = None):
         r"""Метод редактирования поля в заказе.
         :param order_id: Идентификатор заказа.
         :param path: Наименования поля которое будем менять
@@ -356,6 +363,7 @@ class ApiOrder:
         :param price: Цена товарной позиции.
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
+        :param vat: Ставка НДС.
         """
         if path:
             json_patch_order = json.dumps(
@@ -368,6 +376,8 @@ class ApiOrder:
                 ]
             )
         else:
+            if vat is None:
+                vat = "0"
             json_patch_order = json.dumps(
                 [
                     {
@@ -382,7 +392,7 @@ class ApiOrder:
                                         "price": price,
                                         "count": count,
                                         "weight": weight,
-                                        "vat": "0"
+                                        "vat": vat
                                     },
                                 ],
                                 "barcode": f"Box_2{randrange(100000, 999999)}",
