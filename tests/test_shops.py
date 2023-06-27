@@ -4,8 +4,6 @@ from random import choice
 import allure
 import pytest
 
-# Todo завести регрессионную задачу на метод PUT SHOP нужно возвращать 200 и тело ответа а не 204 как сейчас.
-
 
 @allure.description("Создание магазина")
 @pytest.mark.parametrize("execution_number", range(5))
