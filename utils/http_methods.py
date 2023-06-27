@@ -44,7 +44,7 @@ class HttpMethod:
         :param link: Ссылка на запрос.
         :param data: Тело запроса в формате JSON.
         """
-        with allure.step(f"POST requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
+        with allure.step(f"PATCH requests to URL '{ENV_OBJECT.get_base_url()}/v2/{link}'"):
             link = f"{ENV_OBJECT.get_base_url()}/v2/{link}"
             return requests.patch(url=link, data=data, headers=self.token())
 
