@@ -1,5 +1,5 @@
-from utils.checking import Checking
 from utils.enums.global_enums import INFO
+from utils.checking import Checking
 from random import choice
 import pytest
 import allure
@@ -55,7 +55,8 @@ def test_intake_offices(app):
 
 @allure.description("Получения сроков доставки по TopDelivery")
 def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="TopDelivery", day="today")
+    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="TopDelivery",
+                                                               postal_code="101000")
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
     Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
 
