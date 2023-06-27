@@ -19,34 +19,24 @@ class ApiOffers:
         :param delivery_point_number: Идентификатор точки доставки.
         :param format_: Получение в формате виджета.
         """
+        body_offers = {
+            "warehouseId": self.database.metaship.get_list_warehouses()[0],
+            "shopId": self.database.metaship.get_list_shops()[0],
+            "address": "г Москва, пр-кт Мира, д 45 стр 2",
+            "declaredValue": randrange(1000, 5000),
+            "height": randrange(10, 45),
+            "length": randrange(10, 45),
+            "width": randrange(10, 45),
+            "weight": randrange(1, 10)
+        }
         if format_:
-            body_offers = {
-                "warehouseId": self.database.metaship.get_list_warehouses()[0],
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "address": "г Москва, пр-кт Мира, д 45 стр 2",
-                "declaredValue": randrange(1000, 5000),
-                "height": randrange(10, 45),
-                "length": randrange(10, 45),
-                "width": randrange(10, 45),
-                "weight": randrange(1, 10),
-                "types[0]": "DeliveryPoint",
-                "format": format_
-            }
+            body_offers["types[0]"] = "DeliveryPoint",
+            body_offers["format"] = format_
         else:
-            body_offers = {
-                "warehouseId": self.database.metaship.get_list_warehouses()[0],
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "address":  "г Москва, пр-кт Мира, д 45 стр 2",
-                "declaredValue": randrange(1000, 5000),
-                "height": randrange(10, 45),
-                "length": randrange(10, 45),
-                "width": randrange(10, 45),
-                "weight": randrange(1, 10),
-                "paymentType": payment_type,
-                "types[0]": types,
-                "deliveryServiceCode": delivery_service_code,
-                "deliveryPointNumber": delivery_point_number
-            }
+            body_offers["paymentType"] = payment_type,
+            body_offers["types[0]"] = types,
+            body_offers["deliveryServiceCode"] = delivery_service_code,
+            body_offers["deliveryPointNumber"] = delivery_point_number
         with allure.step(f"Requests: {body_offers}"):
             result = self.app.http_method.get(link="offers", params=body_offers)
         with allure.step(f"Response: {result.json()}"):
