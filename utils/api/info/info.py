@@ -16,23 +16,18 @@ class ApiInfo:
         :param postal_code: Индекс (только для СД TopDelivery).
         :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал (только для СД Dalli).
         """
+        params = {
+            "deliveryServiceCode": delivery_service_code,
+            "deliveryDate": f"{datetime.date.today()}",
+            "shopId": self.database.metaship.get_list_shops()[0]
+        }
         if postal_code:
-            params = {
-                "deliveryServiceCode": delivery_service_code,
-                "deliveryDate": f"{datetime.date.today()}",
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "postalCode": postal_code
-            }
+            params["postalCode"] = postal_code
         elif tariff_id:
-            params = {
-                "deliveryServiceCode": delivery_service_code,
-                "deliveryDate": f"{datetime.date.today()}",
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "tariffId": tariff_id
-            }
+            params["tariffId"] = tariff_id
         else:
             params = {
-                "deliveryServiceCode": delivery_service_code,
+                "deliveryServiceCode": delivery_service_code
             }
         with allure.step(f"Requests: {params}"):
             result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
