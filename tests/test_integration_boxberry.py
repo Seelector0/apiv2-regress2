@@ -4,7 +4,6 @@ from random import choice
 import pytest
 import allure
 
-
 # Todo Добавить получение этикеток для multi order, сейчас только для single order
 
 
