@@ -14,21 +14,20 @@ class ApiDocument:
         """Метод получения ссылки для документов."""
         return f"{self.app.parcel.link}/{self.database.metaship.get_list_parcels()[0]}"
 
-    def get_label(self, order_id: str, type_: str = None, size: bool = False, format_: str = None):
+    def get_label(self, order_id: str, type_: str = None, size_format: str = None):
         r"""Метод получения этикетки.
         :param order_id: Идентификатор заказа.
         :param type_: Тип этикетки 'original' - этикетка от службы доставки, 'termo' - Этикетка по стандарту MetaShip.
-        :param size: Размер этикетки для этикеток с типом original для СД Cdek и Dpd.
-        :param format_: Формат размера этикеток A4, A5 и A6.
+        :param size_format: Размер этикетки для этикеток с типом original для СД Cdek и Dpd(Формат этикеток A4, A5, A6).
         """
         link = f"{self.app.order.link}/{order_id}/label"
         if type_:
             params = {
                 "type": type_
             }
-        elif size:
+        elif size_format:
             params = {
-                "size": f"{format_}"
+                "size": f"{size_format}"
             }
         else:
             return self.app.http_method.get(link=link)
