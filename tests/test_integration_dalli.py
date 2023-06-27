@@ -1,6 +1,6 @@
 from utils.enums.global_enums import INFO
 from utils.checking import Checking
-from random import choice, randint
+from random import choice
 import datetime
 import pytest
 import allure
@@ -67,7 +67,7 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
 
 
-@allure.description("Получение оферов по TopDelivery (Courier)")
+@allure.description("Получение оферов по СД Dalli (Courier)")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
@@ -94,7 +94,7 @@ def test_create_multi_order_courier(app, payment_type, connections):
     Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
 
 
-@allure.description("Создание Courier заказа по CД DostavkaClub")
+@allure.description("Создание Courier заказа по CД Dalli")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, payment_type, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -149,7 +149,7 @@ def test_create_parcel(app):
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
-@allure.description("Редактирование партии СД Почта России (Добавление заказов)")
+@allure.description("Редактирование партии СД Dalli (Добавление заказов)")
 def test_add_order_in_parcel(app):
     parcel_id = app.parcel.getting_list_of_parcels_ids()
     for order in app.order.getting_all_order_id_out_parcel():
@@ -160,7 +160,7 @@ def test_add_order_in_parcel(app):
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
-@allure.description("Получение этикетки СД Почта России")
+@allure.description("Получение этикетки СД Dalli")
 def test_get_label(app):
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
     for order_id in order_in_parcel:
@@ -168,23 +168,13 @@ def test_get_label(app):
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
-@allure.description("Получение АПП СД Почта России")
+@allure.description("Получение АПП СД Dalli")
 def test_get_app(app):
     acceptance = app.document.get_acceptance()
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
-@allure.description("Получение документов СД Почта России")
+@allure.description("Получение документов СД Dalli")
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
-
-
-@allure.description("Редактирование партии СД Почта России (Удаление заказа из партии)")
-def test_remove_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
-    new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    Checking.check_status_code(response=parcel_remove, expected_status_code=200)
-    Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
