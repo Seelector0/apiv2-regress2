@@ -222,7 +222,7 @@ def test_get_labels_out_of_parcel(app, labels):
 def test_get_original_labels_out_of_parcel(app, format_):
     order_out_parcel = app.order.getting_all_order_id_out_parcel()
     for order_id in order_out_parcel:
-        label = app.document.get_label(order_id=order_id, size=True, format_=format_)
+        label = app.document.get_label(order_id=order_id, size_format=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -276,7 +276,7 @@ def test_get_label(app, labels):
 def test_get_original_labels(app, format_):
     order_in_parcel = app.order.getting_all_order_in_parcel()
     for order_id in order_in_parcel:
-        label = app.document.get_label(order_id=order_id, size=True, format_=format_)
+        label = app.document.get_label(order_id=order_id, size_format=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
