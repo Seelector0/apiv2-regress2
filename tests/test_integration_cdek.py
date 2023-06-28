@@ -290,7 +290,7 @@ def test_get_label(app, labels):
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
-@allure.description("Получения оригинальных этикеток CД Cdek в формате A5, A6")
+@allure.description("Получения оригинальных этикеток CД Cdek в формате A4, A5, A6")
 @pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
 def test_get_original_labels(app, format_):
     order_in_parcel = app.order.getting_all_order_in_parcel()
