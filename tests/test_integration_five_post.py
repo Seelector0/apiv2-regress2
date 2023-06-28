@@ -5,9 +5,6 @@ import pytest
 import allure
 
 
-# Todo сделать чтобы тесты с редактирование веса запускались только на dev стенде
-
-
 @allure.description("Создание магазина")
 def test_create_integration_shop(app):
     new_shop = app.shop.post_shop()

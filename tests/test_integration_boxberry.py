@@ -4,11 +4,6 @@ from random import choice
 import pytest
 import allure
 
-# Todo Сделать test_get_labels[original] FAILED
-#  tests/test_integration_boxberry.py::test_get_labels[termo] FAILED
-#  tests/test_integration_boxberry.py::test_get_labels_from_parcel FAILED
-#  tests/test_integration_boxberry.py::test_get_documents FAILED чтобы данные тесты запускались только на dev стенде.
-
 
 @allure.description("Создание магазина")
 def test_create_integration_shop(app):
