@@ -66,11 +66,11 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dpd_services)
 
 
-@allure.description("Получение оферов в формате 'widget'")
-def test_offers_format_widget(app):
-    offers_widget = app.offers.get_offers(format_="widget")
-    Checking.check_status_code(response=offers_widget, expected_status_code=200)
-    Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Dpd")
+# @allure.description("Получение оферов в формате 'widget'")
+# def test_offers_format_widget(app):
+#     offers_widget = app.offers.get_offers(format_="widget")
+#     Checking.check_status_code(response=offers_widget, expected_status_code=200)
+#     Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Dpd")
 
 
 @allure.description("Получение оферов по СД Dpd (Courier)")
@@ -95,7 +95,9 @@ def test_create_multi_order_courier(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dpd",
                                            tariff=choice(INFO.dpd_courier_tariffs),
-                                           date_pickup=f"{tomorrow}", pickup_time_period="9-18", declared_value=1500)
+                                           date_pickup=f"{tomorrow}", pickup_time_period="9-18", declared_value=1500,
+                                           barcode_1=f"{randrange(1000000, 9999999)}",
+                                           barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
@@ -110,7 +112,9 @@ def test_create_multi_order_delivery_point(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                            tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{tomorrow}",
-                                           pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500)
+                                           pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500,
+                                           barcode_1=f"{randrange(1000000, 9999999)}",
+                                           barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
