@@ -66,11 +66,11 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dpd_services)
 
 
-# @allure.description("Получение оферов в формате 'widget'")
-# def test_offers_format_widget(app):
-#     offers_widget = app.offers.get_offers(format_="widget")
-#     Checking.check_status_code(response=offers_widget, expected_status_code=200)
-#     Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Dpd")
+@allure.description("Получение оферов в формате 'widget'")
+def test_offers_format_widget(app):
+    offers_widget = app.offers.get_offers(format_="widget")
+    Checking.check_status_code(response=offers_widget, expected_status_code=200)
+    Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Dpd")
 
 
 @allure.description("Получение оферов по СД Dpd (Courier)")
