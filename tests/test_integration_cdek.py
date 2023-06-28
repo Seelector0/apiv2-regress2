@@ -1,6 +1,6 @@
 from utils.enums.global_enums import INFO
 from utils.checking import Checking
-from random import choice
+from random import choice, randrange
 import pytest
 import allure
 
@@ -100,7 +100,9 @@ def test_offers_delivery_point(app, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
-                                           tariff=choice(INFO.cdek_courier_tariffs), declared_value=1500)
+                                           tariff=choice(INFO.cdek_courier_tariffs), declared_value=1500,
+                                           barcode_1=f"{randrange(1000000, 9999999)}",
+                                           barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
@@ -115,7 +117,9 @@ def test_create_multi_order_courier(app, payment_type, connections):
 def test_create_multi_order_delivery_point(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint",
                                            service="Cdek", tariff=choice(INFO.cdek_ds_tariffs),
-                                           delivery_point_code="VNG2", declared_value=1500)
+                                           delivery_point_code="VNG2", declared_value=1500,
+                                           barcode_1=f"{randrange(1000000, 9999999)}",
+                                           barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])

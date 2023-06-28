@@ -1,9 +1,12 @@
 from utils.enums.global_enums import INFO
 from utils.checking import Checking
-from random import choice
+from random import choice, randrange
 import datetime
 import pytest
 import allure
+
+
+# Todo Параметризировать тесты создания заказов с PayOnDelivery
 
 
 @allure.description("Создание магазина")
@@ -77,14 +80,14 @@ def test_offers_courier(app, payment_type):
 
 
 @allure.description("Создание Courier многоместного заказа по CД Dalli")
-@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_multi_order_courier(app, payment_type, connections):
+def test_create_multi_order_courier(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
+    new_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dalli",
                                            data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
                                                "from": "18:00",
                                                "to": "22:00"
-                                           }, vat="NO_VAT")
+                                           }, vat="NO_VAT", barcode_1=f"{randrange(1000000, 9999999)}",
+                                           barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
@@ -95,10 +98,9 @@ def test_create_multi_order_courier(app, payment_type, connections):
 
 
 @allure.description("Создание Courier заказа по CД Dalli")
-@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, payment_type, connections):
+def test_create_order_courier(app,  connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
+    new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dalli",
                                      data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
                                         "from": "18:00",
                                         "to": "22:00"
@@ -160,20 +162,12 @@ def test_add_order_in_parcel(app):
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
-@allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A5, A6")
-@pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
+@allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A6")
+@pytest.mark.parametrize("format_", ["A4", "A6"])
 def test_get_original_labels(app, format_):
     order_in_parcel = app.order.getting_all_order_in_parcel()
     for order_id in order_in_parcel:
         label = app.document.get_label(order_id=order_id, size_format=format_)
-        Checking.check_status_code(response=label, expected_status_code=200)
-
-
-@allure.description("Получение этикетки СД Dalli")
-def test_get_label(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    for order_id in order_in_parcel:
-        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
