@@ -160,6 +160,15 @@ def test_add_order_in_parcel(app):
         Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
 
 
+@allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A5, A6")
+@pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
+def test_get_original_labels(app, format_):
+    order_in_parcel = app.order.getting_all_order_in_parcel()
+    for order_id in order_in_parcel:
+        label = app.document.get_label(order_id=order_id, size_format=format_)
+        Checking.check_status_code(response=label, expected_status_code=200)
+
+
 @allure.description("Получение этикетки СД Dalli")
 def test_get_label(app):
     order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
