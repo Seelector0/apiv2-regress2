@@ -18,7 +18,7 @@ class ApiDocument:
         r"""Метод получения этикетки.
         :param order_id: Идентификатор заказа.
         :param type_: Тип этикетки 'original' - этикетка от службы доставки, 'termo' - Этикетка по стандарту MetaShip.
-        :param size_format: Размер этикетки для этикеток с типом original для СД Cdek и Dpd(Формат этикеток A4, A5, A6).
+        :param size_format: Размер этикетки для этикеток с типом original. Формат этикеток A4, A5, A6.
         """
         link = f"{self.app.order.link}/{order_id}/label"
         if type_:
