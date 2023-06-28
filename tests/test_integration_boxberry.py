@@ -4,7 +4,11 @@ from random import choice
 import pytest
 import allure
 
-# Todo Добавить получение этикеток для multi order, сейчас только для single order
+# Todo Сделать test_get_labels[original] FAILED
+#  tests/test_integration_boxberry.py::test_get_labels[termo] FAILED
+#  tests/test_integration_boxberry.py::test_get_labels_from_parcel FAILED
+#  tests/test_integration_boxberry.py::test_get_app PASSED
+#  tests/test_integration_boxberry.py::test_get_documents FAILED чтобы данные тесты запускались только на dev стенде.
 
 
 @allure.description("Создание магазина")
@@ -189,7 +193,7 @@ def test_delete_order(app):
 @allure.description("Получения этикетки Boxberry вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label_out_of_parcel(app, labels):
-    for order_id in app.order.getting_single_order_in_parcel():
+    for order_id in app.order.getting_all_order_in_parcel():
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -221,14 +225,14 @@ def test_create_parcel(app):
 @allure.description("Получение этикетки CД Boxberry")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels(app, labels):
-    for order_id in app.order.getting_single_order_in_parcel():
+    for order_id in app.order.getting_all_order_in_parcel():
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение этикеток заказов из партии СД Boxberry")
 def test_get_labels_from_parcel(app):
-    labels_from_parcel = app.document.post_labels(order_ids=app.order.getting_single_order_in_parcel())
+    labels_from_parcel = app.document.post_labels(order_ids=app.order.getting_all_order_in_parcel())
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
 
 
@@ -239,7 +243,6 @@ def test_get_app(app):
 
 
 @allure.description("Получение документов CД Boxberry")
-@pytest.mark.skip("404 код. Из-за проблем с этикеткой многоместного заказа")
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
