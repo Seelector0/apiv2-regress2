@@ -143,7 +143,7 @@ class ApiOrder:
                          delivery_point_code: str = None, pickup_time_period: str = None, delivery_time: dict = None,
                          date_pickup: str = None, length: float = randint(10, 30), width: float = randint(10, 50),
                          price: float = None, height: float = randint(10, 50), weight_1: float = randint(1, 5),
-                         vat: str = None, weight_2: float = randint(1, 5),
+                         vat: str = None, weight_2: float = randint(1, 5), barcode_1: str = None, barcode_2: str = None,
                          shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
@@ -167,6 +167,8 @@ class ApiOrder:
         :param vat: Ставка НДС.
         :param shop_number_1: Номер в магазине первого места в заказе.
         :param shop_number_2: Номер в магазине второго места в заказе.
+        :param barcode_1: Штрих код грузо-места 1.
+        :param barcode_2: Штрих код грузо-места 2.
         :param dimension: Габариты места заказа.
         """
         if delivery_sum is None:
@@ -229,7 +231,7 @@ class ApiOrder:
                                 "vat": vat
                             }
                         ],
-                        "barcode": f"Box_1{randrange(100000, 999999)}",
+                        "barcode": barcode_1,
                         "shopNumber": shop_number_1,
                         "weight": weight_1,
                         "dimension": dimension
@@ -245,7 +247,7 @@ class ApiOrder:
                                 "vat": vat
                             }
                         ],
-                        "barcode": f"Box_2{randrange(100000, 999999)}",
+                        "barcode": barcode_2,
                         "shopNumber": shop_number_2,
                         "weight": weight_2,
                         "dimension": dimension
@@ -355,7 +357,7 @@ class ApiOrder:
             return result
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
-                    vat: str = None, path: str = None):
+                    path: str = None):
         r"""Метод редактирования поля в заказе.
         :param order_id: Идентификатор заказа.
         :param path: Наименования поля которое будем менять
@@ -363,7 +365,6 @@ class ApiOrder:
         :param price: Цена товарной позиции.
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
-        :param vat: Ставка НДС.
         """
         if path:
             json_patch_order = json.dumps(
@@ -376,8 +377,6 @@ class ApiOrder:
                 ]
             )
         else:
-            if vat is None:
-                vat = "0"
             json_patch_order = json.dumps(
                 [
                     {
@@ -392,7 +391,7 @@ class ApiOrder:
                                         "price": price,
                                         "count": count,
                                         "weight": weight,
-                                        "vat": vat
+                                        "vat": "0"
                                     },
                                 ],
                                 "barcode": f"Box_2{randrange(100000, 999999)}",
@@ -582,7 +581,7 @@ class ApiOrder:
         return list_orders_id
 
     def getting_all_order_in_parcel(self):
-        """Метод получения id всех заказов не в партии."""
+        """Метод получения id всех заказов в партии."""
         list_orders_id = []
         order_list = self.get_orders()
         for order in order_list.json():
