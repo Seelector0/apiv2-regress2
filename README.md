@@ -17,5 +17,6 @@
 
 Запуск тестов:
 
-1. Запустить тесты с помощью команды pytest -x -s -v tests/ --alluredir=result (флаг -x - остановка после первого упавшего теста)
-2. Формирование отчёта командой allure serve result
+1. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result на dev стенде.
+2. pytest -s -v -m "not dev_stand" tests/ --alluredir=result на локальном стенде
+3. Формирование отчёта командой allure serve result
