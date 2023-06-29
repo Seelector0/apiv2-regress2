@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo Параметризировать тесты создания заказов с PayOnDelivery
-
-
 @allure.description("Создание магазина")
 def test_create_integration_shop(app):
     new_shop = app.shop.post_shop()
