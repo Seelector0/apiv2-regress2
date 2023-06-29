@@ -17,7 +17,7 @@ class ApiOrder:
 
     def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price_1: float = None,
                    price_2: float = None, price_3: float = None, barcode: str = None, delivery_sum: float = None,
-                   data: str = None, delivery_time: dict = None, length: float = randint(10, 30),
+                   data: str = None, delivery_time: dict = None, length: float = randint(10, 30), cod: float = None,
                    width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
                    routes: list = None, tariff: str = None, vat: str = None, items_declared_value: int = None):
@@ -25,6 +25,7 @@ class ApiOrder:
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
+        :param cod: Наложенный платеж, руб.
         :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param price_1: Цена первой товарной позиции.
@@ -55,6 +56,8 @@ class ApiOrder:
             price_3 = 1000
         if vat is None:
             vat = "0"
+        if cod:
+            cod = delivery_sum + price_1 + price_2 + price_3
         json_order = json.dumps(
             {
                 "warehouse": {
@@ -69,6 +72,7 @@ class ApiOrder:
                     "type": payment_type,
                     "declaredValue": declared_value + price_1 + price_2 + price_3,
                     "deliverySum": delivery_sum,
+                    "cod": cod
                 },
                 "dimension": {
                     "length": length,
@@ -139,7 +143,7 @@ class ApiOrder:
             return result
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                         delivery_sum: float = None, data: str = None, tariff: str = None,
+                         delivery_sum: float = None, data: str = None, tariff: str = None, cod: float = None,
                          delivery_point_code: str = None, pickup_time_period: str = None, delivery_time: dict = None,
                          date_pickup: str = None, length: float = randint(10, 30), width: float = randint(10, 50),
                          price: float = None, height: float = randint(10, 50), weight_1: float = randint(1, 5),
@@ -150,6 +154,7 @@ class ApiOrder:
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
+        :param cod: Наложенный платеж, руб.
         :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param data: Дата доставки.
@@ -177,6 +182,8 @@ class ApiOrder:
             price = 1000
         if vat is None:
             vat = "0"
+        if cod:
+            cod = delivery_sum + price * 2
         json_multi_order = json.dumps(
             {
                 "warehouse": {
@@ -190,7 +197,8 @@ class ApiOrder:
                 "payment": {
                     "type": payment_type,
                     "declaredValue": declared_value,
-                    "deliverySum": delivery_sum
+                    "deliverySum": delivery_sum,
+                    "cod": cod
                 },
                 "dimension": {
                     "length": length,
