@@ -80,14 +80,23 @@ def test_offers_courier(app, payment_type):
 
 
 @allure.description("Создание Courier многоместного заказа по CД Dalli")
-def test_create_multi_order_courier(app, connections):
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_multi_order_courier(app, payment_type, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    new_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dalli",
-                                           data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
-                                               "from": "18:00",
-                                               "to": "22:00"
-                                           }, vat="NO_VAT", barcode_1=f"{randrange(1000000, 9999999)}",
-                                           barcode_2=f"{randrange(1000000, 9999999)}")
+    if payment_type == "PayOnDelivery":
+        new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
+                                               data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
+                                                   "from": "18:00",
+                                                   "to": "22:00"
+                                               }, vat="NO_VAT", barcode_1=f"{randrange(1000000, 9999999)}",
+                                               barcode_2=f"{randrange(1000000, 9999999)}", cod=True)
+    else:
+        new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
+                                               data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
+                                                   "from": "18:00",
+                                                   "to": "22:00"
+                                               }, vat="NO_VAT", barcode_1=f"{randrange(1000000, 9999999)}",
+                                               barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
@@ -98,13 +107,21 @@ def test_create_multi_order_courier(app, connections):
 
 
 @allure.description("Создание Courier заказа по CД Dalli")
-def test_create_order_courier(app,  connections):
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_order_courier(app,  payment_type, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="Dalli",
-                                     data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
-                                        "from": "18:00",
-                                        "to": "22:00"
-                                     }, vat="NO_VAT")
+    if payment_type == "PayOnDelivery":
+        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Dalli", cod=True,
+                                         data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
+                                            "from": "18:00",
+                                            "to": "22:00"
+                                         }, vat="NO_VAT")
+    else:
+        new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
+                                         data=str(tomorrow), tariff="1", declared_value=2000, delivery_time={
+                                            "from": "18:00",
+                                            "to": "22:00"
+                                         }, vat="NO_VAT")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
