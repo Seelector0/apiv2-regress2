@@ -11,23 +11,21 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        json_warehouse = json.dumps(
-            {
-                "name": f"{randrange(100000, 999999)}",
-                "address": {
-                    "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
-                },
-                "lPostWarehouseId": "20537",
-                "pickup": True,
-                "contact": {
-                    "fullName": "Виктор Викторович",
-                    "phone": f"+7910{randrange(1000000, 9999999)}",
-                    "email": "test@email.ru"
-                }
+        warehouse = {
+            "name": f"{randrange(100000, 999999)}",
+            "address": {
+                "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
+            },
+            "lPostWarehouseId": "20537",
+            "pickup": True,
+            "contact": {
+                "fullName": "Виктор Викторович",
+                "phone": f"+7910{randrange(1000000, 9999999)}",
+                "email": "test@email.ru"
             }
-        )
-        with allure.step(f"Requests: {json_warehouse}"):
-            result = self.app.http_method.post(link=self.link, data=json_warehouse)
+        }
+        with allure.step(f"Requests: {warehouse}"):
+            result = self.app.http_method.post(link=self.link, data=json.dumps(warehouse))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -76,9 +74,8 @@ class ApiWarehouse:
         warehouse["contact"]["phone"] = phone
         warehouse["contact"]["email"] = email
         warehouse["workingTime"] = working_time
-        json_put_warehouse = json.dumps(warehouse)
-        with allure.step(f"Requests: {json_put_warehouse}"):
-            return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=json_put_warehouse)
+        with allure.step(f"Requests: {warehouse}"):
+            return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=json.dumps(warehouse))
 
     def patch_warehouse(self, warehouse_id: str, path: str, value):
         r"""Метод для редактирования полей склада.
@@ -87,19 +84,17 @@ class ApiWarehouse:
         :param value: Новое значение поля.
         """
         if path:
-            json_patch_warehouse = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": path,
-                        "value": value
-                    }
-                ]
-            )
+            patch_warehouse = [
+                {
+                    "op": "replace",
+                    "path": path,
+                    "value": value
+                }
+            ]
         else:
             raise ValueError(f"Выбрана не верная операция {path}")
-        with allure.step(f"Requests: {json_patch_warehouse}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=json_patch_warehouse)
+        with allure.step(f"Requests: {patch_warehouse}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=json.dumps(patch_warehouse))
         with allure.step(f"Response: {result.json()}"):
             return result
 

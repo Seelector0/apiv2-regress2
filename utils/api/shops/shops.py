@@ -14,16 +14,14 @@ class ApiShop:
 
     def post_shop(self):
         """Метод создания магазина."""
-        json_shop = json.dumps(
-            {
-                "name": f"INT{randrange(100000, 999999)}",
-                "uri": f"integration-shop{randrange(1000, 9999)}.ru",
-                "phone": f"7916{randrange(1000000, 9999999)}",
-                "sender": "Иванов Иван Иванович"
-            }
-        )
-        with allure.step(f"Requests: {json_shop}"):
-            result = self.app.http_method.post(link=self.link, data=json_shop)
+        shop = {
+            "name": f"INT{randrange(100000, 999999)}",
+            "uri": f"integration-shop{randrange(1000, 9999)}.ru",
+            "phone": f"7916{randrange(1000000, 9999999)}",
+            "sender": "Иванов Иван Иванович"
+        }
+        with allure.step(f"Requests: {shop}"):
+            result = self.app.http_method.post(link=self.link, data=json.dumps(shop))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -55,25 +53,22 @@ class ApiShop:
         shop["uri"] = shop_url
         shop["sender"] = contact_person
         shop["phone"] = phone
-        json_put_shop = json.dumps(shop)
-        with allure.step(f"Requests: {json_put_shop}"):
-            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json_put_shop)
+        with allure.step(f"Requests: {shop}"):
+            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json.dumps(shop))
 
     def patch_shop(self, shop_id: str, value: bool = True):
         r"""Метод обновления полей магазина.
         :param shop_id: Идентификатор магазина.
         :param value: Флаг скрывает магазин из ЛК.
         """
-        json_patch_shop = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": "visibility",
-                    "value": value
-                }
-            ]
-        )
-        with allure.step(f"Requests: {json_patch_shop}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=json_patch_shop)
+        patch_shop = [
+            {
+                "op": "replace",
+                "path": "visibility",
+                "value": value
+            }
+        ]
+        with allure.step(f"Requests: {patch_shop}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=json.dumps(patch_shop))
         with allure.step(f"Response: {result.json()}"):
             return result

@@ -12,16 +12,14 @@ class ApiWebhook:
 
     def create_webhook(self):
         """Создание веб-хука."""
-        json_webhook = json.dumps(
-            {
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
-                "name": "Подписка на обновление статусов",
-                "eventType": "StatusUpdate",
-                "secret": "string"
-            }
-        )
-        return self.app.http_method.post(link=self.link, data=json_webhook)
+        webhook = {
+            "shopId": self.database.metaship.get_list_shops()[0],
+            "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
+            "name": "Подписка на обновление статусов",
+            "eventType": "StatusUpdate",
+            "secret": "string"
+        }
+        return self.app.http_method.post(link=self.link, data=json.dumps(webhook))
 
     def get_webhooks(self):
         """Получение списка веб-хуков."""
@@ -37,13 +35,11 @@ class ApiWebhook:
         r"""Веб-хук на смену статуса заказа.
         :param url: URL веб-хука.
         """
-        json_change_order_status = json.dumps(
-            {
-                "shopId": self.database.metaship.get_list_shops()[0],
-                "url": "https://test.test/test",
-                "name": "Подписка на обновление статусов",
-                "eventType": "StatusUpdate",
-                "secret": "string"
-            }
-        )
-        return self.app.http_method.post(link=f"{url}", data=json_change_order_status)
+        change_order_status = {
+            "shopId": self.database.metaship.get_list_shops()[0],
+            "url": "https://test.test/test",
+            "name": "Подписка на обновление статусов",
+            "eventType": "StatusUpdate",
+            "secret": "string"
+        }
+        return self.app.http_method.post(link=f"{url}", data=json.dumps(change_order_status))

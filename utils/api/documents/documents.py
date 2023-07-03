@@ -38,13 +38,12 @@ class ApiDocument:
         r"""Метод получения этикеток из партии.
         :param order_ids: Список идентификаторов заказа.
         """
-        json_labels_from_parcel = json.dumps(
-            {
-                "orderIds": order_ids
-            }
-        )
-        with allure.step(f"Requests: {json_labels_from_parcel}"):
-            return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=json_labels_from_parcel)
+        labels_from_parcel = {
+            "orderIds": order_ids
+        }
+        with allure.step(f"Requests: {labels_from_parcel}"):
+            return self.app.http_method.post(link=f"{self.link_documents()}/labels",
+                                             data=json.dumps(labels_from_parcel))
 
     def get_acceptance(self):
         """Метод получения АПП."""

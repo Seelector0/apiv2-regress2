@@ -12,12 +12,10 @@ class ApiWidget:
 
     def post_widget_tokens(self):
         """Создание токена для виджета."""
-        body = json.dumps(
-            {
-                "shopId": self.database.metaship.get_list_shops()[0]
-            }
-        )
-        return self.app.http_method.post(link=self.link, data=body)
+        body = {
+            "shopId": self.database.metaship.get_list_shops()[0]
+        }
+        return self.app.http_method.post(link=self.link, data=json.dumps(body))
 
     def get_widget_tokens(self):
         """Получение списка токенов."""

@@ -18,21 +18,17 @@ class ApiParcel:
         if data is None:
             data = datetime.date.today()
         if all_orders:
-            json_create_parcel = json.dumps(
-                {
-                    "orderIds": [*order_id],
-                    "shipmentDate": f"{data}"
-                }
-            )
+            create_parcel = {
+                "orderIds": [*order_id],
+                "shipmentDate": f"{data}"
+            }
         else:
-            json_create_parcel = json.dumps(
-                {
-                    "orderIds": [order_id],
-                    "shipmentDate": f"{data}"
-                }
-            )
-        with allure.step(f"Requests: {json_create_parcel}"):
-            result = self.app.http_method.post(link=self.link, data=json_create_parcel)
+            create_parcel = {
+                "orderIds": [order_id],
+                "shipmentDate": f"{data}"
+            }
+        with allure.step(f"Requests: {create_parcel}"):
+            result = self.app.http_method.post(link=self.link, data=json.dumps(create_parcel))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -57,19 +53,17 @@ class ApiParcel:
         :param parcel_id: Идентификатор партии.
         """
         if op:
-            json_patch_parcel = json.dumps(
-                [
-                    {
-                        "op": op,
-                        "path": "orderIds",
-                        "value": [order_id]
-                    }
-                ]
-            )
+            patch_parcel = [
+                {
+                    "op": op,
+                    "path": "orderIds",
+                    "value": [order_id]
+                }
+            ]
         else:
             raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
-        with allure.step(f"Requests: {json_patch_parcel}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        with allure.step(f"Requests: {patch_parcel}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json.dumps(patch_parcel))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -80,17 +74,15 @@ class ApiParcel:
         """
         data: datetime.date = datetime.date.today()
         data += datetime.timedelta(days=day)
-        json_patch_parcel = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": "shipmentDate",
-                    "value": f"{data}"
-                }
-            ]
-        )
-        with allure.step(f"Requests: {json_patch_parcel}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json_patch_parcel)
+        patch_parcel = [
+            {
+                "op": "replace",
+                "path": "shipmentDate",
+                "value": f"{data}"
+            }
+        ]
+        with allure.step(f"Requests: {patch_parcel}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json.dumps(patch_parcel))
         with allure.step(f"Response: {result.json()}"):
             return result
 

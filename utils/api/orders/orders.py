@@ -58,87 +58,85 @@ class ApiOrder:
             vat = "0"
         if cod:
             cod = delivery_sum + price_1 + price_2 + price_3
-        json_order = json.dumps(
-            {
-                "warehouse": {
-                    "id": str(self.database.metaship.get_list_warehouses()[0]),
-                },
-                "shop": {
-                    "id": str(self.database.metaship.get_list_shops()[0]),
-                    "number": f"{randrange(1000000, 9999999)}",
-                    "barcode": barcode,
-                },
-                "payment": {
-                    "type": payment_type,
-                    "declaredValue": declared_value + price_1 + price_2 + price_3,
-                    "deliverySum": delivery_sum,
-                    "cod": cod
-                },
-                "dimension": {
-                    "length": length,
-                    "width": width,
-                    "height": height
-                },
-                "weight": 0 + weight,
-                "delivery": {
-                    "type": type_ds,
-                    "service": service,
-                    "tariff": tariff,
-                    "date": data,
-                    "time": delivery_time,
-                    "deliveryPointCode": delivery_point_code
-                },
-                "recipient": {
-                    "familyName": "Филипенко",
-                    "firstName": "Юрий",
-                    "secondName": "Павлович",
-                    "email": "test@mail.ru",
-                    "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
-                    "address": {
-                        "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
-                    }
-                },
-                "comment": "",
-                "pickupTimePeriod": pickup_time_period,
-                "datePickup": date_pickup,
-                "routes": routes,
-                "places": [
-                    {
-                        "items": [
-                            {
-                                "article": f"ART_1{randrange(1000000, 9999999)}",
-                                "name": "Стол",
-                                "price": price_1,
-                                "count": 1,
-                                "weight": weight,
-                                "vat": vat,
-                                "declaredValue": items_declared_value,
-                            },
-                            {
-                                "article": f"ART_2{randrange(1000000, 9999999)}",
-                                "name": "Стол",
-                                "price": price_1,
-                                "count": 1,
-                                "weight": weight,
-                                "vat": vat,
-                                "declaredValue": items_declared_value,
-                            },
-                            {
-                                "article": f"ART_3{randrange(1000000, 9999999)}",
-                                "name": "Стол",
-                                "price": price_3,
-                                "count": 1,
-                                "weight": weight,
-                                "vat": vat,
-                                "declaredValue": items_declared_value,
-                            }
-                        ]
-                    }
-                ]
-            }
-        )
-        with allure.step(f"Requests: {json_order}"):
-            result = self.app.http_method.post(link=self.link, data=json_order)
+        order = {
+            "warehouse": {
+                "id": str(self.database.metaship.get_list_warehouses()[0]),
+            },
+            "shop": {
+                "id": str(self.database.metaship.get_list_shops()[0]),
+                "number": f"{randrange(1000000, 9999999)}",
+                "barcode": barcode,
+            },
+            "payment": {
+                "type": payment_type,
+                "declaredValue": declared_value + price_1 + price_2 + price_3,
+                "deliverySum": delivery_sum,
+                "cod": cod
+            },
+            "dimension": {
+                "length": length,
+                "width": width,
+                "height": height
+            },
+            "weight": 0 + weight,
+            "delivery": {
+                "type": type_ds,
+                "service": service,
+                "tariff": tariff,
+                "date": data,
+                "time": delivery_time,
+                "deliveryPointCode": delivery_point_code
+            },
+            "recipient": {
+                "familyName": "Филипенко",
+                "firstName": "Юрий",
+                "secondName": "Павлович",
+                "email": "test@mail.ru",
+                "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
+                "address": {
+                    "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
+                }
+            },
+            "comment": "",
+            "pickupTimePeriod": pickup_time_period,
+            "datePickup": date_pickup,
+            "routes": routes,
+            "places": [
+                {
+                    "items": [
+                        {
+                            "article": f"ART_1{randrange(1000000, 9999999)}",
+                            "name": "Стол",
+                            "price": price_1,
+                            "count": 1,
+                            "weight": weight,
+                            "vat": vat,
+                            "declaredValue": items_declared_value,
+                        },
+                        {
+                            "article": f"ART_2{randrange(1000000, 9999999)}",
+                            "name": "Стол",
+                            "price": price_1,
+                            "count": 1,
+                            "weight": weight,
+                            "vat": vat,
+                            "declaredValue": items_declared_value,
+                        },
+                        {
+                            "article": f"ART_3{randrange(1000000, 9999999)}",
+                            "name": "Стол",
+                            "price": price_3,
+                            "count": 1,
+                            "weight": weight,
+                            "vat": vat,
+                            "declaredValue": items_declared_value,
+                        }
+                    ]
+                }
+            ]
+        }
+        with allure.step(f"Requests: {order}"):
+            result = self.app.http_method.post(link=self.link, data=json.dumps(order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -184,87 +182,85 @@ class ApiOrder:
             vat = "0"
         if cod:
             cod = delivery_sum + price * 2
-        json_multi_order = json.dumps(
-            {
-                "warehouse": {
-                    "id": str(self.database.metaship.get_list_warehouses()[0]),
+        multi_order = {
+            "warehouse": {
+                "id": str(self.database.metaship.get_list_warehouses()[0]),
+            },
+            "shop": {
+                "id": str(self.database.metaship.get_list_shops()[0]),
+                "number": f"{randrange(1000000, 9999999)}",
+                "barcode": f"{randrange(100000000, 999999999)}",
+            },
+            "payment": {
+                "type": payment_type,
+                "declaredValue": declared_value,
+                "deliverySum": delivery_sum,
+                "cod": cod
+            },
+            "dimension": {
+                "length": length,
+                "width": width,
+                "height": height
+            },
+            "weight": weight_1 + weight_2,
+            "delivery": {
+                "type": type_ds,
+                "deliveryPointCode": delivery_point_code,
+                "service": service,
+                "tariff": tariff,
+                "date": data,
+                "time": delivery_time
+            },
+            "recipient": {
+                "familyName": "Иванов",
+                "firstName": "Иван",
+                "secondName": "Иванович",
+                "email": "test@mail.ru",
+                "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
+                "address": {
+                    "raw": "603000, Нижегородская обл, г Нижний Новгород, ул Большая Покровская, д 4"
+                }
+            },
+            "comment": "",
+            "pickupTimePeriod": pickup_time_period,
+            "datePickup": date_pickup,
+            "places": [
+                {
+                    "items": [
+                        {
+                            "article": f"ART1{randrange(1000000, 9999999)}",
+                            "name": "Стол",
+                            "price": price,
+                            "count": 1,
+                            "weight": weight_1,
+                            "vat": vat
+                        }
+                    ],
+                    "barcode": barcode_1,
+                    "shopNumber": shop_number_1,
+                    "weight": weight_1,
+                    "dimension": dimension
                 },
-                "shop": {
-                    "id": str(self.database.metaship.get_list_shops()[0]),
-                    "number": f"{randrange(1000000, 9999999)}",
-                    "barcode": f"{randrange(100000000, 999999999)}",
-                },
-                "payment": {
-                    "type": payment_type,
-                    "declaredValue": declared_value,
-                    "deliverySum": delivery_sum,
-                    "cod": cod
-                },
-                "dimension": {
-                    "length": length,
-                    "width": width,
-                    "height": height
-                },
-                "weight": weight_1 + weight_2,
-                "delivery": {
-                    "type": type_ds,
-                    "deliveryPointCode": delivery_point_code,
-                    "service": service,
-                    "tariff": tariff,
-                    "date": data,
-                    "time": delivery_time
-                },
-                "recipient": {
-                    "familyName": "Иванов",
-                    "firstName": "Иван",
-                    "secondName": "Иванович",
-                    "email": "test@mail.ru",
-                    "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
-                    "address": {
-                        "raw": "603000, Нижегородская обл, г Нижний Новгород, ул Большая Покровская, д 4"
-                    }
-                },
-                "comment": "",
-                "pickupTimePeriod": pickup_time_period,
-                "datePickup": date_pickup,
-                "places": [
-                    {
-                        "items": [
-                            {
-                                "article": f"ART1{randrange(1000000, 9999999)}",
-                                "name": "Стол",
-                                "price": price,
-                                "count": 1,
-                                "weight": weight_1,
-                                "vat": vat
-                            }
-                        ],
-                        "barcode": barcode_1,
-                        "shopNumber": shop_number_1,
-                        "weight": weight_1,
-                        "dimension": dimension
-                    },
-                    {
-                        "items": [
-                            {
-                                "article": f"ART2{randrange(1000000, 9999999)}",
-                                "name": "Стул",
-                                "price": price,
-                                "count": 1,
-                                "weight": weight_2,
-                                "vat": vat
-                            }
-                        ],
-                        "barcode": barcode_2,
-                        "shopNumber": shop_number_2,
-                        "weight": weight_2,
-                        "dimension": dimension
-                    }
-                ]
-            }
-        )
-        with allure.step(f"Requests: {json_multi_order}"):
-            result = self.app.http_method.post(link=self.link, data=json_multi_order)
+                {
+                    "items": [
+                        {
+                            "article": f"ART2{randrange(1000000, 9999999)}",
+                            "name": "Стул",
+                            "price": price,
+                            "count": 1,
+                            "weight": weight_2,
+                            "vat": vat
+                        }
+                    ],
+                    "barcode": barcode_2,
+                    "shopNumber": shop_number_2,
+                    "weight": weight_2,
+                    "dimension": dimension
+                }
+            ]
+        }
+        with allure.step(f"Requests: {multi_order}"):
+            result = self.app.http_method.post(link=self.link, data=json.dumps(multi_order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -274,7 +270,7 @@ class ApiOrder:
         """
         file_xls = "orders_format_russian_post.xls"
         file_xlsx = "orders_format_russian_post.xlsx"
-        json_order_from_file = {
+        order_from_file = {
             "shopId": str(self.database.metaship.get_list_shops()[0]),
             "warehouseId": str(self.database.metaship.get_list_warehouses()[0]),
             "type": "russian_post"
@@ -285,8 +281,8 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(f"Requests: {json_order_from_file}"):
-            result = self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Requests: {order_from_file}"):
+            result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -297,7 +293,7 @@ class ApiOrder:
         """
         file_xls = f"orders_{delivery_services}.xls"
         file_xlsx = f"orders_{delivery_services}.xlsx"
-        json_order_from_file = {
+        order_from_file = {
             "shopId": str(self.database.metaship.get_list_shops()[0]),
             "warehouseId": str(self.database.metaship.get_list_warehouses()[0]),
         }
@@ -307,8 +303,8 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(f"Requests: {json_order_from_file}"):
-            result = self.app.http_method.post(link=f"import/{self.link}", data=json_order_from_file, files=file)
+        with allure.step(f"Requests: {order_from_file}"):
+            result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -352,15 +348,14 @@ class ApiOrder:
         :param family_name: ФИО получателя.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
-        body_order = result_get_order_by_id.json()["data"]["request"]
-        body_order["weight"] = weight
-        body_order["dimension"]["length"] = length
-        body_order["dimension"]["width"] = width
-        body_order["dimension"]["height"] = height
-        body_order["recipient"]["familyName"] = family_name
-        json_put_order = json.dumps(body_order)
-        with allure.step(f"Requests: {json_put_order}"):
-            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=json_put_order)
+        put_order = result_get_order_by_id.json()["data"]["request"]
+        put_order["weight"] = weight
+        put_order["dimension"]["length"] = length
+        put_order["dimension"]["width"] = width
+        put_order["dimension"]["height"] = height
+        put_order["recipient"]["familyName"] = family_name
+        with allure.step(f"Requests: {put_order}"):
+            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=json.dumps(put_order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -375,47 +370,43 @@ class ApiOrder:
         :param weight: Вес товарной позиции.
         """
         if path:
-            json_patch_order = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": path,
-                        "value": weight
-                    }
-                ]
-            )
+            patch_order = [
+                {
+                    "op": "replace",
+                    "path": path,
+                    "value": weight
+                }
+            ]
         else:
-            json_patch_order = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "places",
-                        "value": [
-                            {
-                                "items": [
-                                    {
-                                        "article": f"ART_1{randrange(1000000, 9999999)}",
-                                        "name": name,
-                                        "price": price,
-                                        "count": count,
-                                        "weight": weight,
-                                        "vat": "0"
-                                    },
-                                ],
-                                "barcode": f"Box_2{randrange(100000, 999999)}",
-                                "weight": 1,
-                                "dimension": {
-                                    "length": 10,
-                                    "width": 10,
-                                    "height": 10
-                                }
+            patch_order = [
+                {
+                    "op": "replace",
+                    "path": "places",
+                    "value": [
+                        {
+                            "items": [
+                                {
+                                    "article": f"ART_1{randrange(1000000, 9999999)}",
+                                    "name": name,
+                                    "price": price,
+                                    "count": count,
+                                    "weight": weight,
+                                    "vat": "0"
+                                },
+                            ],
+                            "barcode": f"Box_2{randrange(100000, 999999)}",
+                            "weight": 1,
+                            "dimension": {
+                                "length": 10,
+                                "width": 10,
+                                "height": 10
                             }
-                        ]
-                    }
-                ]
-            )
-        with allure.step(f"Requests: {json_patch_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_patch_order)
+                        }
+                    ]
+                }
+            ]
+        with allure.step(f"Requests: {patch_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(patch_order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -426,35 +417,33 @@ class ApiOrder:
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        json_path_order = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": "places",
-                    "value": [
-                        *items,
-                        {
-                            "items": [
-                                {
-                                    "article": f"ART_3{randrange(1000000, 9999999)}",
-                                    "name": "Пуфик",
-                                    "price": 1000,
-                                    "count": 1,
-                                    "weight": randint(10, 30),
-                                    "vat": "NO_VAT"
-                                }
-                            ],
-                            "barcode": f"Box_3{randrange(100000, 999999)}",
-                            "shopNumber": f"{randrange(100000, 999999)}",
-                            "weight": randint(1, 5),
-                            "dimension": dimension
-                        }
-                    ]
-                }
-            ]
-        )
-        with allure.step(f"Requests: {json_path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+        path_order = [
+            {
+                "op": "replace",
+                "path": "places",
+                "value": [
+                    *items,
+                    {
+                        "items": [
+                            {
+                                "article": f"ART_3{randrange(1000000, 9999999)}",
+                                "name": "Пуфик",
+                                "price": 1000,
+                                "count": 1,
+                                "weight": randint(10, 30),
+                                "vat": "NO_VAT"
+                            }
+                        ],
+                        "barcode": f"Box_3{randrange(100000, 999999)}",
+                        "shopNumber": f"{randrange(100000, 999999)}",
+                        "weight": randint(1, 5),
+                        "dimension": dimension
+                    }
+                ]
+            }
+        ]
+        with allure.step(f"Requests: {path_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -468,57 +457,55 @@ class ApiOrder:
         for i in body:
             for j in i["items"]:
                 list1.append(j)
-        json_path_order = json.dumps(
-            [
-                {
-                    "op": "replace",
-                    "path": "places",
-                    "value": [
-                        {
-                            "items": [
-                                list1[0]
-                            ],
-                            "barcode": f"Box_1{randrange(100000, 999999)}",
-                            "shopNumber": f"{randrange(100000, 999999)}",
-                            "weight": randint(10, 30),
-                            "dimension": {
-                                "length": randint(10, 30),
-                                "width": randint(10, 30),
-                                "height": randint(10, 30)
-                            }
-                        },
-                        {
-                            "items": [
-                                list1[1]
-                            ],
-                            "barcode": f"Box_2{randrange(100000, 999999)}",
-                            "shopNumber": f"{randrange(100000, 999999)}",
-                            "weight": randint(10, 30),
-                            "dimension": {
-                                "length": randint(10, 30),
-                                "width": randint(10, 30),
-                                "height": randint(10, 30)
-                            }
-                        },
-                        {
-                            "items": [
-                                list1[2]
-                            ],
-                            "barcode": f"Box_3{randrange(100000, 999999)}",
-                            "shopNumber": f"{randrange(100000, 999999)}",
-                            "weight": randint(10, 30),
-                            "dimension": {
-                                "length": randint(10, 30),
-                                "width": randint(10, 30),
-                                "height": randint(10, 30)
-                            }
+        path_order = [
+            {
+                "op": "replace",
+                "path": "places",
+                "value": [
+                    {
+                        "items": [
+                            list1[0]
+                        ],
+                        "barcode": f"Box_1{randrange(100000, 999999)}",
+                        "shopNumber": f"{randrange(100000, 999999)}",
+                        "weight": randint(10, 30),
+                        "dimension": {
+                            "length": randint(10, 30),
+                            "width": randint(10, 30),
+                            "height": randint(10, 30)
                         }
-                    ]
-                }
-            ]
-        )
-        with allure.step(f"Requests: {json_path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json_path_order)
+                    },
+                    {
+                        "items": [
+                            list1[1]
+                        ],
+                        "barcode": f"Box_2{randrange(100000, 999999)}",
+                        "shopNumber": f"{randrange(100000, 999999)}",
+                        "weight": randint(10, 30),
+                        "dimension": {
+                            "length": randint(10, 30),
+                            "width": randint(10, 30),
+                            "height": randint(10, 30)
+                        }
+                    },
+                    {
+                        "items": [
+                            list1[2]
+                        ],
+                        "barcode": f"Box_3{randrange(100000, 999999)}",
+                        "shopNumber": f"{randrange(100000, 999999)}",
+                        "weight": randint(10, 30),
+                        "dimension": {
+                            "length": randint(10, 30),
+                            "width": randint(10, 30),
+                            "height": randint(10, 30)
+                        }
+                    }
+                ]
+            }
+        ]
+        with allure.step(f"Requests: {path_order}"):
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
         with allure.step(f"Response: {result.json()}"):
             return result
 
