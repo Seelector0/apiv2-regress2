@@ -14,6 +14,32 @@ class ApiDeliveryServices:
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
+    @staticmethod
+    def integration(delivery_service_code):
+        r"""Настройки по интеграции.
+        :param delivery_service_code: Код службы доставки.
+        """
+        integration = {
+            "deliveryServiceCode": delivery_service_code,
+            "data": {
+                "type": "integration"
+            }
+        }
+        return integration
+
+    @staticmethod
+    def aggregation(delivery_service_code):
+        r"""Настройки по агрегации.
+        :param delivery_service_code: Код службы доставки.
+        """
+        aggregation = {
+            "deliveryServiceCode": delivery_service_code,
+            "data": {
+                "type": "aggregation"
+            }
+        }
+        return aggregation
+
     def link_delivery_services(self):
         """Метод получения ссылки для подключения СД."""
         return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
@@ -23,29 +49,15 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_russian_post = json.dumps(
-                {
-                    "deliveryServiceCode": "RussianPost",
-                    "data": {
-                        "intakePostOfficeCode": "101000",
-                        "type": "aggregation"
-                    }
-                }
-            )
+            russian_post = self.aggregation(delivery_service_code="RussianPost")
+            russian_post["data"]["intakePostOfficeCode"] = "101000"
         else:
-            json_russian_post = json.dumps(
-                {
-                    "deliveryServiceCode": "RussianPost",
-                    "data": {
-                        "token": f"{os.getenv('RP_TOKEN')}",
-                        "secret": f"{os.getenv('RP_SECRET')}",
-                        "type": "integration",
-                        "intakePostOfficeCode": "101000"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_russian_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_russian_post)
+            russian_post = self.integration(delivery_service_code="RussianPost")
+            russian_post["data"]["intakePostOfficeCode"] = "101000"
+            russian_post["data"]["token"] = f"{os.getenv('RP_TOKEN')}"
+            russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
+        with allure.step(f"Requests: {russian_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(russian_post))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -54,29 +66,15 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_topdelivery = json.dumps(
-                {
-                    "deliveryServiceCode": "TopDelivery",
-                    "data": {
-                        "type": "aggregation"
-                    }
-                }
-            )
+            topdelivery = self.aggregation(delivery_service_code="TopDelivery")
         else:
-            json_topdelivery = json.dumps(
-                {
-                    "deliveryServiceCode": "TopDelivery",
-                    "data": {
-                        "username": f"{os.getenv('TD_USER_NAME')}",
-                        "password": f"{os.getenv('TD_PASSWORD')}",
-                        "basicLogin": f"{os.getenv('TD_BASIC_LOGIN')}",
-                        "basicPassword": f"{os.getenv('TD_BASIC_PASSWORD')}",
-                        "type": "integration"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_topdelivery}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_topdelivery)
+            topdelivery = self.integration(delivery_service_code="TopDelivery")
+            topdelivery["data"]["username"] = f"{os.getenv('TD_USER_NAME')}"
+            topdelivery["data"]["password"] = f"{os.getenv('TD_PASSWORD')}"
+            topdelivery["data"]["basicLogin"] = f"{os.getenv('TD_BASIC_LOGIN')}"
+            topdelivery["data"]["basicPassword"] = f"{os.getenv('TD_BASIC_PASSWORD')}"
+        with allure.step(f"Requests: {topdelivery}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(topdelivery))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -85,28 +83,14 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_boxberry = json.dumps(
-                {
-                    "deliveryServiceCode": "Boxberry",
-                    "data": {
-                        "type": "aggregation",
-                        "intakeDeliveryPointCode": "00127"
-                    }
-                }
-            )
+            boxberry = self.aggregation(delivery_service_code="Boxberry")
+            boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         else:
-            json_boxberry = json.dumps(
-                {
-                    "deliveryServiceCode": "Boxberry",
-                    "data": {
-                        "type": "integration",
-                        "intakeDeliveryPointCode": "00127",
-                        "token": f"{os.getenv('BB_API_TOKEN')}"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_boxberry}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_boxberry)
+            boxberry = self.integration(delivery_service_code="Boxberry")
+            boxberry["data"]["intakeDeliveryPointCode"] = "00127"
+            boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
+        with allure.step(f"Requests: {boxberry}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(boxberry))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -115,45 +99,24 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_cdek = json.dumps(
-                {
-                    "deliveryServiceCode": "Cdek",
-                    "data": {
-                        "type": "aggregation",
-                        "shipmentPointCode": "AKHT1"
-                    }
-                }
-            )
+            cdek = self.aggregation(delivery_service_code="Cdek")
+            cdek["data"]["shipmentPointCode"] = "AKHT1"
         else:
-            json_cdek = json.dumps(
-                {
-                    "deliveryServiceCode": "Cdek",
-                    "data": {
-                        "type": "integration",
-                        "account": f"{os.getenv('CDEK_ACCOUNT')}",
-                        "password": f"{os.getenv('CDEK_PASSWORD')}",
-                        "shipmentPointCode": "AKHT1"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_cdek}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_cdek)
+            cdek = self.integration(delivery_service_code="Cdek")
+            cdek["data"]["shipmentPointCode"] = "AKHT1"
+            cdek["data"]["account"] = f"{os.getenv('CDEK_ACCOUNT')}"
+            cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
+        with allure.step(f"Requests: {cdek}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(cdek))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_drh_logistic(self):
         """Настройки подключения службы доставки DRH Logistic к магазину."""
-        json_drh_logistic = json.dumps(
-            {
-                "deliveryServiceCode": "Drhl",
-                "data": {
-                    "type": "integration",
-                    "apiKey": f"{os.getenv('DRHL_API_TOKEN')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_drh_logistic}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_drh_logistic)
+        drh_logistic = self.integration(delivery_service_code="Drhl")
+        drh_logistic["data"]["apiKey"] = f"{os.getenv('DRHL_API_TOKEN')}"
+        with allure.step(f"Requests: {drh_logistic}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(drh_logistic))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -162,46 +125,26 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_dpd = json.dumps(
-                {
-                    "deliveryServiceCode": "Dpd",
-                    "data": {
-                        "type": "aggregation",
-                        "intakePointCode": "M16"
-                    }
-                }
-            )
+            dpd = self.aggregation(delivery_service_code="Dpd")
+            dpd["data"]["intakePointCode"] = "M16"
         else:
-            json_dpd = json.dumps(
-                {
-                    "deliveryServiceCode": "Dpd",
-                    "data": {
-                        "type": "integration",
-                        "clientNumber": f"{os.getenv('DPD_CLIENT_NUMBER')}",
-                        "clientKey": f"{os.getenv('DPD_CLIENT_KEY')}",
-                        "intakePointCode": "M16"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_dpd}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dpd)
+            dpd = self.integration(delivery_service_code="Dpd")
+            dpd["data"]["clientNumber"] = f"{os.getenv('DPD_CLIENT_NUMBER')}"
+            dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
+            dpd["data"]["intakePointCode"] = "M16"
+        with allure.step(f"Requests: {dpd}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dpd))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину."""
-        json_cse = json.dumps(
-            {
-                "deliveryServiceCode": "Cse",
-                "data": {
-                    "login": f"{os.getenv('CSE_LOGIN')}",
-                    "password": f"{os.getenv('CSE_PASSWORD')}",
-                    "token": f"{os.getenv('CSE_TOKEN')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_cse}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_cse)
+        cse = self.integration(delivery_service_code="Cse")
+        cse["data"]["login"] = f"{os.getenv('CSE_LOGIN')}"
+        cse["data"]["password"] = f"{os.getenv('CSE_PASSWORD')}"
+        cse["data"]["token"] = f"{os.getenv('CSE_TOKEN')}"
+        with allure.step(f"Requests: {cse}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(cse))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -210,44 +153,24 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_five_post = json.dumps(
-                {
-                    "deliveryServiceCode": "FivePost",
-                    "data": {
-                        "type": "aggregation"
-                    }
-                }
-            )
+            five_post = self.aggregation(delivery_service_code="FivePost")
         else:
-            json_five_post = json.dumps(
-                {
-                    "deliveryServiceCode": "FivePost",
-                    "data": {
-                        "apiKey": f"{os.getenv('FIVE_POST_API_KEY')}",
-                        "partnerNumber": f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}",
-                        "baseWeight": 1000,
-                        "type": "integration"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_five_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_five_post)
+            five_post = self.integration(delivery_service_code="FivePost")
+            five_post["data"]["apiKey"] = f"{os.getenv('FIVE_POST_API_KEY')}"
+            five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
+            five_post["data"]["baseWeight"] = 1000
+        with allure.step(f"Requests: {five_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(five_post))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину."""
-        json_svyaznoy = json.dumps(
-            {
-                "deliveryServiceCode": "Svyaznoy",
-                "data": {
-                    "login": f"{os.getenv('SL_LOGIN')}",
-                    "password": f"{os.getenv('SL_PASSWORD')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_svyaznoy}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_svyaznoy)
+        svyaznoy = self.integration(delivery_service_code="Svyaznoy")
+        svyaznoy["data"]["login"] = f"{os.getenv('SL_LOGIN')}"
+        svyaznoy["data"]["password"] = f"{os.getenv('SL_PASSWORD')}"
+        with allure.step(f"Requests: {svyaznoy}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(svyaznoy))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -256,26 +179,12 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_yandex_go = json.dumps(
-                {
-                    "deliveryServiceCode": "YandexGo",
-                    "data": {
-                        "type": "aggregation"
-                    }
-                }
-            )
+            yandex_go = self.aggregation(delivery_service_code="YandexGo")
         else:
-            json_yandex_go = json.dumps(
-                {
-                    "deliveryServiceCode": "YandexGo",
-                    "data": {
-                        "token": f"{os.getenv('YANDEX_TOKEN')}",
-                        "type": "integration"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_yandex_go}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_go)
+            yandex_go = self.integration(delivery_service_code="YandexGo")
+            yandex_go["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
+        with allure.step(f"Requests: {yandex_go}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(yandex_go))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -284,77 +193,43 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_yandex_delivery = json.dumps(
-                {
-                    "deliveryServiceCode": "YandexDelivery",
-                    "data": {
-                        "type": "aggregation",
-                        "intakePointCode": "807655"
-                    }
-                }
-            )
+            yandex_delivery = self.aggregation(delivery_service_code="YandexDelivery")
+            yandex_delivery["data"]["intakePointCode"] = "807655"
         else:
-            json_yandex_delivery = json.dumps(
-                {
-                    "deliveryServiceCode": "YandexDelivery",
-                    "data": {
-                        "token": f"{os.getenv('YANDEX_TOKEN')}",
-                        "type": "integration",
-                        "intakePointCode": "807655"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_yandex_delivery}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_yandex_delivery)
+            yandex_delivery = self.integration(delivery_service_code="YandexDelivery")
+            yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
+            yandex_delivery["data"]["intakePointCode"] = "807655"
+        with allure.step(f"Requests: {yandex_delivery}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(yandex_delivery))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину."""
-        json_dostavka_club = json.dumps(
-            {
-                "deliveryServiceCode": "DostavkaClub",
-                "data": {
-                    "type": "integration",
-                    "login": f"{os.getenv('CLUB_LOGIN')}",
-                    "pass": f"{os.getenv('CLUB_PASSWORD')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_dostavka_club}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_club)
+        dostavka_club = self.integration(delivery_service_code="DostavkaClub")
+        dostavka_club["data"]["login"] = f"{os.getenv('CLUB_LOGIN')}"
+        dostavka_club["data"]["pass"] = f"{os.getenv('CLUB_PASSWORD')}"
+        with allure.step(f"Requests: {dostavka_club}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dostavka_club))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину."""
-        json_dostavka_guru = json.dumps(
-            {
-                "deliveryServiceCode": "DostavkaGuru",
-                "data": {
-                    "type": "integration",
-                    "partnerId": int(f"{os.getenv('GURU_PARTNER_ID')}"),
-                    "key": f"{os.getenv('GURU_KEY')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_dostavka_guru}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dostavka_guru)
+        dostavka_guru = self.integration(delivery_service_code="DostavkaGuru")
+        dostavka_guru["data"]["partnerId"] = int(f"{os.getenv('GURU_PARTNER_ID')}")
+        dostavka_guru["data"]["key"] = f"{os.getenv('GURU_KEY')}"
+        with allure.step(f"Requests: {dostavka_guru}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dostavka_guru))
         with allure.step(f"Response: {result.json()}"):
             return result
 
     def delivery_services_l_post(self):
         """Настройки подключения службы доставки LPost к магазину."""
-        json_l_post = json.dumps(
-            {
-                "deliveryServiceCode": "LPost",
-                "data": {
-                    "secret": f"{os.getenv('L_POST_SECRET')}"
-                }
-            }
-        )
-        with allure.step(f"Requests: {json_l_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_l_post)
+        l_post = self.integration(delivery_service_code="LPost")
+        l_post["data"]["secret"] = f"{os.getenv('L_POST_SECRET')}"
+        with allure.step(f"Requests: {l_post}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(l_post))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -363,26 +238,12 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            json_dalli = json.dumps(
-                {
-                    "deliveryServiceCode": "Dalli",
-                    "data": {
-                        "type": "aggregation",
-                    }
-                }
-            )
+            dalli = self.aggregation(delivery_service_code="Dalli")
         else:
-            json_dalli = json.dumps(
-                {
-                    "deliveryServiceCode": "Dalli",
-                    "data": {
-                        "type": "integration",
-                        "token": f"{os.getenv('DALLI_TOKEN')}"
-                    }
-                }
-            )
-        with allure.step(f"Requests: {json_dalli}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json_dalli)
+            dalli = self.integration(delivery_service_code="Dalli")
+            dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
+        with allure.step(f"Requests: {dalli}"):
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dalli))
         with allure.step(f"Response: {result.json()}"):
             return result
 
@@ -400,38 +261,33 @@ class ApiDeliveryServices:
         with allure.step(f"Response: {result.json()}"):
             return result
 
-    def patch_delivery_services(self, code: str, value: bool = True, path: str = None, tariffs: list = None):
+    def patch_delivery_services(self, code: str, value: bool = True, tariffs: list = None):
         r"""Метод редактирования полей настройки подключения к СД.
         :param code: Код СД.
         :param value: Скрытие СД из ЛК при False.
-        :param path: Изменяемое поле в СД.
         :param tariffs: Список тарифов для редактирования.
         """
-        if path == "tariffs":
-            json_editing = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "settings.tariffs",
-                        "value": {
-                            "exclude": tariffs,
-                            "restrict": None
-                        }
+        if tariffs:
+            patch = [
+                {
+                    "op": "replace",
+                    "path": "settings.tariffs",
+                    "value": {
+                        "exclude": tariffs,
+                        "restrict": None
                     }
-                ]
-            )
+                }
+            ]
         else:
-            json_editing = json.dumps(
-                [
-                    {
-                        "op": "replace",
-                        "path": "visibility",
-                        "value": value
-                    }
-                ]
-            )
-        with allure.step(f"Requests: {json_editing}"):
-            result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json_editing)
+            patch = [
+                {
+                    "op": "replace",
+                    "path": "visibility",
+                    "value": value
+                }
+            ]
+        with allure.step(f"Requests: {patch}"):
+            result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json.dumps(patch))
         with allure.step(f"Response: {result.json()}"):
             return result
 
