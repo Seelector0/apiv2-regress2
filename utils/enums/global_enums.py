@@ -9,6 +9,206 @@ class OtherInfo:
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
                         "dpdPickupNum", "lPostWarehouseId", "comment"]
 
+    entity_order_statuses = [
+        {
+            "name": "accepted",
+            "title": "Заказ подтвержден",
+            "description": "Заказ подтвержден интернет-магазином"
+        },
+        {
+            "name": "arrived-to-city",
+            "title": "Заказ прибыл в город получателя",
+            "description": "Заказ прибыл в город получателя"
+        },
+        {
+            "name": "arrived-to-city-warehouse",
+            "title": "Прибыл в город получателя",
+            "description": "Прямой поток. Заказ принят на складе службы в городе получателя"
+        },
+        {
+            "name": "arrived-to-city-warehouse-after-delivery-failed",
+            "title": "Не удачная попытка вручения",
+            "description": "Прямой поток. Оформлен повторный приход на склад в городе-получателе. "
+                           "Доставка не удалась по какой-либо причине, ожидается очередная попытка доставки. "
+                           "Статус не означает возврат заказа отправителю"
+        },
+        {
+            "name": "arrived-warehouse",
+            "title": "Заказ поступил на склад службы",
+            "description": "Заказ поступил на склад службы"
+        },
+        {
+            "name": "cancelled",
+            "title": "Отменен",
+            "description": "Заказ отменен"
+        },
+        {
+            "name": "cancelled-by-ds",
+            "title": "Курьер отменил заказ",
+            "description": "Курьер отменил заказ"
+        },
+        {
+            "name": "courier-arrived",
+            "title": "Курьер приехал в точку А",
+            "description": "Курьер приехал в точку А"
+        },
+        {
+            "name": "courier-found",
+            "title": "Курьер найден и едет в точку А",
+            "description": "Курьер найден и едет в точку А"
+        },
+        {
+            "name": "courier-not-found",
+            "title": "Не удалось найти курьера.",
+            "description": "Не удалось найти курьера. Можно попробовать снова через некоторое время."
+        },
+        {
+            "name": "created",
+            "title": "Создан",
+            "description": "Заказ подтвержден службой доставки"
+        },
+        {
+            "name": "declined-by-client",
+            "title": "Отказ клиента от выкупа заказа",
+            "description": "Прямой поток. Клиент отказался от получения заказа. Заказ готовится к возврату отправителя"
+        },
+        {
+            "name": "delivered",
+            "title": "Доставлен",
+            "description": "Получатель получил заказ через ПВЗ, постамат или курьером"
+        },
+        {
+            "name": "delivery-failed",
+            "title": "Отказ клиента от выкупа заказа",
+            "description": "Прямой поток. Неудачная попытка вручения"
+        },
+        {
+            "name": "delivery-point-client-cancelled",
+            "title": "Клиент отказался от заказа",
+            "description": "Клиент отказался от заказа"
+        },
+        {
+            "name": "delivery-point-expired",
+            "title": "Истёк срок хранения заказа",
+            "description": "Истёк срок хранения заказа"
+        },
+        {
+            "name": "dispatched-to-a-courier",
+            "title": "Передан курьеру",
+            "description": "Заказ передан курьеру на доставку"
+        },
+        {
+            "name": "draft",
+            "title": "Черновик",
+            "description": "Заказ доступен для редактирования"
+        },
+        {
+            "name": "error",
+            "title": "Ошибка создания заказа",
+            "description": "Заказ не прошел проверку в Metaship или в службе доставки"
+        },
+        {
+            "name": "estimating",
+            "title": "Процесс оценки",
+            "description": "Идет процесс оценки заказа (подбор типа автомобиля по параметрам груза и расчет стоимости)"
+        },
+        {
+            "name": "estimating-failed",
+            "title": "Не удалось оценить заявку",
+            "description": "Не удалось оценить заявку"
+        },
+        {
+            "name": "expected-return",
+            "title": "Готовится к возврату",
+            "description": "Заказ находится в пути на полный возврат"
+        },
+        {
+            "name": "expected-return-client-cancelled",
+            "title": "Посылка уехала из ПВЗ по отказу клиента",
+            "description": "Посылка уехала из ПВЗ по отказу клиента"
+        },
+        {
+            "name": "expected-return-expired",
+            "title": "Посылка уехала из ПВЗ по истечению срока хранения",
+            "description": "Посылка уехала из ПВЗ по истечению срока хранения"
+        },
+        {
+            "name": "intransit",
+            "title": "Доставляется",
+            "description": "Заказ доставляется"
+        },
+        {
+            "name": "looking-for-courier",
+            "title": "Идет поиск курьера",
+            "description": "Идет поиск курьера"
+        },
+        {
+            "name": "losted",
+            "title": "Утерян",
+            "description": "Заказ утерян при доставке"
+        },
+        {
+            "name": "not-accepted-in-delivery-service",
+            "title": "Не принят в СД",
+            "description": "Заказ не принят в службе доставки"
+        },
+        {
+            "name": "order-failed",
+            "title": "При доставке заказа произошла ошибка",
+            "description": "При доставке заказа произошла ошибка, дальнейшее выполнение невозможно"
+        },
+        {
+            "name": "partially-delivered",
+            "title": "Частично доставлен",
+            "description": "Получатель получил часть заказа через ПВЗ, постамат или курьером"
+        },
+        {
+            "name": "pending",
+            "title": "Ждет подтверждения службы доставки",
+            "description": "Заказ ожидает подтверждения от службы доставки"
+        },
+        {
+            "name": "ready-for-approval",
+            "title": "Успешно оценён",
+            "description": "Заказ успешно оценён и ожидает подтверждения от интернет-магазина"
+        },
+        {
+            "name": "return-arrived-warehouse",
+            "title": "Возвращён на склад службы доставки",
+            "description": "Заказ вернули на склад службы доставки"
+        },
+        {
+            "name": "return-completed",
+            "title": "Возвращён в магазин",
+            "description": "Заказ вернули в интернет-магазин"
+        },
+        {
+            "name": "return-partially-completed",
+            "title": "Частичный возврат заказа",
+            "description": "Часть заказа возвращена в интернет-магазин, после того как часть заказа была вручена"
+        },
+        {
+            "name": "return-partially-in-progress",
+            "title": "Готовится частичный возврат заказа",
+            "description": "Часть заказа поехала на возврат, после того как часть заказа была вручена"
+        },
+        {
+            "name": "stored",
+            "title": "В пункте самовывоза",
+            "description": "Заказ находится в пункте выдачи"
+        },
+        {
+            "name": "unknown",
+            "title": "Статус уточняется",
+            "description": "Статус заказа уточняется"
+        },
+        {
+            "name": "wait-delivery",
+            "title": "Готов к передаче в службу доставки",
+            "description": "Заказ готов к передаче в службу доставки"
+        }
+    ]
+
     old_work_time_warehouse = {
         "timezone": "+03:00",
         "monday": {
