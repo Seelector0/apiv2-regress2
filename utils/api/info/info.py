@@ -75,7 +75,9 @@ class ApiInfo:
 
     def info_statuses(self):
         """Получение полного актуального списка возможных статусов заказа."""
-        return self.app.http_method.get(link="/info/statuses")
+        result = self.app.http_method.get(link="info/statuses")
+        with allure.step(f"Response: {result.json()}"):
+            return result
 
     def info_delivery_service_services(self, code: str):
         """Получение информации о дополнительных услугах поддерживаемых СД.
@@ -107,6 +109,7 @@ class ApiInfo:
             "raw": raw
         }
         with allure.step(f"Requests: {params}"):
-            result = self.app.http_method.get(link="info/address", parsms=params)
+            result = self.app.http_method.get(link="info/address", params=params)
         with allure.step(f"Response: {result.json()}"):
             return result
+
