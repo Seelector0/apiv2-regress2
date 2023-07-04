@@ -31,7 +31,7 @@ class ApiDocument:
             }
         else:
             return self.app.http_method.get(link=link)
-        with allure.step(f"Requests: {params}"):
+        with allure.step(title=f"Requests: {params}"):
             return self.app.http_method.get(link=link, params=params)
 
     def post_labels(self, order_ids: list):
@@ -41,7 +41,7 @@ class ApiDocument:
         labels_from_parcel = {
             "orderIds": order_ids
         }
-        with allure.step(f"Requests: {labels_from_parcel}"):
+        with allure.step(title=f"Requests: {labels_from_parcel}"):
             return self.app.http_method.post(link=f"{self.link_documents()}/labels",
                                              data=json.dumps(labels_from_parcel))
 

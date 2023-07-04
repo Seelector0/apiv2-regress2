@@ -37,7 +37,7 @@ class ApiOffers:
             body_offers["types[0]"] = types,
             body_offers["deliveryServiceCode"] = delivery_service_code,
             body_offers["deliveryPointNumber"] = delivery_point_number
-        with allure.step(f"Requests: {body_offers}"):
+        with allure.step(title=f"Requests: {body_offers}"):
             result = self.app.http_method.get(link="offers", params=body_offers)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result

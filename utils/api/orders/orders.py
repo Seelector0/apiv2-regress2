@@ -135,9 +135,9 @@ class ApiOrder:
                 }
             ]
         }
-        with allure.step(f"Requests: {order}"):
+        with allure.step(title=f"Requests: {order}"):
             result = self.app.http_method.post(link=self.link, data=json.dumps(order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
@@ -259,9 +259,9 @@ class ApiOrder:
                 }
             ]
         }
-        with allure.step(f"Requests: {multi_order}"):
+        with allure.step(title=f"Requests: {multi_order}"):
             result = self.app.http_method.post(link=self.link, data=json.dumps(multi_order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def post_import_order_format_russian_post(self, file_extension: str = None):
@@ -281,9 +281,9 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(f"Requests: {order_from_file}"):
+        with allure.step(title=f"Requests: {order_from_file}"):
             result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def post_import_order(self, delivery_services: str = None, file_extension: str = None):
@@ -303,9 +303,9 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(f"Requests: {order_from_file}"):
+        with allure.step(title=f"Requests: {order_from_file}"):
             result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_order_search(self, query: str):
@@ -315,15 +315,15 @@ class ApiOrder:
         search = {
             "query": query
         }
-        with allure.step(f"Requests: {search}"):
+        with allure.step(title=f"Requests: {search}"):
             result = self.app.http_method.get(link=f"{self.link}/search", params=search)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_orders(self):
         """Метод возвращает список заказов."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_order_id(self, order_id: str):
@@ -332,7 +332,7 @@ class ApiOrder:
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}")
         if result.status_code == 200:
-            with allure.step(f"Response: {result.json()}"):
+            with allure.step(title=f"Response: {result.json()}"):
                 return result
         else:
             pass
@@ -354,9 +354,9 @@ class ApiOrder:
         put_order["dimension"]["width"] = width
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
-        with allure.step(f"Requests: {put_order}"):
+        with allure.step(title=f"Requests: {put_order}"):
             result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=json.dumps(put_order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
@@ -405,9 +405,9 @@ class ApiOrder:
                     ]
                 }
             ]
-        with allure.step(f"Requests: {patch_order}"):
+        with allure.step(title=f"Requests: {patch_order}"):
             result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(patch_order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def patch_order_add_item(self, order_id: str, dimension: dict = None):
@@ -442,9 +442,9 @@ class ApiOrder:
                 ]
             }
         ]
-        with allure.step(f"Requests: {path_order}"):
+        with allure.step(title=f"Requests: {path_order}"):
             result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def patch_create_multy_order(self, order_id: str):
@@ -504,9 +504,9 @@ class ApiOrder:
                 ]
             }
         ]
-        with allure.step(f"Requests: {path_order}"):
+        with allure.step(title=f"Requests: {path_order}"):
             result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def delete_order(self, order_id: str):
@@ -520,7 +520,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_order_statuses(self, order_id: str):
@@ -528,7 +528,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_order_details(self, order_id: str):
@@ -536,7 +536,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def getting_all_order_id_out_parcel(self):

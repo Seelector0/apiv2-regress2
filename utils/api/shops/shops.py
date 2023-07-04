@@ -20,15 +20,15 @@ class ApiShop:
             "phone": f"7916{randrange(1000000, 9999999)}",
             "sender": "Иванов Иван Иванович"
         }
-        with allure.step(f"Requests: {shop}"):
+        with allure.step(title=f"Requests: {shop}"):
             result = self.app.http_method.post(link=self.link, data=json.dumps(shop))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_shops(self):
         """Метод получения списка магазинов."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_shop_id(self, shop_id: str):
@@ -36,7 +36,7 @@ class ApiShop:
         :param shop_id: Идентификатор магазина.
         """
         result = self.app.http_method.get(link=f"{self.link}/{shop_id}")
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def put_shop(self, shop_id: str, shop_name: str, shop_url: str, contact_person: str, phone: str):
@@ -53,7 +53,7 @@ class ApiShop:
         shop["uri"] = shop_url
         shop["sender"] = contact_person
         shop["phone"] = phone
-        with allure.step(f"Requests: {shop}"):
+        with allure.step(title=f"Requests: {shop}"):
             return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json.dumps(shop))
 
     def patch_shop(self, shop_id: str, value: bool = True):
@@ -68,7 +68,7 @@ class ApiShop:
                 "value": value
             }
         ]
-        with allure.step(f"Requests: {patch_shop}"):
+        with allure.step(title=f"Requests: {patch_shop}"):
             result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=json.dumps(patch_shop))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result

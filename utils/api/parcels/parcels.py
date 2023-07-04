@@ -27,15 +27,15 @@ class ApiParcel:
                 "orderIds": [order_id],
                 "shipmentDate": f"{data}"
             }
-        with allure.step(f"Requests: {create_parcel}"):
+        with allure.step(title=f"Requests: {create_parcel}"):
             result = self.app.http_method.post(link=self.link, data=json.dumps(create_parcel))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_parcels(self):
         """Метод получения списка партий."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_parcel_id(self, parcel_id: str):
@@ -43,7 +43,7 @@ class ApiParcel:
         :param parcel_id: Идентификатор партии.
         """
         result = self.app.http_method.get(link=f"{self.link}/{parcel_id}")
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def patch_parcel(self, op: str, parcel_id: str, order_id: str):
@@ -62,9 +62,9 @@ class ApiParcel:
             ]
         else:
             raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
-        with allure.step(f"Requests: {patch_parcel}"):
+        with allure.step(title=f"Requests: {patch_parcel}"):
             result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json.dumps(patch_parcel))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
@@ -81,9 +81,9 @@ class ApiParcel:
                 "value": f"{data}"
             }
         ]
-        with allure.step(f"Requests: {patch_parcel}"):
+        with allure.step(title=f"Requests: {patch_parcel}"):
             result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=json.dumps(patch_parcel))
-        with allure.step(f"Response: {result.json()}"):
+        with allure.step(title=f"Response: {result.json()}"):
             return result
 
     def get_orders_in_parcel(self, parcel_id):
