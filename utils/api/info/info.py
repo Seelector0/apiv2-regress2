@@ -112,4 +112,3 @@ class ApiInfo:
             result = self.app.http_method.get(link="info/address", params=params)
         with allure.step(f"Response: {result.json()}"):
             return result
-
