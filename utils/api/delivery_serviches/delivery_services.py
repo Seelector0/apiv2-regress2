@@ -76,8 +76,8 @@ class ApiDeliveryServices:
             boxberry = self.connection_type(delivery_service_code="Boxberry", aggregation=True)
         else:
             boxberry = self.connection_type(delivery_service_code="Boxberry")
-            boxberry["data"]["intakeDeliveryPointCode"] = "00127"
-        boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
+            boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
+        boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         with allure.step(title=f"Requests: {boxberry}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(boxberry))
         with allure.step(title=f"Response: {result.json()}"):
