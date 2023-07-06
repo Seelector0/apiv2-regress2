@@ -41,12 +41,11 @@ class ApiDeliveryServices:
         """
         if aggregation is True:
             russian_post = self.connection_type(delivery_service_code="RussianPost", aggregation=True)
-            russian_post["data"]["intakePostOfficeCode"] = "101000"
         else:
             russian_post = self.connection_type(delivery_service_code="RussianPost")
-            russian_post["data"]["intakePostOfficeCode"] = "101000"
             russian_post["data"]["token"] = f"{os.getenv('RP_TOKEN')}"
             russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
+        russian_post["data"]["intakePostOfficeCode"] = "101000"  # Todo заменить на более универсальный.
         with allure.step(title=f"Requests: {russian_post}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(russian_post))
         with allure.step(title=f"Response: {result.json()}"):
@@ -75,11 +74,10 @@ class ApiDeliveryServices:
         """
         if aggregation is True:
             boxberry = self.connection_type(delivery_service_code="Boxberry", aggregation=True)
-            boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         else:
             boxberry = self.connection_type(delivery_service_code="Boxberry")
             boxberry["data"]["intakeDeliveryPointCode"] = "00127"
-            boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
+        boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
         with allure.step(title=f"Requests: {boxberry}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(boxberry))
         with allure.step(title=f"Response: {result.json()}"):
@@ -91,12 +89,11 @@ class ApiDeliveryServices:
         """
         if aggregation is True:
             cdek = self.connection_type(delivery_service_code="Cdek", aggregation=True)
-            cdek["data"]["shipmentPointCode"] = "AKHT1"
         else:
             cdek = self.connection_type(delivery_service_code="Cdek")
-            cdek["data"]["shipmentPointCode"] = "AKHT1"
             cdek["data"]["account"] = f"{os.getenv('CDEK_ACCOUNT')}"
             cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
+        cdek["data"]["shipmentPointCode"] = "AKHT1"
         with allure.step(title=f"Requests: {cdek}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(cdek))
         with allure.step(title=f"Response: {result.json()}"):
@@ -117,12 +114,11 @@ class ApiDeliveryServices:
         """
         if aggregation is True:
             dpd = self.connection_type(delivery_service_code="Dpd", aggregation=True)
-            dpd["data"]["intakePointCode"] = "M16"
         else:
             dpd = self.connection_type(delivery_service_code="Dpd")
             dpd["data"]["clientNumber"] = f"{os.getenv('DPD_CLIENT_NUMBER')}"
             dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
-            dpd["data"]["intakePointCode"] = "M16"
+        dpd["data"]["intakePointCode"] = "M16"
         with allure.step(title=f"Requests: {dpd}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dpd))
         with allure.step(title=f"Response: {result.json()}"):
@@ -185,11 +181,10 @@ class ApiDeliveryServices:
         """
         if aggregation is True:
             yandex_delivery = self.connection_type(delivery_service_code="YandexDelivery", aggregation=True)
-            yandex_delivery["data"]["intakePointCode"] = "807655"
         else:
             yandex_delivery = self.connection_type(delivery_service_code="YandexDelivery")
             yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
-            yandex_delivery["data"]["intakePointCode"] = "807655"
+        yandex_delivery["data"]["intakePointCode"] = "807655"
         with allure.step(title=f"Requests: {yandex_delivery}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(yandex_delivery))
         with allure.step(title=f"Response: {result.json()}"):
