@@ -27,7 +27,7 @@ class ApiDocument:
             }
         elif size_format:
             params = {
-                "size": f"{size_format}"
+                "size": size_format
             }
         else:
             return self.app.http_method.get(link=link)
