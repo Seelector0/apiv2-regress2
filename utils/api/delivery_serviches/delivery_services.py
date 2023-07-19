@@ -45,7 +45,7 @@ class ApiDeliveryServices:
             russian_post = self.connection_type(delivery_service_code="RussianPost")
             russian_post["data"]["token"] = f"{os.getenv('RP_TOKEN')}"
             russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
-        russian_post["data"]["intakePostOfficeCode"] = "101000"  # Todo заменить на более универсальный.
+        russian_post["data"]["intakePostOfficeCode"] = "101000"
         with allure.step(title=f"Requests: {russian_post}"):
             result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(russian_post))
         with allure.step(title=f"Response: {result.json()}"):
