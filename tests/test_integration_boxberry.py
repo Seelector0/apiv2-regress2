@@ -1,5 +1,6 @@
 from utils.enums.global_enums import INFO
 from utils.checking import Checking
+from environment import ENV_OBJECT
 from random import choice
 import pytest
 import allure
@@ -218,7 +219,7 @@ def test_create_parcel(app):
 
 @allure.description("Получение этикетки CД Boxberry")
 @pytest.mark.parametrize("labels", ["original", "termo"])
-@pytest.mark.dev_stand
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Не работает на local стенде")
 def test_get_labels(app, labels):
     for order_id in app.order.getting_all_order_in_parcel():
         label = app.document.get_label(order_id=order_id, type_=labels)
@@ -226,7 +227,7 @@ def test_get_labels(app, labels):
 
 
 @allure.description("Получение этикеток заказов из партии СД Boxberry")
-@pytest.mark.dev_stand
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Не работает на local стенде")
 def test_get_labels_from_parcel(app):
     labels_from_parcel = app.document.post_labels(order_ids=app.order.getting_all_order_in_parcel())
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
@@ -239,7 +240,7 @@ def test_get_app(app):
 
 
 @allure.description("Получение документов CД Boxberry")
-@pytest.mark.dev_stand
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Не работает на local стенде")
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
