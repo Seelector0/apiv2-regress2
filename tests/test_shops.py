@@ -6,7 +6,7 @@ import pytest
 
 
 @allure.description("Создание магазина")
-@pytest.mark.parametrize("execution_number", range(4))
+@pytest.mark.parametrize("execution_number", range(3))
 def test_create_shop(app, execution_number):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)

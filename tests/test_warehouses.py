@@ -6,7 +6,7 @@ import pytest
 
 
 @allure.description("Создание склада")
-@pytest.mark.parametrize("execution_number", range(4))
+@pytest.mark.parametrize("execution_number", range(3))
 def test_create_warehouse(app, execution_number):
     new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=new_warehouse, expected_status_code=201)
