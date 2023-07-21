@@ -15,7 +15,7 @@ class ApiOrder:
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
-    def post_order(self, payment_type: str, declared_value, type_ds: str, service: str, price_1: float = None,
+    def post_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, price_1: float = None,
                    price_2: float = None, price_3: float = None, barcode: str = None, delivery_sum: float = None,
                    data: str = None, delivery_time: dict = None, length: float = randint(10, 30), cod: float = None,
                    width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
