@@ -27,8 +27,6 @@ class ApiDeliveryServices:
         }
         if aggregation is True:
             connection_type["data"]["type"] = "aggregation"
-        else:
-            connection_type["data"]["type"] = "integration"
         return connection_type
 
     def link_delivery_services(self):
