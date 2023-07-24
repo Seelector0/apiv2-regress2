@@ -1078,5 +1078,37 @@ class OtherInfo:
         }
     ]
 
+    yandex_go_vats = [
+        {
+            "code": "NO_VAT",
+            "name": "Без НДС"
+        },
+        {
+            "code": "0",
+            "name": "НДС 0%"
+        },
+        {
+            "code": "10",
+            "name": "НДС 10%"
+        },
+        {
+            "code": "20",
+            "name": "НДС 20%"
+        }
+    ]
+
+    yandex_go_services = [
+        {
+            "name": "no-recipient-confirmation",
+            "title": "Отключение подтверждения кодом для получателя",
+            "description": "Отключение подтверждения кодом для получателя"
+        },
+        {
+            "name": "no-sender-confirmation",
+            "title": "Отключение подтверждения кодом для отправителя",
+            "description": "Отключение подтверждения кодом для отправителя"
+        }
+    ]
+
 
 INFO = OtherInfo()
