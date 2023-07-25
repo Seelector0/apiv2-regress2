@@ -9,6 +9,8 @@ class OtherInfo:
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
                         "dpdPickupNum", "lPostWarehouseId", "comment"]
 
+    entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
+
     entity_order_statuses = [
         {
             "name": "accepted",
