@@ -247,3 +247,15 @@ def test_get_app(app):
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
+
+
+@allure.description("Создание забора СД Boxberry")
+def test_create_intake(app):
+    new_intake = app.intakes.post_intakes(delivery_service="Boxberry")
+    Checking.check_status_code(response=new_intake, expected_status_code=201)
+    Checking.checking_json_key(response=new_intake, expected_value=INFO.created_entity)
+    get_new_intake = app.intakes.get_intakes_id(intakes_id=new_intake.json()["id"])
+    Checking.check_status_code(response=get_new_intake, expected_status_code=200)
+    Checking.checking_json_value(response=get_new_intake, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=get_new_intake, key_name="request", field="deliveryService",
+                                 expected_value="Boxberry")
