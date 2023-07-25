@@ -2,6 +2,7 @@ from utils.api.delivery_serviches.delivery_services import ApiDeliveryServices
 from utils.api.warehouses.warehouses import ApiWarehouse
 from utils.api.documents.documents import ApiDocument
 from utils.api.webhooks.webhooks import ApiWebhook
+from utils.api.intakes.intakes import ApiIntakes
 from utils.api.widgets.widgets import ApiWidget
 from utils.api.parcels.parcels import ApiParcel
 from utils.api.offers.offers import ApiOffers
@@ -31,6 +32,7 @@ class Application:
         self.document = ApiDocument(self)
         self.widget = ApiWidget(self)
         self.webhook = ApiWebhook(self)
+        self.intakes = ApiIntakes(self)
 
     def open_session(self):
         """Метод для открытия сессии."""

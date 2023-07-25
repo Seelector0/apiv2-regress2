@@ -6,7 +6,7 @@ import allure
 import json
 
 
-class Intakes:
+class ApiIntakes:
 
     def __init__(self, app):
         self.app = app

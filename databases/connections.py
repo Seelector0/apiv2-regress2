@@ -207,6 +207,16 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
+    def delete_intakes(self):
+        """Метод чистит таблицу 'intake.intake'"""
+        cursor = self.metaship.connection_open().cursor()
+        try:
+            cursor.execute(f"delete from {self.metaship.db_connections}.intake.intake "
+                           f"where intake.user_id = '{self.metaship.user_id}'")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def delete_all_setting(self):
         """Метод удаляет всё выше перечисленное"""
         self.delete_list_shops()
@@ -220,3 +230,4 @@ class DataBaseConnections:
             self.delete_order_parcel(parcel_id=id_)
         self.delete_order_path()
         self.delete_list_parcels()
+        self.delete_intakes()
