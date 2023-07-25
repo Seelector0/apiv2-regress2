@@ -13,7 +13,7 @@ class HttpMethod:
     def token(self):
         """Метод получения токена для авторизации."""
         x_trace_id = str(uuid.uuid4())
-        with allure.step(title=f"x-trace-id: '{x_trace_id}'"):
+        with allure.step(title=f"x-trace-id: {x_trace_id}"):
             token = {
                 "x-trace-id": x_trace_id,
                 "Authorization": f"Bearer {self.app.response.json()['access_token']}"
