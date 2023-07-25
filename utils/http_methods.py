@@ -1,6 +1,7 @@
 from environment import ENV_OBJECT
 import requests
 import allure
+import json
 import uuid
 
 
@@ -34,11 +35,13 @@ class HttpMethod:
         :param link: Ссылка на запрос.
         :param data: Тело запроса в формате JSON.
         :param files: Передаваемый файл.
-        :return:
         """
         with allure.step(title=f"POST requests to URL '{self.url}{link}'"):
             link = f"{self.url}{link}"
-            return requests.post(url=link, data=data, headers=self.token(), files=files)
+            try:
+                return requests.post(url=link, data=json.dumps(data), headers=self.token(), files=files)
+            except:
+                return requests.post(url=link, data=data, headers=self.token(), files=files)
 
     def patch(self, link: str, data=None):
         r"""PATCH запрос.
@@ -47,7 +50,7 @@ class HttpMethod:
         """
         with allure.step(title=f"PATCH requests to URL '{self.url}{link}'"):
             link = f"{self.url}{link}"
-            return requests.patch(url=link, data=data, headers=self.token())
+            return requests.patch(url=link, data=json.dumps(data), headers=self.token())
 
     def put(self, link: str, data=None):
         r"""PUT запрос.
@@ -56,7 +59,7 @@ class HttpMethod:
         """
         with allure.step(title=f"PUT requests to URL '{self.url}{link}'"):
             link = f"{self.url}{link}"
-            return requests.put(url=link, data=data, headers=self.token())
+            return requests.put(url=link, data=json.dumps(data), headers=self.token())
 
     def delete(self, link: str):
         r"""DELETE запрос.
