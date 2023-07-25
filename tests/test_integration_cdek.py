@@ -340,6 +340,6 @@ def test_create_intake(app):
     Checking.checking_json_key(response=new_intake, expected_value=INFO.created_entity)
     get_new_intake = app.intakes.get_intakes_id(intakes_id=new_intake.json()["id"])
     Checking.check_status_code(response=get_new_intake, expected_status_code=200)
-    Checking.checking_json_value(response=get_new_intake, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=get_new_intake, key_name="status", expected_value="pending")
     Checking.checking_json_value(response=get_new_intake, key_name="request", field="deliveryService",
                                  expected_value="Cdek")
