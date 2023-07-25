@@ -1,6 +1,5 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-import json
 
 
 class ApiWidget:
@@ -15,7 +14,7 @@ class ApiWidget:
         body = {
             "shopId": self.database.metaship.get_list_shops()[0]
         }
-        return self.app.http_method.post(link=self.link, data=json.dumps(body))
+        return self.app.http_method.post(link=self.link, data=body)
 
     def get_widget_tokens(self):
         """Получение списка токенов."""

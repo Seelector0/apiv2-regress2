@@ -2,7 +2,6 @@ from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange
 import allure
-import json
 
 
 class ApiShop:
@@ -21,7 +20,7 @@ class ApiShop:
             "sender": "Иванов Иван Иванович"
         }
         with allure.step(title=f"Requests: {shop}"):
-            result = self.app.http_method.post(link=self.link, data=json.dumps(shop))
+            result = self.app.http_method.post(link=self.link, data=shop)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -54,7 +53,7 @@ class ApiShop:
         shop["sender"] = contact_person
         shop["phone"] = phone
         with allure.step(title=f"Requests: {shop}"):
-            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=json.dumps(shop))
+            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
 
     def patch_shop(self, shop_id: str, value: bool = True):
         r"""Метод обновления полей магазина.
@@ -69,6 +68,6 @@ class ApiShop:
             }
         ]
         with allure.step(title=f"Requests: {patch_shop}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=json.dumps(patch_shop))
+            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=patch_shop)
         with allure.step(title=f"Response: {result.json()}"):
             return result

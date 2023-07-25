@@ -2,7 +2,6 @@ from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange, randint
 import allure
-import json
 
 
 class ApiOrder:
@@ -136,7 +135,7 @@ class ApiOrder:
             ]
         }
         with allure.step(title=f"Requests: {order}"):
-            result = self.app.http_method.post(link=self.link, data=json.dumps(order))
+            result = self.app.http_method.post(link=self.link, data=order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -260,7 +259,7 @@ class ApiOrder:
             ]
         }
         with allure.step(title=f"Requests: {multi_order}"):
-            result = self.app.http_method.post(link=self.link, data=json.dumps(multi_order))
+            result = self.app.http_method.post(link=self.link, data=multi_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -355,7 +354,7 @@ class ApiOrder:
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
         with allure.step(title=f"Requests: {put_order}"):
-            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=json.dumps(put_order))
+            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=put_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -406,7 +405,7 @@ class ApiOrder:
                 }
             ]
         with allure.step(title=f"Requests: {patch_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(patch_order))
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -443,7 +442,7 @@ class ApiOrder:
             }
         ]
         with allure.step(title=f"Requests: {path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -505,7 +504,7 @@ class ApiOrder:
             }
         ]
         with allure.step(title=f"Requests: {path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=json.dumps(path_order))
+            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 

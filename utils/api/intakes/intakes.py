@@ -3,7 +3,6 @@ from environment import ENV_OBJECT
 from random import randrange, randint
 import datetime
 import allure
-import json
 
 
 class ApiIntakes:
@@ -46,7 +45,7 @@ class ApiIntakes:
             "description": "Классный груз"
         }
         with allure.step(title=f"Requests: {intakes}"):
-            result = self.app.http_method.post(link=self.link, data=json.dumps(intakes))
+            result = self.app.http_method.post(link=self.link, data=intakes)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 

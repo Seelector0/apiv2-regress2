@@ -1,6 +1,5 @@
 from environment import ENV_OBJECT
 from fixture.database import DataBase
-import json
 
 
 class ApiWebhook:
@@ -19,7 +18,7 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        return self.app.http_method.post(link=self.link, data=json.dumps(webhook))
+        return self.app.http_method.post(link=self.link, data=webhook)
 
     def get_webhooks(self):
         """Получение списка веб-хуков."""
@@ -42,4 +41,4 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        return self.app.http_method.post(link=f"{url}", data=json.dumps(change_order_status))
+        return self.app.http_method.post(link=f"{url}", data=change_order_status)

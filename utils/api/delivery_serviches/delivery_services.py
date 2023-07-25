@@ -2,7 +2,6 @@ from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 import allure
-import json
 import os
 
 
@@ -45,7 +44,7 @@ class ApiDeliveryServices:
             russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
         russian_post["data"]["intakePostOfficeCode"] = "101000"
         with allure.step(title=f"Requests: {russian_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(russian_post))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=russian_post)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -62,7 +61,7 @@ class ApiDeliveryServices:
             topdelivery["data"]["basicLogin"] = f"{os.getenv('TD_BASIC_LOGIN')}"
             topdelivery["data"]["basicPassword"] = f"{os.getenv('TD_BASIC_PASSWORD')}"
         with allure.step(title=f"Requests: {topdelivery}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(topdelivery))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=topdelivery)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -77,7 +76,7 @@ class ApiDeliveryServices:
             boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
         boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         with allure.step(title=f"Requests: {boxberry}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(boxberry))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=boxberry)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -93,7 +92,7 @@ class ApiDeliveryServices:
             cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
         cdek["data"]["shipmentPointCode"] = "AKHT1"
         with allure.step(title=f"Requests: {cdek}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(cdek))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=cdek)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -102,7 +101,7 @@ class ApiDeliveryServices:
         drh_logistic = self.connection_type(delivery_service_code="Drhl")
         drh_logistic["data"]["apiKey"] = f"{os.getenv('DRHL_API_TOKEN')}"
         with allure.step(title=f"Requests: {drh_logistic}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(drh_logistic))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=drh_logistic)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -118,7 +117,7 @@ class ApiDeliveryServices:
             dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
         dpd["data"]["intakePointCode"] = "M16"
         with allure.step(title=f"Requests: {dpd}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dpd))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=dpd)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -129,7 +128,7 @@ class ApiDeliveryServices:
         cse["data"]["password"] = f"{os.getenv('CSE_PASSWORD')}"
         cse["data"]["token"] = f"{os.getenv('CSE_TOKEN')}"
         with allure.step(title=f"Requests: {cse}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(cse))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=cse)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -145,7 +144,7 @@ class ApiDeliveryServices:
             five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
             five_post["data"]["baseWeight"] = 1000
         with allure.step(title=f"Requests: {five_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(five_post))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=five_post)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -155,7 +154,7 @@ class ApiDeliveryServices:
         svyaznoy["data"]["login"] = f"{os.getenv('SL_LOGIN')}"
         svyaznoy["data"]["password"] = f"{os.getenv('SL_PASSWORD')}"
         with allure.step(title=f"Requests: {svyaznoy}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(svyaznoy))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=svyaznoy)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -169,7 +168,7 @@ class ApiDeliveryServices:
             yandex_go = self.connection_type(delivery_service_code="YandexGo")
             yandex_go["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         with allure.step(title=f"Requests: {yandex_go}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(yandex_go))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_go)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -184,7 +183,7 @@ class ApiDeliveryServices:
             yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         yandex_delivery["data"]["intakePointCode"] = "807655"
         with allure.step(title=f"Requests: {yandex_delivery}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(yandex_delivery))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_delivery)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -194,7 +193,7 @@ class ApiDeliveryServices:
         dostavka_club["data"]["login"] = f"{os.getenv('CLUB_LOGIN')}"
         dostavka_club["data"]["pass"] = f"{os.getenv('CLUB_PASSWORD')}"
         with allure.step(title=f"Requests: {dostavka_club}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dostavka_club))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_club)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -204,7 +203,7 @@ class ApiDeliveryServices:
         dostavka_guru["data"]["partnerId"] = int(f"{os.getenv('GURU_PARTNER_ID')}")
         dostavka_guru["data"]["key"] = f"{os.getenv('GURU_KEY')}"
         with allure.step(title=f"Requests: {dostavka_guru}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dostavka_guru))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_guru)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -213,7 +212,7 @@ class ApiDeliveryServices:
         l_post = self.connection_type(delivery_service_code="LPost")
         l_post["data"]["secret"] = f"{os.getenv('L_POST_SECRET')}"
         with allure.step(title=f"Requests: {l_post}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(l_post))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=l_post)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -227,7 +226,7 @@ class ApiDeliveryServices:
             dalli = self.connection_type(delivery_service_code="Dalli")
             dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
         with allure.step(title=f"Requests: {dalli}"):
-            result = self.app.http_method.post(link=self.link_delivery_services(), data=json.dumps(dalli))
+            result = self.app.http_method.post(link=self.link_delivery_services(), data=dalli)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -271,7 +270,7 @@ class ApiDeliveryServices:
                 }
             ]
         with allure.step(title=f"Requests: {patch}"):
-            result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=json.dumps(patch))
+            result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
