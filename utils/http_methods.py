@@ -27,7 +27,9 @@ class HttpMethod:
         :param params: Тело запроса если нужно.
         """
         with allure.step(title=f"GET requests to URL '{self.url}{link}'"):
-            return requests.get(url=f"{self.url}{link}", params=params, headers=self.token())
+            result = requests.get(url=f"{self.url}{link}", params=params, headers=self.token())
+        with allure.step(title=f"Request: {params}"):
+            return result
 
     def post(self, link: str, data=None, files=None):
         r"""POST запрос.
@@ -37,9 +39,11 @@ class HttpMethod:
         """
         with allure.step(title=f"POST requests to URL '{self.url}{link}'"):
             try:
-                return requests.post(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token(), files=files)
+                result = requests.post(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token(), files=files)
             except:
-                return requests.post(url=f"{self.url}{link}", data=data, headers=self.token(), files=files)
+                result = requests.post(url=f"{self.url}{link}", data=data, headers=self.token(), files=files)
+        with allure.step(title=f"Request: {data}"):
+            return result
 
     def patch(self, link: str, data=None):
         r"""PATCH запрос.
@@ -47,7 +51,9 @@ class HttpMethod:
         :param data: Тело запроса в формате JSON.
         """
         with allure.step(title=f"PATCH requests to URL '{self.url}{link}'"):
-            return requests.patch(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token())
+            result = requests.patch(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token())
+        with allure.step(title=f"Request: {data}"):
+            return result
 
     def put(self, link: str, data=None):
         r"""PUT запрос.
@@ -55,7 +61,9 @@ class HttpMethod:
         :param data: Тело запроса в формате JSON.
         """
         with allure.step(title=f"PUT requests to URL '{self.url}{link}'"):
-            return requests.put(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token())
+            result = requests.put(url=f"{self.url}{link}", data=json.dumps(data), headers=self.token())
+        with allure.step(title=f"Request: {data}"):
+            return result
 
     def delete(self, link: str):
         r"""DELETE запрос.
