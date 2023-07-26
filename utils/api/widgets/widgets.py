@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import allure
 
 
 class ApiWidget:
@@ -14,14 +15,20 @@ class ApiWidget:
         body = {
             "shopId": self.database.metaship.get_list_shops()[0]
         }
-        return self.app.http_method.post(link=self.link, data=body)
+        result = self.app.http_method.post(link=self.link, data=body)
+        with allure.step(title=f"Response: {result.json()}"):
+            return result
 
     def get_widget_tokens(self):
         """Получение списка токенов."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(title=f"Response: {result.json()}"):
+            return result
 
     def get_widget_tokens_id(self, widget_id: str):
         r"""Получение виджета.
         :param widget_id: Идентификатор виджета.
         """
-        return self.app.http_method.get(link=f"{self.link}/{widget_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{widget_id}")
+        with allure.step(title=f"Response: {result.json()}"):
+            return result

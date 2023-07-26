@@ -19,8 +19,7 @@ class ApiShop:
             "phone": f"7916{randrange(1000000, 9999999)}",
             "sender": "Иванов Иван Иванович"
         }
-        with allure.step(title=f"Requests: {shop}"):
-            result = self.app.http_method.post(link=self.link, data=shop)
+        result = self.app.http_method.post(link=self.link, data=shop)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -52,8 +51,7 @@ class ApiShop:
         shop["uri"] = shop_url
         shop["sender"] = contact_person
         shop["phone"] = phone
-        with allure.step(title=f"Requests: {shop}"):
-            return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
+        return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=shop)
 
     def patch_shop(self, shop_id: str, value: bool = True):
         r"""Метод обновления полей магазина.
@@ -67,7 +65,6 @@ class ApiShop:
                 "value": value
             }
         ]
-        with allure.step(title=f"Requests: {patch_shop}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=patch_shop)
+        result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=patch_shop)
         with allure.step(title=f"Response: {result.json()}"):
             return result

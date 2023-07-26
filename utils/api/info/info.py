@@ -29,8 +29,7 @@ class ApiInfo:
             params = {
                 "deliveryServiceCode": delivery_service_code
             }
-        with allure.step(title=f"Requests: {params}"):
-            result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
+        result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -44,8 +43,7 @@ class ApiInfo:
             "shopId": self.database.metaship.get_list_shops()[0],
             "cityRaw": city_raw
         }
-        with allure.step(title=f"Requests: {params}"):
-            result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
+        result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -56,8 +54,7 @@ class ApiInfo:
         params = {
             "deliveryServiceCode": delivery_service_code
         }
-        with allure.step(title=f"Requests: {params}"):
-            result = self.app.http_method.get(link="info/vats", params=params)
+        result = self.app.http_method.get(link="info/vats", params=params)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -68,8 +65,7 @@ class ApiInfo:
         params = {
             "deliveryServiceCode": delivery_service_code
         }
-        with allure.step(title=f"Requests: {params}"):
-            result = self.app.http_method.get(link="info/intake_offices", params=params)
+        result = self.app.http_method.get(link="info/intake_offices", params=params)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -108,7 +104,6 @@ class ApiInfo:
         params = {
             "raw": raw
         }
-        with allure.step(title=f"Requests: {params}"):
-            result = self.app.http_method.get(link="info/address", params=params)
+        result = self.app.http_method.get(link="info/address", params=params)
         with allure.step(title=f"Response: {result.json()}"):
             return result

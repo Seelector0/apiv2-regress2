@@ -1,5 +1,6 @@
 from environment import ENV_OBJECT
 from fixture.database import DataBase
+import allure
 
 
 class ApiWebhook:
@@ -18,17 +19,23 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        return self.app.http_method.post(link=self.link, data=webhook)
+        result = self.app.http_method.post(link=self.link, data=webhook)
+        with allure.step(title=f"Response: {result.json()}"):
+            return result
 
     def get_webhooks(self):
         """Получение списка веб-хуков."""
-        return self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link)
+        with allure.step(title=f"Response: {result.json()}"):
+            return result
 
     def get_webhook_id(self, webhook_id: str):
         r"""Получение веб-хука по его id.
         :param webhook_id: Идентификатор веб-хука.
         """
-        return self.app.http_method.get(link=f"{self.link}/{webhook_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
+        with allure.step(title=f"Response: {result.json()}"):
+            return result
 
     def webhook_to_change_order_status(self, url: str):
         r"""Веб-хук на смену статуса заказа.
@@ -41,4 +48,6 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        return self.app.http_method.post(link=f"{url}", data=change_order_status)
+        result = self.app.http_method.post(link=f"{url}", data=change_order_status)
+        with allure.step(title=f"Response: {result.json()}"):
+            return result

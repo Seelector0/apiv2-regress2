@@ -23,8 +23,7 @@ class ApiWarehouse:
                 "email": "test@email.ru"
             }
         }
-        with allure.step(title=f"Requests: {warehouse}"):
-            result = self.app.http_method.post(link=self.link, data=warehouse)
+        result = self.app.http_method.post(link=self.link, data=warehouse)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -73,8 +72,7 @@ class ApiWarehouse:
         warehouse["contact"]["phone"] = phone
         warehouse["contact"]["email"] = email
         warehouse["workingTime"] = working_time
-        with allure.step(title=f"Requests: {warehouse}"):
-            return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
+        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
 
     def patch_warehouse(self, warehouse_id: str, path: str, value):
         r"""Метод для редактирования полей склада.
@@ -92,8 +90,7 @@ class ApiWarehouse:
             ]
         else:
             raise ValueError(f"Выбрана не верная операция {path}")
-        with allure.step(title=f"Requests: {patch_warehouse}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=patch_warehouse)
+        result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=patch_warehouse)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 

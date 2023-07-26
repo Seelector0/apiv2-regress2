@@ -26,8 +26,7 @@ class ApiParcel:
                 "orderIds": [order_id],
                 "shipmentDate": f"{data}"
             }
-        with allure.step(title=f"Requests: {create_parcel}"):
-            result = self.app.http_method.post(link=self.link, data=create_parcel)
+        result = self.app.http_method.post(link=self.link, data=create_parcel)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -61,8 +60,7 @@ class ApiParcel:
             ]
         else:
             raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
-        with allure.step(title=f"Requests: {patch_parcel}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
+        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -80,8 +78,7 @@ class ApiParcel:
                 "value": f"{data}"
             }
         ]
-        with allure.step(title=f"Requests: {patch_parcel}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
+        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 

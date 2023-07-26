@@ -1,6 +1,6 @@
 from fixture.database import DataBase
-from environment import ENV_OBJECT
 from random import randrange, randint
+from environment import ENV_OBJECT
 import datetime
 import allure
 
@@ -44,8 +44,7 @@ class ApiIntakes:
             },
             "description": "Классный груз"
         }
-        with allure.step(title=f"Requests: {intakes}"):
-            result = self.app.http_method.post(link=self.link, data=intakes)
+        result = self.app.http_method.post(link=self.link, data=intakes)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 

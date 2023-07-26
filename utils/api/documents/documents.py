@@ -30,8 +30,7 @@ class ApiDocument:
             }
         else:
             return self.app.http_method.get(link=link)
-        with allure.step(title=f"Requests: {params}"):
-            return self.app.http_method.get(link=link, params=params)
+        return self.app.http_method.get(link=link, params=params)
 
     def post_labels(self, order_ids: list):
         r"""Метод получения этикеток из партии.
@@ -40,8 +39,7 @@ class ApiDocument:
         labels = {
             "orderIds": order_ids
         }
-        with allure.step(title=f"Requests: {labels}"):
-            return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=labels)
+        return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=labels)
 
     def get_acceptance(self):
         """Метод получения АПП."""

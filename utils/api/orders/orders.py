@@ -134,8 +134,7 @@ class ApiOrder:
                 }
             ]
         }
-        with allure.step(title=f"Requests: {order}"):
-            result = self.app.http_method.post(link=self.link, data=order)
+        result = self.app.http_method.post(link=self.link, data=order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -258,8 +257,7 @@ class ApiOrder:
                 }
             ]
         }
-        with allure.step(title=f"Requests: {multi_order}"):
-            result = self.app.http_method.post(link=self.link, data=multi_order)
+        result = self.app.http_method.post(link=self.link, data=multi_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -280,8 +278,7 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(title=f"Requests: {order_from_file}"):
-            result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -302,8 +299,7 @@ class ApiOrder:
             file = [("file", (f"{file_xlsx}", open(file=f"{self.directory}/{file_xlsx}", mode="rb"), self.method_xlsx))]
         else:
             return f"Файл {file_extension} не поддерживается"
-        with allure.step(title=f"Requests: {order_from_file}"):
-            result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -314,8 +310,7 @@ class ApiOrder:
         search = {
             "query": query
         }
-        with allure.step(title=f"Requests: {search}"):
-            result = self.app.http_method.get(link=f"{self.link}/search", params=search)
+        result = self.app.http_method.get(link=f"{self.link}/search", params=search)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -353,8 +348,7 @@ class ApiOrder:
         put_order["dimension"]["width"] = width
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
-        with allure.step(title=f"Requests: {put_order}"):
-            result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=put_order)
+        result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=put_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -404,8 +398,7 @@ class ApiOrder:
                     ]
                 }
             ]
-        with allure.step(title=f"Requests: {patch_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -441,8 +434,7 @@ class ApiOrder:
                 ]
             }
         ]
-        with allure.step(title=f"Requests: {path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
@@ -503,8 +495,7 @@ class ApiOrder:
                 ]
             }
         ]
-        with allure.step(title=f"Requests: {path_order}"):
-            result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         with allure.step(title=f"Response: {result.json()}"):
             return result
 
