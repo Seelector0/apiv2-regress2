@@ -1,10 +1,12 @@
 from fixture.application import Application
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from fixture.admin import Admin
 import pytest
 
 
-fixture_api = None
+apiv2_metaship = None
+api_admin = None
 fixture_connections = None
 fixture_customer = None
 fixture_tracking = None
@@ -12,17 +14,27 @@ fixture_tracking = None
 
 @pytest.fixture(scope="module")
 def app():
-    """Фикстура для открытия сессии по Api"""
-    global fixture_api
-    if fixture_api is None:
-        fixture_api = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
-    fixture_api.open_session()
-    return fixture_api
+    """Фикстура для открытия сессии по Apiv2 metaship."""
+    global apiv2_metaship
+    if apiv2_metaship is None:
+        apiv2_metaship = Application(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
+    apiv2_metaship.open_session()
+    return apiv2_metaship
 
 
 @pytest.fixture(scope="module")
+def admin():
+    """Фикстура для открытия сессии по Admin Api."""
+    global api_admin
+    if api_admin is None:
+        api_admin = Admin(base_url=f"{ENV_OBJECT.get_base_url()}/auth/access_token")
+    api_admin.admin_session()
+    return api_admin
+
+
+@pytest.fixture(scope="module", autouse=True)
 def connections():
-    """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'"""
+    """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'."""
     global fixture_connections
     if fixture_connections is None:
         fixture_connections = DataBase(database=ENV_OBJECT.db_connections())
