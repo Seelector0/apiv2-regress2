@@ -11,6 +11,9 @@ class OtherInfo:
 
     entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
 
+    entity_moderation = ['id', 'connectionId', 'agreementId', 'customerAgreementId', 'credential', 'notified',
+                         'expired']
+
     entity_order_statuses = [
         {
             "name": "accepted",
