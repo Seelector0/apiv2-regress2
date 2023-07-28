@@ -59,6 +59,16 @@ class Environment:
         DEVELOP: f"{os.getenv('USER_ID')}"
     }
 
+    CUSTOMERS_IDS = {
+        LOCAL: f"{os.getenv('CUSTOMER_ID_LOCAL')}",
+        DEVELOP: f"{os.getenv('CUSTOMER_ID')}"
+    }
+
+    CUSTOMERS_AGREEMENTS_IDS = {
+        LOCAL: f"{os.getenv('CUSTOMER_AGREEMENT_ID_LOCAL')}",
+        DEVELOP: f"{os.getenv('CUSTOMER_AGREEMENT_ID')}"
+    }
+
     error_massage = "Неизвестное значение переменной ENV:"
 
     def __init__(self):
@@ -134,6 +144,20 @@ class Environment:
         """Метод для определения user_id для базы данных"""
         if self.env in self.USER_IDS:
             return self.USER_IDS[self.env]
+        else:
+            raise Exception(f"{Environment.error_massage} {self.env}")
+
+    def customer_id(self):
+        """Метод для определения customer_id для работы за определённым стендом"""
+        if self.env in self.CUSTOMERS_IDS:
+            return self.CUSTOMERS_IDS[self.env]
+        else:
+            raise Exception(f"{Environment.error_massage} {self.env}")
+
+    def customer_agreements_id(self):
+        """Метод для определения customer_agreements_id для работы за определённым стендом"""
+        if self.env in self.CUSTOMERS_AGREEMENTS_IDS:
+            return self.CUSTOMERS_AGREEMENTS_IDS[self.env]
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
 
