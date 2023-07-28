@@ -13,6 +13,8 @@ from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
 from requests import Response
 import requests
+import allure
+import uuid
 
 
 class Application:
@@ -49,6 +51,16 @@ class Application:
             return self.response
         else:
             self.session.close()
+
+    def token(self):
+        """Метод получения токена для авторизации в apiv2 metaship."""
+        x_trace_id = str(uuid.uuid4())
+        with allure.step(title=f"x-trace-id: {x_trace_id}"):
+            token = {
+                "x-trace-id": x_trace_id,
+                "Authorization": f"Bearer {self.response.json()['access_token']}"
+            }
+            return token
 
     def close_session(self):
         """Метод для закрытия сессии."""
