@@ -7,7 +7,7 @@ import allure
 
 
 @allure.description("Создание магазина")
-def test_create_integration_shop(app):
+def test_create_shop(app):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=["id", "type", "url", "status"])

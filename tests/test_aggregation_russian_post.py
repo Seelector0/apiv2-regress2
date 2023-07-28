@@ -7,7 +7,7 @@ import allure
 
 
 @allure.description("Создание магазина")
-def test_create_shop(app):
+def test_create_shop(app, admin):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
@@ -27,8 +27,8 @@ def test_create_warehouse(app):
 
 
 @allure.description("Подключение настроек службы доставки СД RussianPost")
-def test_integration_delivery_services(app):
-    russian_post = app.service.delivery_services_russian_post()
+def test_aggregation_delivery_services(app):
+    russian_post = app.service.delivery_services_russian_post(aggregation=True)
     Checking.check_status_code(response=russian_post, expected_status_code=201)
     Checking.checking_json_key(response=russian_post, expected_value=INFO.created_entity)
     get_russian_post = app.service.get_delivery_services_code(code="RussianPost")
@@ -37,6 +37,12 @@ def test_integration_delivery_services(app):
     Checking.checking_json_value(response=get_russian_post, key_name="credentials", field="visibility",
                                  expected_value=True)
 
+
+@allure.description("Модерация СД RussianPost")
+def test_moderation_delivery_services(admin):
+    moderation = admin.moderation.moderation_russian_post()
+    Checking.check_status_code(response=moderation, expected_status_code=200)
+    Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
 @allure.description("Получение списка ПВЗ СД RussianPost")
 def test_delivery_service_points(app):
@@ -272,3 +278,4 @@ def test_remove_order_in_parcel(app):
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
+
