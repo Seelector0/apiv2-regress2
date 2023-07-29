@@ -1,5 +1,5 @@
-from environment import ENV_OBJECT
 from fixture.database import DataBase
+from environment import ENV_OBJECT
 import allure
 
 

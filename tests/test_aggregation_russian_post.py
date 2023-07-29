@@ -44,6 +44,7 @@ def test_moderation_delivery_services(admin):
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
+
 @allure.description("Получение списка ПВЗ СД RussianPost")
 def test_delivery_service_points(app):
     delivery_service_points = app.info.delivery_service_points(delivery_service_code="RussianPost")
@@ -278,4 +279,3 @@ def test_remove_order_in_parcel(app):
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     Checking.check_status_code(response=parcel_remove, expected_status_code=200)
     Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
-
