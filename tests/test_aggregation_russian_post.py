@@ -26,7 +26,7 @@ def test_create_warehouse(app):
     Checking.checking_json_value(response=get_new_warehouse, key_name="visibility", expected_value=True)
 
 
-@allure.description("Подключение настроек службы доставки СД RussianPost")
+@allure.description("Подключение настроек СД RussianPost по агрегации")
 def test_aggregation_delivery_services(app):
     russian_post = app.service.delivery_services_russian_post(aggregation=True)
     Checking.check_status_code(response=russian_post, expected_status_code=201)
