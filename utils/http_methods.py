@@ -12,7 +12,7 @@ class HttpMethod:
     @staticmethod
     def url(admin: bool = None):
         if admin is True:
-            url = f"{ENV_OBJECT.get_base_url()}/admin/v2"
+            url = f"{ENV_OBJECT.get_base_url()}/admin/v2/"
         else:
             url = f"{ENV_OBJECT.get_base_url()}/v2/"
         return url
