@@ -64,7 +64,7 @@ def test_info_vats(app):
 def test_offers_delivery_point(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                   delivery_service_code="FivePost",
-                                                  delivery_point_number="0014e8fe-1c2d-4429-b115-c9064ce54c30")
+                                                  delivery_point_number="006bf88a-5186-45d9-9911-89d37f1edc86")
     Checking.check_status_code(response=offers_delivery_point, expected_status_code=200)
     Checking.checking_json_key(response=offers_delivery_point, expected_value=["DeliveryPoint"])
 
@@ -73,7 +73,7 @@ def test_offers_delivery_point(app, payment_type):
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_delivery_point(app, payment_type, connections):
     new_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="FivePost",
-                                     delivery_point_code="0014e8fe-1c2d-4429-b115-c9064ce54c30", declared_value=500)
+                                     delivery_point_code="006bf88a-5186-45d9-9911-89d37f1edc86", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
