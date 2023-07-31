@@ -20,7 +20,7 @@ class Admin:
         self.moderation = ApiModerationDeliveryServices(self)
 
     def admin_session(self):
-        """Метод для открытия сессии."""
+        """Метод для открытия сессии под admin."""
         data = {
             "grant_type": "client_credentials",
             "client_id": f"{os.getenv('ADMIN_ID')}",
@@ -37,7 +37,7 @@ class Admin:
             self.session.close()
 
     def admin_token(self):
-        """Метод получения токена для авторизации в apiv2 metaship."""
+        """Метод получения токена для авторизации в admin api."""
         x_trace_id = str(uuid.uuid4())
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
             token = {
