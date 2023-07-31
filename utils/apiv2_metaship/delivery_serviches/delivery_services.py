@@ -15,7 +15,7 @@ class ApiDeliveryServices:
 
     @staticmethod
     def connection_type(delivery_service_code: str, aggregation: bool = None):
-        r"""Тип подключения СД.
+        r"""Метод подключения СД.
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
