@@ -1,5 +1,5 @@
 from utils.checking import Checking
-from utils.enums.global_enums import INFO
+from utils.global_enums import INFO
 from random import choice
 import pytest
 import allure

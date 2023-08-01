@@ -10,10 +10,10 @@ class ApiWidget:
         self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "widget/tokens"
 
-    def post_widget_tokens(self):
+    def post_widget_tokens(self, shop_id):
         """Создание токена для виджета."""
         body = {
-            "shopId": self.database.metaship.get_list_shops()[0]
+            "shopId": shop_id
         }
         result = self.app.http_method.post(link=self.link, data=body)
         with allure.step(title=f"Response: {result.json()}"):

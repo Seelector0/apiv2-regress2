@@ -39,6 +39,11 @@ class Environment:
         DEVELOP: f"{os.getenv('TRACKING_API')}"
     }
 
+    DATABASE_WIDGET_API = {
+        LOCAL: f"{os.getenv('WIDGET_API_LOCAL')}",
+        DEVELOP: f"{os.getenv('WIDGET_API')}"
+    }
+
     DATABASE_HOSTS = {
         LOCAL: f"{os.getenv('HOST_LOCAL')}",
         DEVELOP: f"{os.getenv('HOST')}"
@@ -116,6 +121,13 @@ class Environment:
         if self.env in self.DATABASE_TRACKING_API:
             """Метод для определения имени базы данных для работы за определённым стендом (tracking-api)"""
             return self.DATABASE_TRACKING_API[self.env]
+        else:
+            raise Exception(f"{self.error_massage} {self.env}")
+
+    def db_widget_api(self):
+        if self.env in self.DATABASE_WIDGET_API:
+            """Метод для определения имени базы данных для работы за определённым стендом (widget-api)"""
+            return self.DATABASE_WIDGET_API[self.env]
         else:
             raise Exception(f"{self.error_massage} {self.env}")
 

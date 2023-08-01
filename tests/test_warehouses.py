@@ -1,4 +1,4 @@
-from utils.enums.global_enums import INFO
+from utils.global_enums import INFO
 from utils.checking import Checking
 from random import choice
 import allure
@@ -17,10 +17,7 @@ def test_create_warehouse(app, execution_number):
 def test_get_warehouses(app):
     list_warehouses = app.warehouse.get_warehouses()
     Checking.check_status_code(response=list_warehouses, expected_status_code=200)
-    for warehouse in list_warehouses.json():
-        get_warehouse_by_id = app.warehouse.get_warehouse_id(warehouse_id=warehouse["id"])
-        Checking.check_status_code(response=get_warehouse_by_id, expected_status_code=200)
-        Checking.checking_json_key(response=get_warehouse_by_id, expected_value=INFO.entity_warehouse)
+    Checking.check_response_is_not_empty(response=list_warehouses)
 
 
 @allure.description("Получение склада по его id")
