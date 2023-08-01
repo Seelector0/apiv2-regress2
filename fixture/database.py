@@ -1,6 +1,7 @@
-from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
 from databases.tracking_api import DataBaseTrackingApi
+from databases.connections import DataBaseConnections
+from databases.widget_api import DataBaseWidgetApi
 from environment import ENV_OBJECT
 import psycopg2
 
@@ -16,10 +17,12 @@ class DataBase:
         self.db_connections = ENV_OBJECT.db_connections()
         self.db_customer = ENV_OBJECT.db_customer_api()
         self.db_tracking = ENV_OBJECT.db_tracking_api()
+        self.db_widget = ENV_OBJECT.db_widget_api()
         self.connection = None
         self.metaship = DataBaseConnections(self)
         self.customer = DataBaseCustomerApi(self)
         self.tracking = DataBaseTrackingApi(self)
+        self.widget = DataBaseWidgetApi(self)
 
     def connection_open(self):
         """Метод подключение к БД"""

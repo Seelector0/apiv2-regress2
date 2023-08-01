@@ -10,6 +10,7 @@ api_admin = None
 fixture_connections = None
 fixture_customer = None
 fixture_tracking = None
+fixture_widget = None
 link_token = "auth/access_token"
 
 
@@ -63,17 +64,29 @@ def tracking_api():
     return fixture_tracking
 
 
+@pytest.fixture(scope="module")
+def widget_api():
+    """Фикстура для подключения к базе данных 'widget-api'"""
+    global fixture_widget
+    if fixture_widget is None:
+        fixture_widget = DataBase(database=ENV_OBJECT.db_widget_api())
+    fixture_widget.connection_open()
+    return fixture_widget
+
+
 @pytest.fixture(scope="module", autouse=True)
-def stop(app, request, connections, customer_api, tracking_api):
+def stop(app, request, connections, customer_api, tracking_api, widget_api):
     """Фикстура для завершения сессии"""
     def fin():
         app.close_session()
         for id_ in connections.metaship.get_list_shops():
             customer_api.customer.delete_connection(shop_id=id_)
+            widget_api.widget.delete_list_orders_in_tracking(shop_id=id_)
         for id_ in connections.metaship.get_list_orders():
             tracking_api.tracking.delete_list_orders_in_tracking(order_id=id_)
         connections.metaship.delete_all_setting()
         connections.connection_close()
         customer_api.connection_close()
         tracking_api.connection_close()
+        widget_api.connection_close()
     request.addfinalizer(finalizer=fin)
