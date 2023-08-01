@@ -87,3 +87,8 @@ class Checking:
             assert response.json()["features"] != [], f"Ответ {response.json()['features']}"
             for i in response.json()["features"]:
                 assert i["point"]["deliveryServiceCode"] == delivery_service, f"В ответе нет СД {delivery_service}"
+
+    @staticmethod
+    def check_response_is_not_empty(response: Response):
+        with allure.step(title="Проверяю, что ответ не пустой"):
+            assert len(response.json()) != 0, f"Ответ {response.json()}"
