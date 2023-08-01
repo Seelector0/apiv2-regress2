@@ -7,7 +7,9 @@ class DataBaseCustomerApi:
         self.customer_api = customer_api
 
     def get_connections_id(self, shop_id):
-        """Метод получения connection_id из БД."""
+        r"""Метод получения connection_id из БД.
+        :param shop_id: ID магазина в БД.
+        """
         list_connection_id = []
         cursor = self.customer_api.connection_open().cursor(cursor_factory=DictCursor)
         try:
