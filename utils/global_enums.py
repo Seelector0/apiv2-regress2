@@ -11,6 +11,10 @@ class OtherInfo:
 
     entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
 
+    created_entity_widget = ['id', 'customerId', 'shopId', 'token', 'createdAt', 'updatedAt']
+
+    entity_widget = ['id', 'customerId', 'shopId', 'token', 'script', 'createdAt', 'updatedAt']
+
     entity_moderation = ['id', 'connectionId', 'agreementId', 'customerAgreementId', 'credential', 'notified',
                          'expired']
 
