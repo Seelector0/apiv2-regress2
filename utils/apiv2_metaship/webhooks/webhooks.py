@@ -10,10 +10,10 @@ class ApiWebhook:
         self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "webhook"
 
-    def create_webhook(self):
-        """Создание веб-хука."""
+    def post_webhook(self, shop_id):
+        """Метод создание веб-хука."""
         webhook = {
-            "shopId": self.database.metaship.get_list_shops()[0],
+            "shopId": shop_id,
             "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
             "name": "Подписка на обновление статусов",
             "eventType": "StatusUpdate",
