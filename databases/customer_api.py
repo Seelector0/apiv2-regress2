@@ -10,16 +10,16 @@ class DataBaseCustomerApi:
         r"""Метод получения connection_id из БД.
         :param shop_id: ID магазина в БД.
         """
-        list_connection_id = []
+        db_list_connection_id = []
         cursor = self.customer_api.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query="""select id from "customer-api".public.connection """
-                                 f"""where connection.shop_id='{shop_id}'""")
+                                 f"""where connection.shop_id = '{shop_id}'""")
             for row in cursor:
-                list_connection_id.append(*row)
+                db_list_connection_id.append(*row)
         finally:
             cursor.close()
-        return list_connection_id
+        return db_list_connection_id
 
     def delete_connection(self, shop_id):
         r"""Метод чистит таблицу 'public.connection'.

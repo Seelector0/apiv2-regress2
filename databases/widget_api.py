@@ -21,7 +21,7 @@ class DataBaseWidgetApi:
             cursor.close()
         return list_widget_id
 
-    def delete_list_orders_in_tracking(self, shop_id):
+    def delete_widgets_id(self, shop_id):
         r"""Функция чистит таблицу '"widget-api".public.credentials'.
         :param shop_id: ID магазина в БД.
         """

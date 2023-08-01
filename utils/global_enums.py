@@ -18,6 +18,8 @@ class OtherInfo:
     entity_moderation = ['id', 'connectionId', 'agreementId', 'customerAgreementId', 'credential', 'notified',
                          'expired']
 
+    entity_webhook = ['id', 'shopId', 'url', 'name', 'secret', 'eventType', 'active', 'createdAt', 'updatedAt']
+
     entity_order_statuses = [
         {
             "name": "accepted",
