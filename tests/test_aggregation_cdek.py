@@ -1,4 +1,4 @@
-from utils.enums.global_enums import INFO
+from utils.global_enums import INFO
 from utils.checking import Checking
 from random import choice, randrange
 import pytest
@@ -6,7 +6,7 @@ import allure
 
 
 @allure.description("Создание магазина")
-def test_create_shop(app, admin):
+def test_create_shop(app):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
