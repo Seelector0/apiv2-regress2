@@ -217,6 +217,29 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
+    def get_list_webhook(self):
+        """Метод возвращает список id веб-хуков."""
+        db_list_webhook = []
+        cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(f"select id from {self.metaship.db_connections}.webhook.webhook "
+                           f"where webhook.user_id = '{self.metaship.user_id}'")
+            for row in cursor:
+                db_list_webhook.append(*row)
+        finally:
+            cursor.close()
+        return db_list_webhook
+
+    def delete_webhook(self):
+        """Метод чистит таблицу 'webhook.webhook'."""
+        cursor = self.metaship.connection_open().cursor()
+        try:
+            cursor.execute(f"delete from {self.metaship.db_connections}.webhook.webhook "
+                           f"where webhook.user_id = '{self.metaship.user_id}'")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def delete_all_setting(self):
         """Метод удаляет всё выше перечисленное"""
         self.delete_list_shops()
@@ -231,3 +254,4 @@ class DataBaseConnections:
         self.delete_order_path()
         self.delete_list_parcels()
         self.delete_intakes()
+        self.delete_webhook()
