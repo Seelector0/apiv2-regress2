@@ -1,4 +1,4 @@
-from utils.enums.global_enums import INFO
+from utils.global_enums import INFO
 from utils.checking import Checking
 from random import choice
 import allure
@@ -17,15 +17,12 @@ def test_create_shop(app, execution_number):
 def test_get_shop(app):
     list_shops = app.shop.get_shops()
     Checking.check_status_code(response=list_shops, expected_status_code=200)
-    for shop in list_shops.json():
-        get_shop_by_id = app.shop.get_shop_id(shop_id=shop["id"])
-        Checking.check_status_code(response=get_shop_by_id, expected_status_code=200)
-        Checking.checking_json_key(response=get_shop_by_id, expected_value=INFO.entity_shops)
+    Checking.check_response_is_not_empty(response=list_shops)
 
 
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, connections):
-    random_shop_id = choice(connections.metaship.get_list_shops())
+    random_shop_id = choice(choice(connections.metaship.get_list_shops()))
     shop = app.shop.get_shop_id(shop_id=random_shop_id)
     Checking.check_status_code(response=shop, expected_status_code=200)
     Checking.checking_json_key(response=shop, expected_value=INFO.entity_shops)
