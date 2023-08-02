@@ -28,9 +28,9 @@ def test_create_warehouse(app):
 
 @allure.description("Подключение настроек СД Dalli")
 def test_integration_delivery_services(app):
-    cdek = app.service.delivery_services_dalli()
-    Checking.check_status_code(response=cdek, expected_status_code=201)
-    Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
+    dalli = app.service.delivery_services_dalli()
+    Checking.check_status_code(response=dalli, expected_status_code=201)
+    Checking.checking_json_key(response=dalli, expected_value=INFO.created_entity)
     get_dalli = app.service.get_delivery_services_code(code="Dalli")
     Checking.check_status_code(response=get_dalli, expected_status_code=200)
     Checking.checking_json_value(response=get_dalli, key_name="code", expected_value="Dalli")

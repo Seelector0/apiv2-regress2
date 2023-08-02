@@ -26,9 +26,9 @@ def test_create_warehouse(app):
     Checking.checking_json_value(response=get_new_warehouse, key_name="visibility", expected_value=True)
 
 
-@allure.description("Подключение настроек службы доставки СД FivePost")
-def test_integration_delivery_services(app):
-    five_post = app.service.delivery_services_five_post()
+@allure.description("Подключение настроек СД FivePost по агрегации")
+def test_aggregation_delivery_services(app):
+    five_post = app.service.delivery_services_five_post(aggregation=True)
     Checking.check_status_code(response=five_post, expected_status_code=201)
     Checking.checking_json_key(response=five_post, expected_value=INFO.created_entity)
     get_five_post = app.service.get_delivery_services_code(code="FivePost")
@@ -38,12 +38,25 @@ def test_integration_delivery_services(app):
                                  expected_value=True)
 
 
+@allure.description("Модерация СД FivePost")
+def test_moderation_delivery_services(admin):
+    moderation = admin.moderation.moderation_five_post()
+    Checking.check_status_code(response=moderation, expected_status_code=200)
+    Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
+
+
 @allure.description("Получение списка ПВЗ СД FivePost")
 def test_delivery_service_points(app):
     delivery_service_points = app.info.delivery_service_points(delivery_service_code="FivePost")
     Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
                                          expected_value="FivePost")
+
+
+@allure.description("Получения сроков доставки по СД FivePost")
+def test_delivery_time_schedules(app):
+    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="FivePost")
+    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=400)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД FivePost")

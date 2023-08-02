@@ -1,7 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange
-import simplejson.errors
 import allure
 
 
@@ -39,8 +38,5 @@ class ApiOffers:
             body_offers["deliveryServiceCode"] = delivery_service_code,
             body_offers["deliveryPointNumber"] = delivery_point_number
         result = self.app.http_method.get(link="offers", params=body_offers)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"Код ответа: {result.status_code}, Response: {result.requests.body}")
+        with allure.step(title=f"Response: {result.json()}"):
+            return result

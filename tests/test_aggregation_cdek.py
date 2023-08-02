@@ -27,14 +27,13 @@ def test_create_warehouse(app):
 
 @allure.description("Подключение настроек СД Cdek по агрегации")
 def test_aggregation_delivery_services(app):
-    russian_post = app.service.delivery_services_cdek(aggregation=True)
-    Checking.check_status_code(response=russian_post, expected_status_code=201)
-    Checking.checking_json_key(response=russian_post, expected_value=INFO.created_entity)
-    get_russian_post = app.service.get_delivery_services_code(code="Cdek")
-    Checking.check_status_code(response=get_russian_post, expected_status_code=200)
-    Checking.checking_json_value(response=get_russian_post, key_name="code", expected_value="Cdek")
-    Checking.checking_json_value(response=get_russian_post, key_name="credentials", field="visibility",
-                                 expected_value=True)
+    cdek = app.service.delivery_services_cdek(aggregation=True)
+    Checking.check_status_code(response=cdek, expected_status_code=201)
+    Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
+    get_cdek = app.service.get_delivery_services_code(code="Cdek")
+    Checking.check_status_code(response=get_cdek, expected_status_code=200)
+    Checking.checking_json_value(response=get_cdek, key_name="code", expected_value="Cdek")
+    Checking.checking_json_value(response=get_cdek, key_name="credentials", field="visibility", expected_value=True)
 
 
 @allure.description("Модерация СД Cdek")
