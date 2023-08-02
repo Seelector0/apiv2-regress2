@@ -1,8 +1,8 @@
-from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.global_enums import INFO
 from environment import ENV_OBJECT
-import pytest
 import allure
+import pytest
 
 
 @allure.description("Создание магазина")
@@ -25,15 +25,22 @@ def test_create_warehouse(app):
     Checking.checking_json_value(response=get_new_warehouse, key_name="visibility", expected_value=True)
 
 
-@allure.description("Подключение настроек СД YandexGo")
-def test_integration_delivery_services(app):
-    yandex = app.service.delivery_services_yandex_go()
+@allure.description("Подключение настроек СД YandexGo по агрегации")
+def test_aggregation_delivery_services(app):
+    yandex = app.service.delivery_services_yandex_go(aggregation=True)
     Checking.check_status_code(response=yandex, expected_status_code=201)
     Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
     get_yandex = app.service.get_delivery_services_code(code="YandexGo")
     Checking.check_status_code(response=get_yandex, expected_status_code=200)
     Checking.checking_json_value(response=get_yandex, key_name="code", expected_value="YandexGo")
     Checking.checking_json_value(response=get_yandex, key_name="credentials", field="visibility", expected_value=True)
+
+
+@allure.description("Модерация СД YandexGo")
+def test_moderation_delivery_services(admin):
+    moderation = admin.moderation.moderation_yandex_go()
+    Checking.check_status_code(response=moderation, expected_status_code=200)
+    Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД YandexGo")

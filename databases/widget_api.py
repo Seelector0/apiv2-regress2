@@ -14,7 +14,7 @@ class DataBaseWidgetApi:
         cursor = self.widget.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query="""select id from "widget-api".public.credentials """
-                                 f"""where credentials.shop_id='{shop_id}'""")
+                                 """where credentials.shop_id = '{shop_id}'""".format(shop_id=shop_id))
             for row in cursor:
                 list_widget_id.append(*row)
         finally:
@@ -27,8 +27,8 @@ class DataBaseWidgetApi:
         """
         cursor = self.widget.connection_open().cursor()
         try:
-            cursor.execute("""delete from "widget-api".public.credentials """
-                           f"""where credentials.shop_id = '{shop_id}'""")
+            cursor.execute(query="""delete from "widget-api".public.credentials """
+                                 """where credentials.shop_id = '{shop_id}'""".format(shop_id=shop_id))
             cursor.connection.commit()
         finally:
             cursor.close()

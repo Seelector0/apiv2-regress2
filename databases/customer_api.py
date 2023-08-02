@@ -14,7 +14,7 @@ class DataBaseCustomerApi:
         cursor = self.customer_api.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query="""select id from "customer-api".public.connection """
-                                 f"""where connection.shop_id = '{shop_id}'""")
+                                 """where connection.shop_id = '{shop_id}'""".format(shop_id=shop_id))
             for row in cursor:
                 db_list_connection_id.append(*row)
         finally:
@@ -27,8 +27,8 @@ class DataBaseCustomerApi:
         """
         cursor = self.customer_api.connection_open().cursor()
         try:
-            cursor.execute("""delete from "customer-api".public.connection """
-                           f"""where connection.shop_id = '{shop_id}'""")
+            cursor.execute(query="""delete from "customer-api".public.connection """
+                                 """where connection.shop_id = '{shop_id}'""".format(shop_id=shop_id))
             cursor.connection.commit()
         finally:
             cursor.close()
