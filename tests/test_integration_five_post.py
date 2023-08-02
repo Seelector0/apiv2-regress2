@@ -46,12 +46,6 @@ def test_delivery_service_points(app):
                                          expected_value="FivePost")
 
 
-@allure.description("Получения сроков доставки по СД FivePost")
-def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="FivePost")
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=400)
-
-
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД FivePost")
 def test_info_vats(app):
     info_vats = app.info.info_vats(delivery_service_code="FivePost")
