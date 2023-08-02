@@ -22,7 +22,7 @@ def test_get_shop(app):
 
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, connections):
-    random_shop_id = choice(choice(connections.metaship.get_list_shops()))
+    random_shop_id = choice(connections.metaship.get_list_shops())
     shop = app.shop.get_shop_id(shop_id=random_shop_id)
     Checking.check_status_code(response=shop, expected_status_code=200)
     Checking.checking_json_key(response=shop, expected_value=INFO.entity_shops)
