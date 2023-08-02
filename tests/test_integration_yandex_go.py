@@ -51,8 +51,7 @@ def test_info_statuses(app):
 
 
 @allure.description("Создание Courier заказа по CД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 @pytest.mark.parametrize("execution_number", range(2))
 def test_create_order_courier(app, execution_number, connections):
     new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="YandexGo", declared_value=0,
@@ -67,8 +66,7 @@ def test_create_order_courier(app, execution_number, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_order_status(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
@@ -77,8 +75,7 @@ def test_order_status(app):
 
 
 @allure.description("Получение подробной информации о заказе СД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_order_details(app):
     for order_id in app.order.getting_all_order_id_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
@@ -87,8 +84,7 @@ def test_order_details(app):
 
 
 @allure.description("Создание партии СД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_create_parcel(app):
     orders_id = app.order.getting_all_order_id_out_parcel()
     create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
@@ -97,16 +93,14 @@ def test_create_parcel(app):
 
 
 @allure.description("Получение АПП СД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_get_app(app):
     acceptance = app.document.get_acceptance()
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Получение документов СД YandexGo")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship",
-                    reason="Тест работает только на dev стенде")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
