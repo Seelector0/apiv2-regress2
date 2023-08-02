@@ -27,13 +27,13 @@ def test_create_warehouse(app):
 
 @allure.description("Подключение настроек СД LPost")
 def test_integration_delivery_services(app):
-    cdek = app.service.delivery_services_l_post()
-    Checking.check_status_code(response=cdek, expected_status_code=201)
-    Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
-    get_cdek = app.service.get_delivery_services_code(code="LPost")
-    Checking.check_status_code(response=get_cdek, expected_status_code=200)
-    Checking.checking_json_value(response=get_cdek, key_name="code", expected_value="LPost")
-    Checking.checking_json_value(response=get_cdek, key_name="credentials", field="visibility", expected_value=True)
+    l_post = app.service.delivery_services_l_post()
+    Checking.check_status_code(response=l_post, expected_status_code=201)
+    Checking.checking_json_key(response=l_post, expected_value=INFO.created_entity)
+    get_l_post = app.service.get_delivery_services_code(code="LPost")
+    Checking.check_status_code(response=get_l_post, expected_status_code=200)
+    Checking.checking_json_value(response=get_l_post, key_name="code", expected_value="LPost")
+    Checking.checking_json_value(response=get_l_post, key_name="credentials", field="visibility", expected_value=True)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД LPost")
