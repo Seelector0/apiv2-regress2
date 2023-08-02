@@ -11,8 +11,8 @@ class DataBaseTrackingApi:
         """
         cursor = self.tracking.connection_open().cursor()
         try:
-            cursor.execute('delete from "tracking-api".public."order" '
-                           f"""where "order".order_id = '{order_id}'""")
+            cursor.execute("""delete from "tracking-api".public."order" """
+                           """where "order".order_id = '{order_id}'""".format(order_id=order_id))
             cursor.connection.commit()
         finally:
             cursor.close()
