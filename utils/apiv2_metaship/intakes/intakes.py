@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from random import randrange, randint
 from environment import ENV_OBJECT
+import simplejson.errors
 import datetime
 import allure
 
@@ -45,23 +46,28 @@ class ApiIntakes:
             "description": "Классный груз"
         }
         result = self.app.http_method.post(link=self.link, data=intakes)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_intakes(self):
         """Получение списка заборов."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_intakes_id(self, intakes_id: str):
         r"""Получения информации о заборе по его id.
         :param intakes_id: Идентификатор забора.
         """
         result = self.app.http_method.get(link=f"{self.link}/{intakes_id}")
-        if result.status_code == 200:
+        try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        else:
-            pass
-        return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

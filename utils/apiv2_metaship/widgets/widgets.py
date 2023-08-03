@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import simplejson.errors
 import allure
 
 
@@ -16,19 +17,28 @@ class ApiWidget:
             "shopId": shop_id
         }
         result = self.app.http_method.post(link=self.link, data=body)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_widget_tokens(self):
         """Получение списка токенов."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_widget_tokens_id(self, widget_id: str):
         r"""Получение виджета.
         :param widget_id: Идентификатор виджета.
         """
         result = self.app.http_method.get(link=f"{self.link}/{widget_id}")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

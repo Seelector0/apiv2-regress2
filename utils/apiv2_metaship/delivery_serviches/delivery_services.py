@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import simplejson.errors
 import allure
 import os
 
@@ -44,8 +45,11 @@ class ApiDeliveryServices:
             russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
         russian_post["data"]["intakePostOfficeCode"] = "101000"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=russian_post)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_topdelivery(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки TopDelivery к магазину.
@@ -60,8 +64,11 @@ class ApiDeliveryServices:
             topdelivery["data"]["basicLogin"] = f"{os.getenv('TD_BASIC_LOGIN')}"
             topdelivery["data"]["basicPassword"] = f"{os.getenv('TD_BASIC_PASSWORD')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=topdelivery)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_boxberry(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Boxberry к магазину.
@@ -74,8 +81,11 @@ class ApiDeliveryServices:
             boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
         boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=boxberry)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_cdek(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Cdek к магазину.
@@ -89,16 +99,22 @@ class ApiDeliveryServices:
             cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
         cdek["data"]["shipmentPointCode"] = "AKHT1"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=cdek)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_drh_logistic(self):
         """Настройки подключения службы доставки DRH Logistic к магазину."""
         drh_logistic = self.connection_type(delivery_service_code="Drhl")
         drh_logistic["data"]["apiKey"] = f"{os.getenv('DRHL_API_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=drh_logistic)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dpd(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Dpd к магазину.
@@ -112,8 +128,11 @@ class ApiDeliveryServices:
             dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
         dpd["data"]["intakePointCode"] = "M16"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dpd)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину."""
@@ -122,8 +141,11 @@ class ApiDeliveryServices:
         cse["data"]["password"] = f"{os.getenv('CSE_PASSWORD')}"
         cse["data"]["token"] = f"{os.getenv('CSE_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=cse)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_five_post(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки FivePost к магазину.
@@ -137,8 +159,11 @@ class ApiDeliveryServices:
             five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
             five_post["data"]["baseWeight"] = 1000
         result = self.app.http_method.post(link=self.link_delivery_services(), data=five_post)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину."""
@@ -159,8 +184,11 @@ class ApiDeliveryServices:
             yandex_go = self.connection_type(delivery_service_code="YandexGo")
             yandex_go["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_go)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_yandex_delivery(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки YandexDelivery к магазину.
@@ -173,8 +201,11 @@ class ApiDeliveryServices:
             yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         yandex_delivery["data"]["intakePointCode"] = "807655"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_delivery)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину."""
@@ -182,8 +213,11 @@ class ApiDeliveryServices:
         dostavka_club["data"]["login"] = f"{os.getenv('CLUB_LOGIN')}"
         dostavka_club["data"]["pass"] = f"{os.getenv('CLUB_PASSWORD')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_club)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину."""
@@ -191,16 +225,22 @@ class ApiDeliveryServices:
         dostavka_guru["data"]["partnerId"] = int(f"{os.getenv('GURU_PARTNER_ID')}")
         dostavka_guru["data"]["key"] = f"{os.getenv('GURU_KEY')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_guru)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_l_post(self):
         """Настройки подключения службы доставки LPost к магазину."""
         l_post = self.connection_type(delivery_service_code="LPost")
         l_post["data"]["secret"] = f"{os.getenv('L_POST_SECRET')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=l_post)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dalli(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Dalli к магазину.
@@ -212,22 +252,31 @@ class ApiDeliveryServices:
             dalli = self.connection_type(delivery_service_code="Dalli")
             dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dalli)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         result = self.app.http_method.get(link=self.link_delivery_services())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_delivery_services_code(self, code: str):
         r"""Получение настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
         result = self.app.http_method.get(link=f"{self.link_delivery_services()}/{code}")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_delivery_services(self, code: str, value: bool = True, tariffs: list = None):
         r"""Метод редактирования полей настройки подключения к СД.
@@ -255,21 +304,20 @@ class ApiDeliveryServices:
                 }
             ]
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def activate_delivery_service(self, code: str):
         r"""Активация настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
-        result = self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/activate")
 
     def deactivate_delivery_service(self, code: str):
         r"""Деактивация настроек подключения к СД по id магазина.
         :param code: Код СД.
         """
-        result = self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        return self.app.http_method.post(link=f"{self.link_delivery_services()}/{code}/deactivate")

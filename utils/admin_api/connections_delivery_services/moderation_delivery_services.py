@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import simplejson.errors
 import allure
 import os
 
@@ -39,8 +40,11 @@ class ApiModerationDeliveryServices:
         russian_post["credential"]["secret"] = f"{os.getenv('RP_SECRET')}"
         result = self.admin.http_method.post(link=self.link, data=russian_post, admin=True,
                                              token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_topdelivery(self):
         """Снятие с модерации СД TopDelivery."""
@@ -51,16 +55,22 @@ class ApiModerationDeliveryServices:
         topdelivery["credential"]["basicPassword"] = f"{os.getenv('TD_BASIC_PASSWORD')}"
         result = self.admin.http_method.post(link=self.link, data=topdelivery, admin=True,
                                              token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_boxberry(self):
         """Снятие с модерации СД Boxberry."""
         boxberry = self.moderation(delivery_service_code="Boxberry")
         boxberry["credential"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
         result = self.admin.http_method.post(link=self.link, data=boxberry, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_cdek(self):
         """Снятие с модерации СД Cdek."""
@@ -68,8 +78,11 @@ class ApiModerationDeliveryServices:
         cdek["credential"]["account"] = f"{os.getenv('CDEK_ACCOUNT')}"
         cdek["credential"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
         result = self.admin.http_method.post(link=self.link, data=cdek, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_dpd(self):
         """Снятие с модерации СД Dpd."""
@@ -77,8 +90,11 @@ class ApiModerationDeliveryServices:
         dpd["credential"]["clientNumber"] = f"{os.getenv('DPD_CLIENT_NUMBER')}"
         dpd["credential"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
         result = self.admin.http_method.post(link=self.link, data=dpd, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_five_post(self):
         """Снятие с модерации СД FivePost"""
@@ -87,8 +103,11 @@ class ApiModerationDeliveryServices:
         five_post["credential"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
         five_post["credential"]["baseWeight"] = 1000
         result = self.admin.http_method.post(link=self.link, data=five_post, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_yandex_go(self):
         """Снятие с модерации СД YandexGo"""
@@ -96,13 +115,19 @@ class ApiModerationDeliveryServices:
         yandex_go["credential"]["yandexGoToken"] = f"{os.getenv('YANDEX_TOKEN')}"
         yandex_go["credential"]["inn"] = "7734381257"
         result = self.admin.http_method.post(link=self.link, data=yandex_go, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_dalli(self):
         """Снятие с модерации СД Dalli"""
         dalli = self.moderation(delivery_service_code="Dalli")
-        dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
+        dalli["credential"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
         result = self.admin.http_method.post(link=self.link, data=dalli, admin=True, token=self.admin.admin_token())
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

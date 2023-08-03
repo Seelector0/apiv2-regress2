@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import simplejson.errors
 import allure
 
 
@@ -20,22 +21,31 @@ class ApiWebhook:
             "secret": "string"
         }
         result = self.app.http_method.post(link=self.link, data=webhook)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_webhooks(self):
         """Получение списка веб-хуков."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_webhook_id(self, webhook_id: str):
         r"""Получение веб-хука по его id.
         :param webhook_id: Идентификатор веб-хука.
         """
         result = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def webhook_to_change_order_status(self, url: str):
         r"""Веб-хук на смену статуса заказа.
@@ -49,5 +59,8 @@ class ApiWebhook:
             "secret": "string"
         }
         result = self.app.http_method.post(link=f"{url}", data=change_order_status)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
