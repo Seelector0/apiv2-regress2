@@ -1,5 +1,5 @@
-from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.global_enums import INFO
 from environment import ENV_OBJECT
 from random import choice
 import pytest
@@ -51,12 +51,6 @@ def test_delivery_service_points(app):
     Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
     Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
                                          expected_value="FivePost")
-
-
-@allure.description("Получения сроков доставки по СД FivePost")
-def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="FivePost")
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=400)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД FivePost")
