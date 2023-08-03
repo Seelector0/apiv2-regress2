@@ -1,3 +1,4 @@
+import simplejson.errors
 import datetime
 import allure
 
@@ -27,22 +28,31 @@ class ApiParcel:
                 "shipmentDate": f"{data}"
             }
         result = self.app.http_method.post(link=self.link, data=create_parcel)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_parcels(self):
         """Метод получения списка партий."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_parcel_id(self, parcel_id: str):
         r"""Получение партии по её id.
         :param parcel_id: Идентификатор партии.
         """
         result = self.app.http_method.get(link=f"{self.link}/{parcel_id}")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_parcel(self, op: str, parcel_id: str, order_id: str):
         r"""Метод редактирования партии.
@@ -61,8 +71,11 @@ class ApiParcel:
         else:
             raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_parcel_shipment_date(self, parcel_id: str, day: int):
         r"""Метод изменения даты доставки партии только для СД RussianPost.
@@ -79,8 +92,11 @@ class ApiParcel:
             }
         ]
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_orders_in_parcel(self, parcel_id):
         """Получение списка заказов в партии."""

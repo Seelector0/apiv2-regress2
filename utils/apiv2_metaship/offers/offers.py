@@ -43,4 +43,4 @@ class ApiOffers:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
         except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

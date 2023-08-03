@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange, randint
+import simplejson.errors
 import allure
 
 
@@ -135,8 +136,11 @@ class ApiOrder:
             ]
         }
         result = self.app.http_method.post(link=self.link, data=order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
                          delivery_sum: float = None, data: str = None, tariff: str = None, cod: float = None,
@@ -258,8 +262,11 @@ class ApiOrder:
             ]
         }
         result = self.app.http_method.post(link=self.link, data=multi_order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_import_order_format_russian_post(self, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS формата RussianPost.
@@ -279,8 +286,11 @@ class ApiOrder:
         else:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_import_order(self, delivery_services: str = None, file_extension: str = None):
         r"""Метод создания заказа из файла XLSX или XLS.
@@ -300,8 +310,11 @@ class ApiOrder:
         else:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}", data=order_from_file, files=file)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_search(self, query: str):
         r"""Метод поиска по заказам.
@@ -311,8 +324,11 @@ class ApiOrder:
             "query": query
         }
         result = self.app.http_method.get(link=f"{self.link}/search", params=search)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_orders(self):
         """Метод возвращает список заказов."""
@@ -325,12 +341,11 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}")
-        if result.status_code == 200:
+        try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        else:
-            pass
-        return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
         r"""Метод обновления заказа для СД RussianPost и LPost.
@@ -349,8 +364,11 @@ class ApiOrder:
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
         result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=put_order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
                     path: str = None):
@@ -399,8 +417,11 @@ class ApiOrder:
                 }
             ]
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_order_add_item(self, order_id: str, dimension: dict = None):
         r"""Метод добавление места в заказ. Для СД DPD старые места удаляются и добавляются новые
@@ -435,8 +456,11 @@ class ApiOrder:
             }
         ]
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_create_multy_order(self, order_id: str):
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
@@ -496,8 +520,11 @@ class ApiOrder:
             }
         ]
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delete_order(self, order_id: str):
         r"""Метод удаления заказа.
@@ -510,24 +537,33 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/patches")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_statuses(self, order_id: str):
         r"""Метод получение информации об истории изменения статусов заказа.
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/statuses")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_details(self, order_id: str):
         r"""Метод получение подробной информации о заказе.
         :param order_id: Идентификатор заказа.
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def getting_all_order_id_out_parcel(self):
         """Метод получения id всех заказов не в партии."""
