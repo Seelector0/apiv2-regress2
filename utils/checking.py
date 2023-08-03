@@ -91,4 +91,4 @@ class Checking:
     @staticmethod
     def check_response_is_not_empty(response: Response):
         with allure.step(title="Проверяю, что ответ не пустой"):
-            assert len(response.json()) != 0, f"Ответ {response.json()}"
+            assert len(response.json()) != 0, f"Failed Ответ: {response.json()}, длинна ответа {len(response.json())}"
