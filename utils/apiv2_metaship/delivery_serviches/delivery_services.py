@@ -105,17 +105,6 @@ class ApiDeliveryServices:
         except simplejson.errors.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def delivery_services_drh_logistic(self):
-        """Настройки подключения службы доставки DRH Logistic к магазину."""
-        drh_logistic = self.connection_type(delivery_service_code="Drhl")
-        drh_logistic["data"]["apiKey"] = f"{os.getenv('DRHL_API_TOKEN')}"
-        result = self.app.http_method.post(link=self.link_delivery_services(), data=drh_logistic)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
-
     def delivery_services_dpd(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки Dpd к магазину.
         :param aggregation: Тип подключения СД по агрегации.
