@@ -127,6 +127,21 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order_id
 
+    def get_order_delete(self, order_id):
+        r"""Метод возвращает удален заказ или нет (True - удалён, False - нет).
+        :param order_id: ID заказа.
+        """
+        db_list_order = []
+        cursor = self.metaship.connection_open().cursor()
+        try:
+            cursor.execute(query=f"""select deleted from {self.metaship.db_connections}."order"."order" """
+                                 f"""where id = '{order_id}' and user_id = '{self.metaship.user_id}'""")
+            for row in cursor:
+                db_list_order.append(*row)
+        finally:
+            cursor.close()
+        return db_list_order
+
     def wait_create_order(self, order_id):
         r"""Метод ждёт загрузки заказа по его id.
         :param order_id: ID заказа.

@@ -26,15 +26,22 @@ def test_create_warehouse(app):
     Checking.checking_json_value(response=get_new_warehouse, key_name="visibility", expected_value=True)
 
 
-@allure.description("Подключение настроек СД Boxberry")
+@allure.description("Подключение настроек СД Boxberry по агрегации")
 def test_integration_delivery_services(app):
-    boxberry = app.service.delivery_services_boxberry()
+    boxberry = app.service.delivery_services_boxberry(aggregation=True)
     Checking.check_status_code(response=boxberry, expected_status_code=201)
     Checking.checking_json_key(response=boxberry, expected_value=INFO.created_entity)
     get_boxberry = app.service.get_delivery_services_code(code="Boxberry")
     Checking.check_status_code(response=get_boxberry, expected_status_code=200)
     Checking.checking_json_value(response=get_boxberry, key_name="code", expected_value="Boxberry")
     Checking.checking_json_value(response=get_boxberry, key_name="credentials", field="visibility", expected_value=True)
+
+
+@allure.description("Модерация СД Boxberry")
+def test_moderation_delivery_services(admin):
+    moderation = admin.moderation.moderation_boxberry()
+    Checking.check_status_code(response=moderation, expected_status_code=200)
+    Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
 
 @allure.description("Получение списка ПВЗ СД Boxberry")
