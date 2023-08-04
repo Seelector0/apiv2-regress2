@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo сделать проверку удаления заказа через Базу данных.
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app):
     new_shop = app.shop.post_shop()
@@ -187,10 +184,12 @@ def test_patch_order_weight(app):
 
 
 @allure.description("Удаление заказа CД Boxberry")
-def test_delete_order(app):
+def test_delete_order(app, connections):
     random_order_id = choice(app.order.getting_all_order_id_out_parcel())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
+    Checking.check_value_comparison(one_value=connections.metaship.get_order_delete(order_id=random_order_id),
+                                    two_value=[True])
 
 
 @allure.description("Получения этикетки Boxberry вне партии")
