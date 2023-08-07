@@ -43,6 +43,19 @@ class DataBaseConnections:
             cursor.close()
         return db_list_warehouses
 
+    def get_list_warehouses_deleted(self, warehouse_id):
+        """Метод возвращает удален склад или нет (True - удалён, False - нет)"""
+        db_list_warehouses = []
+        cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(query=f"""select deleted from {self.metaship.db_connections}.customer.warehouse """
+                                 f"""where id = '{warehouse_id}' and user_id = '{self.metaship.user_id}'""")
+            for row in cursor:
+                db_list_warehouses.append(*row)
+        finally:
+            cursor.close()
+        return db_list_warehouses
+
     def delete_list_warehouses(self):
         """Метод чистит таблицу 'customer.warehouse'."""
         cursor = self.metaship.connection_open().cursor()
