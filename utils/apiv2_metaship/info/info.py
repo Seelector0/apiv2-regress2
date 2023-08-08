@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import requests.exceptions
 import simplejson.errors
 import datetime
 import allure
@@ -34,8 +35,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
         r"""Получение списка ПВЗ конкретной СД.
@@ -51,8 +52,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def info_vats(self, delivery_service_code: str):
         r"""Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД.
@@ -65,8 +66,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def intake_offices(self, delivery_service_code: str):
         r"""Получение списка точек сдачи.
@@ -79,8 +80,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def info_statuses(self):
         """Получение полного актуального списка возможных статусов заказа."""
@@ -88,8 +89,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def info_delivery_service_services(self, code: str):
         """Получение информации о дополнительных услугах поддерживаемых СД.
@@ -99,8 +100,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def user_clients(self):
         """Получение списка ключей."""
@@ -108,8 +109,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def user_clients_id(self, user_id: str):
         r"""Получение информации о ключе подключения по id.
@@ -119,8 +120,8 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def info_address(self, raw: str = "101000, г Москва"):
         r"""Разбор адреса.
@@ -133,5 +134,5 @@ class ApiInfo:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"API method Failed to Get offers\nResponse status code: {result.status_code}")
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

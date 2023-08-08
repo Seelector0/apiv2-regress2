@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange
+import requests.exceptions
 import simplejson.errors
 import allure
 
@@ -24,7 +25,7 @@ class ApiShop:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_shops(self):
@@ -33,7 +34,7 @@ class ApiShop:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_shop_id(self, shop_id: str):
@@ -44,7 +45,7 @@ class ApiShop:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def put_shop(self, shop_id: str, shop_name: str, shop_url: str, contact_person: str, phone: str):
@@ -79,5 +80,5 @@ class ApiShop:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

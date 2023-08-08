@@ -6,23 +6,31 @@ import pytest
 
 
 @allure.description("Создание магазина")
-def test_create_shop(app):
+def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-    get_new_shop = app.shop.get_shop_id(shop_id=new_shop.json()["id"])
-    Checking.check_status_code(response=get_new_shop, expected_status_code=200)
-    Checking.checking_json_value(response=get_new_shop, key_name="visibility", expected_value=True)
+    Checking.check_value_comparison(
+        one_value=connections.metaship.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
+        two_value=[False])
+    Checking.check_value_comparison(
+        one_value=connections.metaship.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
+        two_value=[True])
 
 
 @allure.description("Создание склада")
-def test_create_warehouse(app):
+def test_create_warehouse(app, connections):
     new_warehouse = app.warehouse.post_warehouse()
     Checking.check_status_code(response=new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
-    get_new_warehouse = app.warehouse.get_warehouse_id(warehouse_id=new_warehouse.json()["id"])
-    Checking.check_status_code(response=get_new_warehouse, expected_status_code=200)
-    Checking.checking_json_value(response=get_new_warehouse, key_name="visibility", expected_value=True)
+    Checking.check_value_comparison(
+        one_value=connections.metaship.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
+                                                                 value="deleted"),
+        two_value=[False])
+    Checking.check_value_comparison(
+        one_value=connections.metaship.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
+                                                                 value="visibility"),
+        two_value=[True])
 
 
 @allure.description("Подключение настроек СД YandexGo по агрегации")
@@ -66,10 +74,12 @@ def test_create_order_courier(app, execution_number, connections):
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
-    get_order_by_id = app.order.get_order_id(order_id=new_order.json()["id"])
-    Checking.check_status_code(response=get_order_by_id, expected_status_code=200)
-    Checking.checking_json_value(response=get_order_by_id, key_name="status", expected_value="created")
-    Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="succeeded")
+    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
+                                                                                        value="status"),
+                                    two_value=["created"])
+    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
+                                                                                        value="state"),
+                                    two_value=["succeeded"])
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД YandexGo")

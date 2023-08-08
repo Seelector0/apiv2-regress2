@@ -79,7 +79,7 @@ class Checking:
     @staticmethod
     def check_value_comparison(one_value, two_value):
         with allure.step(title="Проверка двух значений на равенство"):
-            assert one_value == two_value, f"FAILED! первое значение-{one_value}, второе значение-{two_value}"
+            assert one_value == two_value, f"FAILED! первое значение: {one_value}, второе значение: {two_value}"
 
     @staticmethod
     def check_delivery_services_in_widget_offers(response: Response, delivery_service: str):

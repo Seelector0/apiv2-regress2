@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import requests.exceptions
 import simplejson.errors
 import allure
 import os
@@ -43,7 +44,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_topdelivery(self):
@@ -58,7 +59,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_boxberry(self):
@@ -69,7 +70,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_cdek(self):
@@ -81,7 +82,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_dpd(self):
@@ -93,7 +94,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_five_post(self):
@@ -106,7 +107,7 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_yandex_go(self):
@@ -118,7 +119,22 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+
+    def moderation_yandex_delivery(self):
+        """Снятие с модерации СД YandexDelivery"""
+        yandex_delivery = self.moderation(delivery_service_code="YandexDelivery")
+        yandex_delivery["credential"]["yandexDeliveryToken"] = f"{os.getenv('YANDEX_TOKEN')}"
+        yandex_delivery["credential"]["inn"] = "7734381257"
+        yandex_delivery["credential"]["login"] = "ipiunov@gmail.com"
+        yandex_delivery["credential"]["password"] = "basxok-racgAm-9vapma"
+        result = self.admin.http_method.post(link=self.link, data=yandex_delivery, admin=True,
+                                             token=self.admin.admin_token())
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def moderation_dalli(self):
@@ -129,5 +145,5 @@ class ApiModerationDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

@@ -147,4 +147,5 @@ def test_delete_warehouse(app, connections):
     delete_warehouse = app.warehouse.delete_warehouse(warehouse_id=random_warehouse_id)
     Checking.check_status_code(response=delete_warehouse, expected_status_code=204)
     Checking.check_value_comparison(
-        one_value=connections.metaship.get_list_warehouses_deleted(warehouse_id=random_warehouse_id), two_value=[True])
+        one_value=connections.metaship.get_list_warehouses_value(warehouse_id=random_warehouse_id, value="deleted"),
+        two_value=[True])
