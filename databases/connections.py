@@ -13,7 +13,20 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {self.metaship.db_connections}.customer.shop """
-                                 f"""where shop.user_id = '{self.metaship.user_id}'""")
+                                 f"""where user_id = '{self.metaship.user_id}'""")
+            for row in cursor:
+                db_list_shops.append(*row)
+        finally:
+            cursor.close()
+        return db_list_shops
+
+    def get_list_shops_value(self, shop_id: str, value: str):
+        """Метод возвращает список поля из БД."""
+        db_list_shops = []
+        cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(query=f"""select {value} from {self.metaship.db_connections}.customer.shop """
+                                 f"""where id = '{shop_id}' and user_id = '{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_shops.append(*row)
         finally:
@@ -25,7 +38,7 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor()
         try:
             cursor.execute(query=f"""delete from {self.metaship.db_connections}.customer.shop """
-                                 f"""where shop.user_id = '{self.metaship.user_id}'""")
+                                 f"""where user_id = '{self.metaship.user_id}'""")
             cursor.connection.commit()
         finally:
             cursor.close()
@@ -36,19 +49,19 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {self.metaship.db_connections}.customer.warehouse """
-                                 f"""where warehouse.user_id = '{self.metaship.user_id}'""")
+                                 f"""where user_id = '{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_warehouses.append(*row)
         finally:
             cursor.close()
         return db_list_warehouses
 
-    def get_list_warehouses_deleted(self, warehouse_id):
+    def get_list_warehouses_value(self, warehouse_id: str, value: str):
         """Метод возвращает удален склад или нет (True - удалён, False - нет)"""
         db_list_warehouses = []
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
-            cursor.execute(query=f"""select deleted from {self.metaship.db_connections}.customer.warehouse """
+            cursor.execute(query=f"""select {value} from {self.metaship.db_connections}.customer.warehouse """
                                  f"""where id = '{warehouse_id}' and user_id = '{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_warehouses.append(*row)
@@ -125,14 +138,15 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order
 
-    def get_list_order_state(self, order_id):
+    def get_list_order_value(self, order_id: str, value: str):
         r"""Метод возвращает state заказа по его id.
         :param order_id: ID заказа.
+        :param value: Поле в БД.
         """
         db_list_order_id = []
         cursor = self.metaship.connection_open().cursor()
         try:
-            cursor.execute(query=f"""select state from {self.metaship.db_connections}."order"."order" """
+            cursor.execute(query=f"""select {value} from {self.metaship.db_connections}."order"."order" """
                                  f"""where id = '{order_id}' and user_id = '{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_order_id.append(*row)
@@ -140,30 +154,15 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order_id
 
-    def get_order_delete(self, order_id):
-        r"""Метод возвращает удален заказ или нет (True - удалён, False - нет).
-        :param order_id: ID заказа.
-        """
-        db_list_order = []
-        cursor = self.metaship.connection_open().cursor()
-        try:
-            cursor.execute(query=f"""select deleted from {self.metaship.db_connections}."order"."order" """
-                                 f"""where id = '{order_id}' and user_id = '{self.metaship.user_id}'""")
-            for row in cursor:
-                db_list_order.append(*row)
-        finally:
-            cursor.close()
-        return db_list_order
-
-    def wait_create_order(self, order_id):
+    def wait_create_order(self, order_id: str):
         r"""Метод ждёт загрузки заказа по его id.
         :param order_id: ID заказа.
         """
-        value = self.get_list_order_state(order_id=order_id)
+        value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
         while str(*value) != "succeeded" and counter < 120:
             time.sleep(1)
-            value = self.get_list_order_state(order_id=order_id)
+            value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
             if str(*value) in ["succeeded", "error"]:
                 break
@@ -201,7 +200,7 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
-    def delete_order_document(self, order_id):
+    def delete_order_document(self, order_id: str):
         r"""Метод чистит таблицу 'order.order_document'.
         :param order_id: ID заказа в БД.
         """
@@ -213,7 +212,7 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
-    def delete_order_parcel(self, parcel_id):
+    def delete_order_parcel(self, parcel_id: str):
         r"""Метод чистит таблицу 'order.order_parcel'.
         :param parcel_id: ID партии в БД.
         """
@@ -234,6 +233,19 @@ class DataBaseConnections:
             cursor.connection.commit()
         finally:
             cursor.close()
+
+    def get_list_intakes_value(self, intake_id: str, value):
+        """"""
+        db_list_intakes = []
+        cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(query=f"""select {value} from {self.metaship.db_connections}.intake.intake """
+                                 f"""where id = '{intake_id}' and user_id = '{self.metaship.user_id}'""")
+            for row in cursor:
+                db_list_intakes.append(*row)
+        finally:
+            cursor.close()
+        return db_list_intakes
 
     def delete_intakes(self):
         """Метод чистит таблицу 'intake.intake'."""
