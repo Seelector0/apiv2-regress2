@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import requests.exceptions
 import simplejson.errors
 import allure
 import os
@@ -48,7 +49,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_topdelivery(self, aggregation: bool = None):
@@ -67,7 +68,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_boxberry(self, aggregation: bool = None):
@@ -84,7 +85,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_cdek(self, aggregation: bool = None):
@@ -102,7 +103,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dpd(self, aggregation: bool = None):
@@ -120,7 +121,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_cse(self):
@@ -133,7 +134,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_five_post(self, aggregation: bool = None):
@@ -151,7 +152,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_svyaznoy(self):
@@ -176,7 +177,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_yandex_delivery(self, aggregation: bool = None):
@@ -193,7 +194,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dostavka_club(self):
@@ -205,7 +206,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dostavka_guru(self):
@@ -217,7 +218,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_l_post(self):
@@ -228,7 +229,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delivery_services_dalli(self, aggregation: bool = None):
@@ -244,7 +245,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_delivery_services(self):
@@ -253,7 +254,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_delivery_services_code(self, code: str):
@@ -264,7 +265,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_delivery_services(self, code: str, value: bool = True, tariffs: list = None):
@@ -296,7 +297,7 @@ class ApiDeliveryServices:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def activate_delivery_service(self, code: str):

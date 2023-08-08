@@ -1,4 +1,5 @@
 from random import randrange
+import requests.exceptions
 import simplejson.errors
 import allure
 
@@ -28,7 +29,7 @@ class ApiWarehouse:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_warehouses(self):
@@ -37,7 +38,7 @@ class ApiWarehouse:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_warehouse_id(self, warehouse_id: str):
@@ -48,7 +49,7 @@ class ApiWarehouse:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def put_warehouse(self, warehouse_id: str, name: str, pickup: bool, comment: str, l_post_warehouse_id: str,
@@ -100,7 +101,7 @@ class ApiWarehouse:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delete_warehouse(self, warehouse_id: str):

@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange, randint
+import requests.exceptions
 import simplejson.errors
 import allure
 
@@ -139,7 +140,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
@@ -265,7 +266,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_import_order_format_russian_post(self, file_extension: str = None):
@@ -289,7 +290,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_import_order(self, delivery_services: str = None, file_extension: str = None):
@@ -313,7 +314,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_search(self, query: str):
@@ -327,14 +328,17 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_orders(self):
         """Метод возвращает список заказов."""
         result = self.app.http_method.get(link=self.link)
-        with allure.step(title=f"Response: {result.json()}"):
-            return result
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_id(self, order_id: str):
         r"""Метод получения информации о заказе по его id.
@@ -344,7 +348,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
@@ -367,7 +371,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_order(self, order_id: str, name: str = None, price: float = None, count: int = None, weight: float = None,
@@ -420,7 +424,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_order_add_item(self, order_id: str, dimension: dict = None):
@@ -459,7 +463,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def patch_create_multy_order(self, order_id: str):
@@ -523,7 +527,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def delete_order(self, order_id: str):
@@ -540,7 +544,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_statuses(self, order_id: str):
@@ -551,7 +555,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_order_details(self, order_id: str):
@@ -562,7 +566,7 @@ class ApiOrder:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def getting_all_order_id_out_parcel(self):

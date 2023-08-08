@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+import requests.exceptions
 import simplejson.errors
 import allure
 
@@ -20,7 +21,7 @@ class ApiWidget:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_widget_tokens(self):
@@ -29,7 +30,7 @@ class ApiWidget:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_widget_tokens_id(self, widget_id: str):
@@ -40,5 +41,5 @@ class ApiWidget:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")

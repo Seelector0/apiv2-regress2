@@ -1,6 +1,7 @@
 from fixture.database import DataBase
 from random import randrange, randint
 from environment import ENV_OBJECT
+import requests.exceptions
 import simplejson.errors
 import datetime
 import allure
@@ -49,7 +50,7 @@ class ApiIntakes:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_intakes(self):
@@ -58,7 +59,7 @@ class ApiIntakes:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_intakes_id(self, intakes_id: str):
@@ -69,5 +70,5 @@ class ApiIntakes:
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
-        except simplejson.errors.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
