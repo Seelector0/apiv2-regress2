@@ -144,14 +144,16 @@ class ApiOrder:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                         delivery_sum: float = None, data: str = None, tariff: str = None, cod: float = None,
-                         delivery_point_code: str = None, pickup_time_period: str = None, delivery_time: dict = None,
-                         date_pickup: str = None, length: float = randint(10, 30), width: float = randint(10, 50),
-                         price: float = None, height: float = randint(10, 50), weight_1: float = randint(1, 5),
-                         vat: str = None, weight_2: float = randint(1, 5), barcode_1: str = None, barcode_2: str = None,
+                         barcode: str = None, delivery_sum: float = None, data: str = None, tariff: str = None,
+                         cod: float = None, delivery_point_code: str = None, pickup_time_period: str = None,
+                         delivery_time: dict = None, date_pickup: str = None, length: float = randint(10, 30),
+                         width: float = randint(10, 50), price: float = None, height: float = randint(10, 50),
+                         weight_1: float = randint(1, 5), vat: str = None, weight_2: float = randint(1, 5),
+                         barcode_1: str = None, barcode_2: str = None,
                          shop_number_1: str = f"{randrange(100000, 999999)}",
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
+        :param barcode: Штрихкод заказа в магазине.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
@@ -192,7 +194,7 @@ class ApiOrder:
             "shop": {
                 "id": str(self.database.metaship.get_list_shops()[0]),
                 "number": f"{randrange(1000000, 9999999)}",
-                "barcode": f"{randrange(100000000, 999999999)}",
+                "barcode": barcode,
             },
             "payment": {
                 "type": payment_type,

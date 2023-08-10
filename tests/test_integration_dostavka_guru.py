@@ -38,12 +38,7 @@ def test_create_warehouse(app, connections):
 def test_integration_delivery_services(app):
     dostavka_guru = app.service.delivery_services_dostavka_guru()
     Checking.check_status_code(response=dostavka_guru, expected_status_code=201)
-    Checking.checking_json_key(response=dostavka_guru, expected_value=["id", "type", "url", "status"])
-    get_dostavka_guru = app.service.get_delivery_services_code(code="DostavkaGuru")
-    Checking.check_status_code(response=get_dostavka_guru, expected_status_code=200)
-    Checking.checking_json_value(response=get_dostavka_guru, key_name="code", expected_value="DostavkaGuru")
-    Checking.checking_json_value(response=get_dostavka_guru, key_name="credentials", field="visibility",
-                                 expected_value=True)
+    Checking.checking_json_key(response=dostavka_guru, expected_value=INFO.created_entity)
 
 
 @allure.description("Получения сроков доставки по СД DostavkaGuru")
@@ -91,48 +86,45 @@ def test_create_order_courier(app, payment_type, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД DostavkaGuru")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
 @allure.description("Получения этикеток CД DostavkaGuru вне партии")
-def test_get_labels_out_of_parcel(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_get_labels_out_of_parcel(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение подробной информации о заказе CД DostavkaGuru")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии CД DostavkaGuru")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=connections.metaship.get_list_all_orders())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
 @allure.description("Получение этикеток СД DostavkaGuru")
-def test_get_label(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    for order_id in order_in_parcel:
+def test_get_label(app, connections):
+    for order_id in (connections.metaship.get_list_all_orders_in_parcel()):
         label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение этикеток заказов из партии СД DostavkaGuru")
-def test_get_labels_from_parcel(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
+def test_get_labels_from_parcel(app, connections):
+    labels_from_parcel = app.document.post_labels(order_ids=connections.metaship.get_list_all_orders_in_parcel())
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
 
 

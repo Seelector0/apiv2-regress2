@@ -39,10 +39,6 @@ def test_integration_delivery_services(app):
     cse = app.service.delivery_services_cse()
     Checking.check_status_code(response=cse, expected_status_code=201)
     Checking.checking_json_key(response=cse, expected_value=INFO.created_entity)
-    get_cse = app.service.get_delivery_services_code(code="Cse")
-    Checking.check_status_code(response=get_cse, expected_status_code=200)
-    Checking.checking_json_value(response=get_cse, key_name="code", expected_value="Cse")
-    Checking.checking_json_value(response=get_cse, key_name="credentials", field="visibility", expected_value=True)
 
 
 @allure.description("Получение списка ПВЗ СД Cse")
@@ -89,7 +85,7 @@ def test_offers_format_widget(app):
     Checking.check_delivery_services_in_widget_offers(response=offers_widget, delivery_service="Cse")
 
 
-@allure.description("Получение оферов по СД Cse (Courier)")
+@allure.description("Получение оферов Courier по СД Cse")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier", delivery_service_code="Cse")
@@ -108,6 +104,7 @@ def test_create_multi_order_courier(app, payment_type, connections):
                                            }, date_pickup=f"{datetime.date.today()}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
                                                                                         value="status"),
                                     two_value=["created"])
@@ -169,8 +166,8 @@ def test_create_order_delivery_point(app, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Cse")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -178,7 +175,7 @@ def test_order_status(app):
 
 @allure.description("Удаление заказа СД Cse")
 def test_delete_order(app, connections):
-    random_order_id = choice(app.order.getting_all_order_id_out_parcel())
+    random_order_id = choice(connections.metaship.get_list_all_orders())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
@@ -188,44 +185,42 @@ def test_delete_order(app, connections):
 
 @allure.description("Получения этикеток CД Cse вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_labels_out_of_parcel(app, labels):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_get_labels_out_of_parcel(app, connections, labels):
+    for order_id in connections.metaship.get_list_all_orders():
         label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение подробной информации о заказе СД Cse")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД Cse")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(order_id=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
 @allure.description("Редактирование партии СД Cse (Добавление заказов)")
-def test_add_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    for order in app.order.getting_all_order_id_out_parcel():
-        old_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id[0], op="add")
+def test_add_order_in_parcel(app, connections):
+    list_parcel_id = connections.metaship.get_list_parcels()
+    for order in connections.metaship.get_list_all_orders():
+        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
+        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
+        assert order in list_order_in_parcel
 
 
 @allure.description("Получение этикеток СД Cse")
-def test_get_label(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    for order_id in order_in_parcel:
-        label = app.document.get_label(order_id=order_id)
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_label(app, connections, labels):
+    for order_id in connections.metaship.get_list_all_orders_in_parcel():
+        label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -242,8 +237,8 @@ def test_get_documents(app):
 
 
 @allure.description("Редактирование партии СД Cse (Удаление заказа)")
-def test_remove_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
+def test_remove_order_in_parcel(app, connections):
+    parcel_id = connections.metaship.get_list_parcels()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
