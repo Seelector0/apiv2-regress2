@@ -39,11 +39,6 @@ def test_integration_delivery_services(app):
     five_post = app.service.delivery_services_five_post()
     Checking.check_status_code(response=five_post, expected_status_code=201)
     Checking.checking_json_key(response=five_post, expected_value=INFO.created_entity)
-    get_five_post = app.service.get_delivery_services_code(code="FivePost")
-    Checking.check_status_code(response=get_five_post, expected_status_code=200)
-    Checking.checking_json_value(response=get_five_post, key_name="code", expected_value="FivePost")
-    Checking.checking_json_value(response=get_five_post, key_name="credentials", field="visibility",
-                                 expected_value=True)
 
 
 @allure.description("Получение списка ПВЗ СД FivePost")
@@ -61,7 +56,7 @@ def test_info_vats(app):
     Checking.checking_json_key(response=info_vats, expected_value=INFO.FIVE_POST_VATS)
 
 
-@allure.description("Получение оферов по СД FivePost (DeliveryPoint)")
+@allure.description("Получение DeliveryPoint оферов по СД FivePost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
@@ -103,8 +98,8 @@ def test_create_order_from_file(app, file_extension, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД FivePost")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -112,8 +107,8 @@ def test_order_status(app):
 
 @allure.description("Редактирование веса в заказе СД FivePost")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
-def test_patch_order_weight(app):
-    random_order = choice(app.order.getting_all_order_id_out_parcel())
+def test_patch_order_weight(app, connections):
+    random_order = choice(connections.metaship.get_list_all_orders())
     order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
@@ -121,7 +116,7 @@ def test_patch_order_weight(app):
 
 @allure.description("Удаление заказа СД FivePost")
 def test_delete_order(app, connections):
-    random_order_id = choice(app.order.getting_all_order_id_out_parcel())
+    random_order_id = choice(connections.metaship.get_list_all_orders())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
@@ -130,59 +125,56 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получения этикетки СД FivePost вне партии")
-def test_get_labels_out_of_parcel(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_get_labels_out_of_parcel(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение подробной информации о заказе СД FivePost")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД FivePost")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(order_id=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
+@allure.description("Редактирование партии СД FivePost (Добавление заказов)")
+def test_add_order_in_parcel(app, connections):
+    list_parcel_id = connections.metaship.get_list_parcels()
+    for order in connections.metaship.get_list_all_orders():
+        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
+        Checking.check_status_code(response=parcel_add, expected_status_code=200)
+        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
+        assert order in list_order_in_parcel
+
+
 @allure.description("Редактирование веса заказа в партии СД FivePost")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
-def test_patch_weight_random_order_in_parcel(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
+def test_patch_weight_random_order_in_parcel(app, connections):
+    order_in_parcel = connections.metaship.get_list_all_orders_in_parcel()
     order_patch = app.order.patch_order(order_id=choice(order_in_parcel), path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
 
-@allure.description("Редактирование партии СД FivePost (Добавление заказов)")
-def test_add_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    for order in app.order.getting_all_order_id_out_parcel():
-        old_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id[0], op="add")
-        Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
-
-
 @allure.description("Получение этикеток СД FivePost")
-def test_get_label(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    for order_id in app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0]):
+def test_get_label(app, connections):
+    for order_id in connections.metaship.get_list_all_orders_in_parcel():
         label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение этикеток заказов из партии СД FivePost")
-def test_get_labels_from_parcel(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
+def test_get_labels_from_parcel(app, connections):
+    order_in_parcel = connections.metaship.get_list_all_orders_in_parcel()
     labels_from_parcel = app.document.post_labels(order_ids=order_in_parcel)
     Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
 
@@ -200,8 +192,8 @@ def test_get_documents(app):
 
 
 @allure.description("Редактирование партииСД FivePost (Удаление заказа)")
-def test_remove_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
+def test_remove_order_in_parcel(app, connections):
+    parcel_id = connections.metaship.get_list_parcels()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])

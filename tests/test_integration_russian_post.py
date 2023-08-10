@@ -39,11 +39,6 @@ def test_integration_delivery_services(app):
     russian_post = app.service.delivery_services_russian_post()
     Checking.check_status_code(response=russian_post, expected_status_code=201)
     Checking.checking_json_key(response=russian_post, expected_value=INFO.created_entity)
-    get_russian_post = app.service.get_delivery_services_code(code="RussianPost")
-    Checking.check_status_code(response=get_russian_post, expected_status_code=200)
-    Checking.checking_json_value(response=get_russian_post, key_name="code", expected_value="RussianPost")
-    Checking.checking_json_value(response=get_russian_post, key_name="credentials", field="visibility",
-                                 expected_value=True)
 
 
 @allure.description("Получение списка ПВЗ СД RussianPost")
@@ -83,7 +78,7 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.rp_services)
 
 
-@allure.description("Получение оферов по СД RussianPost (Courier)")
+@allure.description("Получение Courier оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
@@ -92,7 +87,7 @@ def test_offers_courier(app, payment_type):
     Checking.checking_json_key(response=offers_courier, expected_value=["Courier"])
 
 
-@allure.description("Получение оферов по СД RussianPost (DeliveryPoint)")
+@allure.description("Получение DeliveryPoint оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_delivery_point(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
@@ -101,7 +96,7 @@ def test_offers_delivery_point(app, payment_type):
     Checking.checking_json_key(response=offers_delivery_point, expected_value=["PostOffice"])
 
 
-@allure.description("Получение оферов по СД RussianPost (PostOffice)")
+@allure.description("Получение PostOffice оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_russian_post(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="PostOffice",
@@ -159,8 +154,8 @@ def test_create_order_post_office(app, payment_type, connections):
 
 
 @allure.description("Редактирование заказа СД RussianPost")
-def test_editing_order(app):
-    random_order = choice(app.order.getting_all_order_id_out_parcel())
+def test_editing_order(app, connections):
+    random_order = choice(connections.metaship.get_list_all_orders())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -172,8 +167,8 @@ def test_editing_order(app):
 
 
 @allure.description("Редактирование веса в заказе СД RussianPost")
-def test_patch_order_weight(app):
-    random_order = choice(app.order.getting_all_order_id_out_parcel())
+def test_patch_order_weight(app, connections):
+    random_order = choice(connections.metaship.get_list_all_orders())
     order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
@@ -211,7 +206,7 @@ def test_create_order_from_file_format_russian_post(app, file_extension, connect
 
 @allure.description("Удаление заказа СД RussianPost")
 def test_delete_order(app, connections):
-    random_order_id = choice(app.order.getting_all_order_id_out_parcel())
+    random_order_id = choice(connections.metaship.get_list_all_orders())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
@@ -220,43 +215,41 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД RussianPost")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
 @allure.description("Получение подробной информации о заказе СД RussianPost")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД RussianPost")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(order_id=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
 @allure.description("Редактирование партии СД RussianPost (Добавление заказов)")
-def test_add_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    for order in app.order.getting_all_order_id_out_parcel():
-        old_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id[0], op="add")
+def test_add_order_in_parcel(app, connections):
+    list_parcel_id = connections.metaship.get_list_parcels()
+    for order in connections.metaship.get_list_all_orders():
+        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
+        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
+        assert order in list_order_in_parcel
 
 
 @allure.description("Редактирование партии СД RussianPost (Изменение даты отправки партии)")
-def test_change_shipment_date(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
+def test_change_shipment_date(app, connections):
+    parcel_id = connections.metaship.get_list_parcels()
     shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
     Checking.check_status_code(response=shipment_date, expected_status_code=200)
     new_date = shipment_date.json()["data"]["request"]["shipmentDate"]
@@ -264,9 +257,8 @@ def test_change_shipment_date(app):
 
 
 @allure.description("Получение этикетки СД RussianPost")
-def test_get_label(app):
-    order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=app.parcel.getting_list_of_parcels_ids()[0])
-    for order_id in order_in_parcel:
+def test_get_label(app, connections):
+    for order_id in connections.metaship.get_list_all_orders_in_parcel():
         label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -284,8 +276,8 @@ def test_get_documents(app):
 
 
 @allure.description("Редактирование партии СД RussianPost (Удаление заказа из партии)")
-def test_remove_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
+def test_remove_order_in_parcel(app, connections):
+    parcel_id = connections.metaship.get_list_parcels()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
     parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
     new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])

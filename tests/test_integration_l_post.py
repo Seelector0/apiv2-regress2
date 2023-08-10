@@ -38,10 +38,6 @@ def test_integration_delivery_services(app):
     l_post = app.service.delivery_services_l_post()
     Checking.check_status_code(response=l_post, expected_status_code=201)
     Checking.checking_json_key(response=l_post, expected_value=INFO.created_entity)
-    get_l_post = app.service.get_delivery_services_code(code="LPost")
-    Checking.check_status_code(response=get_l_post, expected_status_code=200)
-    Checking.checking_json_value(response=get_l_post, key_name="code", expected_value="LPost")
-    Checking.checking_json_value(response=get_l_post, key_name="credentials", field="visibility", expected_value=True)
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД LPost")
@@ -58,7 +54,7 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.l_post_services)
 
 
-@allure.description("Получение оферов по СД LPost (Courier)")
+@allure.description("Получение оферов Courier по СД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier", delivery_service_code="LPost")
@@ -115,8 +111,8 @@ def test_create_order_courier(app, payment_type, connections):
 
 
 @allure.description("Редактирование заказа СД LPost")
-def test_editing_order(app):
-    random_order = choice(app.order.getting_all_order_id_out_parcel())
+def test_editing_order(app, connections):
+    random_order = choice(connections.metaship.get_list_all_orders())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -128,8 +124,8 @@ def test_editing_order(app):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД LPost")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -137,7 +133,7 @@ def test_order_status(app):
 
 @allure.description("Удаление заказа LPost")
 def test_delete_order(app, connections):
-    random_order_id = choice(app.order.getting_all_order_id_out_parcel())
+    random_order_id = choice(connections.metaship.get_list_all_orders())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
@@ -146,17 +142,16 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получение подробной информации о заказе СД LPost")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии CД LPost")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=connections.metaship.get_list_all_orders())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 

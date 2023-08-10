@@ -78,7 +78,7 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
 
 
-@allure.description("Получение оферов по СД Dalli (Courier)")
+@allure.description("Получение Courier оферов по СД Dalli")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
     offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier",
@@ -144,8 +144,8 @@ def test_create_order_courier(app,  payment_type, connections):
 
 
 @allure.description("Редактирование заказа СД Dalli")
-def test_editing_order(app):
-    random_order = choice(app.order.getting_all_order_id_out_parcel())
+def test_editing_order(app, connections):
+    random_order = choice(connections.metaship.get_list_all_orders())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -157,45 +157,42 @@ def test_editing_order(app):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Dalli")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
 @allure.description("Получение подробной информации о заказе СД Dalli")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии СД Dalli")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
-    create_parcel = app.parcel.post_parcel(order_id=choice(orders_id))
+def test_create_parcel(app, connections):
+    create_parcel = app.parcel.post_parcel(order_id=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
 
 @allure.description("Редактирование партии СД Dalli (Добавление заказов)")
-def test_add_order_in_parcel(app):
-    parcel_id = app.parcel.getting_list_of_parcels_ids()
-    for order in app.order.getting_all_order_id_out_parcel():
-        old_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id[0], op="add")
+def test_add_order_in_parcel(app, connections):
+    list_parcel_id = connections.metaship.get_list_parcels()
+    for order in connections.metaship.get_list_all_orders():
+        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        new_list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-        Checking.checking_sum_len_lists(old_list=old_list_order_in_parcel, new_list=new_list_order_in_parcel)
+        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
+        assert order in list_order_in_parcel
 
 
 @allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A6")
 @pytest.mark.parametrize("format_", ["A4", "A6"])
-def test_get_original_labels(app, format_):
-    order_in_parcel = app.order.getting_all_order_in_parcel()
-    for order_id in order_in_parcel:
+def test_get_original_labels(app, connections, format_):
+    for order_id in connections.metaship.get_list_all_orders_in_parcel():
         label = app.document.get_label(order_id=order_id, size_format=format_)
         Checking.check_status_code(response=label, expected_status_code=200)
 

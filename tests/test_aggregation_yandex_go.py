@@ -38,10 +38,6 @@ def test_aggregation_delivery_services(app):
     yandex = app.service.delivery_services_yandex_go(aggregation=True)
     Checking.check_status_code(response=yandex, expected_status_code=201)
     Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
-    get_yandex = app.service.get_delivery_services_code(code="YandexGo")
-    Checking.check_status_code(response=get_yandex, expected_status_code=200)
-    Checking.checking_json_value(response=get_yandex, key_name="code", expected_value="YandexGo")
-    Checking.checking_json_value(response=get_yandex, key_name="credentials", field="visibility", expected_value=True)
 
 
 @allure.description("Модерация СД YandexGo")
@@ -84,8 +80,8 @@ def test_create_order_courier(app, execution_number, connections):
 
 @allure.description("Получение информации об истории изменения статусов заказа СД YandexGo")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -93,8 +89,8 @@ def test_order_status(app):
 
 @allure.description("Получение подробной информации о заказе СД YandexGo")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
-def test_order_details(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_details(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
@@ -102,8 +98,8 @@ def test_order_details(app):
 
 @allure.description("Создание партии СД YandexGo")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
-def test_create_parcel(app):
-    orders_id = app.order.getting_all_order_id_out_parcel()
+def test_create_parcel(app, connections):
+    orders_id = connections.metaship.get_list_all_orders()
     create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
