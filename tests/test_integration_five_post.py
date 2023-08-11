@@ -85,7 +85,7 @@ def test_create_delivery_point(app, payment_type, connections):
 @allure.description("Создание заказа из файла СД FivePost")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
-    new_orders = app.order.post_import_order(delivery_services="five_post", file_extension=file_extension)
+    new_orders = app.order.post_import_order(name="five_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])

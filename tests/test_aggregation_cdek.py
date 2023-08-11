@@ -197,7 +197,7 @@ def test_create_order_delivery_point(app, payment_type, connections):
 @allure.description("Создание заказа из файла СД Cdek")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
-    new_orders = app.order.post_import_order(delivery_services="cdek", file_extension=file_extension)
+    new_orders = app.order.post_import_order(name="cdek", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])
@@ -211,7 +211,7 @@ def test_create_order_from_file(app, file_extension, connections):
 
 @allure.description("Редактирование заказа СД Cdek")
 def test_editing_order(app, connections):
-    random_order_id = choice(app.order.getting_single_order_id_out_parcel())
+    random_order_id = choice(app.order.get_single_order_id_out_parcel())
     patch_order = app.order.patch_order(order_id=random_order_id, name="Пуфик", price=500, count=2, weight=2)
     Checking.check_status_code(response=patch_order, expected_status_code=200)
     connections.metaship.wait_create_order(order_id=random_order_id)
@@ -228,7 +228,7 @@ def test_editing_order(app, connections):
 
 @allure.description("Редактирование веса в заказе СД Cdek")
 def test_patch_order_weight(app, connections):
-    random_order_id = choice(app.order.getting_single_order_id_out_parcel())
+    random_order_id = choice(app.order.get_single_order_id_out_parcel())
     order_patch = app.order.patch_order(order_id=random_order_id, path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     connections.metaship.wait_create_order(order_id=random_order_id)
@@ -237,8 +237,8 @@ def test_patch_order_weight(app, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Cdek")
-def test_order_status(app):
-    for order_id in app.order.getting_all_order_id_out_parcel():
+def test_order_status(app, connections):
+    for order_id in connections.metaship.get_list_all_orders():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -297,7 +297,7 @@ def test_add_order_in_parcel(app, connections):
 
 @allure.description("Редактирование веса заказа в партии СД Cdek")
 def test_patch_weight_random_order_in_parcel(app, connections):
-    order_in_parcel = app.order.getting_single_order_in_parcel()
+    order_in_parcel = app.order.get_single_order_id_in_parcel()
     order_patch = app.order.patch_order(order_id=choice(order_in_parcel), path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     connections.metaship.wait_create_order(order_id=order_patch.json()["id"])

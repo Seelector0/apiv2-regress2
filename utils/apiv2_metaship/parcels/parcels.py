@@ -83,7 +83,7 @@ class ApiParcel:
         :param parcel_id: Идентификатор партии.
         :param day: Количество дней.
         """
-        data: datetime.date = datetime.date.today()
+        data = datetime.date.today()
         data += datetime.timedelta(days=day)
         patch_parcel = [
             {

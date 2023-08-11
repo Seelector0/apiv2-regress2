@@ -177,7 +177,7 @@ def test_create_order_delivery_point(app, payment_type, connections):
 
 @allure.description("Создание многоместного заказа из одноместного")
 def test_patch_single_order(app):
-    list_order_id = app.order.getting_single_order_id_out_parcel()
+    list_order_id = app.order.get_single_order_id_out_parcel()
     random_order_id = choice(list_order_id)
     single_order = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=single_order, expected_status_code=200)
@@ -192,7 +192,7 @@ def test_patch_single_order(app):
 @allure.description("Создание заказа из файла СД TopDelivery")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
-    new_order = app.order.post_import_order(delivery_services="topdelivery", file_extension=file_extension)
+    new_order = app.order.post_import_order(name="topdelivery", file_extension=file_extension)
     Checking.check_status_code(response=new_order, expected_status_code=200)
     for order in new_order.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])

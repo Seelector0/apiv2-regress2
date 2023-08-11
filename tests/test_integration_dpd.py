@@ -207,7 +207,7 @@ def test_order_status(app, connections):
 
 @allure.description("Редактирование веса в заказе СД Dpd")
 def test_patch_order_weight(app):
-    random_order = choice(app.order.getting_single_order_id_out_parcel())
+    random_order = choice(app.order.get_single_order_id_out_parcel())
     order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)

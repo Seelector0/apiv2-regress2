@@ -181,10 +181,10 @@ def test_patch_order_weight(app, connections):
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
 
-@allure.description("Создание заказа из файла СД RussianPost")
+@allure.description("Создание заказа из файла")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
-    new_orders = app.order.post_import_order(delivery_services="russian_post", file_extension=file_extension)
+    new_orders = app.order.post_import_order(name="russian_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])
@@ -196,10 +196,10 @@ def test_create_order_from_file(app, file_extension, connections):
                                         two_value=["succeeded"])
 
 
-@allure.description("Создание заказа из файла формата RussianPost")
+@allure.description("Создание заказа из файла формата СД RussianPost")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file_format_russian_post(app, file_extension, connections):
-    new_orders = app.order.post_import_order_format_russian_post(file_extension=file_extension)
+    new_orders = app.order.post_import_order(name="format_russian_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])
