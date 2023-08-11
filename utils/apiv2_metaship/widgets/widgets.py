@@ -12,8 +12,10 @@ class ApiWidget:
         self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "widget/tokens"
 
-    def post_widget_tokens(self, shop_id):
-        """Создание токена для виджета."""
+    def post_widget_tokens(self, shop_id: str):
+        r"""Создание токена для виджета.
+        :param shop_id: Id магазина из БД.
+        """
         body = {
             "shopId": shop_id
         }
