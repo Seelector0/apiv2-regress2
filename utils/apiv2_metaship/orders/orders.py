@@ -23,50 +23,33 @@ class ApiOrder:
         """
         return [("file", (f"{file}", open(file=f"folder_with_orders/{file}", mode="rb"), method))]
 
-    def post_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, price_1: float = None,
-                   price_2: float = None, price_3: float = None, barcode: str = None, delivery_sum: float = None,
-                   data: str = None, delivery_time: dict = None, length: float = randint(10, 30), cod: float = None,
-                   width: float = randint(10, 50), height: float = randint(10, 50), weight: float = randint(1, 5),
-                   delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None, tariff: str = None, vat: str = None, items_declared_value: int = None):
-        r"""Метод создания одноместного заказа.
+    def body_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
+                   cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
+                   height: float = randint(10, 50), weight: float = randint(1, 5), tariff: str = None,
+                   delivery_sum: float = None, data: str = None, delivery_time: dict = None,
+                   delivery_point_code: str = None,  pickup_time_period: str = None, date_pickup: str = None,
+                   routes: list = None,):
+        r"""Тело для создания заказов.
+        :param barcode: Штрих код заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
-        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
-        :param service: Код СД.
-        :param price_1: Цена первой товарной позиции.
-        :param price_2: Цена второй товарной позиции.
-        :param price_3: Цена третий товарной позиции.
-        :param barcode: Штрих код заказа.
-        :param data: Дата доставки.
-        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param length: Длинна.
         :param width: Ширина.
         :param height: Высота.
-        :param weight: Вес товарной позиции.
-        :param vat: Ставка НДС.
+        :param weight: Вес всего заказа.
+        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param service: Код СД.
+        :param tariff: Тариф создания заказа.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
-        :param date_pickup: Временной интервал
+        :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
-        :param tariff: Тариф создания заказа.
-        :param items_declared_value: Цена товарной позиции.
         """
-        if delivery_sum is None:
-            delivery_sum = 100.24
-        if price_1 is None:
-            price_1 = 1000
-        if price_2 is None:
-            price_2 = 1000
-        if price_3 is None:
-            price_3 = 1000
-        if vat is None:
-            vat = "0"
-        if cod:
-            cod = delivery_sum + price_1 + price_2 + price_3
-        order = {
+        payload = {
             "warehouse": {
                 "id": str(self.database.metaship.get_list_warehouses()[0]),
             },
@@ -77,7 +60,7 @@ class ApiOrder:
             },
             "payment": {
                 "type": payment_type,
-                "declaredValue": declared_value + price_1 + price_2 + price_3,
+                "declaredValue": declared_value,
                 "deliverySum": delivery_sum,
                 "cod": cod
             },
@@ -86,7 +69,7 @@ class ApiOrder:
                 "width": width,
                 "height": height
             },
-            "weight": 0 + weight,
+            "weight": weight,
             "delivery": {
                 "type": type_ds,
                 "service": service,
@@ -108,42 +91,82 @@ class ApiOrder:
             "comment": "",
             "pickupTimePeriod": pickup_time_period,
             "datePickup": date_pickup,
-            "routes": routes,
-            "places": [
-                {
-                    "items": [
-                        {
-                            "article": f"ART_1{randrange(1000000, 9999999)}",
-                            "name": "Стол",
-                            "price": price_1,
-                            "count": 1,
-                            "weight": weight,
-                            "vat": vat,
-                            "declaredValue": items_declared_value,
-                        },
-                        {
-                            "article": f"ART_2{randrange(1000000, 9999999)}",
-                            "name": "Стол",
-                            "price": price_1,
-                            "count": 1,
-                            "weight": weight,
-                            "vat": vat,
-                            "declaredValue": items_declared_value,
-                        },
-                        {
-                            "article": f"ART_3{randrange(1000000, 9999999)}",
-                            "name": "Стол",
-                            "price": price_3,
-                            "count": 1,
-                            "weight": weight,
-                            "vat": vat,
-                            "declaredValue": items_declared_value,
-                        }
-                    ]
-                }
-            ]
+            "routes": routes
         }
-        result = self.app.http_method.post(link=self.link, data=order)
+        return payload
+
+    def post_single_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
+                          barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
+                          length: float = randint(10, 30), width: float = randint(10, 50),
+                          height: float = randint(10, 50), tariff: str = None, data: str = None,
+                          delivery_time: dict = None, delivery_point_code: str = None, pickup_time_period: str = None,
+                          date_pickup: str = None, routes: list = None, price_1: float = 1000, price_2: float = 1000,
+                          price_3: float = 1000, items_declared_value: int = None):
+        r"""Метод создания одноместного заказа.
+        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
+        :param declared_value: Объявленная стоимость.
+        :param delivery_sum: Стоимость доставки.
+        :param cod: Наложенный платеж, руб.
+        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param service: Код СД.
+        :param price_1: Цена первой товарной позиции.
+        :param price_2: Цена второй товарной позиции.
+        :param price_3: Цена третий товарной позиции.
+        :param barcode: Штрих код заказа.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param length: Длинна.
+        :param width: Ширина.
+        :param height: Высота.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param pickup_time_period: Дата привоза на склад.
+        :param date_pickup: Временной интервал.
+        :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
+        :param tariff: Тариф создания заказа.
+        :param items_declared_value: Цена товарной позиции.
+        """
+        single_order = self.body_order(barcode=barcode, payment_type=payment_type,
+                                       declared_value=declared_value + price_1 + price_2 + price_3,
+                                       delivery_sum=delivery_sum, cod=cod,
+                                       length=length, width=width, height=height,
+                                       type_ds=type_ds, service=service, tariff=tariff, data=data,
+                                       delivery_time=delivery_time, delivery_point_code=delivery_point_code,
+                                       pickup_time_period=pickup_time_period, date_pickup=date_pickup, routes=routes)
+
+        single_order["places"] = [
+            {
+                "items": [
+                    {
+                        "article": f"ART_1{randrange(1000000, 9999999)}",
+                        "name": "Стол",
+                        "price": price_1,
+                        "count": 1,
+                        "weight": 1,
+                        "vat": "10",
+                        "declaredValue": items_declared_value,
+                    },
+                    {
+                        "article": f"ART_2{randrange(1000000, 9999999)}",
+                        "name": "Стол",
+                        "price": price_2,
+                        "count": 1,
+                        "weight": 1,
+                        "vat": "10",
+                        "declaredValue": items_declared_value,
+                    },
+                    {
+                        "article": f"ART_3{randrange(1000000, 9999999)}",
+                        "name": "Стол",
+                        "price": price_3,
+                        "count": 1,
+                        "weight": 1,
+                        "vat": "10",
+                        "declaredValue": items_declared_value,
+                    }
+                ]
+            }
+        ]
+        result = self.app.http_method.post(link=self.link, data=single_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -572,16 +595,7 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def getting_all_order_id_out_parcel(self):
-        """Метод получения id всех заказов не в партии."""
-        list_orders_id = []
-        order_list = self.get_orders()
-        for order in order_list.json():
-            if order["status"] == "created":
-                list_orders_id.append(order["id"])
-        return list_orders_id
-
-    def getting_single_order_id_out_parcel(self):
+    def get_single_order_id_out_parcel(self):
         """Метод получения id одноместных заказов не в партии"""
         list_orders_id = []
         list_orders = self.get_orders()
@@ -590,29 +604,11 @@ class ApiOrder:
                 list_orders_id.append(order["id"])
         return list_orders_id
 
-    def getting_multi_order_id_out_parcel(self):
-        """Метод получения id многоместных заказов не в партии"""
-        list_orders_id = []
-        list_orders = self.get_orders()
-        for order in list_orders.json():
-            if order["status"] == "created" and len(order["data"]["request"]["places"]) > 1:
-                list_orders_id.append(order["id"])
-        return list_orders_id
-
-    def getting_single_order_in_parcel(self):
+    def get_single_order_id_in_parcel(self):
         """Метод получения id одноместных заказов в партии"""
         list_orders_id = []
         list_orders = self.get_orders()
         for order in list_orders.json():
             if order["status"] == "wait-delivery" and len(order["data"]["request"]["places"]) == 1:
-                list_orders_id.append(order["id"])
-        return list_orders_id
-
-    def getting_all_order_in_parcel(self):
-        """Метод получения id всех заказов в партии."""
-        list_orders_id = []
-        order_list = self.get_orders()
-        for order in order_list.json():
-            if order["status"] == "wait-delivery":
                 list_orders_id.append(order["id"])
         return list_orders_id
