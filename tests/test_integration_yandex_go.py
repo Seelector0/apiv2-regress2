@@ -58,8 +58,8 @@ def test_info_statuses(app):
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 @pytest.mark.parametrize("execution_number", range(2))
 def test_create_order_courier(app, execution_number, connections):
-    new_order = app.order.post_order(payment_type="Paid", type_ds="Courier", service="YandexGo", declared_value=0,
-                                     delivery_sum=0)
+    new_order = app.order.post_single_order(payment_type="Paid", type_ds="Courier", service="YandexGo",
+                                            declared_value=0, delivery_sum=0)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])

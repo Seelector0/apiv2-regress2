@@ -164,8 +164,8 @@ def test_patch_multi_order(app, connections):
 @allure.description("Создание Courier заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, payment_type, connections):
-    new_order = app.order.post_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
-                                     tariff=choice(INFO.cdek_courier_tariffs), declared_value=500)
+    new_order = app.order.post_single_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
+                                            tariff=choice(INFO.cdek_courier_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])
@@ -180,9 +180,9 @@ def test_create_order_courier(app, payment_type, connections):
 @allure.description("Создание DeliveryPoint заказа по CД СДЭК")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, payment_type, connections):
-    new_order = app.order.post_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
-                                     tariff=choice(INFO.cdek_ds_tariffs), delivery_point_code="VNG2",
-                                     declared_value=500)
+    new_order = app.order.post_single_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
+                                            tariff=choice(INFO.cdek_ds_tariffs), delivery_point_code="VNG2",
+                                            declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])

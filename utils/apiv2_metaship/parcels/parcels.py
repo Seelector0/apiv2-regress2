@@ -106,11 +106,3 @@ class ApiParcel:
         for order in parcel_list.json()["data"]["request"]["orderIds"]:
             order_in_parcel.append(order)
         return order_in_parcel
-
-    def getting_list_of_parcels_ids(self):
-        """Получение списка id партий."""
-        list_parcel_id = []
-        parcel_list = self.get_parcels()
-        for parcel_id in parcel_list.json():
-            list_parcel_id.append(parcel_id["id"])
-        return list_parcel_id
