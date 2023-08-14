@@ -190,7 +190,7 @@ class DataBaseConnections:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
-            if str(*value) in ["succeeded", "error"]:
+            if str(*value) in ["succeeded", "error", "failed"]:
                 break
 
     def delete_list_orders(self):
