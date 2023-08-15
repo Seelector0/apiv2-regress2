@@ -92,6 +92,17 @@ class ApiInfo:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
+    def get_tariffs(self, code):
+        r"""Получение информации о тарифах поддерживаемых СД
+        :param code: Код СД.
+        """
+        result = self.app.http_method.get(link=f"info/{code}/tariffs")
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+
     def info_delivery_service_services(self, code: str):
         """Получение информации о дополнительных услугах поддерживаемых СД.
         :param code: Код СД.
