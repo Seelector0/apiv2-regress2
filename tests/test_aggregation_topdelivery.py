@@ -192,7 +192,7 @@ def test_patch_single_order(app):
 @allure.description("Создание заказа из файла СД TopDelivery")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
-    new_order = app.order.post_import_order(name="topdelivery", file_extension=file_extension)
+    new_order = app.order.post_import_order_format_metaship(code="topdelivery", file_extension=file_extension)
     Checking.check_status_code(response=new_order, expected_status_code=200)
     for order in new_order.json().values():
         connections.metaship.wait_create_order(order_id=order["id"])
