@@ -98,8 +98,8 @@ def test_offers_delivery_point(app, payment_type):
 def test_create_multi_order_courier(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="Courier", service="Dpd",
-                                           tariff=choice(INFO.dpd_courier_tariffs),
-                                           date_pickup=f"{tomorrow}", pickup_time_period="9-18", declared_value=1500,
+                                           tariff=choice(INFO.dpd_courier_tariffs), date_pickup=f"{tomorrow}",
+                                           pickup_time_period="9-18", declared_value=500,
                                            barcode_1=f"{randrange(1000000, 9999999)}",
                                            barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
@@ -118,8 +118,8 @@ def test_create_multi_order_delivery_point(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_multi_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                            tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{tomorrow}",
-                                           pickup_time_period="9-18", delivery_point_code="007K", declared_value=1500,
-                                           barcode_1=f"{randrange(1000000, 9999999)}",
+                                           pickup_time_period="9-18", delivery_point_code="007K",
+                                           declared_value=500, barcode_1=f"{randrange(1000000, 9999999)}",
                                            barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
@@ -184,9 +184,8 @@ def test_create_order_delivery_point(app, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     new_order = app.order.post_single_order(payment_type="Paid", type_ds="DeliveryPoint", service="Dpd",
                                             barcode=f"{randrange(100000000, 999999999)}",
-                                            tariff=choice(INFO.dpd_ds_tariffs),
-                                            date_pickup=f"{tomorrow}", pickup_time_period="9-18",
-                                            delivery_point_code="007K", declared_value=500)
+                                            tariff=choice(INFO.dpd_ds_tariffs), date_pickup=f"{tomorrow}",
+                                            pickup_time_period="9-18", delivery_point_code="007K", declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.metaship.wait_create_order(order_id=new_order.json()["id"])

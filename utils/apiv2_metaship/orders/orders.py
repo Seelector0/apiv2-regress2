@@ -173,127 +173,75 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                         barcode: str = None, delivery_sum: float = None, data: str = None, tariff: str = None,
-                         cod: float = None, delivery_point_code: str = None, pickup_time_period: str = None,
-                         delivery_time: dict = None, date_pickup: str = None, length: float = randint(10, 30),
-                         width: float = randint(10, 50), price: float = None, height: float = randint(10, 50),
-                         weight_1: float = randint(1, 5), vat: str = None, weight_2: float = randint(1, 5),
-                         barcode_1: str = None, barcode_2: str = None,
-                         shop_number_1: str = f"{randrange(100000, 999999)}",
+    def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, tariff: str = None,
+                         data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
+                         date_pickup: str = None, pickup_time_period: str = None, price_1: float = 1000,
+                         weight_1: float = randint(1, 5), barcode_1: str = None, delivery_sum: float = 100.24,
+                         cod: float = None, shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
+                         weight_2: float = randint(1, 5), barcode_2: str = None,
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
-        :param barcode: Штрихкод заказа в магазине.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
         :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
+        :param price_1: Цена первого грузоместа.
+        :param weight_1: Вес первого грузоместа.
+        :param barcode_1: Штрих-код первого грузоместа.
+        :param shop_number_1: Номер в магазине первого грузоместа.
+        :param price_2: Цена первого грузо места.
+        :param weight_2: Вес первого грузо места.
+        :param barcode_2: Штрих-код первого грузоместа.
+        :param shop_number_2: Номер в магазине первого грузоместа.
+        :param dimension: Габариты грузо мест.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
-        :param length: Длинна.
-        :param width: Ширина.
-        :param height: Высота.
         :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
         :param tariff: Тариф создания заказа.
-        :param price: Цена товарной позиции.
-        :param weight_1: Вес первого места в заказе.
-        :param weight_2: Вес второго места в заказе.
-        :param vat: Ставка НДС.
-        :param shop_number_1: Номер в магазине первого места в заказе.
-        :param shop_number_2: Номер в магазине второго места в заказе.
-        :param barcode_1: Штрих код грузо-места 1.
-        :param barcode_2: Штрих код грузо-места 2.
-        :param dimension: Габариты места заказа.
         """
-        if delivery_sum is None:
-            delivery_sum = 200
-        if price is None:
-            price = 1000
-        if vat is None:
-            vat = "0"
-        if cod:
-            cod = delivery_sum + price * 2
-        multi_order = {
-            "warehouse": {
-                "id": str(self.database.metaship.get_list_warehouses()[0]),
+        multi_order = self.body_order(payment_type=payment_type, declared_value=declared_value + price_1 + price_2,
+                                      delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
+                                      tariff=tariff, data=data, delivery_time=delivery_time,
+                                      delivery_point_code=delivery_point_code, date_pickup=date_pickup,
+                                      pickup_time_period=pickup_time_period)
+        multi_order["places"] = [
+            {
+                "items": [
+                    {
+                        "article": f"ART_1{randrange(1000000, 9999999)}",
+                        "name": "Стол",
+                        "price": price_1,
+                        "count": 1,
+                        "weight": weight_1,
+                        "vat": "10"
+                    }
+                ],
+                "barcode": barcode_1,
+                "shopNumber": shop_number_1,
+                "weight": weight_1,
+                "dimension": dimension
             },
-            "shop": {
-                "id": str(self.database.metaship.get_list_shops()[0]),
-                "number": f"{randrange(1000000, 9999999)}",
-                "barcode": barcode,
-            },
-            "payment": {
-                "type": payment_type,
-                "declaredValue": declared_value,
-                "deliverySum": delivery_sum,
-                "cod": cod
-            },
-            "dimension": {
-                "length": length,
-                "width": width,
-                "height": height
-            },
-            "weight": weight_1 + weight_2,
-            "delivery": {
-                "type": type_ds,
-                "deliveryPointCode": delivery_point_code,
-                "service": service,
-                "tariff": tariff,
-                "date": data,
-                "time": delivery_time
-            },
-            "recipient": {
-                "familyName": "Иванов",
-                "firstName": "Иван",
-                "secondName": "Иванович",
-                "email": "test@mail.ru",
-                "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
-                "address": {
-                    "raw": "603000, Нижегородская обл, г Нижний Новгород, ул Большая Покровская, д 4"
-                }
-            },
-            "comment": "",
-            "pickupTimePeriod": pickup_time_period,
-            "datePickup": date_pickup,
-            "places": [
-                {
-                    "items": [
-                        {
-                            "article": f"ART1{randrange(1000000, 9999999)}",
-                            "name": "Стол",
-                            "price": price,
-                            "count": 1,
-                            "weight": weight_1,
-                            "vat": vat
-                        }
-                    ],
-                    "barcode": barcode_1,
-                    "shopNumber": shop_number_1,
-                    "weight": weight_1,
-                    "dimension": dimension
-                },
-                {
-                    "items": [
-                        {
-                            "article": f"ART2{randrange(1000000, 9999999)}",
-                            "name": "Стул",
-                            "price": price,
-                            "count": 1,
-                            "weight": weight_2,
-                            "vat": vat
-                        }
-                    ],
-                    "barcode": barcode_2,
-                    "shopNumber": shop_number_2,
-                    "weight": weight_2,
-                    "dimension": dimension
-                }
-            ]
-        }
+            {
+                "items": [
+                    {
+                        "article": f"ART_2{randrange(1000000, 9999999)}",
+                        "name": "Стул",
+                        "price": price_2,
+                        "count": 1,
+                        "weight": weight_2,
+                        "vat": "10"
+                    }
+                ],
+                "barcode": barcode_2,
+                "shopNumber": shop_number_2,
+                "weight": weight_2,
+                "dimension": dimension
+            }
+        ]
         result = self.app.http_method.post(link=self.link, data=multi_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
