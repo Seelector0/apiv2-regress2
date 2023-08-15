@@ -270,14 +270,14 @@ class ApiDeliveryServices:
 
     @staticmethod
     def body_patch_delivery_service(path: str, value):
-        body_patch = [
+        payload = [
             {
                 "op": "replace",
                 "path": path,
                 "value": value
             }
         ]
-        return body_patch
+        return payload
 
     def patch_delivery_services_tariffs(self, code: str, tariffs):
         patch = self.body_patch_delivery_service(path="settings.tariffs", value={

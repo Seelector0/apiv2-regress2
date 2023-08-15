@@ -364,14 +364,14 @@ class ApiOrder:
         :param path: Изменяемое поле.
         :param value: Значение.
         """
-        body_patch = [
+        payload = [
             {
                 "op": "replace",
                 "path": path,
                 "value": value
             }
         ]
-        return body_patch
+        return payload
 
     def patch_order_weight(self, order_id: str, weight: int):
         r"""Редактирование веса в заказе
