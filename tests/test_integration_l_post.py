@@ -67,14 +67,14 @@ def test_offers_courier(app, payment_type):
 def test_create_multi_order_courier(app, payment_type, connections):
     if payment_type == "Paid":
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=0, delivery_sum=0, price=0, dimension={
+                                               declared_value=0, delivery_sum=0, price_1=0, price_2=0, dimension={
                                                     "length": randint(10, 30),
                                                     "width": randint(10, 30),
                                                     "height": randint(10, 30)
                                                })
     else:
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=1500, price=1000, dimension={
+                                               declared_value=500, price_1=1000, price_2=1000, dimension={
                                                     "length": randint(10, 30),
                                                     "width": randint(10, 30),
                                                     "height": randint(10, 30)
