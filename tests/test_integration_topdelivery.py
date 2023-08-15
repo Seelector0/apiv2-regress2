@@ -233,7 +233,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии СД TopDelivery")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=connections.metaship.get_list_all_orders())
+    create_parcel = app.parcel.post_parcel(value=connections.metaship.get_list_all_orders())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 

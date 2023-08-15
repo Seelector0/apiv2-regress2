@@ -100,7 +100,7 @@ def test_order_details(app, connections):
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_create_parcel(app, connections):
     orders_id = connections.metaship.get_list_all_orders()
-    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=orders_id)
+    create_parcel = app.parcel.post_parcel(value=orders_id)
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 

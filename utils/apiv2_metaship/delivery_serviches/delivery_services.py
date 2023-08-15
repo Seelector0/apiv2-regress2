@@ -15,6 +15,10 @@ class ApiDeliveryServices:
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
+    def link_delivery_services(self):
+        """Метод получения ссылки для подключения СД."""
+        return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
+
     @staticmethod
     def connection_type(delivery_service_code: str, aggregation: bool = None):
         r"""Метод подключения СД.
@@ -29,10 +33,6 @@ class ApiDeliveryServices:
         if aggregation is True:
             connection_type["data"]["type"] = "aggregation"
         return connection_type
-
-    def link_delivery_services(self):
-        """Метод получения ссылки для подключения СД."""
-        return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки RussianPost к магазину
@@ -268,31 +268,35 @@ class ApiDeliveryServices:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def patch_delivery_services(self, code: str, value: bool = True, tariffs: list = None):
+    @staticmethod
+    def body_patch_delivery_service(path: str, value):
+        body_patch = [
+            {
+                "op": "replace",
+                "path": path,
+                "value": value
+            }
+        ]
+        return body_patch
+
+    def patch_delivery_services_tariffs(self, code: str, tariffs):
+        patch = self.body_patch_delivery_service(path="settings.tariffs", value={
+            "exclude": tariffs,
+            "restrict": None
+            })
+        result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+
+    def patch_delivery_services(self, code: str, value: bool = True):
         r"""Метод редактирования полей настройки подключения к СД.
         :param code: Код СД.
         :param value: Скрытие СД из ЛК при False.
-        :param tariffs: Список тарифов для редактирования.
         """
-        if tariffs:
-            patch = [
-                {
-                    "op": "replace",
-                    "path": "settings.tariffs",
-                    "value": {
-                        "exclude": tariffs,
-                        "restrict": None
-                    }
-                }
-            ]
-        else:
-            patch = [
-                {
-                    "op": "replace",
-                    "path": "visibility",
-                    "value": value
-                }
-            ]
+        patch = self.body_patch_delivery_service(path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
         try:
             with allure.step(title=f"Response: {result.json()}"):

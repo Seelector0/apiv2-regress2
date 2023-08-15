@@ -192,7 +192,7 @@ def test_create_order_from_file(app, file_extension, connections):
 @allure.description("Редактирование веса в заказе СД Boxberry")
 def test_patch_order_weight(app, connections):
     random_order = choice(connections.metaship.get_list_all_orders())
-    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    order_patch = app.order.patch_order_weight(order_id=random_order, weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
@@ -234,7 +234,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии CД Boxberry")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(all_orders=True, order_id=connections.metaship.get_list_all_orders())
+    create_parcel = app.parcel.post_parcel(value=connections.metaship.get_list_all_orders())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
