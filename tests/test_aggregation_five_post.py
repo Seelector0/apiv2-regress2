@@ -117,7 +117,7 @@ def test_order_status(app, connections):
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_patch_order_weight(app, connections):
     random_order = choice(connections.metaship.get_list_all_orders())
-    order_patch = app.order.patch_order(order_id=random_order, path="weight", weight=4)
+    order_patch = app.order.patch_order_weight(order_id=random_order, weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
@@ -149,7 +149,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии СД FivePost")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(order_id=choice(connections.metaship.get_list_all_orders()))
+    create_parcel = app.parcel.post_parcel(value=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
@@ -168,7 +168,7 @@ def test_add_order_in_parcel(app, connections):
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_patch_weight_random_order_in_parcel(app, connections):
     order_in_parcel = connections.metaship.get_list_all_orders_in_parcel()
-    order_patch = app.order.patch_order(order_id=choice(order_in_parcel), path="weight", weight=4)
+    order_patch = app.order.patch_order_weight(order_id=choice(order_in_parcel), weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
