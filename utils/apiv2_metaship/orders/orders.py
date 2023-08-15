@@ -16,12 +16,13 @@ class ApiOrder:
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     @staticmethod
-    def open_file(file: str, method: str):
+    def open_file(folder: str, file: str, method: str):
         r"""Метод отправки файла.
+        :param folder: Название папки.
         :param file: Имя файла.
         :param method: Метод отправки файла.
         """
-        return [("file", (f"{file}", open(file=f"folder_with_orders/{file}", mode="rb"), method))]
+        return [("file", (f"{file}", open(file=f"folder_with_orders/{folder}/{file}", mode="rb"), method))]
 
     def body_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
@@ -261,30 +262,39 @@ class ApiOrder:
             payload["type"] = type_
         return payload
 
-    def post_import_order(self, name: str = None, file_extension: str = None):
-        r"""Метод создания заказа из файла XLSX или XLS формата СД RussianPost или формата Metaship.
-        :param name: Имя файла.
+    def post_import_order_format_metaship(self, code: str = None, file_extension: str = None):
+        r"""Метод создания заказа из файла XLSX или XLS формата Metaship.
+        :param code: Код СД.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
-        orders = f"orders_{name}.{file_extension}"
-        if name == "format_russian_post":
-            if file_extension == "xls":
-                file = self.open_file(file=orders, method=self.method_xls)
-            elif file_extension == "xlsx":
-                file = self.open_file(file=orders, method=self.method_xlsx)
-            else:
-                return f"Файл {file_extension} не поддерживается"
-            result = self.app.http_method.post(link=f"import/{self.link}",
-                                               data=self.order_from_file(type_="russian_post"),
-                                               files=file)
+        orders = f"orders_{code}.{file_extension}"
+        if file_extension == "xls":
+            file = self.open_file(folder="format_metaship", file=orders, method=self.method_xls)
+        elif file_extension == "xlsx":
+            file = self.open_file(folder="format_metaship", file=orders, method=self.method_xlsx)
         else:
-            if file_extension == "xls":
-                file = self.open_file(file=orders, method=self.method_xls)
-            elif file_extension == "xlsx":
-                file = self.open_file(file=orders, method=self.method_xlsx)
-            else:
-                return f"Файл {file_extension} не поддерживается"
-            result = self.app.http_method.post(link=f"import/{self.link}", data=self.order_from_file(), files=file)
+            return f"Файл {file_extension} не поддерживается"
+        result = self.app.http_method.post(link=f"import/{self.link}", data=self.order_from_file(), files=file)
+        try:
+            with allure.step(title=f"Response: {result.json()}"):
+                return result
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+
+    def post_import_order_format_russian_post(self, file_extension: str):
+        r"""Метод создания заказа из файла XLSX или XLS формата СД RussianPost.
+        :param file_extension: Exel файл с расширением xlsx или xls.
+        """
+        orders = f"orders_format_russian_post.{file_extension}"
+        if file_extension == "xls":
+            file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xls)
+        elif file_extension == "xlsx":
+            file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xlsx)
+        else:
+            return f"Файл {file_extension} не поддерживается"
+        result = self.app.http_method.post(link=f"import/{self.link}",
+                                           data=self.order_from_file(type_="russian_post"),
+                                           files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
