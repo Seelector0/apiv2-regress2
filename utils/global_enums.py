@@ -89,11 +89,6 @@ class OtherInfo:
             "description": "Получатель получил заказ через ПВЗ, постамат или курьером"
         },
         {
-            "name": "delivery-failed",
-            "title": "Отказ клиента от выкупа заказа",
-            "description": "Прямой поток. Неудачная попытка вручения"
-        },
-        {
             "name": "delivery-point-client-cancelled",
             "title": "Клиент отказался от заказа",
             "description": "Клиент отказался от заказа"
