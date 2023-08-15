@@ -10,24 +10,20 @@ class ApiParcel:
         self.app = app
         self.link = "parcels"
 
-    def post_parcel(self, order_id: str, all_orders: bool = False, data: str = None):
+    def post_parcel(self, value, data: str = datetime.date.today()):
         r"""Метод создания партии.
-        :param order_id: Идентификатор заказа.
-        :param all_orders: Флаг True отправляет списком заказы в партию.
+        :param value: Идентификатор заказа.
         :param data: Дата отправки партии.
         """
-        if data is None:
-            data = datetime.date.today()
-        if all_orders:
+        if type(value) is list:
             create_parcel = {
-                "orderIds": [*order_id],
-                "shipmentDate": f"{data}"
+                "orderIds": value
             }
         else:
             create_parcel = {
-                "orderIds": [order_id],
-                "shipmentDate": f"{data}"
+                "orderIds": [value]
             }
+        create_parcel["shipmentDate"] = str(data)
         result = self.app.http_method.post(link=self.link, data=create_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
