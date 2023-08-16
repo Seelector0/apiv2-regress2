@@ -93,7 +93,7 @@ class ApiInfo:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     def get_tariffs(self, code):
-        r"""Получение информации о тарифах поддерживаемых СД
+        r"""Получение информации о тарифах поддерживаемых СД.
         :param code: Код СД.
         """
         result = self.app.http_method.get(link=f"info/{code}/tariffs")

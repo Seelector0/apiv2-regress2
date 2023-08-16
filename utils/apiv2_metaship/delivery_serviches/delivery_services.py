@@ -1,6 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.json_fixture import Body
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -21,7 +22,7 @@ class ApiDeliveryServices:
 
     @staticmethod
     def connection_type(delivery_service_code: str, aggregation: bool = None):
-        r"""Метод подключения СД.
+        r"""Тело для подключения СД.
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
@@ -268,19 +269,12 @@ class ApiDeliveryServices:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    @staticmethod
-    def body_patch_delivery_service(path: str, value):
-        payload = [
-            {
-                "op": "replace",
-                "path": path,
-                "value": value
-            }
-        ]
-        return payload
-
     def patch_delivery_services_tariffs(self, code: str, tariffs):
-        patch = self.body_patch_delivery_service(path="settings.tariffs", value={
+        r"""Метод редактирования тарифов СД.
+        :param code: Код СД.
+        :param tariffs: Тарифы СД.
+        """
+        patch = Body.body_patch(op="replace", path="settings.tariffs", value={
             "exclude": tariffs,
             "restrict": None
             })
@@ -296,7 +290,7 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param value: Скрытие СД из ЛК при False.
         """
-        patch = self.body_patch_delivery_service(path="visibility", value=value)
+        patch = Body.body_patch(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
         try:
             with allure.step(title=f"Response: {result.json()}"):

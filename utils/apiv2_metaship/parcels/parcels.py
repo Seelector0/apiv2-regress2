@@ -1,3 +1,4 @@
+from utils.json_fixture import Body
 import requests.exceptions
 import simplejson.errors
 import datetime
@@ -57,16 +58,7 @@ class ApiParcel:
         :param order_id: Идентификатор партии.
         :param parcel_id: Идентификатор партии.
         """
-        if op:
-            patch_parcel = [
-                {
-                    "op": op,
-                    "path": "orderIds",
-                    "value": [order_id]
-                }
-            ]
-        else:
-            raise ValueError(f"Выбрана не верная операция {op}, выберите add или remove")
+        patch_parcel = Body.body_patch(op=op, path="orderIds", value=[order_id])
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -81,13 +73,7 @@ class ApiParcel:
         """
         data = datetime.date.today()
         data += datetime.timedelta(days=day)
-        patch_parcel = [
-            {
-                "op": "replace",
-                "path": "shipmentDate",
-                "value": f"{data}"
-            }
-        ]
+        patch_parcel = Body.body_patch(op="replace", path="shipmentDate", value=str(data))
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):

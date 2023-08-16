@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.json_fixture import Body
 from random import randrange, randint
 import requests.exceptions
 import simplejson.errors
@@ -358,33 +359,31 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    @staticmethod
-    def body_patch(path: str, value):
-        r"""Тело для редактирования заказа.
-        :param path: Изменяемое поле.
-        :param value: Значение.
-        """
-        payload = [
-            {
-                "op": "replace",
-                "path": path,
-                "value": value
-            }
-        ]
-        return payload
-
     def patch_order_weight(self, order_id: str, weight: int):
         r"""Редактирование веса в заказе
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
-        patch_weight = self.body_patch(path="weight", value=weight)
+        patch_weight = Body.body_patch(op="replace", path="weight", value=weight)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_weight)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+
+    @staticmethod
+    def cargo(items: dict, dimension: dict = None):
+        cargo = {
+            "items": [
+                items
+            ],
+            "barcode": f"Box_3{randrange(100000, 999999)}",
+            "shopNumber": f"{randrange(100000, 999999)}",
+            "weight": randint(10, 30),
+            "dimension": dimension
+        }
+        return cargo
 
     def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
         r"""Метод редактирования поля в заказе.
@@ -394,26 +393,15 @@ class ApiOrder:
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        patch_order = self.body_patch(path="places", value=[
-            {
-                "items": [
-                    {
-                        "article": f"ART_1{randrange(1000000, 9999999)}",
-                        "name": name,
-                        "price": price,
-                        "count": count,
-                        "weight": weight,
-                        "vat": "0"
-                    },
-                ],
-                "barcode": f"Box_2{randrange(100000, 999999)}",
-                "weight": 1,
-                "dimension": {
-                    "length": randint(10, 30),
-                    "width": randint(10, 30),
-                    "height": randint(10, 30)
-                }
-            }
+        patch_order = Body.body_patch(op="replace", path="places", value=[
+            self.cargo(items={
+                "article": f"ART_1{randrange(1000000, 9999999)}",
+                "name": name,
+                "price": price,
+                "count": count,
+                "weight": weight,
+                "vat": "0"
+            })
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
         try:
@@ -422,31 +410,22 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def patch_order_add_item(self, order_id: str, dimension: dict = None):
+    def patch_order_add_item(self, order_id: str):
         r"""Метод добавление места в заказ. Для СД DPD старые места удаляются и добавляются новые
         :param order_id: Идентификатор заказа.
-        :param dimension: Габариты нового грузо места значение по умолчанию, можно передать свои.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        patch_order = self.body_patch(path="places", value=[
+        patch_order = Body.body_patch(op="replace", path="places", value=[
             *items,
-            {
-                "items": [
-                    {
-                        "article": f"ART_3{randrange(1000000, 9999999)}",
-                        "name": "Пуфик",
-                        "price": 1000,
-                        "count": 1,
-                        "weight": randint(1, 5),
-                        "vat": "NO_VAT"
-                    }
-                ],
-                "barcode": f"Box_3{randrange(100000, 999999)}",
-                "shopNumber": f"{randrange(100000, 999999)}",
-                "weight": randint(10, 30),
-                "dimension": dimension
-            }
+            self.cargo(items={
+                "article": f"ART_3{randrange(1000000, 9999999)}",
+                "name": "Пуфик",
+                "price": 1000,
+                "count": 1,
+                "weight": randint(1, 5),
+                "vat": "NO_VAT"
+            })
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
         try:
@@ -459,53 +438,16 @@ class ApiOrder:
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
         :param order_id: Идентификатор заказа.
         """
+        list_items = []
         result_get_order_by_id = self.get_order_id(order_id=order_id)
-        items = result_get_order_by_id.json()["data"]["request"]["places"]
-        list1 = []
+        items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            for j in i["items"]:
-                list1.append(j)
-        path_order = self.body_patch(path="places", value=[
-            {
-                "items": [
-                    list1[0]
-                ],
-                "barcode": f"Box_1{randrange(100000, 999999)}",
-                "shopNumber": f"{randrange(100000, 999999)}",
-                "weight": randint(10, 30),
-                "dimension": {
-                    "length": randint(10, 30),
-                    "width": randint(10, 30),
-                    "height": randint(10, 30)
-                }
-            },
-            {
-                "items": [
-                    list1[1]
-                ],
-                "barcode": f"Box_2{randrange(100000, 999999)}",
-                "shopNumber": f"{randrange(100000, 999999)}",
-                "weight": randint(10, 30),
-                "dimension": {
-                    "length": randint(10, 30),
-                    "width": randint(10, 30),
-                    "height": randint(10, 30)
-                }
-            },
-            {
-                "items": [
-                    list1[2]
-                ],
-                "barcode": f"Box_3{randrange(100000, 999999)}",
-                "shopNumber": f"{randrange(100000, 999999)}",
-                "weight": randint(10, 30),
-                "dimension": {
-                    "length": randint(10, 30),
-                    "width": randint(10, 30),
-                    "height": randint(10, 30)
-                }
-            }
-        ])
+            list_items.append(self.cargo(items=i, dimension={
+                "length": randint(10, 30),
+                "width": randint(10, 30),
+                "height": randint(10, 30)
+            }))
+        path_order = Body.body_patch(op="replace", path="places", value=list_items)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
