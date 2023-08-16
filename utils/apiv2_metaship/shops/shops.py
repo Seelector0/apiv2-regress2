@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.json_fixture import Body
 from random import randrange
 import requests.exceptions
 import simplejson.errors
@@ -69,13 +70,7 @@ class ApiShop:
         :param shop_id: Идентификатор магазина.
         :param value: Флаг скрывает магазин из ЛК.
         """
-        patch_shop = [
-            {
-                "op": "replace",
-                "path": "visibility",
-                "value": value
-            }
-        ]
+        patch_shop = Body.body_patch(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=patch_shop)
         try:
             with allure.step(title=f"Response: {result.json()}"):

@@ -1,3 +1,4 @@
+from utils.json_fixture import Body
 from random import randrange
 import requests.exceptions
 import simplejson.errors
@@ -87,16 +88,7 @@ class ApiWarehouse:
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        if path:
-            patch_warehouse = [
-                {
-                    "op": "replace",
-                    "path": path,
-                    "value": value
-                }
-            ]
-        else:
-            raise ValueError(f"Выбрана не верная операция {path}")
+        patch_warehouse = Body.body_patch(op="replace", path=path, value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=patch_warehouse)
         try:
             with allure.step(title=f"Response: {result.json()}"):
