@@ -1,11 +1,9 @@
+from environment import ENV_OBJECT
 from utils.checking import Checking
 from utils.global_enums import INFO
 from random import choice
 import pytest
 import allure
-
-
-# Todo когда будут моки, добавлю метод patch для многоместных заказов
 
 
 @allure.description("Создание магазина")
@@ -88,6 +86,24 @@ def test_create_multi_order_courier(app, payment_type, connections):
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
                                                                                         value="state"),
                                     two_value=["succeeded"])
+
+
+@allure.description("Добавление items в многоместный заказ СД DostavkaClub")
+@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
+def test_patch_multi_order(app, connections):
+    choice_order_id = choice(connections.metaship.get_list_all_orders())
+    old_len_order_list = app.order.get_order_id(order_id=choice_order_id)
+    patch_order = app.order.patch_order_add_item(order_id=choice_order_id)
+    Checking.check_status_code(response=patch_order, expected_status_code=200)
+    Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=patch_order, key_name="state", expected_value="succeeded")
+    connections.metaship.wait_create_order(order_id=choice_order_id)
+    new_len_order_list = app.order.get_order_id(order_id=choice_order_id)
+    Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
+    Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
+    Checking.checking_sum_len_lists(old_list=old_len_order_list.json()["data"]["request"]["places"],
+                                    new_list=new_len_order_list.json()["data"]["request"]["places"])
 
 
 @allure.description("Создание Courier заказа по CД DostavkaClub")
