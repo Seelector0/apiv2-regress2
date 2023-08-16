@@ -1,6 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.json_fixture import Body
+from utils.json_fixture import DICT_OBJECT
 from random import randrange, randint
 import requests.exceptions
 import simplejson.errors
@@ -14,79 +14,7 @@ class ApiOrder:
         self.link = "orders"
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        self.database = DataBase(database=ENV_OBJECT.db_connections())
-
-    def body_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
-                   cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
-                   height: float = randint(10, 50), weight: float = randint(1, 5), tariff: str = None,
-                   delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   delivery_point_code: str = None,  pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None,):
-        r"""Тело для создания заказов.
-        :param barcode: Штрих код заказа.
-        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
-        :param declared_value: Объявленная стоимость.
-        :param delivery_sum: Стоимость доставки.
-        :param cod: Наложенный платеж, руб.
-        :param length: Длинна.
-        :param width: Ширина.
-        :param height: Высота.
-        :param weight: Вес всего заказа.
-        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
-        :param service: Код СД.
-        :param tariff: Тариф создания заказа.
-        :param data: Дата доставки.
-        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
-        :param delivery_point_code: Идентификатор точки доставки.
-        :param pickup_time_period: Дата привоза на склад.
-        :param date_pickup: Временной интервал.
-        :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
-        """
-        payload = {
-            "warehouse": {
-                "id": str(self.database.metaship.get_list_warehouses()[0]),
-            },
-            "shop": {
-                "id": str(self.database.metaship.get_list_shops()[0]),
-                "number": f"{randrange(1000000, 9999999)}",
-                "barcode": barcode,
-            },
-            "payment": {
-                "type": payment_type,
-                "declaredValue": declared_value,
-                "deliverySum": delivery_sum,
-                "cod": cod
-            },
-            "dimension": {
-                "length": length,
-                "width": width,
-                "height": height
-            },
-            "weight": weight,
-            "delivery": {
-                "type": type_ds,
-                "service": service,
-                "tariff": tariff,
-                "date": data,
-                "time": delivery_time,
-                "deliveryPointCode": delivery_point_code
-            },
-            "recipient": {
-                "familyName": "Филипенко",
-                "firstName": "Юрий",
-                "secondName": "Павлович",
-                "email": "test@mail.ru",
-                "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
-                "address": {
-                    "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
-                }
-            },
-            "comment": "",
-            "pickupTimePeriod": pickup_time_period,
-            "datePickup": date_pickup,
-            "routes": routes
-        }
-        return payload
+        self.database_connections = DataBase(database=ENV_OBJECT.db_connections())
 
     def post_single_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
                           barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
@@ -118,13 +46,13 @@ class ApiOrder:
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
-        single_order = self.body_order(barcode=barcode, payment_type=payment_type,
-                                       declared_value=declared_value + price_1 + price_2 + price_3,
-                                       delivery_sum=delivery_sum, cod=cod,
-                                       length=length, width=width, height=height,
-                                       type_ds=type_ds, service=service, tariff=tariff, data=data,
-                                       delivery_time=delivery_time, delivery_point_code=delivery_point_code,
-                                       pickup_time_period=pickup_time_period, date_pickup=date_pickup, routes=routes)
+        single_order = DICT_OBJECT.form_order(barcode=barcode, payment_type=payment_type,
+                                              declared_value=declared_value + price_1 + price_2 + price_3,
+                                              delivery_sum=delivery_sum, cod=cod, length=length, width=width,
+                                              height=height, type_ds=type_ds, service=service, tariff=tariff, data=data,
+                                              delivery_time=delivery_time, delivery_point_code=delivery_point_code,
+                                              pickup_time_period=pickup_time_period, date_pickup=date_pickup,
+                                              routes=routes)
 
         single_order["places"] = [
             {
@@ -196,11 +124,12 @@ class ApiOrder:
         :param date_pickup: Временной интервал.
         :param tariff: Тариф создания заказа.
         """
-        multi_order = self.body_order(payment_type=payment_type, declared_value=declared_value + price_1 + price_2,
-                                      delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
-                                      tariff=tariff, data=data, delivery_time=delivery_time,
-                                      delivery_point_code=delivery_point_code, date_pickup=date_pickup,
-                                      pickup_time_period=pickup_time_period)
+        multi_order = DICT_OBJECT.form_order(payment_type=payment_type,
+                                             declared_value=declared_value + price_1 + price_2,
+                                             delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
+                                             tariff=tariff, data=data, delivery_time=delivery_time,
+                                             delivery_point_code=delivery_point_code, date_pickup=date_pickup,
+                                             pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             {
                 "items": [
@@ -247,8 +176,8 @@ class ApiOrder:
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
         payload = {
-            "shopId": str(self.database.metaship.get_list_shops()[0]),
-            "warehouseId": str(self.database.metaship.get_list_warehouses()[0])
+            "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
+            "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
         }
         if type_:
             payload["type"] = type_
@@ -364,7 +293,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
-        patch_weight = Body.body_patch(op="replace", path="weight", value=weight)
+        patch_weight = DICT_OBJECT.form_patch_body(op="replace", path="weight", value=weight)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_weight)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -393,7 +322,7 @@ class ApiOrder:
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        patch_order = Body.body_patch(op="replace", path="places", value=[
+        patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
             self.cargo(items={
                 "article": f"ART_1{randrange(1000000, 9999999)}",
                 "name": name,
@@ -416,7 +345,7 @@ class ApiOrder:
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        patch_order = Body.body_patch(op="replace", path="places", value=[
+        patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
             *items,
             self.cargo(items={
                 "article": f"ART_3{randrange(1000000, 9999999)}",
@@ -424,7 +353,7 @@ class ApiOrder:
                 "price": 1000,
                 "count": 1,
                 "weight": randint(1, 5),
-                "vat": "NO_VAT"
+                "vat": "10"
             })
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
@@ -447,7 +376,7 @@ class ApiOrder:
                 "width": randint(10, 30),
                 "height": randint(10, 30)
             }))
-        path_order = Body.body_patch(op="replace", path="places", value=list_items)
+        path_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=list_items)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):

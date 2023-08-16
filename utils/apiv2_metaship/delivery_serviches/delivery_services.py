@@ -1,7 +1,7 @@
+from utils.json_fixture import DICT_OBJECT
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.json_fixture import Body
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -14,35 +14,20 @@ class ApiDeliveryServices:
 
     def __init__(self, app):
         self.app = app
-        self.database = DataBase(database=ENV_OBJECT.db_connections())
+        self.database_connections = DataBase(database=ENV_OBJECT.db_connections())
 
     def link_delivery_services(self):
         """Метод получения ссылки для подключения СД."""
-        return f"{self.app.shop.link}/{self.database.metaship.get_list_shops()[0]}/delivery_services"
-
-    @staticmethod
-    def connection_type(delivery_service_code: str, aggregation: bool = None):
-        r"""Тело для подключения СД.
-        :param delivery_service_code: Название СД.
-        :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
-        """
-        connection_type = {
-            "deliveryServiceCode": delivery_service_code,
-            "data": {
-            }
-        }
-        if aggregation is True:
-            connection_type["data"]["type"] = "aggregation"
-        return connection_type
+        return f"{self.app.shop.link}/{self.database_connections.metaship.get_list_shops()[0]}/delivery_services"
 
     def delivery_services_russian_post(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки RussianPost к магазину
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            russian_post = self.connection_type(delivery_service_code="RussianPost", aggregation=True)
+            russian_post = DICT_OBJECT.form_connection_type(delivery_service_code="RussianPost", aggregation=True)
         else:
-            russian_post = self.connection_type(delivery_service_code="RussianPost")
+            russian_post = DICT_OBJECT.form_connection_type(delivery_service_code="RussianPost")
             russian_post["data"]["token"] = f"{os.getenv('RP_TOKEN')}"
             russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
         russian_post["data"]["intakePostOfficeCode"] = "101000"
@@ -58,9 +43,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            topdelivery = self.connection_type(delivery_service_code="TopDelivery", aggregation=True)
+            topdelivery = DICT_OBJECT.form_connection_type(delivery_service_code="TopDelivery", aggregation=True)
         else:
-            topdelivery = self.connection_type(delivery_service_code="TopDelivery")
+            topdelivery = DICT_OBJECT.form_connection_type(delivery_service_code="TopDelivery")
             topdelivery["data"]["username"] = f"{os.getenv('TD_USER_NAME')}"
             topdelivery["data"]["password"] = f"{os.getenv('TD_PASSWORD')}"
             topdelivery["data"]["basicLogin"] = f"{os.getenv('TD_BASIC_LOGIN')}"
@@ -77,9 +62,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            boxberry = self.connection_type(delivery_service_code="Boxberry", aggregation=True)
+            boxberry = DICT_OBJECT.form_connection_type(delivery_service_code="Boxberry", aggregation=True)
         else:
-            boxberry = self.connection_type(delivery_service_code="Boxberry")
+            boxberry = DICT_OBJECT.form_connection_type(delivery_service_code="Boxberry")
             boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
         boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=boxberry)
@@ -94,9 +79,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            cdek = self.connection_type(delivery_service_code="Cdek", aggregation=True)
+            cdek = DICT_OBJECT.form_connection_type(delivery_service_code="Cdek", aggregation=True)
         else:
-            cdek = self.connection_type(delivery_service_code="Cdek")
+            cdek = DICT_OBJECT.form_connection_type(delivery_service_code="Cdek")
             cdek["data"]["account"] = f"{os.getenv('CDEK_ACCOUNT')}"
             cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
         cdek["data"]["shipmentPointCode"] = "AKHT1"
@@ -112,9 +97,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            dpd = self.connection_type(delivery_service_code="Dpd", aggregation=True)
+            dpd = DICT_OBJECT.form_connection_type(delivery_service_code="Dpd", aggregation=True)
         else:
-            dpd = self.connection_type(delivery_service_code="Dpd")
+            dpd = DICT_OBJECT.form_connection_type(delivery_service_code="Dpd")
             dpd["data"]["clientNumber"] = f"{os.getenv('DPD_CLIENT_NUMBER')}"
             dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
         dpd["data"]["intakePointCode"] = "M16"
@@ -127,7 +112,7 @@ class ApiDeliveryServices:
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину."""
-        cse = self.connection_type(delivery_service_code="Cse")
+        cse = DICT_OBJECT.form_connection_type(delivery_service_code="Cse")
         cse["data"]["login"] = f"{os.getenv('CSE_LOGIN')}"
         cse["data"]["password"] = f"{os.getenv('CSE_PASSWORD')}"
         cse["data"]["token"] = f"{os.getenv('CSE_TOKEN')}"
@@ -143,9 +128,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            five_post = self.connection_type(delivery_service_code="FivePost", aggregation=True)
+            five_post = DICT_OBJECT.form_connection_type(delivery_service_code="FivePost", aggregation=True)
         else:
-            five_post = self.connection_type(delivery_service_code="FivePost")
+            five_post = DICT_OBJECT.form_connection_type(delivery_service_code="FivePost")
             five_post["data"]["apiKey"] = f"{os.getenv('FIVE_POST_API_KEY')}"
             five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
             five_post["data"]["baseWeight"] = 1000
@@ -158,7 +143,7 @@ class ApiDeliveryServices:
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину."""
-        svyaznoy = self.connection_type(delivery_service_code="Svyaznoy")
+        svyaznoy = DICT_OBJECT.form_connection_type(delivery_service_code="Svyaznoy")
         svyaznoy["data"]["login"] = f"{os.getenv('SL_LOGIN')}"
         svyaznoy["data"]["password"] = f"{os.getenv('SL_PASSWORD')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=svyaznoy)
@@ -170,9 +155,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            yandex_go = self.connection_type(delivery_service_code="YandexGo", aggregation=True)
+            yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo", aggregation=True)
         else:
-            yandex_go = self.connection_type(delivery_service_code="YandexGo")
+            yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo")
             yandex_go["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_go)
         try:
@@ -186,9 +171,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            yandex_delivery = self.connection_type(delivery_service_code="YandexDelivery", aggregation=True)
+            yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery", aggregation=True)
         else:
-            yandex_delivery = self.connection_type(delivery_service_code="YandexDelivery")
+            yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery")
             yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
         yandex_delivery["data"]["intakePointCode"] = "807655"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=yandex_delivery)
@@ -200,7 +185,7 @@ class ApiDeliveryServices:
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину."""
-        dostavka_club = self.connection_type(delivery_service_code="DostavkaClub")
+        dostavka_club = DICT_OBJECT.form_connection_type(delivery_service_code="DostavkaClub")
         dostavka_club["data"]["login"] = f"{os.getenv('CLUB_LOGIN')}"
         dostavka_club["data"]["pass"] = f"{os.getenv('CLUB_PASSWORD')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_club)
@@ -212,7 +197,7 @@ class ApiDeliveryServices:
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину."""
-        dostavka_guru = self.connection_type(delivery_service_code="DostavkaGuru")
+        dostavka_guru = DICT_OBJECT.form_connection_type(delivery_service_code="DostavkaGuru")
         dostavka_guru["data"]["partnerId"] = int(f"{os.getenv('GURU_PARTNER_ID')}")
         dostavka_guru["data"]["key"] = f"{os.getenv('GURU_KEY')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dostavka_guru)
@@ -224,7 +209,7 @@ class ApiDeliveryServices:
 
     def delivery_services_l_post(self):
         """Настройки подключения службы доставки LPost к магазину."""
-        l_post = self.connection_type(delivery_service_code="LPost")
+        l_post = DICT_OBJECT.form_connection_type(delivery_service_code="LPost")
         l_post["data"]["secret"] = f"{os.getenv('L_POST_SECRET')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=l_post)
         try:
@@ -238,9 +223,9 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            dalli = self.connection_type(delivery_service_code="Dalli", aggregation=True)
+            dalli = DICT_OBJECT.form_connection_type(delivery_service_code="Dalli", aggregation=True)
         else:
-            dalli = self.connection_type(delivery_service_code="Dalli")
+            dalli = DICT_OBJECT.form_connection_type(delivery_service_code="Dalli")
             dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), data=dalli)
         try:
@@ -274,7 +259,7 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param tariffs: Тарифы СД.
         """
-        patch = Body.body_patch(op="replace", path="settings.tariffs", value={
+        patch = DICT_OBJECT.form_patch_body(op="replace", path="settings.tariffs", value={
             "exclude": tariffs,
             "restrict": None
             })
@@ -290,7 +275,7 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param value: Скрытие СД из ЛК при False.
         """
-        patch = Body.body_patch(op="replace", path="visibility", value=value)
+        patch = DICT_OBJECT.form_patch_body(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", data=patch)
         try:
             with allure.step(title=f"Response: {result.json()}"):

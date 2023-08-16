@@ -1,5 +1,4 @@
-from utils.json_fixture import Body
-from random import randrange
+from utils.json_fixture import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -13,19 +12,7 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        warehouse = {
-            "name": f"{randrange(100000, 999999)}",
-            "address": {
-                "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
-            },
-            "lPostWarehouseId": "20537",
-            "pickup": True,
-            "contact": {
-                "fullName": "Виктор Викторович",
-                "phone": f"+7910{randrange(1000000, 9999999)}",
-                "email": "test@email.ru"
-            }
-        }
+        warehouse = DICT_OBJECT.form_warehouse_body()
         result = self.app.http_method.post(link=self.link, data=warehouse)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -88,7 +75,7 @@ class ApiWarehouse:
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        patch_warehouse = Body.body_patch(op="replace", path=path, value=value)
+        patch_warehouse = DICT_OBJECT.form_patch_body(op="replace", path=path, value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=patch_warehouse)
         try:
             with allure.step(title=f"Response: {result.json()}"):

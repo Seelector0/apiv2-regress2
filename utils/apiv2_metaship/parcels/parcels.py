@@ -1,4 +1,4 @@
-from utils.json_fixture import Body
+from utils.json_fixture import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import datetime
@@ -17,14 +17,9 @@ class ApiParcel:
         :param data: Дата отправки партии.
         """
         if type(value) is list:
-            create_parcel = {
-                "orderIds": value
-            }
+            create_parcel = DICT_OBJECT.form_parcel_body(orders_ids=value, data=str(data))
         else:
-            create_parcel = {
-                "orderIds": [value]
-            }
-        create_parcel["shipmentDate"] = str(data)
+            create_parcel = DICT_OBJECT.form_parcel_body(orders_ids=[value], data=str(data))
         result = self.app.http_method.post(link=self.link, data=create_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -58,7 +53,7 @@ class ApiParcel:
         :param order_id: Идентификатор партии.
         :param parcel_id: Идентификатор партии.
         """
-        patch_parcel = Body.body_patch(op=op, path="orderIds", value=[order_id])
+        patch_parcel = DICT_OBJECT.form_patch_body(op=op, path="orderIds", value=[order_id])
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -73,7 +68,7 @@ class ApiParcel:
         """
         data = datetime.date.today()
         data += datetime.timedelta(days=day)
-        patch_parcel = Body.body_patch(op="replace", path="shipmentDate", value=str(data))
+        patch_parcel = DICT_OBJECT.form_patch_body(op="replace", path="shipmentDate", value=str(data))
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
