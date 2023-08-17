@@ -11,16 +11,13 @@ class Dict:
         self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
 
     @staticmethod
-    def form_shop_body(name: str = f"INT{randrange(100000, 999999)}",
-                       uri: str = f"integration-shop{randrange(1000, 9999)}.ru",
-                       phone: str = f"7916{randrange(1000000, 9999999)}",
-                       sender: str = "Иванов Иван Иванович"):
+    def form_shop_body():
         """Тело для создания магазина."""
         shop_body = {
-            "name": name,
-            "uri": uri,
-            "phone": phone,
-            "sender": sender
+            "name": f"INT{randrange(100000, 999999)}",
+            "uri": f"integration-shop{randrange(1000, 9999)}.ru",
+            "phone": f"7916{randrange(1000000, 9999999)}",
+            "sender": "Иванов Иван Иванович"
         }
         return shop_body
 
