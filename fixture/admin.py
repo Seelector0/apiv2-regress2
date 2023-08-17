@@ -23,8 +23,7 @@ class Admin:
     def admin_session(self):
         """Метод для открытия сессии под admin."""
         token = DICT_OBJECT.form_token(client_id=f"{os.getenv('ADMIN_ID')}",
-                                       client_secret=f"{os.getenv('ADMIN_SECRET')}")
-        token["scope"] = "admin"
+                                       client_secret=f"{os.getenv('ADMIN_SECRET')}", admin=True)
         headers = {
             "Content-Type": "application/x-www-form-urlencoded"
         }

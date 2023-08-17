@@ -11,16 +11,19 @@ class Dict:
         self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
 
     @staticmethod
-    def form_token(client_id: str, client_secret: str):
+    def form_token(client_id: str, client_secret: str, admin: bool = None):
         r"""Тело для создания токена.
         :param client_id: Токен.
         :param client_secret: Секретный код.
+        :param admin: Для использования admin api
         """
         body_token = {
             "grant_type": "client_credentials",
             "client_id": client_id,
             "client_secret": client_secret,
         }
+        if admin is True:
+            body_token["admin"] = "scope"
         return body_token
 
     @staticmethod
