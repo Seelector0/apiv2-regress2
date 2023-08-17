@@ -24,7 +24,7 @@ def app():
     return apiv2_metaship
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def admin():
     """Фикстура для открытия сессии по Admin Api."""
     global api_admin
