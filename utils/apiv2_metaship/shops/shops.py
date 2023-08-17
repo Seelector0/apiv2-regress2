@@ -1,4 +1,4 @@
-from utils.json_fixture import DICT_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -48,7 +48,11 @@ class ApiShop:
         :param contact_person: ФИО контактного лица магазина.
         :param phone: Телефон контактного лица магазина.
         """
-        put_shop = DICT_OBJECT.form_shop_body(name=shop_name, uri=shop_url, phone=phone, sender=contact_person)
+        put_shop = DICT_OBJECT.form_shop_body()
+        put_shop["name"] = shop_name
+        put_shop["uri"] = shop_url
+        put_shop["phone"] = phone
+        put_shop["sender"] = contact_person
         return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=put_shop)
 
     def patch_shop(self, shop_id: str, value: bool = True):
