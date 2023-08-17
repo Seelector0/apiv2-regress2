@@ -171,18 +171,6 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def order_from_file(self, type_: str = None):
-        r"""Метод для создания заказа из файла.
-        :param type_: Параметр для создания заказа из файла формата СД RussianPost.
-        """
-        payload = {
-            "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
-            "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
-        }
-        if type_:
-            payload["type"] = type_
-        return payload
-
     @staticmethod
     def open_file(folder: str, file: str, method: str):
         r"""Метод отправки файла.
@@ -204,7 +192,7 @@ class ApiOrder:
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xlsx)
         else:
             return f"Файл {file_extension} не поддерживается"
-        result = self.app.http_method.post(link=f"import/{self.link}", data=self.order_from_file(), files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=DICT_OBJECT.order_from_file(), files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -223,7 +211,7 @@ class ApiOrder:
         else:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}",
-                                           data=self.order_from_file(type_="russian_post"),
+                                           data=DICT_OBJECT.order_from_file(type_="russian_post"),
                                            files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
