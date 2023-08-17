@@ -1,4 +1,4 @@
-from utils.json_fixture import DICT_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -55,8 +55,7 @@ class ApiWarehouse:
         :param email: Email контактного лица склада.
         :param working_time: Время работы склада.
         """
-        get_warehouse = self.get_warehouse_id(warehouse_id=warehouse_id)
-        warehouse = get_warehouse.json()
+        warehouse = DICT_OBJECT.form_warehouse_body()
         warehouse["name"] = name
         warehouse["pickup"] = pickup
         warehouse["comment"] = comment
