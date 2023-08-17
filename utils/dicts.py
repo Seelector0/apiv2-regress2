@@ -2,6 +2,8 @@ from fixture.database import DataBase
 from environment import ENV_OBJECT
 from random import randrange, randint
 import datetime
+import allure
+import uuid
 
 
 class Dict:
@@ -11,20 +13,41 @@ class Dict:
         self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
 
     @staticmethod
-    def form_token(client_id: str, client_secret: str, admin: bool = None):
+    def form_authorization(client_id: str, client_secret: str, admin: bool = None):
         r"""Тело для создания токена.
         :param client_id: Токен.
         :param client_secret: Секретный код.
-        :param admin: Для использования admin api
+        :param admin: Для использования admin api.
         """
-        body_token = {
+        body_authorization = {
             "grant_type": "client_credentials",
             "client_id": client_id,
             "client_secret": client_secret,
         }
         if admin is True:
-            body_token["scope"] = "admin"
-        return body_token
+            body_authorization["scope"] = "admin"
+        return body_authorization
+
+    @staticmethod
+    def form_headers():
+        """Тело headers."""
+        body_headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+        return body_headers
+
+    @staticmethod
+    def form_token(authorization):
+        r"""Тело для получения токена.
+        :param authorization:
+        """
+        x_trace_id = str(uuid.uuid4())
+        with allure.step(title=f"x-trace-id: {x_trace_id}"):
+            body_token = {
+                "x-trace-id": x_trace_id,
+                "Authorization": authorization
+            }
+            return body_token
 
     @staticmethod
     def form_shop_body():
