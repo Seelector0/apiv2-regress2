@@ -12,8 +12,7 @@ class ApiShop:
 
     def post_shop(self):
         """Метод создания магазина."""
-        shop = DICT_OBJECT.form_shop_body()
-        result = self.app.http_method.post(link=self.link, data=shop)
+        result = self.app.http_method.post(link=self.link, data=DICT_OBJECT.form_shop_body())
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

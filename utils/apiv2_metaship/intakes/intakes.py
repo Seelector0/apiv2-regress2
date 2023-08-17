@@ -18,8 +18,8 @@ class ApiIntakes:
         r"""Метод создание забора.
         :param delivery_service: СД только Boxberry, Cdek, Cse.
         """
-        intakes = DICT_OBJECT.form_intakes(delivery_service=delivery_service)
-        result = self.app.http_method.post(link=self.link, data=intakes)
+        result = self.app.http_method.post(link=self.link,
+                                           data=DICT_OBJECT.form_intakes(delivery_service=delivery_service))
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
