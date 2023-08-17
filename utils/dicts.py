@@ -37,7 +37,7 @@ class Dict:
         return body_headers
 
     @staticmethod
-    def form_token(authorization):
+    def form_token(authorization: str):
         r"""Тело для получения токена.
         :param authorization:
         """
