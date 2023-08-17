@@ -16,12 +16,12 @@ class Dict:
         :param client_id: Токен.
         :param client_secret: Секретный код.
         """
-        token = {
+        body_token = {
             "grant_type": "client_credentials",
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        return token
+        return body_token
 
     @staticmethod
     def form_shop_body():
