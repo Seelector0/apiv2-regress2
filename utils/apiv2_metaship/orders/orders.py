@@ -290,7 +290,7 @@ class ApiOrder:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
     @staticmethod
-    def cargo(items: dict, dimension: dict = None):
+    def cargo_items(items: dict, dimension: dict = None):
         cargo = {
             "items": [
                 items
@@ -311,7 +311,7 @@ class ApiOrder:
         :param weight: Вес товарной позиции.
         """
         patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
-            self.cargo(items={
+            self.cargo_items(items={
                 "article": f"ART_1{randrange(1000000, 9999999)}",
                 "name": name,
                 "price": price,
@@ -335,7 +335,7 @@ class ApiOrder:
         items = result_get_order_by_id.json()["data"]["request"]["places"]
         patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
             *items,
-            self.cargo(items={
+            self.cargo_items(items={
                 "article": f"ART_3{randrange(1000000, 9999999)}",
                 "name": "Пуфик",
                 "price": 1000,
@@ -359,7 +359,7 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            list_items.append(self.cargo(items=i, dimension={
+            list_items.append(self.cargo_items(items=i, dimension={
                 "length": randint(10, 30),
                 "width": randint(10, 30),
                 "height": randint(10, 30)
