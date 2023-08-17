@@ -23,7 +23,7 @@ class Dict:
             "client_secret": client_secret,
         }
         if admin is True:
-            body_token["admin"] = "scope"
+            body_token["scope"] = "admin"
         return body_token
 
     @staticmethod
