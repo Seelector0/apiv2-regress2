@@ -48,21 +48,21 @@ class Dict:
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
-        connection_type = {
+        body_connection_type = {
             "deliveryServiceCode": delivery_service_code,
             "data": {
             }
         }
         if aggregation is True:
-            connection_type["data"]["type"] = "aggregation"
-        return connection_type
+            body_connection_type["data"]["type"] = "aggregation"
+        return body_connection_type
 
     def form_moderation_delivery_services(self, delivery_service_code: str):
         r"""Тело для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         """
         shop_id = self.database_connections.metaship.get_list_shops()[0]
-        connection = {
+        body_connection = {
             "shopId": shop_id,
             "customerId": f"{ENV_OBJECT.customer_id()}",
             "connectionId": f"{self.database_customer.customer.get_connections_id(shop_id=shop_id)[0]}",
@@ -72,7 +72,7 @@ class Dict:
             },
             "deliveryService": delivery_service_code
         }
-        return connection
+        return body_connection
 
     def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
@@ -100,7 +100,7 @@ class Dict:
         :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         """
-        payload = {
+        order_body = {
             "warehouse": {
                 "id": str(self.database_connections.metaship.get_list_warehouses()[0]),
             },
@@ -144,19 +144,19 @@ class Dict:
             "datePickup": date_pickup,
             "routes": routes
         }
-        return payload
+        return order_body
 
     def order_from_file(self, type_: str = None):
         r"""Тело для создания заказа из файла.
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
-        payload = {
+        order_body = {
             "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
             "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
         }
         if type_:
-            payload["type"] = type_
-        return payload
+            order_body["type"] = type_
+        return order_body
 
     @staticmethod
     def form_parcel_body(orders_ids, data: str):
@@ -170,7 +170,7 @@ class Dict:
     def form_intakes(self, delivery_service: str):
         """Тело для создания забора."""
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        intakes = {
+        intakes_body = {
             "deliveryService": delivery_service,
             "date": str(tomorrow),
             "shop": {
@@ -197,7 +197,7 @@ class Dict:
             },
             "description": "Классный груз"
         }
-        return intakes
+        return intakes_body
 
     @staticmethod
     def form_patch_body(op: str, path: str, value):
