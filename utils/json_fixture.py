@@ -57,7 +57,7 @@ class Dict:
             connection_type["data"]["type"] = "aggregation"
         return connection_type
 
-    def form_moderation_delivery_services(self, delivery_service_code):
+    def form_moderation_delivery_services(self, delivery_service_code: str):
         r"""Тело для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         """
