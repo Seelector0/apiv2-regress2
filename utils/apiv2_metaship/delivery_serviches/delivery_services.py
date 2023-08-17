@@ -1,4 +1,4 @@
-from utils.json_fixture import DICT_OBJECT
+from utils.dicts import DICT_OBJECT
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT

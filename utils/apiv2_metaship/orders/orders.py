@@ -1,6 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.json_fixture import DICT_OBJECT
+from utils.dicts import DICT_OBJECT
 from random import randrange, randint
 import requests.exceptions
 import simplejson.errors

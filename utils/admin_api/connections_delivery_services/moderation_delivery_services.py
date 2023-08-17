@@ -1,5 +1,5 @@
 from dotenv import load_dotenv, find_dotenv
-from utils.json_fixture import DICT_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
