@@ -11,6 +11,9 @@ class HttpMethod:
 
     @staticmethod
     def url(admin: bool = None):
+        r"""Метод для получения url.
+        :param admin: Для использования admin url.
+        """
         if admin is True:
             url = f"{ENV_OBJECT.get_base_url()}/admin/v2/"
         else:
