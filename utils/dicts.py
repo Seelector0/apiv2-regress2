@@ -11,6 +11,19 @@ class Dict:
         self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
 
     @staticmethod
+    def form_token(client_id: str, client_secret: str):
+        r"""Тело для создания токена.
+        :param client_id: Токен.
+        :param client_secret: Секретный код.
+        """
+        token = {
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
+        }
+        return token
+
+    @staticmethod
     def form_shop_body():
         """Тело для создания магазина."""
         shop_body = {
