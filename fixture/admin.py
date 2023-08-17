@@ -1,6 +1,7 @@
 from utils.admin_api.connections_delivery_services.moderation_delivery_services import ApiModerationDeliveryServices
 from dotenv import load_dotenv, find_dotenv
 from utils.http_methods import HttpMethod
+from utils.dicts import DICT_OBJECT
 from requests import Response
 import requests
 import allure
@@ -21,16 +22,13 @@ class Admin:
 
     def admin_session(self):
         """Метод для открытия сессии под admin."""
-        data = {
-            "grant_type": "client_credentials",
-            "client_id": f"{os.getenv('ADMIN_ID')}",
-            "client_secret": f"{os.getenv('ADMIN_SECRET')}",
-            "scope": "admin"
-        }
+        token = DICT_OBJECT.form_token(client_id=f"{os.getenv('ADMIN_ID')}",
+                                       client_secret=f"{os.getenv('ADMIN_SECRET')}")
+        token["scope"] = "admin"
         headers = {
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        self.response = self.session.post(url=self.base_url, data=data, headers=headers)
+        self.response = self.session.post(url=self.base_url, data=token, headers=headers)
         if self.response.status_code == 200:
             return self.response
         else:

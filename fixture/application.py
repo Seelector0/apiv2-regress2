@@ -11,6 +11,7 @@ from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
 from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
+from utils.dicts import DICT_OBJECT
 from requests import Response
 import requests
 import allure
@@ -38,15 +39,12 @@ class Application:
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = {
-            "grant_type": "client_credentials",
-            "client_id": f"{ENV_OBJECT.client_id()}",
-            "client_secret": f"{ENV_OBJECT.client_secret()}"
-        }
+        token = DICT_OBJECT.form_token(client_id=f"{ENV_OBJECT.client_id()}",
+                                       client_secret=f"{ENV_OBJECT.client_secret()}")
         headers = {
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        self.response = self.session.post(url=self.base_url, data=data, headers=headers)
+        self.response = self.session.post(url=self.base_url, data=token, headers=headers)
         if self.response.status_code == 200:
             return self.response
         else:
