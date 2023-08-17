@@ -14,8 +14,6 @@ from environment import ENV_OBJECT
 from utils.dicts import DICT_OBJECT
 from requests import Response
 import requests
-import allure
-import uuid
 
 
 class Application:
@@ -39,12 +37,9 @@ class Application:
 
     def open_session(self):
         """Метод для открытия сессии."""
-        token = DICT_OBJECT.form_token(client_id=f"{ENV_OBJECT.client_id()}",
-                                       client_secret=f"{ENV_OBJECT.client_secret()}")
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-        self.response = self.session.post(url=self.base_url, data=token, headers=headers)
+        data = DICT_OBJECT.form_authorization(client_id=f"{ENV_OBJECT.client_id()}",
+                                              client_secret=f"{ENV_OBJECT.client_secret()}")
+        self.response = self.session.post(url=self.base_url, data=data, headers=DICT_OBJECT.form_headers())
         if self.response.status_code == 200:
             return self.response
         else:
@@ -52,13 +47,7 @@ class Application:
 
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
-        x_trace_id = str(uuid.uuid4())
-        with allure.step(title=f"x-trace-id: {x_trace_id}"):
-            token = {
-                "x-trace-id": x_trace_id,
-                "Authorization": f"Bearer {self.response.json()['access_token']}"
-            }
-            return token
+        return DICT_OBJECT.form_token(authorization=f"Bearer {self.response.json()['access_token']}")
 
     def close_session(self):
         """Метод для закрытия сессии."""
