@@ -146,6 +146,18 @@ class Dict:
         }
         return payload
 
+    def order_from_file(self, type_: str = None):
+        r"""Тело для создания заказа из файла.
+        :param type_: Параметр для создания заказа из файла формата СД RussianPost.
+        """
+        payload = {
+            "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
+            "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
+        }
+        if type_:
+            payload["type"] = type_
+        return payload
+
     @staticmethod
     def form_parcel_body(orders_ids, data: str):
         """Тело для создания партии."""
