@@ -20,7 +20,7 @@ class ApiParcel:
             create_parcel = DICT_OBJECT.form_parcel_body(orders_ids=value, data=str(data))
         else:
             create_parcel = DICT_OBJECT.form_parcel_body(orders_ids=[value], data=str(data))
-        result = self.app.http_method.post(link=self.link, data=create_parcel)
+        result = self.app.http_method.post(link=self.link, json=create_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -54,7 +54,7 @@ class ApiParcel:
         :param parcel_id: Идентификатор партии.
         """
         patch_parcel = DICT_OBJECT.form_patch_body(op=op, path="orderIds", value=[order_id])
-        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
+        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -69,7 +69,7 @@ class ApiParcel:
         data = datetime.date.today()
         data += datetime.timedelta(days=day)
         patch_parcel = DICT_OBJECT.form_patch_body(op="replace", path="shipmentDate", value=str(data))
-        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", data=patch_parcel)
+        result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

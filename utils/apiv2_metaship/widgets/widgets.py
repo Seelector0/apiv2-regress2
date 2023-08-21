@@ -19,7 +19,7 @@ class ApiWidget:
         body = {
             "shopId": shop_id
         }
-        result = self.app.http_method.post(link=self.link, data=body)
+        result = self.app.http_method.post(link=self.link, json=body)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

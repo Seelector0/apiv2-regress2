@@ -38,7 +38,7 @@ class ApiDocument:
         labels = {
             "orderIds": order_ids
         }
-        return self.app.http_method.post(link=f"{self.link_documents()}/labels", data=labels)
+        return self.app.http_method.post(link=f"{self.link_documents()}/labels", json=labels)
 
     def get_acceptance(self):
         """Метод получения АПП."""

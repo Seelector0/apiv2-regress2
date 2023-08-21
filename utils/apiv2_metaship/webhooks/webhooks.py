@@ -21,7 +21,7 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        result = self.app.http_method.post(link=self.link, data=webhook)
+        result = self.app.http_method.post(link=self.link, json=webhook)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -59,7 +59,7 @@ class ApiWebhook:
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        result = self.app.http_method.post(link=f"{url}", data=change_order_status)
+        result = self.app.http_method.post(link=f"{url}", json=change_order_status)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

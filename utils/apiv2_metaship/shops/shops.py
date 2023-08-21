@@ -12,7 +12,7 @@ class ApiShop:
 
     def post_shop(self):
         """Метод создания магазина."""
-        result = self.app.http_method.post(link=self.link, data=DICT_OBJECT.form_shop_body())
+        result = self.app.http_method.post(link=self.link, json=DICT_OBJECT.form_shop_body())
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -52,7 +52,7 @@ class ApiShop:
         put_shop["uri"] = shop_url
         put_shop["phone"] = phone
         put_shop["sender"] = contact_person
-        return self.app.http_method.put(link=f"{self.link}/{shop_id}", data=put_shop)
+        return self.app.http_method.put(link=f"{self.link}/{shop_id}", json=put_shop)
 
     def patch_shop(self, shop_id: str, value: bool = True):
         r"""Метод обновления полей магазина.
@@ -60,7 +60,7 @@ class ApiShop:
         :param value: Флаг скрывает магазин из ЛК.
         """
         patch_shop = DICT_OBJECT.form_patch_body(op="replace", path="visibility", value=value)
-        result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", data=patch_shop)
+        result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", json=patch_shop)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

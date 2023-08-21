@@ -12,7 +12,7 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        result = self.app.http_method.post(link=self.link, data=DICT_OBJECT.form_warehouse_body())
+        result = self.app.http_method.post(link=self.link, json=DICT_OBJECT.form_warehouse_body())
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -65,7 +65,7 @@ class ApiWarehouse:
         warehouse["contact"]["phone"] = phone
         warehouse["contact"]["email"] = email
         warehouse["workingTime"] = working_time
-        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", data=warehouse)
+        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", json=warehouse)
 
     def patch_warehouse(self, warehouse_id: str, path: str, value):
         r"""Метод для редактирования полей склада.
@@ -74,7 +74,7 @@ class ApiWarehouse:
         :param value: Новое значение поля.
         """
         patch_warehouse = DICT_OBJECT.form_patch_body(op="replace", path=path, value=value)
-        result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", data=patch_warehouse)
+        result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", json=patch_warehouse)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

@@ -19,7 +19,7 @@ class ApiIntakes:
         :param delivery_service: СД только Boxberry, Cdek, Cse.
         """
         result = self.app.http_method.post(link=self.link,
-                                           data=DICT_OBJECT.form_intakes(delivery_service=delivery_service))
+                                           json=DICT_OBJECT.form_intakes(delivery_service=delivery_service))
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
