@@ -68,7 +68,7 @@ class ApiOrder:
                     },
                     {
                         "article": f"ART_2{randrange(1000000, 9999999)}",
-                        "name": "Стол",
+                        "name": "Стул",
                         "price": price_2,
                         "count": 1,
                         "weight": 1,
@@ -77,7 +77,7 @@ class ApiOrder:
                     },
                     {
                         "article": f"ART_3{randrange(1000000, 9999999)}",
-                        "name": "Стол",
+                        "name": "Пуфик",
                         "price": price_3,
                         "count": 1,
                         "weight": 1,
@@ -87,7 +87,7 @@ class ApiOrder:
                 ]
             }
         ]
-        result = self.app.http_method.post(link=self.link, data=single_order)
+        result = self.app.http_method.post(link=self.link, json=single_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -164,7 +164,7 @@ class ApiOrder:
                 "dimension": dimension
             }
         ]
-        result = self.app.http_method.post(link=self.link, data=multi_order)
+        result = self.app.http_method.post(link=self.link, json=multi_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -269,7 +269,7 @@ class ApiOrder:
         put_order["dimension"]["width"] = width
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
-        result = self.app.http_method.put(link=f"{self.link}/{order_id}", data=put_order)
+        result = self.app.http_method.put(link=f"{self.link}/{order_id}", json=put_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -282,7 +282,7 @@ class ApiOrder:
         :param weight: Новый вес заказа.
         """
         patch_weight = DICT_OBJECT.form_patch_body(op="replace", path="weight", value=weight)
-        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_weight)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_weight)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -320,7 +320,7 @@ class ApiOrder:
                 "vat": "0"
             })
         ])
-        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -344,7 +344,7 @@ class ApiOrder:
                 "vat": "10"
             })
         ])
-        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=patch_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -365,7 +365,7 @@ class ApiOrder:
                 "height": randint(10, 30)
             }))
         path_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=list_items)
-        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", data=path_order)
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=path_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
