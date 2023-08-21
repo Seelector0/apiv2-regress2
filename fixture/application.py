@@ -12,16 +12,15 @@ from utils.apiv2_metaship.info.info import ApiInfo
 from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
 from utils.dicts import DICT_OBJECT
-from requests import Response
 import requests
 
 
 class Application:
 
-    def __init__(self, base_url: str = None, response: Response = None):
+    def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
-        self.response = response
+        self.response = None
         self.http_method = HttpMethod(self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)

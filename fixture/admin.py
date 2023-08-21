@@ -2,7 +2,6 @@ from utils.admin_api.connections_delivery_services.moderation_delivery_services 
 from dotenv import load_dotenv, find_dotenv
 from utils.http_methods import HttpMethod
 from utils.dicts import DICT_OBJECT
-from requests import Response
 import requests
 import os
 
@@ -11,10 +10,10 @@ class Admin:
 
     load_dotenv(find_dotenv())
 
-    def __init__(self, base_url: str = None, response: Response = None):
+    def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
-        self.response = response
+        self.response = None
         self.http_method = HttpMethod(self)
         self.moderation = ApiModerationDeliveryServices(self)
 
