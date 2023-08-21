@@ -21,7 +21,7 @@ class Application:
         self.base_url = base_url
         self.session = requests.Session()
         self.response = None
-        self.http_method = HttpMethod(self)
+        self.http_method = HttpMethod(self, self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
