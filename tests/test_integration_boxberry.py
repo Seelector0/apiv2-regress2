@@ -201,7 +201,6 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получения этикетки Boxberry вне партии")
-@pytest.mark.skip("Проблема с моками")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label_out_of_parcel(app, connections, labels):
     for order_id in connections.metaship.get_list_all_orders():
@@ -234,7 +233,6 @@ def test_create_parcel(app, connections):
 
 @allure.description("Получение этикетки CД Boxberry")
 @pytest.mark.parametrize("labels", ["original", "termo"])
-@pytest.mark.skip("Проблема с моками")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_get_labels(app, connections, labels):
     for order_id in connections.metaship.get_list_all_orders_in_parcel():
@@ -243,7 +241,6 @@ def test_get_labels(app, connections, labels):
 
 
 @allure.description("Получение этикеток заказов из партии СД Boxberry")
-@pytest.mark.skip("Проблема с моками")
 @pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
 def test_get_labels_from_parcel(app, connections):
     labels_from_parcel = app.document.post_labels(order_ids=connections.metaship.get_list_all_orders_in_parcel())
