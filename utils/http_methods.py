@@ -5,8 +5,9 @@ import allure
 
 class HttpMethod:
 
-    def __init__(self, app):
+    def __init__(self, app, admin):
         self.app = app
+        self.admin = admin
 
     @staticmethod
     def url(admin: bool = None):
@@ -19,33 +20,30 @@ class HttpMethod:
             url = f"{ENV_OBJECT.get_base_url()}/v2/"
         return url
 
-    def get(self, link: str, params: dict = None, token: dict = None, admin: bool = None):
+    def get(self, link: str, params: dict = None):
         r"""GET запрос.
         :param link: Ссылка на запрос.
         :param params: Тело запроса если нужно.
-        :param token: Токен для сессии.
-        :param admin: Для использования admin URL.
         """
-        if token is None:
-            token = self.app.token()
-        with allure.step(title=f"GET requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.get(url=f"{self.url(admin=admin)}{link}", params=params, headers=token)
+        with allure.step(title=f"GET requests to URL '{self.url()}{link}'"):
+            result = requests.get(url=f"{self.url()}{link}", params=params, headers=self.app.token())
         with allure.step(title=f"Request: {params}"):
             return result
 
-    def post(self, link: str, json: dict = None, data: dict = None, files=None, token: dict = None, admin: bool = None):
+    def post(self, link: str, json: dict = None, data: dict = None, files=None, admin: bool = None):
         r"""POST запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
         :param data: Тело в формате dict.
         :param files: Передаваемый файл.
-        :param token: Токен для сессии.
         :param admin: Для использования admin URL.
         """
-        if token is None:
-            token = self.app.token()
+        if admin is True:
+            headers = self.admin.admin_token()
+        else:
+            headers = self.app.token()
         with allure.step(title=f"POST requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.post(url=f"{self.url(admin=admin)}{link}", json=json, data=data, headers=token,
+            result = requests.post(url=f"{self.url(admin=admin)}{link}", json=json, data=data, headers=headers,
                                    files=files)
         if data:
             with allure.step(title=f"Request: {data}"):
@@ -55,41 +53,29 @@ class HttpMethod:
                 pass
         return result
 
-    def patch(self, link: str, json: dict = None, token: dict = None, admin: bool = None):
+    def patch(self, link: str, json: dict):
         r"""PATCH запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
-        :param token: Токен для сессии.
-        :param admin: Для использования admin URL.
         """
-        if token is None:
-            token = self.app.token()
-        with allure.step(title=f"PATCH requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.patch(url=f"{self.url(admin=admin)}{link}", json=json, headers=token)
+        with allure.step(title=f"PATCH requests to URL '{self.url()}{link}'"):
+            result = requests.patch(url=f"{self.url()}{link}", json=json, headers=self.app.token())
         with allure.step(title=f"Request: {json}"):
             return result
 
-    def put(self, link: str, token: dict = None, json: dict = None, admin: bool = None):
+    def put(self, link: str, json: dict = None):
         r"""PUT запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
-        :param token: Токен для сессии.
-        :param admin: Для использования admin URL.
         """
-        if token is None:
-            token = self.app.token()
-        with allure.step(title=f"PUT requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.put(url=f"{self.url(admin=admin)}{link}", json=json, headers=token)
+        with allure.step(title=f"PUT requests to URL '{self.url()}{link}'"):
+            result = requests.put(url=f"{self.url()}{link}", json=json, headers=self.app.token())
         with allure.step(title=f"Request: {json}"):
             return result
 
-    def delete(self, link: str, token: dict = None, admin: bool = None):
+    def delete(self, link: str):
         r"""DELETE запрос.
         :param link: Ссылка на запрос.
-        :param token: Токен для сессии.
-        :param admin: Для использования admin URL.
         """
-        if token is None:
-            token = self.app.token()
-        with allure.step(title=f"DELETE requests to URL '{self.url(admin=admin)}{link}'"):
-            return requests.delete(url=f"{self.url(admin=admin)}{link}", headers=token)
+        with allure.step(title=f"DELETE requests to URL '{self.url()}{link}'"):
+            return requests.delete(url=f"{self.url()}{link}", headers=self.app.token())

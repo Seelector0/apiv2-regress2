@@ -14,7 +14,7 @@ class Admin:
         self.base_url = base_url
         self.session = requests.Session()
         self.response = None
-        self.http_method = HttpMethod(self)
+        self.http_method = HttpMethod(self, self)
         self.moderation = ApiModerationDeliveryServices(self)
 
     def admin_session(self):
