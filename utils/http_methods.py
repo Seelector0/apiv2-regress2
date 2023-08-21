@@ -45,11 +45,10 @@ class HttpMethod:
         if token is None:
             token = self.app.token()
         with allure.step(title=f"POST requests to URL '{self.url(admin=admin)}{link}'"):
-            try:
-                result = requests.post(url=f"{self.url(admin=admin)}{link}", data=json.dumps(data), headers=token,
-                                       files=files)
-            except:
-                result = requests.post(url=f"{self.url(admin=admin)}{link}", data=data, headers=token, files=files)
+            if files is None:
+                result = requests.post(url=f"{self.url(admin=admin)}{link}", data=json.dumps(data), headers=token)
+            else:
+                result = requests.post(url=f"{self.url()}{link}", data=data, headers=token, files=files)
         with allure.step(title=f"Request: {data}"):
             return result
 
