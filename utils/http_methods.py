@@ -1,7 +1,6 @@
 from environment import ENV_OBJECT
 import requests
 import allure
-import json
 
 
 class HttpMethod:
@@ -46,7 +45,7 @@ class HttpMethod:
             token = self.app.token()
         with allure.step(title=f"POST requests to URL '{self.url(admin=admin)}{link}'"):
             if files is None:
-                result = requests.post(url=f"{self.url(admin=admin)}{link}", data=json.dumps(data), headers=token)
+                result = requests.post(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
             else:
                 result = requests.post(url=f"{self.url()}{link}", data=data, headers=token, files=files)
         with allure.step(title=f"Request: {data}"):
@@ -62,7 +61,7 @@ class HttpMethod:
         if token is None:
             token = self.app.token()
         with allure.step(title=f"PATCH requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.patch(url=f"{self.url(admin=admin)}{link}", data=json.dumps(data), headers=token)
+            result = requests.patch(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
         with allure.step(title=f"Request: {data}"):
             return result
 
@@ -76,7 +75,7 @@ class HttpMethod:
         if token is None:
             token = self.app.token()
         with allure.step(title=f"PUT requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.put(url=f"{self.url(admin=admin)}{link}", data=json.dumps(data), headers=token)
+            result = requests.put(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
         with allure.step(title=f"Request: {data}"):
             return result
 
