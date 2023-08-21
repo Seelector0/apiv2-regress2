@@ -33,10 +33,11 @@ class HttpMethod:
         with allure.step(title=f"Request: {params}"):
             return result
 
-    def post(self, link: str, data: dict = None, files=None, token: dict = None, admin: bool = None):
+    def post(self, link: str, json: dict = None, data: dict = None, files=None, token: dict = None, admin: bool = None):
         r"""POST запрос.
         :param link: Ссылка на запрос.
-        :param data: Тело запроса в формате JSON.
+        :param json: Тело запроса в формате JSON.
+        :param data: Тело в формате dict.
         :param files: Передаваемый файл.
         :param token: Токен для сессии.
         :param admin: Для использования admin URL.
@@ -44,39 +45,42 @@ class HttpMethod:
         if token is None:
             token = self.app.token()
         with allure.step(title=f"POST requests to URL '{self.url(admin=admin)}{link}'"):
-            if files is None:
-                result = requests.post(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
-            else:
-                result = requests.post(url=f"{self.url()}{link}", data=data, headers=token, files=files)
-        with allure.step(title=f"Request: {data}"):
-            return result
+            result = requests.post(url=f"{self.url(admin=admin)}{link}", json=json, data=data, headers=token,
+                                   files=files)
+        if data:
+            with allure.step(title=f"Request: {data}"):
+                pass
+        else:
+            with allure.step(title=f"Request: {json}"):
+                pass
+        return result
 
-    def patch(self, link: str, data: dict = None, token: dict = None, admin: bool = None):
+    def patch(self, link: str, json: dict = None, token: dict = None, admin: bool = None):
         r"""PATCH запрос.
         :param link: Ссылка на запрос.
-        :param data: Тело запроса в формате JSON.
+        :param json: Тело запроса в формате JSON.
         :param token: Токен для сессии.
         :param admin: Для использования admin URL.
         """
         if token is None:
             token = self.app.token()
         with allure.step(title=f"PATCH requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.patch(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
-        with allure.step(title=f"Request: {data}"):
+            result = requests.patch(url=f"{self.url(admin=admin)}{link}", json=json, headers=token)
+        with allure.step(title=f"Request: {json}"):
             return result
 
-    def put(self, link: str, token: dict = None, data: dict = None, admin: bool = None):
+    def put(self, link: str, token: dict = None, json: dict = None, admin: bool = None):
         r"""PUT запрос.
         :param link: Ссылка на запрос.
-        :param data: Тело запроса в формате JSON.
+        :param json: Тело запроса в формате JSON.
         :param token: Токен для сессии.
         :param admin: Для использования admin URL.
         """
         if token is None:
             token = self.app.token()
         with allure.step(title=f"PUT requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.put(url=f"{self.url(admin=admin)}{link}", json=data, headers=token)
-        with allure.step(title=f"Request: {data}"):
+            result = requests.put(url=f"{self.url(admin=admin)}{link}", json=json, headers=token)
+        with allure.step(title=f"Request: {json}"):
             return result
 
     def delete(self, link: str, token: dict = None, admin: bool = None):
