@@ -11,7 +11,7 @@ fixture_connections = None
 fixture_customer = None
 fixture_tracking = None
 fixture_widget = None
-link_token = "auth/access_token"
+access_token = "/auth/access_token"
 
 
 @pytest.fixture(scope="module")
@@ -19,7 +19,7 @@ def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
     global apiv2_metaship
     if apiv2_metaship is None:
-        apiv2_metaship = Application(base_url=f"{ENV_OBJECT.get_base_url()}/{link_token}")
+        apiv2_metaship = Application(base_url=f"{ENV_OBJECT.get_base_url()}{access_token}")
     apiv2_metaship.open_session()
     return apiv2_metaship
 
@@ -29,7 +29,7 @@ def admin():
     """Фикстура для открытия сессии по Admin Api."""
     global api_admin
     if api_admin is None:
-        api_admin = Admin(base_url=f"{ENV_OBJECT.get_base_url()}/{link_token}")
+        api_admin = Admin(base_url=f"{ENV_OBJECT.get_base_url()}{access_token}")
     api_admin.admin_session()
     return api_admin
 
