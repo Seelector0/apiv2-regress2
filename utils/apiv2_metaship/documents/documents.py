@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.dicts import DICT_OBJECT
 
 
 class ApiDocument:
@@ -20,13 +21,9 @@ class ApiDocument:
         """
         link = f"{self.app.order.link}/{order_id}/label"
         if type_:
-            params = {
-                "type": type_
-            }
+            params = DICT_OBJECT.form_label(key="type", value=type_)
         elif size_format:
-            params = {
-                "size": size_format
-            }
+            params = DICT_OBJECT.form_label(key="size", value=size_format)
         else:
             return self.app.http_method.get(link=link)
         return self.app.http_method.get(link=link, params=params)
@@ -35,9 +32,7 @@ class ApiDocument:
         r"""Метод получения этикеток из партии.
         :param order_ids: Список идентификаторов заказа.
         """
-        labels = {
-            "orderIds": order_ids
-        }
+        labels = DICT_OBJECT.form_label(key="orderIds", value=order_ids)
         return self.app.http_method.post(link=f"{self.link_documents()}/labels", json=labels)
 
     def get_acceptance(self):
