@@ -192,7 +192,8 @@ class ApiOrder:
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xlsx)
         else:
             return f"Файл {file_extension} не поддерживается"
-        result = self.app.http_method.post(link=f"import/{self.link}", data=DICT_OBJECT.order_from_file(), files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=DICT_OBJECT.form_order_from_file(),
+                                           files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -211,8 +212,7 @@ class ApiOrder:
         else:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}",
-                                           data=DICT_OBJECT.order_from_file(type_="russian_post"),
-                                           files=file)
+                                           data=DICT_OBJECT.form_order_from_file(type_="russian_post"), files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -289,19 +289,6 @@ class ApiOrder:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    @staticmethod
-    def cargo_items(items: dict, dimension: dict = None):
-        cargo = {
-            "items": [
-                items
-            ],
-            "barcode": f"Box_3{randrange(100000, 999999)}",
-            "shopNumber": f"{randrange(100000, 999999)}",
-            "weight": randint(10, 30),
-            "dimension": dimension
-        }
-        return cargo
-
     def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
         r"""Метод редактирования поля в заказе.
         :param order_id: Идентификатор заказа.
@@ -311,7 +298,7 @@ class ApiOrder:
         :param weight: Вес товарной позиции.
         """
         patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
-            self.cargo_items(items={
+            DICT_OBJECT.form_cargo_items(items={
                 "article": f"ART_1{randrange(1000000, 9999999)}",
                 "name": name,
                 "price": price,
@@ -335,7 +322,7 @@ class ApiOrder:
         items = result_get_order_by_id.json()["data"]["request"]["places"]
         patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
             *items,
-            self.cargo_items(items={
+            DICT_OBJECT.form_cargo_items(items={
                 "article": f"ART_3{randrange(1000000, 9999999)}",
                 "name": "Пуфик",
                 "price": 1000,
@@ -359,7 +346,7 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            list_items.append(self.cargo_items(items=i, dimension={
+            list_items.append(DICT_OBJECT.form_cargo_items(items=i, dimension={
                 "length": randint(10, 30),
                 "width": randint(10, 30),
                 "height": randint(10, 30)
