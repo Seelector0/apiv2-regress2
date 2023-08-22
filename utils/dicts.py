@@ -63,7 +63,7 @@ class Dict:
     @staticmethod
     def form_warehouse_body():
         """Тело для создания склада."""
-        warehouse_body = {
+        body_warehouse = {
             "name": f"{randrange(100000, 999999)}",
             "address": {
                 "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
@@ -76,7 +76,25 @@ class Dict:
                 "email": "test@email.ru"
             }
         }
-        return warehouse_body
+        return body_warehouse
+
+    @staticmethod
+    def form_delivery_service_code(delivery_service_code):
+        r"""Тело СД.
+        :param delivery_service_code: Код СД.
+        """
+        body_delivery_service_code = {
+            "deliveryServiceCode": delivery_service_code
+        }
+        return body_delivery_service_code
+
+    def form_info_body(self, delivery_service_code: str):
+        """Тело для Info methods.
+        :param delivery_service_code: Код СД.
+        """
+        body_info = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
+        body_info["shopId"] = self.database_connections.metaship.get_list_shops()[0]
+        return body_info
 
     @staticmethod
     def form_connection_type(delivery_service_code: str, aggregation: bool = None):
@@ -84,11 +102,8 @@ class Dict:
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
-        body_connection_type = {
-            "deliveryServiceCode": delivery_service_code,
-            "data": {
-            }
-        }
+        body_connection_type = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
+        body_connection_type["data"]: dict = {}
         if aggregation is True:
             body_connection_type["data"]["type"] = "aggregation"
         return body_connection_type
@@ -109,6 +124,21 @@ class Dict:
             "deliveryService": delivery_service_code
         }
         return body_connection
+
+    def form_offers(self, types: str):
+        """Тело для получения офферов"""
+        body_offers = {
+            "warehouseId": self.database_connections.metaship.get_list_warehouses()[0],
+            "shopId": self.database_connections.metaship.get_list_shops()[0],
+            "address": "г Москва, пр-кт Мира, д 45 стр 2",
+            "declaredValue": randrange(1000, 5000),
+            "height": randrange(10, 45),
+            "length": randrange(10, 45),
+            "width": randrange(10, 45),
+            "weight": randrange(1, 10),
+            "types[0]": types
+        }
+        return body_offers
 
     def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
@@ -136,7 +166,7 @@ class Dict:
         :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         """
-        order_body = {
+        body_order = {
             "warehouse": {
                 "id": str(self.database_connections.metaship.get_list_warehouses()[0]),
             },
@@ -180,33 +210,76 @@ class Dict:
             "datePickup": date_pickup,
             "routes": routes
         }
-        return order_body
+        return body_order
 
-    def order_from_file(self, type_: str = None):
+    @staticmethod
+    def form_cargo_items(items: dict, dimension: dict = None):
+        r"""Тело для создания грузоместа.
+        :param items: Товарная позиция.
+        :param dimension: Габариты грузоместа.
+        """
+        body_cargo = {
+            "items": [
+                items
+            ],
+            "barcode": f"Box_3{randrange(100000, 999999)}",
+            "shopNumber": f"{randrange(100000, 999999)}",
+            "weight": randint(10, 30),
+            "dimension": dimension
+        }
+        return body_cargo
+
+    def form_order_from_file(self, type_: str = None):
         r"""Тело для создания заказа из файла.
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
-        order_body = {
+        body_order = {
             "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
             "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
         }
         if type_:
-            order_body["type"] = type_
-        return order_body
+            body_order["type"] = type_
+        return body_order
+
+    @staticmethod
+    def form_raw(raw: str):
+        """Тело для разбора адреса.
+        :param raw: Адрес.
+        """
+        body_raw = {
+            "raw": raw
+        }
+        return body_raw
+
+    @staticmethod
+    def form_label(key: str, value):
+        r"""Тело для получения этикеток.
+        :param key: Название поля.
+        :param value: Значения поля.
+        """
+        body_label = {
+            f"{key}": value
+        }
+        return body_label
 
     @staticmethod
     def form_parcel_body(orders_ids, data: str):
-        """Тело для создания партии."""
-        parcel_body = {
+        r"""Тело для создания партии.
+        :param orders_ids: Список id заказов.
+        :param data: Дата отгрузки партии.
+        """
+        body_parcel = {
             "orderIds": orders_ids,
             "shipmentDate": data
         }
-        return parcel_body
+        return body_parcel
 
     def form_intakes(self, delivery_service: str):
-        """Тело для создания забора."""
+        r"""Тело для создания забора.
+        :param delivery_service: Код СД.
+        """
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        intakes_body = {
+        body_intake = {
             "deliveryService": delivery_service,
             "date": str(tomorrow),
             "shop": {
@@ -233,7 +306,7 @@ class Dict:
             },
             "description": "Классный груз"
         }
-        return intakes_body
+        return body_intake
 
     @staticmethod
     def form_patch_body(op: str, path: str, value):
@@ -242,14 +315,14 @@ class Dict:
         :param path: Изменяемое поле.
         :param value: Значение.
         """
-        patch_body = [
+        body_patch = [
             {
                 "op": op,
                 "path": path,
                 "value": value
             }
         ]
-        return patch_body
+        return body_patch
 
 
 DICT_OBJECT = Dict()
