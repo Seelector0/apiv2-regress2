@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import datetime
@@ -18,19 +19,14 @@ class ApiInfo:
         :param postal_code: Индекс (только для СД TopDelivery).
         :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал (только для СД Dalli).
         """
-        params = {
-            "deliveryServiceCode": delivery_service_code,
-            "deliveryDate": f"{datetime.date.today()}",
-            "shopId": self.database.metaship.get_list_shops()[0]
-        }
+        params = DICT_OBJECT.form_info_body(delivery_service_code=delivery_service_code)
+        params["deliveryDate"] = f"{datetime.date.today()}"
         if postal_code:
             params["postalCode"] = postal_code
         elif tariff_id:
             params["tariffId"] = tariff_id
         else:
-            params = {
-                "deliveryServiceCode": delivery_service_code
-            }
+            params = DICT_OBJECT.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -38,16 +34,13 @@ class ApiInfo:
         except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
 
-    def delivery_service_points(self, delivery_service_code: str, city_raw="г. Москва"):
+    def delivery_service_points(self, delivery_service_code: str, city_raw: str = "г. Москва"):
         r"""Получение списка ПВЗ конкретной СД.
         :param delivery_service_code: Код СД.
         :param city_raw: Адресная строка по умолчанию г. Москва.
         """
-        params = {
-            "deliveryServiceCode": delivery_service_code,
-            "shopId": self.database.metaship.get_list_shops()[0],
-            "cityRaw": city_raw
-        }
+        params = DICT_OBJECT.form_info_body(delivery_service_code=delivery_service_code)
+        params["cityRaw"] = city_raw
         result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -59,9 +52,7 @@ class ApiInfo:
         r"""Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД.
         :param delivery_service_code: Код СД.
         """
-        params = {
-            "deliveryServiceCode": delivery_service_code
-        }
+        params = DICT_OBJECT.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/vats", params=params)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -73,9 +64,7 @@ class ApiInfo:
         r"""Получение списка точек сдачи.
         :param delivery_service_code: Код СД.
         """
-        params = {
-            "deliveryServiceCode": delivery_service_code
-        }
+        params = DICT_OBJECT.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/intake_offices", params=params)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -138,9 +127,7 @@ class ApiInfo:
         r"""Разбор адреса.
         :param raw: Адрес.
         """
-        params = {
-            "raw": raw
-        }
+        params = DICT_OBJECT.form_raw(raw=raw)
         result = self.app.http_method.get(link="info/address", params=params)
         try:
             with allure.step(title=f"Response: {result.json()}"):

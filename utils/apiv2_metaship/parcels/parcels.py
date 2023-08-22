@@ -11,7 +11,7 @@ class ApiParcel:
         self.app = app
         self.link = "parcels"
 
-    def post_parcel(self, value, data: str = datetime.date.today()):
+    def post_parcel(self, value, data: datetime = datetime.date.today()):
         r"""Метод создания партии.
         :param value: Идентификатор заказа.
         :param data: Дата отправки партии.

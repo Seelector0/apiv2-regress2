@@ -7,7 +7,7 @@ class OtherInfo:
     entity_shops = ["id", "number", "name", "uri", "phone", "sender", "trackingTag", "visibility"]
 
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
-                        "dpdPickupNum", "lPostWarehouseId", "comment"]
+                        "dpdPickupNum", "lPostWarehouseId", "yandexWarehouseId", "comment"]
 
     entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
 
