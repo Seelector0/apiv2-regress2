@@ -192,7 +192,7 @@ def test_get_documents(app):
     Checking.check_status_code(response=documents, expected_status_code=200)
 
 
-@allure.description("Редактирование партииСД FivePost (Удаление заказа)")
+@allure.description("Редактирование партии СД FivePost (Удаление заказа)")
 def test_remove_order_in_parcel(app, connections):
     parcel_id = connections.metaship.get_list_parcels()
     old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
