@@ -204,6 +204,20 @@ def test_create_order_from_file(app, file_extension, connections):
                                         two_value=["succeeded"])
 
 
+@allure.description("Получение списка заказов CД TopDelivery")
+def test_get_orders(app):
+    list_orders = app.order.get_orders()
+    Checking.check_status_code(response=list_orders, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=list_orders)
+
+
+@allure.description("Получение информации о заказе CД TopDelivery")
+def test_get_order_by_id(app, connections):
+    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders()))
+    Checking.check_status_code(response=random_order, expected_status_code=200)
+    Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
+
+
 @allure.description("Получение информации об истории изменения статусов заказа СД TopDelivery")
 def test_order_status(app, connections):
     for order_id in connections.metaship.get_list_all_orders():
@@ -243,6 +257,20 @@ def test_create_parcel(app, connections):
     create_parcel = app.parcel.post_parcel(value=connections.metaship.get_list_all_orders())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+
+
+@allure.description("Получение списка партий CД TopDelivery")
+def test_get_parcels(app):
+    list_parcel = app.parcel.get_parcels()
+    Checking.check_status_code(response=list_parcel, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=list_parcel)
+
+
+@allure.description("Получение информации о партии CД Topdelivery")
+def test_get_parcel_by_id(app, connections):
+    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.metaship.get_list_parcels()))
+    Checking.check_status_code(response=random_parcel, expected_status_code=200)
+    Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
 
 
 @allure.description("Получение этикеток СД TopDelivery")

@@ -100,7 +100,7 @@ def test_offers_delivery_point(app, payment_type):
     Checking.checking_json_key(response=offers_delivery_point, expected_value=["DeliveryPoint"])
 
 
-@allure.description("Создание Courier многоместного заказа по CД СДЭК")
+@allure.description("Создание Courier многоместного заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_courier(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
@@ -118,7 +118,7 @@ def test_create_multi_order_courier(app, payment_type, connections):
                                     two_value=["succeeded"])
 
 
-@allure.description("Создание DeliveryPoint многоместного заказа по CД СДЭК")
+@allure.description("Создание DeliveryPoint многоместного заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_multi_order_delivery_point(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="DeliveryPoint",
@@ -154,7 +154,7 @@ def test_patch_multi_order(app, connections):
                                     new_list=new_len_order_list.json()["data"]["request"]["places"])
 
 
-@allure.description("Создание Courier заказа по CД СДЭК")
+@allure.description("Создание Courier заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_courier(app, payment_type, connections):
     new_order = app.order.post_single_order(payment_type=payment_type, type_ds="Courier", service="Cdek",
@@ -170,7 +170,7 @@ def test_create_order_courier(app, payment_type, connections):
                                     two_value=["succeeded"])
 
 
-@allure.description("Создание DeliveryPoint заказа по CД СДЭК")
+@allure.description("Создание DeliveryPoint заказа по CД Cdek")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_create_order_delivery_point(app, payment_type, connections):
     new_order = app.order.post_single_order(payment_type=payment_type, type_ds="DeliveryPoint", service="Cdek",
@@ -200,6 +200,20 @@ def test_create_order_from_file(app, file_extension, connections):
         Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=order["id"],
                                                                                             value="state"),
                                         two_value=["succeeded"])
+
+
+@allure.description("Получение списка заказов CД Cdek")
+def test_get_orders(app):
+    list_orders = app.order.get_orders()
+    Checking.check_status_code(response=list_orders, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=list_orders)
+
+
+@allure.description("Получение информации о заказе CД Cdek")
+def test_get_order_by_id(app, connections):
+    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders()))
+    Checking.check_status_code(response=random_order, expected_status_code=200)
+    Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
 
 
 @allure.description("Редактирование заказа СД Cdek")
@@ -247,7 +261,7 @@ def test_delete_order(app, connections):
                                     two_value=[True])
 
 
-@allure.description("Получения этикеток CД СДЭК вне партии")
+@allure.description("Получения этикеток CД Cdek вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels_out_of_parcel(app, connections, labels):
     for order_id in connections.metaship.get_list_all_orders():
@@ -255,7 +269,7 @@ def test_get_labels_out_of_parcel(app, connections, labels):
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
-@allure.description("Получения оригинальных этикеток CД СДЭК в формате A4, A5, A6 вне партии")
+@allure.description("Получения оригинальных этикеток CД Cdek в формате A4, A5, A6 вне партии")
 @pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
 def test_get_original_labels_out_of_parcel(app, connections, format_):
     for order_id in connections.metaship.get_list_all_orders():
@@ -276,6 +290,20 @@ def test_create_parcel(app, connections):
     create_parcel = app.parcel.post_parcel(value=choice(connections.metaship.get_list_all_orders()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+
+
+@allure.description("Получение списка партий CД Cdek")
+def test_get_parcels(app):
+    list_parcel = app.parcel.get_parcels()
+    Checking.check_status_code(response=list_parcel, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=list_parcel)
+
+
+@allure.description("Получение информации о партии CД Cdek")
+def test_get_parcel_by_id(app, connections):
+    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.metaship.get_list_parcels()))
+    Checking.check_status_code(response=random_parcel, expected_status_code=200)
+    Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
 
 
 @allure.description("Редактирование партии СД Cdek (Добавление заказов)")

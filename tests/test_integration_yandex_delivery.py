@@ -221,7 +221,7 @@ def test_get_parcels(app):
     Checking.check_response_is_not_empty(response=list_parcel)
 
 
-@allure.description("Получение информации о заказе CД YandexDelivery")
+@allure.description("Получение информации о партии CД YandexDelivery")
 def test_get_parcel_by_id(app, connections):
     random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.metaship.get_list_parcels()))
     Checking.check_status_code(response=random_parcel, expected_status_code=200)
