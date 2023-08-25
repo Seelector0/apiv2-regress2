@@ -80,7 +80,7 @@ class ApiModerationDeliveryServices:
         five_post = DICT_OBJECT.form_moderation_delivery_services(delivery_service_code="FivePost")
         five_post["credential"]["apiKey"] = f"{os.getenv('FIVE_POST_API_KEY')}"
         five_post["credential"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
-        five_post["credential"]["baseWeight"] = 1000
+        five_post["credential"]["baseWeight"] = int(f"{os.getenv('FIVE_POST_BASE_WEIGHT')}")
         result = self.admin.http_method.post(link=self.link, json=five_post, admin=True)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -91,7 +91,7 @@ class ApiModerationDeliveryServices:
     def moderation_yandex_go(self):
         """Снятие с модерации СД YandexGo"""
         yandex_go = DICT_OBJECT.form_moderation_delivery_services(delivery_service_code="YandexGo")
-        yandex_go["credential"]["yandexGoToken"] = f"{os.getenv('YANDEX_TOKEN')}"
+        yandex_go["credential"]["yandexGoToken"] = f"{os.getenv('YA_GO_TOKEN')}"
         yandex_go["credential"]["inn"] = "7734381257"
         result = self.admin.http_method.post(link=self.link, json=yandex_go, admin=True)
         try:
@@ -103,10 +103,9 @@ class ApiModerationDeliveryServices:
     def moderation_yandex_delivery(self):
         """Снятие с модерации СД YandexDelivery"""
         yandex_delivery = DICT_OBJECT.form_moderation_delivery_services(delivery_service_code="YandexDelivery")
-        yandex_delivery["credential"]["yandexDeliveryToken"] = f"{os.getenv('YANDEX_TOKEN')}"
-        yandex_delivery["credential"]["inn"] = "7734381257"
-        yandex_delivery["credential"]["login"] = "ipiunov@gmail.com"
-        yandex_delivery["credential"]["password"] = "basxok-racgAm-9vapma"
+        yandex_delivery["credential"]["yandexDeliveryToken"] = f"{os.getenv('YA_DELIVERY_TOKEN')}"
+        yandex_delivery["credential"]["inn"] = f"{os.getenv('YA_DELIVERY_INN')}"
+        yandex_delivery["credential"]["intakePointCode"] = f"{os.getenv('YA_DELIVERY_INTAKE_POINT_CODE')}"
         result = self.admin.http_method.post(link=self.link, json=yandex_delivery, admin=True)
         try:
             with allure.step(title=f"Response: {result.json()}"):
