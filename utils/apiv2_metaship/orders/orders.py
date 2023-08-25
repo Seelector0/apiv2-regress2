@@ -17,7 +17,7 @@ class ApiOrder:
         self.database_connections = DataBase(database=ENV_OBJECT.db_connections())
 
     def post_single_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                          barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
+                          shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
                           length: float = randint(10, 30), width: float = randint(10, 50),
                           height: float = randint(10, 50), tariff: str = None, data: str = None,
                           delivery_time: dict = None, delivery_point_code: str = None, pickup_time_period: str = None,
@@ -33,7 +33,7 @@ class ApiOrder:
         :param price_1: Цена первой товарной позиции.
         :param price_2: Цена второй товарной позиции.
         :param price_3: Цена третий товарной позиции.
-        :param barcode: Штрих код заказа.
+        :param shop_barcode: Штрих код заказа.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param length: Длинна.
@@ -46,7 +46,7 @@ class ApiOrder:
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
-        single_order = DICT_OBJECT.form_order(barcode=barcode, payment_type=payment_type,
+        single_order = DICT_OBJECT.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
                                               declared_value=declared_value + price_1 + price_2 + price_3,
                                               delivery_sum=delivery_sum, cod=cod, length=length, width=width,
                                               height=height, type_ds=type_ds, service=service, tariff=tariff, data=data,
