@@ -9,6 +9,11 @@ class OtherInfo:
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
                         "dpdPickupNum", "lPostWarehouseId", "yandexWarehouseId", "comment"]
 
+    entity_order = ['id', 'number', 'addressTo', 'data', 'parcel', 'status', 'statusReason', 'state', 'stateMessage',
+                    'created']
+
+    entity_parcel = ['id', 'number', 'shop', 'deliveryServiceCode', 'data', 'created', 'deleted', 'state', 'stateTime']
+
     entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
 
     created_entity_widget = ['id', 'customerId', 'shopId', 'token', 'createdAt', 'updatedAt']
@@ -1123,6 +1128,38 @@ class OtherInfo:
             "name": "no-sender-confirmation",
             "title": "Отключение подтверждения кодом для отправителя",
             "description": "Отключение подтверждения кодом для отправителя"
+        }
+    ]
+
+    yandex_delivery_vats = [
+        {
+            "code": "NO_VAT",
+            "name": "Без НДС"
+        },
+        {
+            "code": "0",
+            "name": "НДС 0%"
+        },
+        {
+            "code": "10",
+            "name": "НДС 10%"
+        },
+        {
+            "code": "20",
+            "name": "НДС 20%"
+        }
+    ]
+
+    yandex_delivery_services = [
+        {
+            "name": "barcode-generation",
+            "title": "Генерация штрихкода на стороне Меташипа",
+            "description": "Генерация штрихкода на стороне Меташипа"
+        },
+        {
+            "name": "partial-sale",
+            "title": "Частичная реализация",
+            "description": "Частичная реализация"
         }
     ]
 
