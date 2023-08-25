@@ -69,6 +69,7 @@ class Dict:
                 "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
             },
             "lPostWarehouseId": "20537",
+            "yandexWarehouseId": None,
             "pickup": True,
             "contact": {
                 "fullName": "Виктор Викторович",
@@ -140,14 +141,14 @@ class Dict:
         }
         return body_offers
 
-    def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, barcode: str = None,
+    def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, shop_barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
                    height: float = randint(10, 50), weight: float = randint(1, 5), tariff: str = None,
                    delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   delivery_point_code: str = None,  pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None,):
+                   delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
+                   routes: list = None, ):
         r"""Тело для создания заказов.
-        :param barcode: Штрих код заказа.
+        :param shop_barcode: Штрих код заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
@@ -173,7 +174,7 @@ class Dict:
             "shop": {
                 "id": str(self.database_connections.metaship.get_list_shops()[0]),
                 "number": f"{randrange(1000000, 9999999)}",
-                "barcode": barcode,
+                "barcode": shop_barcode,
             },
             "payment": {
                 "type": payment_type,
