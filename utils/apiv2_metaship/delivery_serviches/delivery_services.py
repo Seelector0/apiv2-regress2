@@ -1,7 +1,7 @@
-from utils.dicts import DICT_OBJECT
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -133,7 +133,7 @@ class ApiDeliveryServices:
             five_post = DICT_OBJECT.form_connection_type(delivery_service_code="FivePost")
             five_post["data"]["apiKey"] = f"{os.getenv('FIVE_POST_API_KEY')}"
             five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
-            five_post["data"]["baseWeight"] = 1000
+            five_post["data"]["baseWeight"] = int(f"{os.getenv('FIVE_POST_BASE_WEIGHT')}")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=five_post)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -158,7 +158,7 @@ class ApiDeliveryServices:
             yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo", aggregation=True)
         else:
             yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo")
-            yandex_go["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
+            yandex_go["data"]["token"] = f"{os.getenv('YA_GO_TOKEN')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=yandex_go)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -174,8 +174,9 @@ class ApiDeliveryServices:
             yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery", aggregation=True)
         else:
             yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery")
-            yandex_delivery["data"]["token"] = f"{os.getenv('YANDEX_TOKEN')}"
-        yandex_delivery["data"]["intakePointCode"] = "807655"
+            yandex_delivery["data"]["token"] = f"{os.getenv('YA_DELIVERY_TOKEN')}"
+            yandex_delivery["data"]["inn"] = f"{os.getenv('YA_DELIVERY_INN')}"
+            yandex_delivery["data"]["intakePointCode"] = f"{os.getenv('YA_DELIVERY_INTAKE_POINT_CODE')}"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=yandex_delivery)
         try:
             with allure.step(title=f"Response: {result.json()}"):
