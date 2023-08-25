@@ -83,6 +83,13 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cdek_services)
 
 
+@allure.description("Получение информации о тарифах поддерживаемых СД Cdek")
+def tests_tariffs(app):
+    list_tariffs = app.info.get_tariffs(code="Cdek")
+    Checking.check_status_code(response=list_tariffs, expected_status_code=200)
+    Checking.checking_json_key(response=list_tariffs, expected_value=INFO.cdek_list_tariffs)
+
+
 @allure.description("Получение оферов в формате 'widget'")
 def test_offers_format_widget(app):
     offers_widget = app.offers.get_offers(format_="widget")
