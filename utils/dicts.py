@@ -116,10 +116,10 @@ class Dict:
         shop_id = self.database_connections.metaship.get_list_shops()[0]
         body_connection = {
             "shopId": shop_id,
-            "customerId": f"{ENV_OBJECT.customer_id()}",
-            "connectionId": f"{self.database_customer.customer.get_connections_id(shop_id=shop_id)[0]}",
+            "customerId": ENV_OBJECT.customer_id(),
+            "connectionId": self.database_customer.customer.get_connections_id(shop_id=shop_id)[0],
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
-            "customerAgreementId": f"{ENV_OBJECT.customer_agreements_id()}",
+            "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
             "credential": {
             },
             "deliveryService": delivery_service_code
@@ -169,10 +169,10 @@ class Dict:
         """
         body_order = {
             "warehouse": {
-                "id": str(self.database_connections.metaship.get_list_warehouses()[0]),
+                "id": self.database_connections.metaship.get_list_warehouses()[0],
             },
             "shop": {
-                "id": str(self.database_connections.metaship.get_list_shops()[0]),
+                "id": self.database_connections.metaship.get_list_shops()[0],
                 "number": f"{randrange(1000000, 9999999)}",
                 "barcode": shop_barcode,
             },
@@ -235,8 +235,8 @@ class Dict:
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
         body_order = {
-            "shopId": str(self.database_connections.metaship.get_list_shops()[0]),
-            "warehouseId": str(self.database_connections.metaship.get_list_warehouses()[0])
+            "shopId": self.database_connections.metaship.get_list_shops()[0],
+            "warehouseId": self.database_connections.metaship.get_list_warehouses()[0]
         }
         if type_:
             body_order["type"] = type_
@@ -308,6 +308,20 @@ class Dict:
             "description": "Классный груз"
         }
         return body_intake
+
+    @staticmethod
+    def form_webhook(shop_id):
+        r"""Тело для создания веб-хука.
+        :param shop_id: Идентификатор магазина.
+        """
+        body_webhook = {
+            "shopId": shop_id,
+            "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
+            "name": "Подписка на обновление статусов",
+            "eventType": "StatusUpdate",
+            "secret": "string"
+        }
+        return body_webhook
 
     @staticmethod
     def form_patch_body(op: str, path: str, value):
