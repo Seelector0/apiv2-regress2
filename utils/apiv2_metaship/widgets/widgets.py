@@ -16,9 +16,7 @@ class ApiWidget:
         r"""Создание токена для виджета.
         :param shop_id: Id магазина из БД.
         """
-        body = {
-            "shopId": shop_id
-        }
+        body = self.app.dict.form_widget(shop_id=shop_id)
         result = self.app.http_method.post(link=self.link, json=body)
         try:
             with allure.step(title=f"Response: {result.json()}"):

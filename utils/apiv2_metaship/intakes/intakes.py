@@ -1,4 +1,3 @@
-from utils.dicts import DICT_OBJECT
 from fixture.database import DataBase
 from environment import ENV_OBJECT
 import requests.exceptions
@@ -18,7 +17,7 @@ class ApiIntakes:
         :param delivery_service: СД только Boxberry, Cdek, Cse.
         """
         result = self.app.http_method.post(link=self.link,
-                                           json=DICT_OBJECT.form_intakes(delivery_service=delivery_service))
+                                           json=self.app.dict.form_intakes(delivery_service=delivery_service))
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result

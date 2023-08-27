@@ -1,6 +1,5 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -15,7 +14,7 @@ class ApiWebhook:
 
     def post_webhook(self, shop_id: str):
         """Метод создания веб-хука."""
-        webhook = DICT_OBJECT.form_webhook(shop_id=shop_id)
+        webhook = self.app.dict.form_webhook(shop_id=shop_id)
         result = self.app.http_method.post(link=self.link, json=webhook)
         try:
             with allure.step(title=f"Response: {result.json()}"):

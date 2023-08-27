@@ -1,6 +1,5 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.dicts import DICT_OBJECT
 from random import randrange, randint
 import requests.exceptions
 import simplejson.errors
@@ -46,13 +45,14 @@ class ApiOrder:
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
-        single_order = DICT_OBJECT.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
-                                              declared_value=declared_value + price_1 + price_2 + price_3,
-                                              delivery_sum=delivery_sum, cod=cod, length=length, width=width,
-                                              height=height, type_ds=type_ds, service=service, tariff=tariff, data=data,
-                                              delivery_time=delivery_time, delivery_point_code=delivery_point_code,
-                                              pickup_time_period=pickup_time_period, date_pickup=date_pickup,
-                                              routes=routes)
+        single_order = self.app.dict.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
+                                                declared_value=declared_value + price_1 + price_2 + price_3,
+                                                delivery_sum=delivery_sum, cod=cod, length=length, width=width,
+                                                height=height, type_ds=type_ds, service=service, tariff=tariff,
+                                                data=data, delivery_time=delivery_time,
+                                                delivery_point_code=delivery_point_code,
+                                                pickup_time_period=pickup_time_period, date_pickup=date_pickup,
+                                                routes=routes)
 
         single_order["places"] = [
             {
@@ -124,12 +124,12 @@ class ApiOrder:
         :param date_pickup: Временной интервал.
         :param tariff: Тариф создания заказа.
         """
-        multi_order = DICT_OBJECT.form_order(payment_type=payment_type,
-                                             declared_value=declared_value + price_1 + price_2,
-                                             delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
-                                             tariff=tariff, data=data, delivery_time=delivery_time,
-                                             delivery_point_code=delivery_point_code, date_pickup=date_pickup,
-                                             pickup_time_period=pickup_time_period)
+        multi_order = self.app.dict.form_order(payment_type=payment_type,
+                                               declared_value=declared_value + price_1 + price_2,
+                                               delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
+                                               tariff=tariff, data=data, delivery_time=delivery_time,
+                                               delivery_point_code=delivery_point_code, date_pickup=date_pickup,
+                                               pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             {
                 "items": [
@@ -192,7 +192,7 @@ class ApiOrder:
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xlsx)
         else:
             return f"Файл {file_extension} не поддерживается"
-        result = self.app.http_method.post(link=f"import/{self.link}", data=DICT_OBJECT.form_order_from_file(),
+        result = self.app.http_method.post(link=f"import/{self.link}", data=self.app.dict.form_order_from_file(),
                                            files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -212,7 +212,7 @@ class ApiOrder:
         else:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}",
-                                           data=DICT_OBJECT.form_order_from_file(type_="russian_post"), files=file)
+                                           data=self.app.dict.form_order_from_file(type_="russian_post"), files=file)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -281,7 +281,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
-        patch_weight = DICT_OBJECT.form_patch_body(op="replace", path="weight", value=weight)
+        patch_weight = self.app.dict.form_patch_body(op="replace", path="weight", value=weight)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_weight)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -297,8 +297,8 @@ class ApiOrder:
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
-            DICT_OBJECT.form_cargo_items(items={
+        patch_order = self.app.dict.form_patch_body(op="replace", path="places", value=[
+            self.app.dict.form_cargo_items(items={
                 "article": f"ART_1{randrange(1000000, 9999999)}",
                 "name": name,
                 "price": price,
@@ -320,9 +320,9 @@ class ApiOrder:
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        patch_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=[
+        patch_order = self.app.dict.form_patch_body(op="replace", path="places", value=[
             *items,
-            DICT_OBJECT.form_cargo_items(items={
+            self.app.dict.form_cargo_items(items={
                 "article": f"ART_3{randrange(1000000, 9999999)}",
                 "name": "Пуфик",
                 "price": 1000,
@@ -346,12 +346,12 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            list_items.append(DICT_OBJECT.form_cargo_items(items=i, dimension={
+            list_items.append(self.app.dict.form_cargo_items(items=i, dimension={
                 "length": randint(10, 30),
                 "width": randint(10, 30),
                 "height": randint(10, 30)
             }))
-        path_order = DICT_OBJECT.form_patch_body(op="replace", path="places", value=list_items)
+        path_order = self.app.dict.form_patch_body(op="replace", path="places", value=list_items)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=path_order)
         try:
             with allure.step(title=f"Response: {result.json()}"):

@@ -1,4 +1,3 @@
-from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -19,10 +18,10 @@ class ApiOffers:
         :param format_: Получение в формате виджета.
         """
         if format_:
-            body_offers = DICT_OBJECT.form_offers(types="DeliveryPoint")
+            body_offers = self.app.dict.form_offers(types="DeliveryPoint")
             body_offers["format"] = format_
         else:
-            body_offers = DICT_OBJECT.form_offers(types=types)
+            body_offers = self.app.dict.form_offers(types=types)
             body_offers["paymentType"] = payment_type,
             body_offers["deliveryServiceCode"] = delivery_service_code,
             body_offers["deliveryPointNumber"] = delivery_point_number

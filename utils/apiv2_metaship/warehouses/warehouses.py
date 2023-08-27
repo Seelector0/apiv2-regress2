@@ -1,4 +1,3 @@
-from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -12,7 +11,7 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        result = self.app.http_method.post(link=self.link, json=DICT_OBJECT.form_warehouse_body())
+        result = self.app.http_method.post(link=self.link, json=self.app.dict.form_warehouse_body())
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -54,7 +53,7 @@ class ApiWarehouse:
         :param email: Email контактного лица склада.
         :param working_time: Время работы склада.
         """
-        warehouse = DICT_OBJECT.form_warehouse_body()
+        warehouse = self.app.dict.form_warehouse_body()
         warehouse["name"] = name
         warehouse["pickup"] = pickup
         warehouse["comment"] = comment
@@ -73,7 +72,7 @@ class ApiWarehouse:
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        patch_warehouse = DICT_OBJECT.form_patch_body(op="replace", path=path, value=value)
+        patch_warehouse = self.app.dict.form_patch_body(op="replace", path=path, value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", json=patch_warehouse)
         try:
             with allure.step(title=f"Response: {result.json()}"):

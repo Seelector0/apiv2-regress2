@@ -1,4 +1,3 @@
-from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -12,7 +11,7 @@ class ApiShop:
 
     def post_shop(self):
         """Метод создания магазина."""
-        result = self.app.http_method.post(link=self.link, json=DICT_OBJECT.form_shop_body())
+        result = self.app.http_method.post(link=self.link, json=self.app.dict.form_shop_body())
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
@@ -47,7 +46,7 @@ class ApiShop:
         :param contact_person: ФИО контактного лица магазина.
         :param phone: Телефон контактного лица магазина.
         """
-        put_shop = DICT_OBJECT.form_shop_body()
+        put_shop = self.app.dict.form_shop_body()
         put_shop["name"] = shop_name
         put_shop["uri"] = shop_url
         put_shop["phone"] = phone
@@ -59,7 +58,7 @@ class ApiShop:
         :param shop_id: Идентификатор магазина.
         :param value: Флаг скрывает магазин из ЛК.
         """
-        patch_shop = DICT_OBJECT.form_patch_body(op="replace", path="visibility", value=value)
+        patch_shop = self.app.dict.form_patch_body(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", json=patch_shop)
         try:
             with allure.step(title=f"Response: {result.json()}"):
