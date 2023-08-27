@@ -8,7 +8,9 @@ import uuid
 
 class Dict:
 
-    def __init__(self):
+    def __init__(self, app, admin):
+        self.app = app
+        self.admin = admin
         self.database_connections = DataBase(database=ENV_OBJECT.db_connections())
         self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
 
@@ -310,7 +312,14 @@ class Dict:
         return body_intake
 
     @staticmethod
-    def form_webhook(shop_id):
+    def form_widget(shop_id: str):
+        body_widget = {
+            "shopId": shop_id
+        }
+        return body_widget
+
+    @staticmethod
+    def form_webhook(shop_id: str):
         r"""Тело для создания веб-хука.
         :param shop_id: Идентификатор магазина.
         """
@@ -338,6 +347,3 @@ class Dict:
             }
         ]
         return body_patch
-
-
-DICT_OBJECT = Dict()
