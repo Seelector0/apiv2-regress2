@@ -21,8 +21,8 @@ class Admin:
 
     def admin_session(self):
         """Метод для открытия сессии под admin."""
-        data = self.dict.form_authorization(client_id=f"{os.getenv('ADMIN_ID')}",
-                                            client_secret=f"{os.getenv('ADMIN_SECRET')}",
+        data = self.dict.form_authorization(client_id=os.getenv("ADMIN_ID"),
+                                            client_secret=os.getenv("ADMIN_SECRET"),
                                             admin=True)
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
         if self.response.status_code == 200:

@@ -23,19 +23,16 @@ def test_user_clients(app):
 @allure.description("Получение информации о ключе подключения")
 def test_user_clients_by_id(app, connections):
     if connections.db_connections == "metaship":
-        clients_id = app.info.user_clients_id(user_id=f"{os.getenv('CLIENT_ID_LOCAL')}")
+        clients_id = app.info.user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
-        Checking.checking_json_value(response=clients_id, key_name="id",
-                                     expected_value=f"{os.getenv('CLIENT_ID_LOCAL')}")
+        Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID_LOCAL"))
         Checking.checking_json_value(response=clients_id, key_name="secret",
-                                     expected_value=f"{os.getenv('CLIENT_SECRET_LOCAL')}")
+                                     expected_value=os.getenv("CLIENT_SECRET_LOCAL"))
     else:
-        clients_id = app.info.user_clients_id(user_id=f"{os.getenv('CLIENT_ID')}")
+        clients_id = app.info.user_clients_id(user_id=os.getenv("CLIENT_ID"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
-        Checking.checking_json_value(response=clients_id, key_name="id",
-                                     expected_value=f"{os.getenv('CLIENT_ID')}")
-        Checking.checking_json_value(response=clients_id, key_name="secret",
-                                     expected_value=f"{os.getenv('CLIENT_SECRET')}")
+        Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID"))
+        Checking.checking_json_value(response=clients_id, key_name="secret", expected_value=os.getenv("CLIENT_SECRET"))
 
 
 @allure.description("Разбор адреса")

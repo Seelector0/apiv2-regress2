@@ -37,8 +37,8 @@ class Application:
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = self.dict.form_authorization(client_id=f"{ENV_OBJECT.client_id()}",
-                                            client_secret=f"{ENV_OBJECT.client_secret()}")
+        data = self.dict.form_authorization(client_id=ENV_OBJECT.client_id(),
+                                            client_secret=ENV_OBJECT.client_secret())
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
         if self.response.status_code == 200:
             return self.response
