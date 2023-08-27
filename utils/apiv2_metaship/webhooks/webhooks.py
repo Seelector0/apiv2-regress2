@@ -1,5 +1,6 @@
 from fixture.database import DataBase
 from environment import ENV_OBJECT
+from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
@@ -12,15 +13,9 @@ class ApiWebhook:
         self.database = DataBase(database=ENV_OBJECT.db_connections())
         self.link = "webhook"
 
-    def post_webhook(self, shop_id):
-        """Метод создание веб-хука."""
-        webhook = {
-            "shopId": shop_id,
-            "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
-            "name": "Подписка на обновление статусов",
-            "eventType": "StatusUpdate",
-            "secret": "string"
-        }
+    def post_webhook(self, shop_id: str):
+        """Метод создания веб-хука."""
+        webhook = DICT_OBJECT.form_webhook(shop_id=shop_id)
         result = self.app.http_method.post(link=self.link, json=webhook)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -42,24 +37,6 @@ class ApiWebhook:
         :param webhook_id: Идентификатор веб-хука.
         """
         result = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
-
-    def webhook_to_change_order_status(self, url: str):
-        r"""Веб-хук на смену статуса заказа.
-        :param url: URL веб-хука.
-        """
-        change_order_status = {
-            "shopId": self.database.metaship.get_list_shops()[0],
-            "url": "https://test.test/test",
-            "name": "Подписка на обновление статусов",
-            "eventType": "StatusUpdate",
-            "secret": "string"
-        }
-        result = self.app.http_method.post(link=f"{url}", json=change_order_status)
         try:
             with allure.step(title=f"Response: {result.json()}"):
                 return result
