@@ -89,7 +89,7 @@ def test_create_multi_order_courier(app, payment_type, connections):
 
 
 @allure.description("Добавление items в многоместный заказ СД DostavkaClub")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_patch_multi_order(app, connections):
     choice_order_id = choice(connections.metaship.get_list_all_orders())
     old_len_order_list = app.order.get_order_id(order_id=choice_order_id)

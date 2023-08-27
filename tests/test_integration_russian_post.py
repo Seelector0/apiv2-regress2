@@ -128,7 +128,7 @@ def test_create_order_courier(app, connections):
 
 
 @allure.description("Создание DeliveryPoint заказа по СД RussianPost")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "connections", reason="Не работает на dev стенде")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "connections", reason="Не работает на dev стенде")
 def test_create_delivery_point(app, connections):
     new_order = app.order.post_single_order(payment_type="Paid", length=15, width=15, height=15,
                                             type_ds="DeliveryPoint", service="RussianPost",

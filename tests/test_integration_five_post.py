@@ -121,7 +121,7 @@ def test_order_status(app, connections):
 
 
 @allure.description("Редактирование веса в заказе СД FivePost")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_patch_order_weight(app, connections):
     random_order = choice(connections.metaship.get_list_all_orders())
     order_patch = app.order.patch_order_weight(order_id=random_order, weight=4)
@@ -186,7 +186,7 @@ def test_add_order_in_parcel(app, connections):
 
 
 @allure.description("Редактирование веса заказа в партии СД FivePost")
-@pytest.mark.skipif(condition=f"{ENV_OBJECT.db_connections()}" == "metaship", reason="Тест только для dev стенда")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_patch_weight_random_order_in_parcel(app, connections):
     order_in_parcel = connections.metaship.get_list_all_orders_in_parcel()
     order_patch = app.order.patch_order_weight(order_id=choice(order_in_parcel), weight=4)
