@@ -11,7 +11,7 @@ from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
 from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
-from utils.dicts import DICT_OBJECT
+from utils.dicts import Dict
 import requests
 
 
@@ -33,12 +33,13 @@ class Application:
         self.widget = ApiWidget(self)
         self.webhook = ApiWebhook(self)
         self.intakes = ApiIntakes(self)
+        self.dict = Dict(self, self)
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = DICT_OBJECT.form_authorization(client_id=f"{ENV_OBJECT.client_id()}",
-                                              client_secret=f"{ENV_OBJECT.client_secret()}")
-        self.response = self.session.post(url=self.base_url, data=data, headers=DICT_OBJECT.form_headers())
+        data = self.dict.form_authorization(client_id=f"{ENV_OBJECT.client_id()}",
+                                            client_secret=f"{ENV_OBJECT.client_secret()}")
+        self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
         if self.response.status_code == 200:
             return self.response
         else:
@@ -46,7 +47,7 @@ class Application:
 
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
-        return DICT_OBJECT.form_token(authorization=f"Bearer {self.response.json()['access_token']}")
+        return self.dict.form_token(authorization=f"Bearer {self.response.json()['access_token']}")
 
     def close_session(self):
         """Метод для закрытия сессии."""
