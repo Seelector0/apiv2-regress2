@@ -3,7 +3,6 @@ from fixture.database import DataBase
 from environment import ENV_OBJECT
 import requests.exceptions
 import simplejson.errors
-
 import allure
 
 
