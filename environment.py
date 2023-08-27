@@ -2,83 +2,84 @@ from dotenv import load_dotenv, find_dotenv
 import os
 
 
+load_dotenv(find_dotenv())
+
+
 class Environment:
 
-    load_dotenv(find_dotenv())
-
-    LOCAL = 'local'
-    DEVELOP = 'dev'
+    LOCAL = "local"
+    DEVELOP = "dev"
 
     URLS = {
-        LOCAL: f"{os.getenv('URL_LOCAL')}",
-        DEVELOP: f"{os.getenv('URL')}"
+        LOCAL: os.getenv("URL_LOCAL"),
+        DEVELOP: os.getenv("URL")
     }
 
     CLIENT_IDS = {
-        LOCAL: f"{os.getenv('CLIENT_ID_LOCAL')}",
-        DEVELOP: f"{os.getenv('CLIENT_ID')}"
+        LOCAL: os.getenv("CLIENT_ID_LOCAL"),
+        DEVELOP: os.getenv("CLIENT_ID")
     }
 
     CLIENT_SECRETS = {
-        LOCAL: f"{os.getenv('CLIENT_SECRET_LOCAL')}",
-        DEVELOP: f"{os.getenv('CLIENT_SECRET')}"
+        LOCAL: os.getenv("CLIENT_SECRET_LOCAL"),
+        DEVELOP: os.getenv("CLIENT_SECRET")
     }
 
     DATABASE_CONNECTIONS = {
-        LOCAL: f"{os.getenv('CONNECTIONS_LOCAL')}",
-        DEVELOP: f"{os.getenv('CONNECTIONS')}"
+        LOCAL: os.getenv("CONNECTIONS_LOCAL"),
+        DEVELOP: os.getenv("CONNECTIONS")
     }
 
     DATABASE_CUSTOMER_API = {
-        LOCAL: f"{os.getenv('CUSTOMER_API_LOCAL')}",
-        DEVELOP: f"{os.getenv('CUSTOMER_API')}"
+        LOCAL: os.getenv("CUSTOMER_API_LOCAL"),
+        DEVELOP: os.getenv("CUSTOMER_API")
     }
 
     DATABASE_TRACKING_API = {
-        LOCAL: f"{os.getenv('TRACKING_API_LOCAL')}",
-        DEVELOP: f"{os.getenv('TRACKING_API')}"
+        LOCAL: os.getenv("TRACKING_API_LOCAL"),
+        DEVELOP: os.getenv("TRACKING_API")
     }
 
     DATABASE_WIDGET_API = {
-        LOCAL: f"{os.getenv('WIDGET_API_LOCAL')}",
-        DEVELOP: f"{os.getenv('WIDGET_API')}"
+        LOCAL: os.getenv("WIDGET_API_LOCAL"),
+        DEVELOP: os.getenv("WIDGET_API")
     }
 
     DATABASE_HOSTS = {
-        LOCAL: f"{os.getenv('HOST_LOCAL')}",
-        DEVELOP: f"{os.getenv('HOST')}"
+        LOCAL: os.getenv("HOST_LOCAL"),
+        DEVELOP: os.getenv("HOST")
     }
 
     DATABASE_USERS = {
-        LOCAL: f"{os.getenv('USER')}",
-        DEVELOP: f"{os.getenv('USER_LOCAL')}"
+        LOCAL: os.getenv("USER"),
+        DEVELOP: os.getenv("USER_LOCAL")
     }
 
     DATABASE_PASSWORDS = {
-        LOCAL: f"{os.getenv('DATABASE_PASSWORD_LOCAL')}",
-        DEVELOP: f"{os.getenv('DATABASE_PASSWORD')}"
+        LOCAL: os.getenv("DATABASE_PASSWORD_LOCAL"),
+        DEVELOP: os.getenv("DATABASE_PASSWORD")
     }
 
     USER_IDS = {
-        LOCAL: f"{os.getenv('USER_ID_LOCAL')}",
-        DEVELOP: f"{os.getenv('USER_ID')}"
+        LOCAL: os.getenv("USER_ID_LOCAL"),
+        DEVELOP: os.getenv("USER_ID")
     }
 
     CUSTOMERS_IDS = {
-        LOCAL: f"{os.getenv('CUSTOMER_ID_LOCAL')}",
-        DEVELOP: f"{os.getenv('CUSTOMER_ID')}"
+        LOCAL: os.getenv("CUSTOMER_ID_LOCAL"),
+        DEVELOP: os.getenv("CUSTOMER_ID")
     }
 
     CUSTOMERS_AGREEMENTS_IDS = {
-        LOCAL: f"{os.getenv('CUSTOMER_AGREEMENT_ID_LOCAL')}",
-        DEVELOP: f"{os.getenv('CUSTOMER_AGREEMENT_ID')}"
+        LOCAL: os.getenv("CUSTOMER_AGREEMENT_ID_LOCAL"),
+        DEVELOP: os.getenv("CUSTOMER_AGREEMENT_ID")
     }
 
     error_massage = "Неизвестное значение переменной ENV:"
 
     def __init__(self):
         try:
-            self.env = os.environ['ENV']
+            self.env = os.environ["ENV"]
         except KeyError:
             self.env = self.DEVELOP
 

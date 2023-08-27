@@ -1,16 +1,16 @@
 from dotenv import load_dotenv, find_dotenv
 from fixture.database import DataBase
 from environment import ENV_OBJECT
-from utils.dicts import DICT_OBJECT
 import requests.exceptions
 import simplejson.errors
 import allure
 import os
 
 
-class ApiDeliveryServices:
+load_dotenv(find_dotenv())
 
-    load_dotenv(find_dotenv())
+
+class ApiDeliveryServices:
 
     def __init__(self, app):
         self.app = app
@@ -25,11 +25,11 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            russian_post = DICT_OBJECT.form_connection_type(delivery_service_code="RussianPost", aggregation=True)
+            russian_post = self.app.dict.form_connection_type(delivery_service_code="RussianPost", aggregation=True)
         else:
-            russian_post = DICT_OBJECT.form_connection_type(delivery_service_code="RussianPost")
-            russian_post["data"]["token"] = f"{os.getenv('RP_TOKEN')}"
-            russian_post["data"]["secret"] = f"{os.getenv('RP_SECRET')}"
+            russian_post = self.app.dict.form_connection_type(delivery_service_code="RussianPost")
+            russian_post["data"]["token"] = os.getenv("RP_TOKEN")
+            russian_post["data"]["secret"] = os.getenv("RP_SECRET")
         russian_post["data"]["intakePostOfficeCode"] = "101000"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=russian_post)
         try:
@@ -43,13 +43,13 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            topdelivery = DICT_OBJECT.form_connection_type(delivery_service_code="TopDelivery", aggregation=True)
+            topdelivery = self.app.dict.form_connection_type(delivery_service_code="TopDelivery", aggregation=True)
         else:
-            topdelivery = DICT_OBJECT.form_connection_type(delivery_service_code="TopDelivery")
-            topdelivery["data"]["username"] = f"{os.getenv('TD_USER_NAME')}"
-            topdelivery["data"]["password"] = f"{os.getenv('TD_PASSWORD')}"
-            topdelivery["data"]["basicLogin"] = f"{os.getenv('TD_BASIC_LOGIN')}"
-            topdelivery["data"]["basicPassword"] = f"{os.getenv('TD_BASIC_PASSWORD')}"
+            topdelivery = self.app.dict.form_connection_type(delivery_service_code="TopDelivery")
+            topdelivery["data"]["username"] = os.getenv("TD_USER_NAME")
+            topdelivery["data"]["password"] = os.getenv("TD_PASSWORD")
+            topdelivery["data"]["basicLogin"] = os.getenv("TD_BASIC_LOGIN")
+            topdelivery["data"]["basicPassword"] = os.getenv("TD_BASIC_PASSWORD")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=topdelivery)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -62,10 +62,10 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            boxberry = DICT_OBJECT.form_connection_type(delivery_service_code="Boxberry", aggregation=True)
+            boxberry = self.app.dict.form_connection_type(delivery_service_code="Boxberry", aggregation=True)
         else:
-            boxberry = DICT_OBJECT.form_connection_type(delivery_service_code="Boxberry")
-            boxberry["data"]["token"] = f"{os.getenv('BB_API_TOKEN')}"
+            boxberry = self.app.dict.form_connection_type(delivery_service_code="Boxberry")
+            boxberry["data"]["token"] = os.getenv("BB_API_TOKEN")
         boxberry["data"]["intakeDeliveryPointCode"] = "00127"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=boxberry)
         try:
@@ -79,11 +79,11 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            cdek = DICT_OBJECT.form_connection_type(delivery_service_code="Cdek", aggregation=True)
+            cdek = self.app.dict.form_connection_type(delivery_service_code="Cdek", aggregation=True)
         else:
-            cdek = DICT_OBJECT.form_connection_type(delivery_service_code="Cdek")
-            cdek["data"]["account"] = f"{os.getenv('CDEK_ACCOUNT')}"
-            cdek["data"]["password"] = f"{os.getenv('CDEK_PASSWORD')}"
+            cdek = self.app.dict.form_connection_type(delivery_service_code="Cdek")
+            cdek["data"]["account"] = os.getenv("CDEK_ACCOUNT")
+            cdek["data"]["password"] = os.getenv("CDEK_PASSWORD")
         cdek["data"]["shipmentPointCode"] = "AKHT1"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=cdek)
         try:
@@ -97,11 +97,11 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            dpd = DICT_OBJECT.form_connection_type(delivery_service_code="Dpd", aggregation=True)
+            dpd = self.app.dict.form_connection_type(delivery_service_code="Dpd", aggregation=True)
         else:
-            dpd = DICT_OBJECT.form_connection_type(delivery_service_code="Dpd")
-            dpd["data"]["clientNumber"] = f"{os.getenv('DPD_CLIENT_NUMBER')}"
-            dpd["data"]["clientKey"] = f"{os.getenv('DPD_CLIENT_KEY')}"
+            dpd = self.app.dict.form_connection_type(delivery_service_code="Dpd")
+            dpd["data"]["clientNumber"] = os.getenv("DPD_CLIENT_NUMBER")
+            dpd["data"]["clientKey"] = os.getenv("DPD_CLIENT_KEY")
         dpd["data"]["intakePointCode"] = "M16"
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dpd)
         try:
@@ -112,10 +112,10 @@ class ApiDeliveryServices:
 
     def delivery_services_cse(self):
         """Настройки подключения службы доставки Cse к магазину."""
-        cse = DICT_OBJECT.form_connection_type(delivery_service_code="Cse")
-        cse["data"]["login"] = f"{os.getenv('CSE_LOGIN')}"
-        cse["data"]["password"] = f"{os.getenv('CSE_PASSWORD')}"
-        cse["data"]["token"] = f"{os.getenv('CSE_TOKEN')}"
+        cse = self.app.dict.form_connection_type(delivery_service_code="Cse")
+        cse["data"]["login"] = os.getenv("CSE_LOGIN")
+        cse["data"]["password"] = os.getenv("CSE_PASSWORD")
+        cse["data"]["token"] = os.getenv("CSE_TOKEN")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=cse)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -128,12 +128,12 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            five_post = DICT_OBJECT.form_connection_type(delivery_service_code="FivePost", aggregation=True)
+            five_post = self.app.dict.form_connection_type(delivery_service_code="FivePost", aggregation=True)
         else:
-            five_post = DICT_OBJECT.form_connection_type(delivery_service_code="FivePost")
-            five_post["data"]["apiKey"] = f"{os.getenv('FIVE_POST_API_KEY')}"
-            five_post["data"]["partnerNumber"] = f"{os.getenv('FIVE_POST_PARTNER_NUMBER')}"
-            five_post["data"]["baseWeight"] = int(f"{os.getenv('FIVE_POST_BASE_WEIGHT')}")
+            five_post = self.app.dict.form_connection_type(delivery_service_code="FivePost")
+            five_post["data"]["apiKey"] = os.getenv("FIVE_POST_API_KEY")
+            five_post["data"]["partnerNumber"] = os.getenv("FIVE_POST_PARTNER_NUMBER")
+            five_post["data"]["baseWeight"] = int(os.getenv("FIVE_POST_BASE_WEIGHT"))
         result = self.app.http_method.post(link=self.link_delivery_services(), json=five_post)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -143,9 +143,9 @@ class ApiDeliveryServices:
 
     def delivery_services_svyaznoy(self):
         """Настройки подключения службы доставки Svyaznoy к магазину."""
-        svyaznoy = DICT_OBJECT.form_connection_type(delivery_service_code="Svyaznoy")
-        svyaznoy["data"]["login"] = f"{os.getenv('SL_LOGIN')}"
-        svyaznoy["data"]["password"] = f"{os.getenv('SL_PASSWORD')}"
+        svyaznoy = self.app.dict.form_connection_type(delivery_service_code="Svyaznoy")
+        svyaznoy["data"]["login"] = os.getenv("SL_LOGIN")
+        svyaznoy["data"]["password"] = os.getenv("SL_PASSWORD")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=svyaznoy)
         with allure.step(title=f"Response: {result.json()}"):
             return result
@@ -155,10 +155,10 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo", aggregation=True)
+            yandex_go = self.app.dict.form_connection_type(delivery_service_code="YandexGo", aggregation=True)
         else:
-            yandex_go = DICT_OBJECT.form_connection_type(delivery_service_code="YandexGo")
-            yandex_go["data"]["token"] = f"{os.getenv('YA_GO_TOKEN')}"
+            yandex_go = self.app.dict.form_connection_type(delivery_service_code="YandexGo")
+            yandex_go["data"]["token"] = os.getenv("YA_GO_TOKEN")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=yandex_go)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -171,12 +171,13 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery", aggregation=True)
+            yandex_delivery = self.app.dict.form_connection_type(delivery_service_code="YandexDelivery",
+                                                                 aggregation=True)
         else:
-            yandex_delivery = DICT_OBJECT.form_connection_type(delivery_service_code="YandexDelivery")
-            yandex_delivery["data"]["token"] = f"{os.getenv('YA_DELIVERY_TOKEN')}"
-            yandex_delivery["data"]["inn"] = f"{os.getenv('YA_DELIVERY_INN')}"
-            yandex_delivery["data"]["intakePointCode"] = f"{os.getenv('YA_DELIVERY_INTAKE_POINT_CODE')}"
+            yandex_delivery = self.app.dict.form_connection_type(delivery_service_code="YandexDelivery")
+            yandex_delivery["data"]["token"] = os.getenv("YA_DELIVERY_TOKEN")
+            yandex_delivery["data"]["inn"] = os.getenv("YA_DELIVERY_INN")
+            yandex_delivery["data"]["intakePointCode"] = os.getenv("YA_DELIVERY_INTAKE_POINT_CODE")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=yandex_delivery)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -186,9 +187,9 @@ class ApiDeliveryServices:
 
     def delivery_services_dostavka_club(self):
         """Настройки подключения службы доставки DostavkaClub к магазину."""
-        dostavka_club = DICT_OBJECT.form_connection_type(delivery_service_code="DostavkaClub")
-        dostavka_club["data"]["login"] = f"{os.getenv('CLUB_LOGIN')}"
-        dostavka_club["data"]["pass"] = f"{os.getenv('CLUB_PASSWORD')}"
+        dostavka_club = self.app.dict.form_connection_type(delivery_service_code="DostavkaClub")
+        dostavka_club["data"]["login"] = os.getenv("CLUB_LOGIN")
+        dostavka_club["data"]["pass"] = os.getenv("CLUB_PASSWORD")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dostavka_club)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -198,9 +199,9 @@ class ApiDeliveryServices:
 
     def delivery_services_dostavka_guru(self):
         """Настройки подключения службы доставки DostavkaGuru к магазину."""
-        dostavka_guru = DICT_OBJECT.form_connection_type(delivery_service_code="DostavkaGuru")
-        dostavka_guru["data"]["partnerId"] = int(f"{os.getenv('GURU_PARTNER_ID')}")
-        dostavka_guru["data"]["key"] = f"{os.getenv('GURU_KEY')}"
+        dostavka_guru = self.app.dict.form_connection_type(delivery_service_code="DostavkaGuru")
+        dostavka_guru["data"]["partnerId"] = int(os.getenv("GURU_PARTNER_ID"))
+        dostavka_guru["data"]["key"] = os.getenv("GURU_KEY")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dostavka_guru)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -210,8 +211,8 @@ class ApiDeliveryServices:
 
     def delivery_services_l_post(self):
         """Настройки подключения службы доставки LPost к магазину."""
-        l_post = DICT_OBJECT.form_connection_type(delivery_service_code="LPost")
-        l_post["data"]["secret"] = f"{os.getenv('L_POST_SECRET')}"
+        l_post = self.app.dict.form_connection_type(delivery_service_code="LPost")
+        l_post["data"]["secret"] = os.getenv("L_POST_SECRET")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=l_post)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -224,10 +225,10 @@ class ApiDeliveryServices:
         :param aggregation: Тип подключения СД по агрегации.
         """
         if aggregation is True:
-            dalli = DICT_OBJECT.form_connection_type(delivery_service_code="Dalli", aggregation=True)
+            dalli = self.app.dict.form_connection_type(delivery_service_code="Dalli", aggregation=True)
         else:
-            dalli = DICT_OBJECT.form_connection_type(delivery_service_code="Dalli")
-            dalli["data"]["token"] = f"{os.getenv('DALLI_TOKEN')}"
+            dalli = self.app.dict.form_connection_type(delivery_service_code="Dalli")
+            dalli["data"]["token"] = os.getenv("DALLI_TOKEN")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dalli)
         try:
             with allure.step(title=f"Response: {result.json()}"):
@@ -260,7 +261,7 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param tariffs: Тарифы СД.
         """
-        patch = DICT_OBJECT.form_patch_body(op="replace", path="settings.tariffs", value={
+        patch = self.app.dict.form_patch_body(op="replace", path="settings.tariffs", value={
             "exclude": tariffs,
             "restrict": None
             })
@@ -276,7 +277,7 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param value: Скрытие СД из ЛК при False.
         """
-        patch = DICT_OBJECT.form_patch_body(op="replace", path="visibility", value=value)
+        patch = self.app.dict.form_patch_body(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", json=patch)
         try:
             with allure.step(title=f"Response: {result.json()}"):
