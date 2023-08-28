@@ -5,6 +5,20 @@ import pytest
 import os
 
 
+@allure.description("Получение списка ПВЗ СД конкретной СД")
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "FivePost", "RussianPost", "TopDelivery",
+                                                   "YandexDelivery", "Cse"])
+def test_delivery_service_points(app, delivery_service_code, connections):
+    if len(connections.metaship.get_list_shops()) == 0:
+        new_shop = app.shop.post_shop()
+        Checking.check_status_code(response=new_shop, expected_status_code=201)
+        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+    delivery_service_points = app.info.delivery_service_points(delivery_service_code=delivery_service_code)
+    Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
+    Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
+                                         expected_value=delivery_service_code)
+
+
 @allure.description("Получение полного актуального списка возможных статусов заказа")
 def test_info_order_statuses(app):
     order_statuses = app.info.info_statuses()
