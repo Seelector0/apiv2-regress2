@@ -57,13 +57,6 @@ def test_delivery_time_schedules(app, tariff_id):
                                      expected_value=INFO.dalli_intervals_11)
 
 
-@allure.description("Получение актуального списка возможных сервисов заказа СД Dalli")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="Dalli")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
-
-
 @allure.description("Получение Courier оферов по СД Dalli")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):

@@ -894,6 +894,14 @@ class OtherInfo:
         }
     ]
 
+    five_post_services = [
+        {
+            "name": "no-return",
+            "title": "Возврату не подлежит",
+            "description": "Возврату не подлежит"
+        }
+    ]
+
     topdelivery_vats = [
         {
             "code": "NO_VAT",
@@ -1325,7 +1333,7 @@ class OtherInfo:
         }
     ]
 
-    yandex_go_vats = [
+    ya_go_vats = [
         {
             "code": "NO_VAT",
             "name": "Без НДС"
@@ -1344,7 +1352,7 @@ class OtherInfo:
         }
     ]
 
-    yandex_go_services = [
+    ya_go_services = [
         {
             "name": "no-recipient-confirmation",
             "title": "Отключение подтверждения кодом для получателя",
@@ -1357,7 +1365,7 @@ class OtherInfo:
         }
     ]
 
-    yandex_delivery_vats = [
+    ya_delivery_vats = [
         {
             "code": "NO_VAT",
             "name": "Без НДС"
@@ -1376,7 +1384,7 @@ class OtherInfo:
         }
     ]
 
-    yandex_delivery_services = [
+    ya_delivery_services = [
         {
             "name": "barcode-generation",
             "title": "Генерация штрихкода на стороне Меташипа",
