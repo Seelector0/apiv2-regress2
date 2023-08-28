@@ -35,9 +35,9 @@ def test_info_vats(app, delivery_service_code):
     elif delivery_service_code == "TopDelivery":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.topdelivery_vats)
     elif delivery_service_code == "YandexGo":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.yandex_go_vats)
+        Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_go_vats)
     elif delivery_service_code == "YandexDelivery":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.yandex_delivery_vats)
+        Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_delivery_vats)
 
 
 @allure.description("Получение списка точек сдачи СД")
@@ -66,6 +66,41 @@ def tests_tariffs(app, code):
         Checking.checking_json_key(response=list_tariffs, expected_value=INFO.rp_list_tariffs)
     elif code == "Cdek":
         Checking.checking_json_key(response=list_tariffs, expected_value=INFO.cdek_list_tariffs)
+
+
+@allure.description("Получение информации о дополнительных услугах поддерживаемых СД")
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
+                                                   "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
+                                                   "YandexDelivery"])
+def test_info_statuses(app, delivery_service_code):
+    info_delivery_service_services = app.info.info_delivery_service_services(code=delivery_service_code)
+    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
+    if delivery_service_code == "Boxberry":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.boxberry_services)
+    elif delivery_service_code == "Cdek":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cdek_services)
+    elif delivery_service_code == "Cse":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cse_services)
+    elif delivery_service_code == "Dalli":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
+    elif delivery_service_code == "DostavkaClub":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.club_services)
+    elif delivery_service_code == "DostavkaGuru":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.guru_services)
+    elif delivery_service_code == "Dpd":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dpd_services)
+    elif delivery_service_code == "FivePost":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.five_post_services)
+    elif delivery_service_code == "LPost":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.l_post_services)
+    elif delivery_service_code == "RussianPost":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.rp_services)
+    elif delivery_service_code == "TopDelivery":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.topdelivery_services)
+    elif delivery_service_code == "YandexGo":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_go_services)
+    elif delivery_service_code == "YandexDelivery":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_delivery_services)
 
 
 @allure.description("Получение списка ключей")

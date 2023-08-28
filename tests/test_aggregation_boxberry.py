@@ -65,13 +65,6 @@ def test_delivery_time_schedules(app):
                                  expected_value=INFO.boxberry_intervals)
 
 
-@allure.description("Получение актуального списка возможных сервисов заказа СД Boxberry")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="Boxberry")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.boxberry_services)
-
-
 @allure.description("Получение оферов в формате 'widget'")
 def test_offers_format_widget(app):
     offers_widget = app.offers.get_offers(format_="widget")

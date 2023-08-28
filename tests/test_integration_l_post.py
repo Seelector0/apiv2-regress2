@@ -40,13 +40,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=l_post, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение актуального списка возможных сервисов заказа СД LPost")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="LPost")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.l_post_services)
-
-
 @allure.description("Получение оферов Courier по СД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):

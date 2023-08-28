@@ -64,13 +64,6 @@ def test_delivery_time_schedules(app):
     Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
 
 
-@allure.description("Получение актуального списка возможных статусов заказа СД RussianPost")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="RussianPost")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.rp_services)
-
-
 @allure.description("Получение Courier оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):

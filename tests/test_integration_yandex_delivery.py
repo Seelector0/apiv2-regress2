@@ -48,13 +48,6 @@ def test_intake_offices(app):
                                          expected_value="YandexDelivery")
 
 
-@allure.description("Получение актуального списка возможных сервисов заказа СД YandexDelivery")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="YandexDelivery")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.yandex_delivery_services)
-
-
 @allure.description("Получение Courier оферов по СД YandexDelivery")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):

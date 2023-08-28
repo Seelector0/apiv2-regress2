@@ -41,13 +41,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение актуального списка возможных сервисов заказа СД YandexGo")
-def test_info_statuses(app):
-    info_delivery_service_services = app.info.info_delivery_service_services(code="YandexGo")
-    Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
-    Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.yandex_go_services)
-
-
 @allure.description("Создание Courier заказа по CД YandexGo")
 @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 @pytest.mark.parametrize("execution_number", range(2))
