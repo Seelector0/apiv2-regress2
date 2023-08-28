@@ -48,6 +48,15 @@ def test_moderation_delivery_services(admin):
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
 
+@allure.description("Получение списка ПВЗ СД Dpd")
+def test_delivery_service_points(app):
+    delivery_service_points = app.info.delivery_service_points(delivery_service_code="Dpd")
+    Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=delivery_service_points)
+    Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
+                                         expected_value="Dpd")
+
+
 @allure.description("Получения сроков доставки по СД Dpd")
 def test_delivery_time_schedules(app):
     delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Dpd")
