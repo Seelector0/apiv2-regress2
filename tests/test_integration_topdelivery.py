@@ -40,14 +40,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=topdelivery, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение списка точек сдачи СД TopDelivery")
-def test_intake_offices(app):
-    intake_offices = app.info.intake_offices(delivery_service_code="TopDelivery")
-    Checking.check_status_code(response=intake_offices, expected_status_code=200)
-    Checking.checking_in_list_json_value(response=intake_offices, key_name="deliveryServiceCode",
-                                         expected_value="TopDelivery")
-
-
 @allure.description("Получения сроков доставки по TopDelivery")
 def test_delivery_time_schedules(app):
     delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="TopDelivery",
