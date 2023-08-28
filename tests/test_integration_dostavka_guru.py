@@ -49,13 +49,6 @@ def test_delivery_time_schedules(app):
                                  expected_value=INFO.guru_intervals)
 
 
-@allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД DostavkaGuru")
-def test_info_vats(app):
-    info_vats = app.info.info_vats(delivery_service_code="DostavkaGuru")
-    Checking.check_status_code(response=info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=info_vats, expected_value=INFO.guru_vats)
-
-
 @allure.description("Получение актуального списка возможных сервисов заказа СД DostavkaGuru")
 def test_info_statuses(app):
     info_delivery_service_services = app.info.info_delivery_service_services(code="DostavkaGuru")

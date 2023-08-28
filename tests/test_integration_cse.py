@@ -41,11 +41,13 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=cse, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение списка точек сдачи СД Cse")
-def test_intake_offices(app):
-    intake_offices = app.info.intake_offices(delivery_service_code="Cse")
-    Checking.check_status_code(response=intake_offices, expected_status_code=200)
-    Checking.checking_in_list_json_value(response=intake_offices, key_name="deliveryServiceCode", expected_value="Cse")
+@allure.description("Получение списка ПВЗ СД Cse")
+def test_delivery_service_points(app):
+    delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cse")
+    Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
+    Checking.check_response_is_not_empty(response=delivery_service_points)
+    Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
+                                         expected_value="Cse")
 
 
 @allure.description("Получения сроков доставки по СД Cse")
@@ -53,13 +55,6 @@ def test_delivery_time_schedules(app):
     delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Cse")
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
     Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
-
-
-@allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД Cse")
-def test_info_vats(app):
-    info_vats = app.info.info_vats(delivery_service_code="Cse")
-    Checking.check_status_code(response=info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=info_vats, expected_value=INFO.cse_vats)
 
 
 @allure.description("Получение актуального списка возможных статусов заказа СД Cse")

@@ -879,7 +879,7 @@ class OtherInfo:
 
     dpd_ds_tariffs = ["BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
 
-    FIVE_POST_VATS = [
+    five_post_vats = [
         {
             "code": "NO_VAT",
             "name": "Без НДС"

@@ -41,13 +41,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать СД YandexGo")
-def test_info_vats(app):
-    info_vats = app.info.info_vats(delivery_service_code="YandexGo")
-    Checking.check_status_code(response=info_vats, expected_status_code=200)
-    Checking.checking_json_key(response=info_vats, expected_value=INFO.yandex_go_vats)
-
-
 @allure.description("Получение актуального списка возможных сервисов заказа СД YandexGo")
 def test_info_statuses(app):
     info_delivery_service_services = app.info.info_delivery_service_services(code="YandexGo")
