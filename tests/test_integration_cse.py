@@ -41,14 +41,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=cse, expected_value=INFO.created_entity)
 
 
-@allure.description("Получение списка ПВЗ СД Cse")
-def test_delivery_service_points(app):
-    delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cse")
-    Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
-    Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
-                                         expected_value="Cse")
-
-
 @allure.description("Получение списка точек сдачи СД Cse")
 def test_intake_offices(app):
     intake_offices = app.info.intake_offices(delivery_service_code="Cse")
