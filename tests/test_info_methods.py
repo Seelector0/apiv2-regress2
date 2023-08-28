@@ -1,6 +1,7 @@
 from utils.global_enums import INFO
 from utils.checking import Checking
 import allure
+import pytest
 import os
 
 
@@ -9,6 +10,17 @@ def test_info_order_statuses(app):
     order_statuses = app.info.info_statuses()
     Checking.check_status_code(response=order_statuses, expected_status_code=200)
     Checking.checking_json_key(response=order_statuses, expected_value=INFO.entity_order_statuses)
+
+
+@allure.description("Получение информации о тарифах поддерживаемых СД")
+@pytest.mark.parametrize("code", ["RussianPost", "Cdek"])
+def tests_tariffs(app, code):
+    list_tariffs = app.info.get_tariffs(code=code)
+    Checking.check_status_code(response=list_tariffs, expected_status_code=200)
+    if code == "RussianPost":
+        Checking.checking_json_key(response=list_tariffs, expected_value=INFO.rp_list_tariffs)
+    if code == "Cdek":
+        Checking.checking_json_key(response=list_tariffs, expected_value=INFO.cdek_list_tariffs)
 
 
 @allure.description("Получение списка ключей")

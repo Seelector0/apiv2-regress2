@@ -78,13 +78,6 @@ def test_info_statuses(app):
     Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.rp_services)
 
 
-@allure.description("Получение информации о тарифах поддерживаемых СД RussianPost")
-def tests_tariffs(app):
-    list_tariffs = app.info.get_tariffs(code="RussianPost")
-    Checking.check_status_code(response=list_tariffs, expected_status_code=200)
-    Checking.checking_json_key(response=list_tariffs, expected_value=INFO.rp_list_tariffs)
-
-
 @allure.description("Получение Courier оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):
