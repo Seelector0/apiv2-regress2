@@ -71,7 +71,7 @@ class Dict:
                 "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
             },
             "lPostWarehouseId": "20537",
-            "yandexWarehouseId": None,
+            "yandexWarehouseId": "4eb18cc4-329d-424d-a8a8-abfd8926463d",
             "pickup": True,
             "contact": {
                 "fullName": "Виктор Викторович",
