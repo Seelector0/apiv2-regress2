@@ -180,7 +180,6 @@ class ApiOrder:
             return f"Файл {file_extension} не поддерживается"
         result = self.app.http_method.post(link=f"import/{self.link}", data=self.app.dict.form_order_from_file(),
                                            files=file)
-        result = result
         return self.app.http_method.return_result(response=result)
 
     def post_import_order_format_russian_post(self, file_extension: str):
