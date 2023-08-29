@@ -199,12 +199,9 @@ class ApiOrder:
 
     def get_order_search(self, query: str):
         r"""Метод поиска по заказам.
-        :param query: Метод поиска по ID, shop_number и тд.
+        :param query: Поле поиска по ID, shop_number и тд.
         """
-        search = {
-            "query": query
-        }
-        result = self.app.http_method.get(link=f"{self.link}/search", params=search)
+        result = self.app.http_method.get(link=f"{self.link}/search", params=self.app.dict.form_search(query=query))
         return self.app.http_method.return_result(response=result)
 
     def get_orders(self):
