@@ -1,6 +1,3 @@
-import requests.exceptions
-import simplejson.errors
-import allure
 
 
 class ApiWarehouse:
@@ -12,31 +9,19 @@ class ApiWarehouse:
     def post_warehouse(self):
         """Метод создания склада."""
         result = self.app.http_method.post(link=self.link, json=self.app.dict.form_warehouse_body())
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def get_warehouses(self):
         """Метод получения списка складов."""
         result = self.app.http_method.get(link=self.link)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def get_warehouse_id(self, warehouse_id: str):
         r"""Метод получения склада по его id.
         :param warehouse_id: Идентификатор склада.
         """
         result = self.app.http_method.get(link=f"{self.link}/{warehouse_id}")
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def put_warehouse(self, warehouse_id: str, name: str, pickup: bool, comment: str, l_post_warehouse_id: str,
                       dpd_pickup_num: str, address: str, full_name: str, phone: str, email: str, working_time: dict):
@@ -74,11 +59,7 @@ class ApiWarehouse:
         """
         patch_warehouse = self.app.dict.form_patch_body(op="replace", path=path, value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", json=patch_warehouse)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def delete_warehouse(self, warehouse_id: str):
         r"""Метод удаления склада.

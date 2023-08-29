@@ -1,6 +1,3 @@
-import requests.exceptions
-import simplejson.errors
-import allure
 
 
 class ApiShop:
@@ -12,31 +9,19 @@ class ApiShop:
     def post_shop(self):
         """Метод создания магазина."""
         result = self.app.http_method.post(link=self.link, json=self.app.dict.form_shop_body())
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def get_shops(self):
         """Метод получения списка магазинов."""
         result = self.app.http_method.get(link=self.link)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def get_shop_id(self, shop_id: str):
         """Метод получения магазина по его id.
         :param shop_id: Идентификатор магазина.
         """
         result = self.app.http_method.get(link=f"{self.link}/{shop_id}")
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
 
     def put_shop(self, shop_id: str, shop_name: str, shop_url: str, contact_person: str, phone: str):
         r"""Метод обновления магазина.
@@ -60,8 +45,4 @@ class ApiShop:
         """
         patch_shop = self.app.dict.form_patch_body(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", json=patch_shop)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
