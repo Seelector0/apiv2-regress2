@@ -247,6 +247,16 @@ class Dict:
         return body_order
 
     @staticmethod
+    def form_search(query):
+        r"""Тело для поиска по заказам.
+        :param query: Поле поиска по ID, shop_number и тд.
+        """
+        search = {
+            "query": query
+        }
+        return search
+
+    @staticmethod
     def form_raw(raw: str):
         """Тело для разбора адреса.
         :param raw: Адрес.
