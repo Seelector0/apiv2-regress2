@@ -42,10 +42,10 @@ def test_integration_delivery_services(app):
 
 @allure.description("Получения сроков доставки по TopDelivery")
 def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="TopDelivery",
-                                                               postal_code="101000")
+    delivery_time_schedules = app.info.get_delivery_time_schedules(delivery_service_code="TopDelivery")
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
+    Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
+                                 expected_value=INFO.topdelivery_intervals)
 
 
 @allure.description("Получение оферов в формате 'widget'")
