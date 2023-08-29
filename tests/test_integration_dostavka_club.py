@@ -41,14 +41,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=dostavka_club, expected_value=INFO.created_entity)
 
 
-@allure.description("Получения сроков доставки по DostavkaClub")
-def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="DostavkaClub")
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                 expected_value=INFO.club_intervals)
-
-
 @allure.description("Получение оферов Courier по СД DostavkaClub")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, payment_type):

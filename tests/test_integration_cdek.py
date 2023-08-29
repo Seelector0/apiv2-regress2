@@ -40,13 +40,6 @@ def test_integration_delivery_services(app):
     Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
 
 
-@allure.description("Получения сроков доставки по СД Cdek")
-def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Cdek")
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
-
-
 @allure.description("Получение оферов в формате 'widget'")
 def test_offers_format_widget(app):
     offers_widget = app.offers.get_offers(format_="widget")

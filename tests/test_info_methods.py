@@ -103,6 +103,25 @@ def test_info_statuses(app, delivery_service_code):
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_delivery_services)
 
 
+@allure.description("Получения интервалов доставки")
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "RussianPost", "Cse", "DostavkaClub",
+                                                   "DostavkaGuru"])
+def test_delivery_time_schedules(app, delivery_service_code):
+    delivery_time_schedules = app.info.get_delivery_time_schedules(delivery_service_code=delivery_service_code)
+    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
+    if delivery_service_code == "Boxberry":
+        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
+                                     expected_value=INFO.boxberry_intervals)
+    elif delivery_time_schedules in ["Cdek", "Dpd", "RussianPost", "Cse"]:
+        Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
+    elif delivery_time_schedules == "DostavkaClub":
+        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
+                                     expected_value=INFO.club_intervals)
+    elif delivery_time_schedules == "DostavkaGuru":
+        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
+                                     expected_value=INFO.guru_intervals)
+
+
 @allure.description("Получение списка ключей")
 def test_user_clients(app):
     user_clients = app.info.user_clients()

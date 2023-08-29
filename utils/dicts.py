@@ -91,12 +91,14 @@ class Dict:
         }
         return body_delivery_service_code
 
-    def form_info_body(self, delivery_service_code: str):
+    def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
         """Тело для Info methods.
         :param delivery_service_code: Код СД.
+        :param data: Желаемая дата доставки.
         """
         body_info = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
         body_info["shopId"] = self.database_connections.metaship.get_list_shops()[0]
+        body_info["deliveryDate"] = data
         return body_info
 
     @staticmethod

@@ -12,18 +12,18 @@ class ApiInfo:
         self.app = app
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
-    def delivery_time_schedules(self, delivery_service_code: str, postal_code: str = None, tariff_id: str = None):
+    def get_delivery_time_schedules(self, delivery_service_code: str, tariff_id: str = None):
         r"""Получение интервалов доставки конкретной СД.
         :param delivery_service_code: Код СД.
-        :param postal_code: Индекс (только для СД TopDelivery).
-        :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал (только для СД Dalli).
+        :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал только для СД Dalli.
         """
-        params = self.app.dict.form_info_body(delivery_service_code=delivery_service_code)
-        params["deliveryDate"] = f"{datetime.date.today()}"
-        if postal_code:
-            params["postalCode"] = postal_code
-        elif tariff_id:
+        if delivery_service_code == "Dalli":
+            params = self.app.dict.form_info_body(delivery_service_code=delivery_service_code)
             params["tariffId"] = tariff_id
+        elif delivery_service_code == "TopDelivery":
+            tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+            params = self.app.dict.form_info_body(delivery_service_code=delivery_service_code, data=tomorrow)
+            params["postalCode"] = "119633"
         else:
             params = self.app.dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)

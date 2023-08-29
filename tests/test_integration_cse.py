@@ -50,13 +50,6 @@ def test_delivery_service_points(app):
                                          expected_value="Cse")
 
 
-@allure.description("Получения сроков доставки по СД Cse")
-def test_delivery_time_schedules(app):
-    delivery_time_schedules = app.info.delivery_time_schedules(delivery_service_code="Cse")
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-    Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
-
-
 @allure.description("Получение оферов в формате 'widget'")
 @pytest.mark.xfail
 def test_offers_format_widget(app):
