@@ -44,7 +44,7 @@ def test_integration_delivery_services(app):
 @allure.description("Получения сроков доставки по СД Dalli")
 @pytest.mark.parametrize("tariff_id", ["1", "2", "11"])
 def test_delivery_time_schedules(app, tariff_id):
-    delivery_time_schedules = app.info.get_delivery_time_schedules(tariff_id=tariff_id)
+    delivery_time_schedules = app.info.get_delivery_time_schedules(delivery_service_code="Dalli", tariff_id=tariff_id)
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
     if tariff_id == "1":
         Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
