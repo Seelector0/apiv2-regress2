@@ -1047,6 +1047,11 @@ class OtherInfo:
             "name": "partial-sale",
             "title": "Частичная реализация",
             "description": "Частичная реализация"
+        },
+        {
+            "name": "return-documents",
+            "title": "Возврат документов",
+            "description": "Возврат документов"
         }
     ]
 
