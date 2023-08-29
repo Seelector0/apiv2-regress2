@@ -1,4 +1,5 @@
 from environment import ENV_OBJECT
+import simplejson.errors
 import requests
 import allure
 
@@ -98,3 +99,15 @@ class HttpMethod:
             with allure.step(title=f"Request: {json}"):
                 pass
         return response
+
+    @staticmethod
+    def return_result(response):
+        r"""Метод возвращает результат запроса.
+        :param response: Результат запроса.
+        """
+        response = response
+        try:
+            with allure.step(title=f"Response: {response.json()}"):
+                return response
+        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {response.status_code}")
