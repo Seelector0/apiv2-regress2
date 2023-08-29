@@ -15,20 +15,18 @@ class HttpMethod:
         :param admin: Для использования admin url.
         """
         if admin is True:
-            url = f"{ENV_OBJECT.get_base_url()}/admin/v2/"
+            url = f"{ENV_OBJECT.get_base_url()}/admin/v2"
         else:
-            url = f"{ENV_OBJECT.get_base_url()}/v2/"
+            url = f"{ENV_OBJECT.get_base_url()}/v2"
         return url
 
-    def get(self, link: str, params: dict = None):
+    def get(self, link: str, params: dict = None, admin: bool = None):
         r"""GET запрос.
         :param link: Ссылка на запрос.
         :param params: Тело запроса если нужно.
+        :param admin: Для использования admin URL.
         """
-        with allure.step(title=f"GET requests to URL '{self.url()}{link}'"):
-            result = requests.get(url=f"{self.url()}{link}", params=params, headers=self.app.token())
-        with allure.step(title=f"Request: {params}"):
-            return result
+        return self._send(method="GET", url=link, params=params, admin=admin)
 
     def post(self, link: str, json: dict = None, data: dict = None, files=None, admin: bool = None):
         r"""POST запрос.
@@ -38,44 +36,65 @@ class HttpMethod:
         :param files: Передаваемый файл.
         :param admin: Для использования admin URL.
         """
-        if admin is True:
-            headers = self.admin.admin_token()
-        else:
-            headers = self.app.token()
-        with allure.step(title=f"POST requests to URL '{self.url(admin=admin)}{link}'"):
-            result = requests.post(url=f"{self.url(admin=admin)}{link}", json=json, data=data, headers=headers,
-                                   files=files)
-        if data:
-            with allure.step(title=f"Request: {data}"):
-                pass
-        else:
-            with allure.step(title=f"Request: {json}"):
-                pass
-        return result
+        return self._send(method="POST", url=link, json=json, data=data, files=files, admin=admin)
 
-    def patch(self, link: str, json: dict):
+    def patch(self, link: str, json: dict, admin: bool = None):
         r"""PATCH запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
+        :param admin: Для использования admin URL.
         """
-        with allure.step(title=f"PATCH requests to URL '{self.url()}{link}'"):
-            result = requests.patch(url=f"{self.url()}{link}", json=json, headers=self.app.token())
-        with allure.step(title=f"Request: {json}"):
-            return result
+        return self._send(method="PATCH", url=link, json=json, admin=admin)
 
-    def put(self, link: str, json: dict = None):
+    def put(self, link: str, json: dict = None, admin: bool = None):
         r"""PUT запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
+        :param admin: Для использования admin URL.
         """
-        with allure.step(title=f"PUT requests to URL '{self.url()}{link}'"):
-            result = requests.put(url=f"{self.url()}{link}", json=json, headers=self.app.token())
-        with allure.step(title=f"Request: {json}"):
-            return result
+        return self._send(method="PUT", url=link, json=json, admin=admin)
 
-    def delete(self, link: str):
+    def delete(self, link: str, admin: bool = None):
         r"""DELETE запрос.
         :param link: Ссылка на запрос.
+        :param admin: Для использования admin URL.
         """
-        with allure.step(title=f"DELETE requests to URL '{self.url()}{link}'"):
-            return requests.delete(url=f"{self.url()}{link}", headers=self.app.token())
+        return self._send(method="DELETE", url=link, admin=admin)
+
+    def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None, files=None,
+              admin: bool = None):
+        r"""Метод для определения запросов.
+        :param method: Метод запроса.
+        :param url: URL запроса.
+        :param params: Параметр запроса для метода GET.
+        :param json: Тело запроса в формате json.
+        :param data: Тело запроса в формате data.
+        :param files: Передаваемый файл
+        :param admin: Для использования admin URL.
+        """
+        url = f"{self.url(admin=admin)}/{url}"
+        if admin is True:
+            token = self.admin.admin_token()
+        else:
+            token = self.app.token()
+        with allure.step(title=f"{method} requests tu URL: {url}'"):
+            if method == "GET":
+                response = requests.get(url=url, params=params, headers=token)
+            elif method == "POST":
+                response = requests.post(url=url, json=json, data=data, files=files, headers=token)
+            elif method == "PUT":
+                response = requests.put(url=url, json=json, headers=token)
+            elif method == "PATCH":
+                response = requests.patch(url=url, json=json, headers=token)
+            elif method == "DELETE":
+                response = requests.delete(url=url, headers=token)
+        if params:
+            with allure.step(title=f"Request: {params}"):
+                pass
+        elif data:
+            with allure.step(title=f"Request: {data}"):
+                pass
+        elif json:
+            with allure.step(title=f"Request: {json}"):
+                pass
+        return response
