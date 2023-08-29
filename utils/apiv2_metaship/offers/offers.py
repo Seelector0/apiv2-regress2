@@ -1,6 +1,3 @@
-import requests.exceptions
-import simplejson.errors
-import allure
 
 
 class ApiOffers:
@@ -26,8 +23,4 @@ class ApiOffers:
             body_offers["deliveryServiceCode"] = delivery_service_code,
             body_offers["deliveryPointNumber"] = delivery_point_number
         result = self.app.http_method.get(link="offers", params=body_offers)
-        try:
-            with allure.step(title=f"Response: {result.json()}"):
-                return result
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"API method Failed\nResponse status code: {result.status_code}")
+        return self.app.http_method.return_result(response=result)
