@@ -954,6 +954,13 @@ class OtherInfo:
         }
     ]
 
+    topdelivery_intervals = [
+        {
+            "from": "10:00",
+            "to": "22:00"
+        }
+    ]
+
     guru_vats = [
         {
             "code": "NO_VAT",
