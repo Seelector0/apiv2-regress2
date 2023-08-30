@@ -11,7 +11,7 @@ class ApiModerationDeliveryServices:
         self.admin = admin
         self.link = "configurations"
 
-    def moderation_russian_post(self):
+    def post_connections_russian_post(self):
         """Снятие с модерация СД RussianPost."""
         russian_post = self.admin.dict.form_moderation_delivery_services(delivery_service_code="RussianPost")
         russian_post["credential"]["token"] = os.getenv("RP_TOKEN")
@@ -19,7 +19,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=russian_post, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_topdelivery(self):
+    def post_connections_topdelivery(self):
         """Снятие с модерации СД TopDelivery."""
         topdelivery = self.admin.dict.form_moderation_delivery_services(delivery_service_code="TopDelivery")
         topdelivery["credential"]["username"] = os.getenv("TD_USER_NAME")
@@ -29,7 +29,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=topdelivery, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_boxberry(self):
+    def post_connections_boxberry(self):
         """Снятие с модерации СД Boxberry."""
         boxberry = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Boxberry")
         boxberry["credential"]["token"] = os.getenv("BB_API_TOKEN")
@@ -44,7 +44,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=cdek, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_dpd(self):
+    def post_connections_dpd(self):
         """Снятие с модерации СД Dpd."""
         dpd = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Dpd")
         dpd["credential"]["clientNumber"] = os.getenv("DPD_CLIENT_NUMBER")
@@ -52,7 +52,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=dpd, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_five_post(self):
+    def post_connections_five_post(self):
         """Снятие с модерации СД FivePost"""
         five_post = self.admin.dict.form_moderation_delivery_services(delivery_service_code="FivePost")
         five_post["credential"]["apiKey"] = os.getenv("FIVE_POST_API_KEY")
@@ -61,7 +61,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=five_post, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_yandex_go(self):
+    def post_connections_yandex_go(self):
         """Снятие с модерации СД YandexGo"""
         yandex_go = self.admin.dict.form_moderation_delivery_services(delivery_service_code="YandexGo")
         yandex_go["credential"]["yandexGoToken"] = os.getenv("YA_GO_TOKEN")
@@ -69,7 +69,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=yandex_go, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_yandex_delivery(self):
+    def post_connections_yandex_delivery(self):
         """Снятие с модерации СД YandexDelivery"""
         yandex_delivery = self.admin.dict.form_moderation_delivery_services(delivery_service_code="YandexDelivery")
         yandex_delivery["credential"]["yandexDeliveryToken"] = os.getenv("YA_DELIVERY_TOKEN")
@@ -78,7 +78,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=yandex_delivery, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_dalli(self):
+    def post_connections_dalli(self):
         """Снятие с модерации СД Dalli"""
         dalli = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Dalli")
         dalli["credential"]["token"] = os.getenv("DALLI_TOKEN")

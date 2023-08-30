@@ -42,7 +42,7 @@ def test_aggregation_delivery_services(app):
 
 @allure.description("Модерация СД TopDelivery")
 def test_moderation_delivery_services(admin):
-    moderation = admin.moderation.moderation_topdelivery()
+    moderation = admin.moderation.post_connections_topdelivery()
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
