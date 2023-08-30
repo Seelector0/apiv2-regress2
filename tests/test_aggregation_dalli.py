@@ -200,8 +200,7 @@ def test_add_order_in_parcel(app, connections):
     for order in connections.metaship.get_list_all_orders():
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
-        assert order in list_order_in_parcel
+        assert order in connections.metaship.get_list_all_orders_in_parcel()
 
 
 @allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A6")
