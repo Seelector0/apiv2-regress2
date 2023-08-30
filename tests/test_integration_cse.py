@@ -43,7 +43,7 @@ def test_integration_delivery_services(app):
 
 @allure.description("Получение списка ПВЗ СД Cse")
 def test_delivery_service_points(app):
-    delivery_service_points = app.info.delivery_service_points(delivery_service_code="Cse")
+    delivery_service_points = app.info.get_delivery_service_points(delivery_service_code="Cse")
     Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
     Checking.check_response_is_not_empty(response=delivery_service_points)
     Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",

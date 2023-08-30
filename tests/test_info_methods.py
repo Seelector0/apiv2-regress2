@@ -10,7 +10,7 @@ import os
                                                    "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
                                                    "YandexDelivery"])
 def test_info_vats(app, delivery_service_code):
-    info_vats = app.info.info_vats(delivery_service_code=delivery_service_code)
+    info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
     if delivery_service_code == "Boxberry":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.boxberry_vats)
@@ -43,7 +43,7 @@ def test_info_vats(app, delivery_service_code):
 @allure.description("Получение списка точек сдачи СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "RussianPost", "YandexDelivery"])
 def test_intake_offices(app, delivery_service_code):
-    intake_offices = app.info.intake_offices(delivery_service_code=delivery_service_code)
+    intake_offices = app.info.get_intake_offices(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=intake_offices, expected_status_code=200)
     Checking.check_response_is_not_empty(response=intake_offices)
     Checking.checking_in_list_json_value(response=intake_offices, key_name="deliveryServiceCode",
@@ -52,7 +52,7 @@ def test_intake_offices(app, delivery_service_code):
 
 @allure.description("Получение полного актуального списка возможных статусов заказа")
 def test_info_order_statuses(app):
-    order_statuses = app.info.info_statuses()
+    order_statuses = app.info.get_info_statuses()
     Checking.check_status_code(response=order_statuses, expected_status_code=200)
     Checking.checking_json_key(response=order_statuses, expected_value=INFO.entity_order_statuses)
 
@@ -73,7 +73,7 @@ def tests_tariffs(app, code):
                                                    "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
                                                    "YandexDelivery"])
 def test_info_statuses(app, delivery_service_code):
-    info_delivery_service_services = app.info.info_delivery_service_services(code=delivery_service_code)
+    info_delivery_service_services = app.info.get_info_delivery_service_services(code=delivery_service_code)
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
     if delivery_service_code == "Boxberry":
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.boxberry_services)
@@ -124,7 +124,7 @@ def test_delivery_time_schedules(app, delivery_service_code):
 
 @allure.description("Получение списка ключей")
 def test_user_clients(app):
-    user_clients = app.info.user_clients()
+    user_clients = app.info.get_user_clients()
     Checking.check_status_code(response=user_clients, expected_status_code=200)
     for user in user_clients.json():
         Checking.check_value_comparison(one_value=user["name"], two_value="Клиент APIv2")
@@ -134,13 +134,13 @@ def test_user_clients(app):
 @allure.description("Получение информации о ключе подключения")
 def test_user_clients_by_id(app, connections):
     if connections.db_connections == "metaship":
-        clients_id = app.info.user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
+        clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID_LOCAL"))
         Checking.checking_json_value(response=clients_id, key_name="secret",
                                      expected_value=os.getenv("CLIENT_SECRET_LOCAL"))
     else:
-        clients_id = app.info.user_clients_id(user_id=os.getenv("CLIENT_ID"))
+        clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID"))
         Checking.checking_json_value(response=clients_id, key_name="secret", expected_value=os.getenv("CLIENT_SECRET"))
@@ -148,7 +148,7 @@ def test_user_clients_by_id(app, connections):
 
 @allure.description("Разбор адреса")
 def test_address(app):
-    address = app.info.info_address(raw="119633 г Москва Боровское шоссе 33")
+    address = app.info.get_info_address(raw="119633 г Москва Боровское шоссе 33")
     Checking.check_status_code(response=address, expected_status_code=200)
     Checking.checking_json_value(response=address, key_name="raw",
                                  expected_value="119633, г Москва, р-н Ново-Переделкино, Боровское шоссе, д 33")
