@@ -62,8 +62,8 @@ class HttpMethod:
         """
         return self._send(method="DELETE", url=link, admin=admin)
 
-    def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None, files=None,
-              admin: bool = None):
+    def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
+              files: list = None, admin: bool = None):
         r"""Метод для определения запросов.
         :param method: Метод запроса.
         :param url: URL запроса.
