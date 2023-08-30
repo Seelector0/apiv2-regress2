@@ -46,7 +46,7 @@ class Application:
 
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
-        return self.dict.form_token(authorization=f"Bearer {self.response.json()['access_token']}")
+        return self.dict.form_token(authorization=self.response.json()["access_token"])
 
     def close_session(self):
         """Метод для закрытия сессии."""

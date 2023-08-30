@@ -41,13 +41,13 @@ class Dict:
     @staticmethod
     def form_token(authorization: str):
         r"""Тело для получения токена.
-        :param authorization:
+        :param authorization: Токен для авторизации.
         """
         x_trace_id = str(uuid.uuid4())
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
             body_token = {
                 "x-trace-id": x_trace_id,
-                "Authorization": authorization
+                "Authorization": f"Bearer {authorization}"
             }
             return body_token
 
