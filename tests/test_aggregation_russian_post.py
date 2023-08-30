@@ -72,7 +72,7 @@ def test_offers_delivery_point(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="DeliveryPoint",
                                                   delivery_service_code="RussianPost")
     Checking.check_status_code(response=offers_delivery_point, expected_status_code=200)
-    Checking.checking_json_key(response=offers_delivery_point, expected_value=["PostOffice"])
+    Checking.checking_json_key(response=offers_delivery_point, expected_value=["DeliveryPoint"])
 
 
 @allure.description("Получение PostOffice оферов по СД RussianPost")
