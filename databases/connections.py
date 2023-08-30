@@ -144,7 +144,7 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {self.metaship.db_connections}."order"."order" """
-                                 f"""where deleted = false and user_id = '{self.metaship.user_id}'""")
+                                 f"""where state='succeeded' and deleted=false and user_id='{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_order.append(*row)
         finally:
@@ -157,7 +157,7 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select order_id from {self.metaship.db_connections}."order".order_parcel """
-                                 f"""where parcel_id = '{self.get_list_parcels()[0]}'""")
+                                 f"""where deleted=false and parcel_id = '{self.get_list_parcels()[0]}'""")
             for row in cursor:
                 db_list_orders_in_parcel.append(*row)
         finally:
@@ -190,7 +190,7 @@ class DataBaseConnections:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
-            if str(*value) in ["succeeded", "error", "failed"]:
+            if str(*value) in ["succeeded", "failed"]:
                 break
 
     def delete_list_orders(self):
