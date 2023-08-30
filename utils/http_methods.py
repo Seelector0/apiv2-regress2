@@ -29,7 +29,7 @@ class HttpMethod:
         """
         return self._send(method="GET", url=link, params=params, admin=admin)
 
-    def post(self, link: str, json: dict = None, data: dict = None, files=None, admin: bool = None):
+    def post(self, link: str, json: dict = None, data: dict = None, files: list = None, admin: bool = None):
         r"""POST запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
