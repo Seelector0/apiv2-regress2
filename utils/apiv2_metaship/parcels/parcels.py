@@ -13,10 +13,10 @@ class ApiParcel:
         :param data: Дата отправки партии.
         """
         if type(value) is list:
-            create_parcel = self.app.dict.form_parcel_body(orders_ids=value, data=str(data))
+            parcel = self.app.dict.form_parcel_body(orders_ids=value, data=str(data))
         else:
-            create_parcel = self.app.dict.form_parcel_body(orders_ids=[value], data=str(data))
-        result = self.app.http_method.post(link=self.link, json=create_parcel)
+            parcel = self.app.dict.form_parcel_body(orders_ids=[value], data=str(data))
+        result = self.app.http_method.post(link=self.link, json=parcel)
         return self.app.http_method.return_result(response=result)
 
     def get_parcels(self):

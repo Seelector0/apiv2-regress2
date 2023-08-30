@@ -10,8 +10,8 @@ class ApiWidget:
         r"""Создание токена для виджета.
         :param shop_id: Id магазина из БД.
         """
-        body = self.app.dict.form_widget(shop_id=shop_id)
-        result = self.app.http_method.post(link=self.link, json=body)
+        widget = self.app.dict.form_widget(shop_id=shop_id)
+        result = self.app.http_method.post(link=self.link, json=widget)
         return self.app.http_method.return_result(response=result)
 
     def get_widget_tokens(self):

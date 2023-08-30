@@ -8,8 +8,8 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        body = self.app.dict.form_warehouse_body()
-        result = self.app.http_method.post(link=self.link, json=body)
+        warehouse = self.app.dict.form_warehouse_body()
+        result = self.app.http_method.post(link=self.link, json=warehouse)
         return self.app.http_method.return_result(response=result)
 
     def get_warehouses(self):
@@ -39,18 +39,18 @@ class ApiWarehouse:
         :param email: Email контактного лица склада.
         :param working_time: Время работы склада.
         """
-        warehouse = self.app.dict.form_warehouse_body()
-        warehouse["name"] = name
-        warehouse["pickup"] = pickup
-        warehouse["comment"] = comment
-        warehouse["lPostWarehouseId"] = l_post_warehouse_id
-        warehouse["dpdPickupNum"] = dpd_pickup_num
-        warehouse["address"]["raw"] = address
-        warehouse["contact"]["fullName"] = full_name
-        warehouse["contact"]["phone"] = phone
-        warehouse["contact"]["email"] = email
-        warehouse["workingTime"] = working_time
-        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", json=warehouse)
+        put_warehouse = self.app.dict.form_warehouse_body()
+        put_warehouse["name"] = name
+        put_warehouse["pickup"] = pickup
+        put_warehouse["comment"] = comment
+        put_warehouse["lPostWarehouseId"] = l_post_warehouse_id
+        put_warehouse["dpdPickupNum"] = dpd_pickup_num
+        put_warehouse["address"]["raw"] = address
+        put_warehouse["contact"]["fullName"] = full_name
+        put_warehouse["contact"]["phone"] = phone
+        put_warehouse["contact"]["email"] = email
+        put_warehouse["workingTime"] = working_time
+        return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", json=put_warehouse)
 
     def patch_warehouse(self, warehouse_id: str, path: str, value):
         r"""Метод для редактирования полей склада.

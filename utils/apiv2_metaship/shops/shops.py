@@ -8,8 +8,8 @@ class ApiShop:
 
     def post_shop(self):
         """Метод создания магазина."""
-        body = self.app.dict.form_shop_body()
-        result = self.app.http_method.post(link=self.link, json=body)
+        shop = self.app.dict.form_shop_body()
+        result = self.app.http_method.post(link=self.link, json=shop)
         return self.app.http_method.return_result(response=result)
 
     def get_shops(self):

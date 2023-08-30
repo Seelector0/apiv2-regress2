@@ -15,12 +15,12 @@ class ApiOffers:
         :param format_: Получение в формате виджета.
         """
         if format_:
-            body_offers = self.app.dict.form_offers(types="DeliveryPoint")
-            body_offers["format"] = format_
+            params = self.app.dict.form_offers(types="DeliveryPoint")
+            params["format"] = format_
         else:
-            body_offers = self.app.dict.form_offers(types=types)
-            body_offers["paymentType"] = payment_type,
-            body_offers["deliveryServiceCode"] = delivery_service_code,
-            body_offers["deliveryPointNumber"] = delivery_point_number
-        result = self.app.http_method.get(link="offers", params=body_offers)
+            params = self.app.dict.form_offers(types=types)
+            params["paymentType"] = payment_type,
+            params["deliveryServiceCode"] = delivery_service_code,
+            params["deliveryPointNumber"] = delivery_point_number
+        result = self.app.http_method.get(link="params", params=params)
         return self.app.http_method.return_result(response=result)
