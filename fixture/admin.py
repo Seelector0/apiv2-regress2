@@ -1,4 +1,4 @@
-from utils.admin_api.connections_delivery_services.moderation_delivery_services import ApiModerationDeliveryServices
+from utils.admin_api.connections_delivery_services.connections_delivery_services import ApiModerationDeliveryServices
 from dotenv import load_dotenv, find_dotenv
 from utils.http_methods import HttpMethod
 from utils.dicts import Dict
