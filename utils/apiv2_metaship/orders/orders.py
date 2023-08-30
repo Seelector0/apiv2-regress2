@@ -172,14 +172,14 @@ class ApiOrder:
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_{code}.{file_extension}"
+        body = self.app.dict.form_order_from_file()
         if file_extension == "xls":
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xlsx)
         else:
             return f"Файл {file_extension} не поддерживается"
-        result = self.app.http_method.post(link=f"import/{self.link}", data=self.app.dict.form_order_from_file(),
-                                           files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=body, files=file)
         return self.app.http_method.return_result(response=result)
 
     def post_import_order_format_russian_post(self, file_extension: str):
@@ -187,21 +187,22 @@ class ApiOrder:
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_format_russian_post.{file_extension}"
+        body = self.app.dict.form_order_from_file(type_="russian_post")
         if file_extension == "xls":
             file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
             file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xlsx)
         else:
             return f"Файл {file_extension} не поддерживается"
-        result = self.app.http_method.post(link=f"import/{self.link}",
-                                           data=self.app.dict.form_order_from_file(type_="russian_post"), files=file)
+        result = self.app.http_method.post(link=f"import/{self.link}", data=body, files=file)
         return self.app.http_method.return_result(response=result)
 
     def get_order_search(self, query: str):
         r"""Метод поиска по заказам.
         :param query: Поле поиска по ID, shop_number и тд.
         """
-        result = self.app.http_method.get(link=f"{self.link}/search", params=self.app.dict.form_search(query=query))
+        params = self.app.dict.form_search(query=query)
+        result = self.app.http_method.get(link=f"{self.link}/search", params=params)
         return self.app.http_method.return_result(response=result)
 
     def get_orders(self):

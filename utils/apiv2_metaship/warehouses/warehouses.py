@@ -8,7 +8,8 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        result = self.app.http_method.post(link=self.link, json=self.app.dict.form_warehouse_body())
+        body = self.app.dict.form_warehouse_body()
+        result = self.app.http_method.post(link=self.link, json=body)
         return self.app.http_method.return_result(response=result)
 
     def get_warehouses(self):

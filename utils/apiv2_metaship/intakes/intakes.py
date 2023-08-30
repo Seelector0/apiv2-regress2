@@ -10,8 +10,8 @@ class ApiIntakes:
         r"""Метод создание забора.
         :param delivery_service: СД только Boxberry, Cdek, Cse.
         """
-        result = self.app.http_method.post(link=self.link,
-                                           json=self.app.dict.form_intakes(delivery_service=delivery_service))
+        body = self.app.dict.form_intakes(delivery_service=delivery_service)
+        result = self.app.http_method.post(link=self.link, json=body)
         return self.app.http_method.return_result(response=result)
 
     def get_intakes(self):
