@@ -51,11 +51,3 @@ class ApiParcel:
         patch_parcel = self.app.dict.form_patch_body(op="replace", path="shipmentDate", value=str(data))
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         return self.app.http_method.return_result(response=result)
-
-    def get_orders_in_parcel(self, parcel_id):
-        """Получение списка заказов в партии."""
-        order_in_parcel = []
-        parcel_list = self.get_parcel_id(parcel_id=parcel_id)
-        for order in parcel_list.json()["data"]["request"]["orderIds"]:
-            order_in_parcel.append(order)
-        return order_in_parcel

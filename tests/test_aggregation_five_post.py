@@ -182,8 +182,7 @@ def test_add_order_in_parcel(app, connections):
     for order in connections.metaship.get_list_all_orders():
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        list_order_in_parcel = app.parcel.get_orders_in_parcel(parcel_id=list_parcel_id[0])
-        assert order in list_order_in_parcel
+        assert order in connections.metaship.get_list_all_orders_in_parcel()
 
 
 @allure.description("Редактирование веса заказа в партии СД FivePost")
@@ -223,9 +222,8 @@ def test_get_documents(app):
 
 @allure.description("Редактирование партии СД FivePost (Удаление заказа)")
 def test_remove_order_in_parcel(app, connections):
-    parcel_id = connections.metaship.get_list_parcels()
-    old_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    parcel_remove = app.parcel.patch_parcel(order_id=choice(old_list_order), parcel_id=parcel_id[0], op="remove")
-    new_list_order = app.parcel.get_orders_in_parcel(parcel_id=parcel_id[0])
-    Checking.check_status_code(response=parcel_remove, expected_status_code=200)
-    Checking.checking_difference_len_lists(old_list=old_list_order, new_list=new_list_order)
+    list_order = connections.metaship.get_list_all_orders_in_parcel()
+    list_parcel_id = connections.metaship.get_list_parcels()
+    remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(list_order), parcel_id=list_parcel_id[0])
+    Checking.check_status_code(response=remove_order, expected_status_code=200)
+    assert remove_order is not connections.metaship.get_list_all_orders_in_parcel()

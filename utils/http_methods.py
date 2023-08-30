@@ -78,24 +78,19 @@ class HttpMethod:
             token = self.admin.admin_token()
         else:
             token = self.app.token()
-        with allure.step(title=f"{method} requests tu URL: {url}'"):
-            if method == "GET":
-                response = requests.get(url=url, params=params, headers=token)
-            elif method == "POST":
-                response = requests.post(url=url, json=json, data=data, files=files, headers=token)
-            elif method == "PUT":
-                response = requests.put(url=url, json=json, headers=token)
-            elif method == "PATCH":
-                response = requests.patch(url=url, json=json, headers=token)
-            elif method == "DELETE":
-                response = requests.delete(url=url, headers=token)
+        with allure.step(title=f"{method} requests tu URL: {url}"):
+            if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+                response = requests.request(method=method, url=url, params=params, json=json, data=data, files=files,
+                                            headers=token)
+            else:
+                raise Exception(f"Получен неверный HTTP метод '{method}'")
         if params:
             with allure.step(title=f"Request: {params}"):
                 pass
         elif data:
             with allure.step(title=f"Request: {data}"):
                 pass
-        elif json:
+        else:
             with allure.step(title=f"Request: {json}"):
                 pass
         return response
