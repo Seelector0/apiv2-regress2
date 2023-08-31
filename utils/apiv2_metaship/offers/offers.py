@@ -22,5 +22,5 @@ class ApiOffers:
             params["paymentType"] = payment_type,
             params["deliveryServiceCode"] = delivery_service_code,
             params["deliveryPointNumber"] = delivery_point_number
-        result = self.app.http_method.get(link="params", params=params)
+        result = self.app.http_method.get(link="offers", params=params)
         return self.app.http_method.return_result(response=result)
