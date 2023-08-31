@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД YandexGo")
 def test_integration_delivery_services(app):
-    yandex = app.service.delivery_services_yandex_go()
+    yandex = app.service.post_delivery_services_yandex_go()
     Checking.check_status_code(response=yandex, expected_status_code=201)
     Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
 

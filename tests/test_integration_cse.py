@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек службы доставки СД Cse")
 def test_integration_delivery_services(app):
-    cse = app.service.delivery_services_cse()
+    cse = app.service.post_delivery_services_cse()
     Checking.check_status_code(response=cse, expected_status_code=201)
     Checking.checking_json_key(response=cse, expected_value=INFO.created_entity)
 

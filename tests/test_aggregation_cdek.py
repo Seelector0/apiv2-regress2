@@ -35,7 +35,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Cdek по агрегации")
 def test_aggregation_delivery_services(app):
-    cdek = app.service.delivery_services_cdek(aggregation=True)
+    cdek = app.service.post_delivery_services_cdek(aggregation=True)
     Checking.check_status_code(response=cdek, expected_status_code=201)
     Checking.checking_json_key(response=cdek, expected_value=INFO.created_entity)
 

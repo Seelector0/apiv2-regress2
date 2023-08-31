@@ -35,7 +35,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД TopDelivery по агрегации")
 def test_aggregation_delivery_services(app):
-    topdelivery = app.service.delivery_services_topdelivery(aggregation=True)
+    topdelivery = app.service.post_delivery_services_topdelivery(aggregation=True)
     Checking.check_status_code(response=topdelivery, expected_status_code=201)
     Checking.checking_json_key(response=topdelivery, expected_value=INFO.created_entity)
 

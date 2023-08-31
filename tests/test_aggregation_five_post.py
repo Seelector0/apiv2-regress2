@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД FivePost по агрегации")
 def test_aggregation_delivery_services(app):
-    five_post = app.service.delivery_services_five_post(aggregation=True)
+    five_post = app.service.post_delivery_services_five_post(aggregation=True)
     Checking.check_status_code(response=five_post, expected_status_code=201)
     Checking.checking_json_key(response=five_post, expected_value=INFO.created_entity)
 

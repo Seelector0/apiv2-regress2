@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Boxberry по агрегации")
 def test_aggregation_delivery_services(app):
-    boxberry = app.service.delivery_services_boxberry(aggregation=True)
+    boxberry = app.service.post_delivery_services_boxberry(aggregation=True)
     Checking.check_status_code(response=boxberry, expected_status_code=201)
     Checking.checking_json_key(response=boxberry, expected_value=INFO.created_entity)
 

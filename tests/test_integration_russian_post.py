@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек службы доставки СД RussianPost")
 def test_integration_delivery_services(app):
-    russian_post = app.service.delivery_services_russian_post()
+    russian_post = app.service.post_delivery_services_russian_post()
     Checking.check_status_code(response=russian_post, expected_status_code=201)
     Checking.checking_json_key(response=russian_post, expected_value=INFO.created_entity)
 

@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Dpd")
 def test_integration_delivery_services(app):
-    dpd = app.service.delivery_services_dpd()
+    dpd = app.service.post_delivery_services_dpd()
     Checking.check_status_code(response=dpd, expected_status_code=201)
     Checking.checking_json_key(response=dpd, expected_value=INFO.created_entity)
 

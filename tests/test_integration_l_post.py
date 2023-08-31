@@ -35,7 +35,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД LPost")
 def test_integration_delivery_services(app):
-    l_post = app.service.delivery_services_l_post()
+    l_post = app.service.post_delivery_services_l_post()
     Checking.check_status_code(response=l_post, expected_status_code=201)
     Checking.checking_json_key(response=l_post, expected_value=INFO.created_entity)
 

@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек службы доставки СД FivePost")
 def test_integration_delivery_services(app):
-    five_post = app.service.delivery_services_five_post()
+    five_post = app.service.post_delivery_services_five_post()
     Checking.check_status_code(response=five_post, expected_status_code=201)
     Checking.checking_json_key(response=five_post, expected_value=INFO.created_entity)
 

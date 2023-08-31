@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Dalli по агрегации")
 def test_aggregation_delivery_services(app):
-    dalli = app.service.delivery_services_dalli(aggregation=True)
+    dalli = app.service.post_delivery_services_dalli(aggregation=True)
     Checking.check_status_code(response=dalli, expected_status_code=201)
     Checking.checking_json_key(response=dalli, expected_value=INFO.created_entity)
 

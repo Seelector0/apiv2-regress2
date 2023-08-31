@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД DostavkaClub")
 def test_integration_delivery_services(app):
-    dostavka_club = app.service.delivery_services_dostavka_club()
+    dostavka_club = app.service.post_delivery_services_dostavka_club()
     Checking.check_status_code(response=dostavka_club, expected_status_code=201)
     Checking.checking_json_key(response=dostavka_club, expected_value=INFO.created_entity)
 

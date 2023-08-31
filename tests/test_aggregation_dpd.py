@@ -36,7 +36,7 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Dpd по агрегации")
 def test_aggregation_delivery_services(app):
-    dpd = app.service.delivery_services_dpd(aggregation=True)
+    dpd = app.service.post_delivery_services_dpd(aggregation=True)
     Checking.check_status_code(response=dpd, expected_status_code=201)
     Checking.checking_json_key(response=dpd, expected_value=INFO.created_entity)
 
