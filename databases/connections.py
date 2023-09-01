@@ -1,5 +1,6 @@
 from psycopg2.extras import DictCursor
 import time
+import json
 
 
 class DataBaseConnections:
@@ -138,7 +139,7 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order
 
-    def get_list_all_orders(self):
+    def get_list_all_orders_out_parcel(self):
         """Метод собирает (возвращает) список заказов который не удалены из таблицы order."""
         db_list_order = []
         cursor = self.metaship.connection_open().cursor(cursor_factory=DictCursor)
@@ -173,12 +174,64 @@ class DataBaseConnections:
         cursor = self.metaship.connection_open().cursor()
         try:
             cursor.execute(query=f"""select {value} from {self.metaship.db_connections}."order"."order" """
-                                 f"""where id = '{order_id}' and user_id = '{self.metaship.user_id}'""")
+                                 f"""where id='{order_id}' and user_id='{self.metaship.user_id}'""")
             for row in cursor:
                 db_list_order_id.append(*row)
         finally:
             cursor.close()
         return db_list_order_id
+
+    def get_order_id_out_parcel(self, single_order: bool = None, multy_order: bool = None):
+        """Метод получения id заказов не в партии."""
+        order_id = None
+        db_list_data = []
+        db_list_single_order_id = []
+        db_list_multy_order_id = []
+        cursor = self.metaship.connection_open().cursor()
+        try:
+            for order_id in self.get_list_all_orders_out_parcel():
+                cursor.execute(query=f"""select data from {self.metaship.db_connections}."order"."order" """
+                                     f"""where id='{order_id}' and state='succeeded' and deleted=false """
+                                     f"""and user_id='{self.metaship.user_id}'""")
+                for row in cursor:
+                    db_list_data.append(*row)
+            for i in db_list_data:
+                if len(json.loads(i["request"].replace('\"', '"'))["places"]) == 1:
+                    db_list_single_order_id.append(order_id)
+                elif len(json.loads(i["request"].replace('\"', '"'))["places"]) > 1:
+                    db_list_multy_order_id.append(order_id)
+        finally:
+            cursor.close()
+        if single_order is True:
+            return db_list_single_order_id
+        if multy_order is True:
+            return multy_order
+
+    def get_order_id_in_parcel(self, single_order: bool = None, multy_order: bool = None):
+        """Метод получения id заказов в партии"""
+        order_id = None
+        db_list_data = []
+        db_list_single_order_id = []
+        db_list_multy_order_id = []
+        cursor = self.metaship.connection_open().cursor()
+        try:
+            for order_id in self.get_list_all_orders_in_parcel():
+                cursor.execute(query=f"""select data from {self.metaship.db_connections}."order"."order" """
+                                     f"""where id='{order_id}' and state='succeeded' and deleted=false """
+                                     f"""and user_id='{self.metaship.user_id}'""")
+                for row in cursor:
+                    db_list_data.append(*row)
+            for i in db_list_data:
+                if len(json.loads(i["request"].replace('\"', '"'))["places"]) == 1:
+                    db_list_single_order_id.append(order_id)
+                elif len(json.loads(i["request"].replace('\"', '"'))["places"]) > 1:
+                    db_list_multy_order_id.append(order_id)
+        finally:
+            cursor.close()
+        if single_order is True:
+            return db_list_single_order_id
+        if multy_order is True:
+            return multy_order
 
     def wait_create_order(self, order_id: str):
         r"""Метод ждёт загрузки заказа по его id.
@@ -322,7 +375,7 @@ class DataBaseConnections:
         self.delete_list_warehouses()
         self.delete_list_delivery_services()
         self.delete_list_drafts()
-        for id_ in self.get_list_all_orders():
+        for id_ in self.get_list_all_orders_out_parcel():
             self.delete_order_document(order_id=id_)
         self.delete_list_orders()
         for id_ in self.get_list_parcels():
