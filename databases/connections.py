@@ -202,9 +202,9 @@ class DataBaseConnections:
                     db_list_multy_order_id.append(order_id)
         finally:
             cursor.close()
-        if single_order is True:
+        if single_order:
             return db_list_single_order_id
-        if multy_order is True:
+        if multy_order:
             return db_list_multy_order_id
 
     def get_order_id_in_parcel(self, single_order: bool = None, multy_order: bool = None):
@@ -228,9 +228,9 @@ class DataBaseConnections:
                     db_list_multy_order_id.append(order_id)
         finally:
             cursor.close()
-        if single_order is True:
+        if single_order:
             return db_list_single_order_id
-        if multy_order is True:
+        if multy_order:
             return db_list_multy_order_id
 
     def wait_create_order(self, order_id: str):
