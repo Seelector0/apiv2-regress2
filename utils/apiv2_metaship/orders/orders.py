@@ -329,21 +329,3 @@ class ApiOrder:
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
         return self.app.http_method.return_result(response=result)
-
-    def get_single_order_id_out_parcel(self):
-        """Метод получения id одноместных заказов не в партии"""
-        list_orders_id = []
-        list_orders = self.get_orders()
-        for order in list_orders.json():
-            if order["status"] == "created" and len(order["data"]["request"]["places"]) == 1:
-                list_orders_id.append(order["id"])
-        return list_orders_id
-
-    def get_single_order_id_in_parcel(self):
-        """Метод получения id одноместных заказов в партии"""
-        list_orders_id = []
-        list_orders = self.get_orders()
-        for order in list_orders.json():
-            if order["status"] == "wait-delivery" and len(order["data"]["request"]["places"]) == 1:
-                list_orders_id.append(order["id"])
-        return list_orders_id
