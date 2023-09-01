@@ -132,14 +132,14 @@ def test_get_orders(app):
 
 @allure.description("Получение информации о заказе CД Dalli")
 def test_get_order_by_id(app, connections):
-    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders()))
+    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders_out_parcel()))
     Checking.check_status_code(response=random_order, expected_status_code=200)
     Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
 
 
 @allure.description("Редактирование заказа СД Dalli")
 def test_editing_order(app, connections):
-    random_order = choice(connections.metaship.get_list_all_orders())
+    random_order = choice(connections.metaship.get_list_all_orders_out_parcel())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -152,7 +152,7 @@ def test_editing_order(app, connections):
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Dalli")
 def test_order_status(app, connections):
-    for order_id in connections.metaship.get_list_all_orders():
+    for order_id in connections.metaship.get_list_all_orders_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -160,7 +160,7 @@ def test_order_status(app, connections):
 
 @allure.description("Получение подробной информации о заказе СД Dalli")
 def test_order_details(app, connections):
-    for order_id in connections.metaship.get_list_all_orders():
+    for order_id in connections.metaship.get_list_all_orders_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
@@ -168,7 +168,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии СД Dalli")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(value=choice(connections.metaship.get_list_all_orders()))
+    create_parcel = app.parcel.post_parcel(value=choice(connections.metaship.get_list_all_orders_out_parcel()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
@@ -190,7 +190,7 @@ def test_get_parcel_by_id(app, connections):
 @allure.description("Редактирование партии СД Dalli (Добавление заказов)")
 def test_add_order_in_parcel(app, connections):
     list_parcel_id = connections.metaship.get_list_parcels()
-    for order in connections.metaship.get_list_all_orders():
+    for order in connections.metaship.get_list_all_orders_out_parcel():
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
         assert order in connections.metaship.get_list_all_orders_in_parcel()

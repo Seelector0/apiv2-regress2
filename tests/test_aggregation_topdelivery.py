@@ -154,9 +154,8 @@ def test_create_order_delivery_point(app, payment_type, connections):
 
 
 @allure.description("Создание многоместного заказа из одноместного")
-def test_patch_single_order(app):
-    list_order_id = app.order.get_single_order_id_out_parcel()
-    random_order_id = choice(list_order_id)
+def test_patch_single_order(app, connections):
+    random_order_id = choice(connections.metaship.get_order_id_out_parcel(single_order=True))
     single_order = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=single_order, expected_status_code=200)
     patch_single_order = app.order.patch_create_multy_order(order_id=random_order_id)
@@ -191,14 +190,14 @@ def test_get_orders(app):
 
 @allure.description("Получение информации о заказе CД TopDelivery")
 def test_get_order_by_id(app, connections):
-    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders()))
+    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders_out_parcel()))
     Checking.check_status_code(response=random_order, expected_status_code=200)
     Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД TopDelivery")
 def test_order_status(app, connections):
-    for order_id in connections.metaship.get_list_all_orders():
+    for order_id in connections.metaship.get_list_all_orders_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -206,7 +205,7 @@ def test_order_status(app, connections):
 
 @allure.description("Удаление заказа TopDelivery")
 def test_delete_order(app, connections):
-    random_order_id = choice(connections.metaship.get_list_all_orders())
+    random_order_id = choice(connections.metaship.get_list_all_orders_out_parcel())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
@@ -217,14 +216,14 @@ def test_delete_order(app, connections):
 @allure.description("Получения этикеток СД TopDelivery вне партии")
 @pytest.mark.parametrize("labels", [pytest.param("original", marks=pytest.mark.xfail), "termo"])
 def test_get_labels_out_of_parcel(app, connections, labels):
-    for order_id in connections.metaship.get_list_all_orders():
+    for order_id in connections.metaship.get_list_all_orders_out_parcel():
         label = app.document.get_label(order_id=order_id, type_="termo")
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение подробной информации о заказе СД TopDelivery")
 def test_order_details(app, connections):
-    for order_id in connections.metaship.get_list_all_orders():
+    for order_id in connections.metaship.get_list_all_orders_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
@@ -232,7 +231,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии СД TopDelivery")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(value=connections.metaship.get_list_all_orders())
+    create_parcel = app.parcel.post_parcel(value=connections.metaship.get_list_all_orders_out_parcel())
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
