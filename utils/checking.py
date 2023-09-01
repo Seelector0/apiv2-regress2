@@ -57,19 +57,6 @@ class Checking:
                 f"FAILED! Длинна старого списка {len(old_list)} и длинна нового списка {len(new_list)}"
 
     @staticmethod
-    def checking_difference_len_lists(old_list: list, new_list: list):
-        """Метод проверяет уменьшения длинны старого списка и сравнения его с длинной нового списка"""
-        with allure.step(title="Проверяю длины списков"):
-            assert len(old_list) - 1 == len(new_list), \
-                f"FAILED! Длинна старого списка {old_list} и длинна нового списка {new_list}"
-
-    @staticmethod
-    def checking_sorted_lists_key(old_list: list, new_list: list, key):
-        with allure.step(title="Сортировка списков и проверка их на равенство"):
-            assert sorted(old_list, key=key) == sorted(new_list, key=key), \
-                f"FAILED! Старый список {old_list}, Новый список {new_list}"
-
-    @staticmethod
     def check_date_change(calendar_date, number_of_days: int):
         with allure.step(title=f"Проверка, что дата отправки изменилась на {number_of_days} день/дней"):
             day = datetime.date.today()
