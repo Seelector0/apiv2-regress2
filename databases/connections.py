@@ -205,7 +205,7 @@ class DataBaseConnections:
         if single_order is True:
             return db_list_single_order_id
         if multy_order is True:
-            return multy_order
+            return db_list_multy_order_id
 
     def get_order_id_in_parcel(self, single_order: bool = None, multy_order: bool = None):
         """Метод получения id заказов в партии"""
@@ -231,7 +231,7 @@ class DataBaseConnections:
         if single_order is True:
             return db_list_single_order_id
         if multy_order is True:
-            return multy_order
+            return db_list_multy_order_id
 
     def wait_create_order(self, order_id: str):
         r"""Метод ждёт загрузки заказа по его id.
