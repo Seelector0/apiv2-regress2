@@ -181,41 +181,26 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order_id
 
-    def get_order_id_out_parcel(self, single_order: bool = None, multy_order: bool = None):
-        """Метод получения id заказов не в партии."""
+    def get_order_id_from_database(self, not_in_parcel: bool = None, in_parcel: bool = None, single_order: bool = None,
+                                   multy_order: bool = None):
+        r"""Метод получения id заказов.
+        :param not_in_parcel: Все заказы не в партии.
+        :param in_parcel: Все заказы в партии.
+        :param single_order: Одноместные заказы.`
+        :param multy_order: Многоместные заказы.
+        """
         order_id = None
+        list_orders = None
         db_list_data = []
         db_list_single_order_id = []
         db_list_multy_order_id = []
         cursor = self.metaship.connection_open().cursor()
+        if in_parcel:
+            list_orders = self.get_list_all_orders_in_parcel()
+        elif not_in_parcel:
+            list_orders = self.get_list_all_orders_out_parcel()
         try:
-            for order_id in self.get_list_all_orders_out_parcel():
-                cursor.execute(query=f"""select data from {self.metaship.db_connections}."order"."order" """
-                                     f"""where id='{order_id}' and state='succeeded' and deleted=false """
-                                     f"""and user_id='{self.metaship.user_id}'""")
-                for row in cursor:
-                    db_list_data.append(*row)
-            for i in db_list_data:
-                if len(json.loads(i["request"].replace('\"', '"'))["places"]) == 1:
-                    db_list_single_order_id.append(order_id)
-                elif len(json.loads(i["request"].replace('\"', '"'))["places"]) > 1:
-                    db_list_multy_order_id.append(order_id)
-        finally:
-            cursor.close()
-        if single_order:
-            return db_list_single_order_id
-        if multy_order:
-            return db_list_multy_order_id
-
-    def get_order_id_in_parcel(self, single_order: bool = None, multy_order: bool = None):
-        """Метод получения id заказов в партии"""
-        order_id = None
-        db_list_data = []
-        db_list_single_order_id = []
-        db_list_multy_order_id = []
-        cursor = self.metaship.connection_open().cursor()
-        try:
-            for order_id in self.get_list_all_orders_in_parcel():
+            for order_id in list_orders:
                 cursor.execute(query=f"""select data from {self.metaship.db_connections}."order"."order" """
                                      f"""where id='{order_id}' and state='succeeded' and deleted=false """
                                      f"""and user_id='{self.metaship.user_id}'""")
