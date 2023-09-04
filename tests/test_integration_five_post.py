@@ -172,7 +172,7 @@ def test_add_order_in_parcel(app, connections):
 @allure.description("Редактирование веса заказа в партии СД FivePost")
 @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_patch_weight_random_order_in_parcel(app, connections):
-    order_in_parcel = connections.metaship.get_order_id_in_parcel(single_order=True)
+    order_in_parcel = connections.metaship.get_order_id_from_database(in_parcel=True, single_order=True)
     order_patch = app.order.patch_order_weight(order_id=choice(order_in_parcel), weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)

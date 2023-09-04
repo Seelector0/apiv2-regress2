@@ -139,7 +139,7 @@ def test_create_order_delivery_point(app, payment_type, connections):
 
 @allure.description("Создание многоместного заказа из одноместного")
 def test_patch_single_order(app, connections):
-    random_order_id = choice(connections.metaship.get_order_id_out_parcel(single_order=True))
+    random_order_id = choice(connections.metaship.get_order_id_from_database(not_in_parcel=True, single_order=True))
     single_order = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=single_order, expected_status_code=200)
     patch_single_order = app.order.patch_create_multy_order(order_id=random_order_id)
