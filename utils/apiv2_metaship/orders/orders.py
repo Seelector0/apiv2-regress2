@@ -218,7 +218,7 @@ class ApiOrder:
         return self.app.http_method.return_result(response=result)
 
     def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
-        r"""Метод обновления заказа для СД RussianPost и LPost.
+        r"""Метод обновления заказа для СД RussianPost, LPost и Dalli.
         :param order_id: Идентификатор заказа.
         :param weight: Общий вес заказа.
         :param length: Длинна.
@@ -237,7 +237,7 @@ class ApiOrder:
         return self.app.http_method.return_result(response=result)
 
     def patch_order_weight(self, order_id: str, weight: int):
-        r"""Редактирование веса в заказе
+        r"""Редактирование веса в заказе для СД Boxberry, Cdek, Dpd, FivePost, RussianPost.
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
@@ -246,7 +246,7 @@ class ApiOrder:
         return self.app.http_method.return_result(response=result)
 
     def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
-        r"""Метод редактирования поля в заказе.
+        r"""Метод редактирования поля в заказе для СД Cdek и Dpd.
         :param order_id: Идентификатор заказа.
         :param name: Наименование товарной позиции.
         :param price: Цена товарной позиции.
@@ -267,7 +267,8 @@ class ApiOrder:
         return self.app.http_method.return_result(response=result)
 
     def patch_order_add_item(self, order_id: str):
-        r"""Метод добавление места в заказ. Для СД DPD старые места удаляются и добавляются новые
+        r"""Метод добавление места в заказ СД Cdek, Dpd, DostavkaClub.
+        Для СД DPD старые места удаляются и добавляются новые
         :param order_id: Идентификатор заказа.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
