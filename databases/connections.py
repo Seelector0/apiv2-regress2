@@ -186,7 +186,7 @@ class DataBaseConnections:
         r"""Метод получения id заказов.
         :param not_in_parcel: Все заказы не в партии.
         :param in_parcel: Все заказы в партии.
-        :param single_order: Одноместные заказы.`
+        :param single_order: Одноместные заказы.
         :param multy_order: Многоместные заказы.
         """
         order_id = None
