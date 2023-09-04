@@ -104,5 +104,7 @@ class HttpMethod:
         try:
             with allure.step(title=f"Response: {response.json()}"):
                 return response
-        except simplejson.errors.JSONDecodeError or requests.exceptions.JSONDecodeError:
+        except simplejson.errors.JSONDecodeError:
+            raise AssertionError(f"API method Failed\nResponse status code: {response.status_code}")
+        except requests.exceptions.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {response.status_code}")
