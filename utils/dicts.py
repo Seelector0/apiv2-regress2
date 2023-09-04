@@ -26,7 +26,7 @@ class Dict:
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        if admin is True:
+        if admin:
             body_authorization["scope"] = "admin"
         return body_authorization
 
@@ -109,7 +109,7 @@ class Dict:
         """
         body_connection_type = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
         body_connection_type["data"]: dict = {}
-        if aggregation is True:
+        if aggregation:
             body_connection_type["data"]["type"] = "aggregation"
         return body_connection_type
 
