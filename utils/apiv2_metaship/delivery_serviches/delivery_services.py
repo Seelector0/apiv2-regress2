@@ -21,7 +21,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки RussianPost к магазину
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             russian_post = self.app.dict.form_connection_type(delivery_service_code="RussianPost", aggregation=True)
         else:
             russian_post = self.app.dict.form_connection_type(delivery_service_code="RussianPost")
@@ -35,7 +35,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки TopDelivery к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             topdelivery = self.app.dict.form_connection_type(delivery_service_code="TopDelivery", aggregation=True)
         else:
             topdelivery = self.app.dict.form_connection_type(delivery_service_code="TopDelivery")
@@ -50,7 +50,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки Boxberry к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             boxberry = self.app.dict.form_connection_type(delivery_service_code="Boxberry", aggregation=True)
         else:
             boxberry = self.app.dict.form_connection_type(delivery_service_code="Boxberry")
@@ -63,7 +63,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки Cdek к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             cdek = self.app.dict.form_connection_type(delivery_service_code="Cdek", aggregation=True)
         else:
             cdek = self.app.dict.form_connection_type(delivery_service_code="Cdek")
@@ -77,7 +77,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки Dpd к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             dpd = self.app.dict.form_connection_type(delivery_service_code="Dpd", aggregation=True)
         else:
             dpd = self.app.dict.form_connection_type(delivery_service_code="Dpd")
@@ -100,7 +100,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки FivePost к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             five_post = self.app.dict.form_connection_type(delivery_service_code="FivePost", aggregation=True)
         else:
             five_post = self.app.dict.form_connection_type(delivery_service_code="FivePost")
@@ -122,7 +122,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки YandexGo к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             yandex_go = self.app.dict.form_connection_type(delivery_service_code="YandexGo", aggregation=True)
         else:
             yandex_go = self.app.dict.form_connection_type(delivery_service_code="YandexGo")
@@ -134,7 +134,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки YandexDelivery к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             yandex_delivery = self.app.dict.form_connection_type(delivery_service_code="YandexDelivery",
                                                                  aggregation=True)
         else:
@@ -172,7 +172,7 @@ class ApiDeliveryServices:
         r"""Настройки подключения службы доставки Dalli к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
-        if aggregation is True:
+        if aggregation:
             dalli = self.app.dict.form_connection_type(delivery_service_code="Dalli", aggregation=True)
         else:
             dalli = self.app.dict.form_connection_type(delivery_service_code="Dalli")

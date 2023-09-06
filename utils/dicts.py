@@ -108,7 +108,7 @@ class Dict:
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
         body_connection_type = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
-        body_connection_type["data"]: dict = {}
+        body_connection_type["data"] = dict()
         if aggregation:
             body_connection_type["data"]["type"] = "aggregation"
         return body_connection_type
@@ -124,8 +124,7 @@ class Dict:
             "connectionId": self.database_customer.customer.get_connections_id(shop_id=shop_id)[0],
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
             "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
-            "credential": {
-            },
+            "credential": dict(),
             "deliveryService": delivery_service_code
         }
         return body_connection
