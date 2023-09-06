@@ -74,7 +74,7 @@ class HttpMethod:
         :param admin: Для использования admin URL.
         """
         url = f"{self.url(admin=admin)}/{url}"
-        if admin is True:
+        if admin:
             token = self.admin.admin_token()
         else:
             token = self.app.token()
