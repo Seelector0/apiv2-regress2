@@ -180,6 +180,19 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dalli)
         return self.app.http_method.return_result(response=result)
 
+    def post_delivery_services_halva(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки Halva к магазину.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
+        if aggregation:
+            halva = self.app.dict.form_connection_type(delivery_service_code="Halva", aggregation=True)
+        else:
+            halva = self.app.dict.form_connection_type(delivery_service_code="Halva")
+            halva["data"]["client"] = os.getenv("HALVA_CLIENT_AND_KEY")
+            halva["data"]["key"] = os.getenv("HALVA_CLIENT_AND_KEY")
+        result = self.app.http_method.post(link=self.link_delivery_services(), json=halva)
+        return self.app.http_method.return_result(response=result)
+
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         result = self.app.http_method.get(link=self.link_delivery_services())

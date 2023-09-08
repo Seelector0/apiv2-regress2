@@ -84,3 +84,11 @@ class ApiModerationDeliveryServices:
         dalli["credential"]["token"] = os.getenv("DALLI_TOKEN")
         result = self.admin.http_method.post(link=self.link, json=dalli, admin=True)
         return self.admin.http_method.return_result(response=result)
+
+    def post_connections_halva(self):
+        """Снятие с модерации СД Halva"""
+        halva = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Halva")
+        halva["credential"]["client"] = os.getenv("HALVA_CLIENT_AND_KEY")
+        halva["credential"]["key"] = os.getenv("HALVA_CLIENT_AND_KEY")
+        result = self.admin.http_method.post(link=self.link, json=halva, admin=True)
+        return self.admin.http_method.return_result(response=result)
