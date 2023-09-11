@@ -1,9 +1,15 @@
 from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
+from dotenv import load_dotenv, find_dotenv
+from environment import ENV_OBJECT
 from random import randrange, randint
 import datetime
 import allure
 import uuid
+import os
+
+
+load_dotenv(find_dotenv())
 
 
 class Dict:
@@ -15,18 +21,16 @@ class Dict:
         self.db_customer_api = DataBaseCustomerApi()
 
     @staticmethod
-    def form_authorization(client_id: str, client_secret: str, admin: bool = None):
+    def form_authorization(admin: bool = None):
         r"""Тело для создания токена.
-        :param client_id: Токен.
-        :param client_secret: Секретный код.
         :param admin: Для использования admin api.
         """
-        body_authorization = {
-            "grant_type": "client_credentials",
-            "client_id": client_id,
-            "client_secret": client_secret,
-        }
+        client_id = ENV_OBJECT.client_id()
+        client_secret = ENV_OBJECT.client_secret()
+        body_authorization = dict(grant_type="client_credentials", client_id=client_id, client_secret=client_secret)
         if admin:
+            body_authorization["client_id"] = os.getenv("ADMIN_ID")
+            body_authorization["client_secret"] = os.getenv("ADMIN_SECRET")
             body_authorization["scope"] = "admin"
         return body_authorization
 
@@ -86,9 +90,7 @@ class Dict:
         r"""Тело СД.
         :param delivery_service_code: Код СД.
         """
-        body_delivery_service_code = {
-            "deliveryServiceCode": delivery_service_code
-        }
+        body_delivery_service_code = dict(deliveryServiceCode=delivery_service_code)
         return body_delivery_service_code
 
     def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
@@ -96,18 +98,17 @@ class Dict:
         :param delivery_service_code: Код СД.
         :param data: Желаемая дата доставки.
         """
-        body_info = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
+        body_info = self.form_delivery_service_code(delivery_service_code=delivery_service_code)
         body_info["shopId"] = self.db_connections.get_list_shops()[0]
         body_info["deliveryDate"] = data
         return body_info
 
-    @staticmethod
-    def form_connection_type(delivery_service_code: str, aggregation: bool = None):
+    def form_connection_type(self, delivery_service_code: str, aggregation: bool = None):
         r"""Тело для подключения СД.
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
-        body_connection_type = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
+        body_connection_type = self.form_delivery_service_code(delivery_service_code=delivery_service_code)
         body_connection_type["data"] = dict()
         if aggregation:
             body_connection_type["data"]["type"] = "aggregation"
@@ -250,9 +251,7 @@ class Dict:
         r"""Тело для поиска по заказам.
         :param query: Поле поиска по ID, shop_number и тд.
         """
-        search = {
-            "query": query
-        }
+        search = dict(query=query)
         return search
 
     @staticmethod
@@ -260,9 +259,7 @@ class Dict:
         """Тело для разбора адреса.
         :param raw: Адрес.
         """
-        body_raw = {
-            "raw": raw
-        }
+        body_raw = dict(raw=raw)
         return body_raw
 
     @staticmethod
@@ -282,10 +279,7 @@ class Dict:
         :param orders_ids: Список id заказов.
         :param data: Дата отгрузки партии.
         """
-        body_parcel = {
-            "orderIds": orders_ids,
-            "shipmentDate": data
-        }
+        body_parcel = dict(orderIds=orders_ids, shipmentDate=data)
         return body_parcel
 
     def form_intakes(self, delivery_service: str):
@@ -324,9 +318,7 @@ class Dict:
 
     @staticmethod
     def form_widget(shop_id: str):
-        body_widget = {
-            "shopId": shop_id
-        }
+        body_widget = dict(shopId=shop_id)
         return body_widget
 
     @staticmethod
@@ -350,11 +342,5 @@ class Dict:
         :param path: Изменяемое поле.
         :param value: Значение.
         """
-        body_patch = [
-            {
-                "op": op,
-                "path": path,
-                "value": value
-            }
-        ]
+        body_patch = [dict(op=op, path=path, value=value)]
         return body_patch
