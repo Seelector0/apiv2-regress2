@@ -8,13 +8,13 @@ from fixture.admin import Admin
 import pytest
 
 
-access_token = "/auth/access_token"
+url = f"{ENV_OBJECT.get_base_url()}/auth/access_token"
 
 
 @pytest.fixture(scope="module")
 def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
-    apiv2_metaship = Application(base_url=f"{ENV_OBJECT.get_base_url()}{access_token}")
+    apiv2_metaship = Application(base_url=url)
     apiv2_metaship.open_session()
     return apiv2_metaship
 
@@ -22,7 +22,7 @@ def app():
 @pytest.fixture(scope="function")
 def admin():
     """Фикстура для открытия сессии по Admin Api."""
-    api_admin = Admin(base_url=f"{ENV_OBJECT.get_base_url()}{access_token}")
+    api_admin = Admin(base_url=url)
     api_admin.admin_session()
     return api_admin
 
