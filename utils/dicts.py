@@ -120,7 +120,7 @@ class Dict:
         shop_id = self.db_connections.get_list_shops()[0]
         body_connection = {
             "shopId": shop_id,
-            "customerId": self.db_connections.user_id,
+            "customerId": self.db_connections.customer_id,
             "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id)[0],
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
             "customerAgreementId": self.db_customer_api.customer_agreements_id,
