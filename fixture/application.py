@@ -10,7 +10,6 @@ from utils.apiv2_metaship.orders.orders import ApiOrder
 from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
 from utils.http_methods import HttpMethod
-from environment import ENV_OBJECT
 from utils.dicts import Dict
 import requests
 
@@ -37,7 +36,7 @@ class Application:
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = self.dict.form_authorization(client_id=ENV_OBJECT.client_id(), client_secret=ENV_OBJECT.client_secret())
+        data = self.dict.form_authorization()
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
         if self.response.status_code == 200:
             return self.response
@@ -47,7 +46,3 @@ class Application:
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
         return self.dict.form_token(authorization=self.response.json()["access_token"])
-
-    def close_session(self):
-        """Метод для закрытия сессии."""
-        self.session.close()

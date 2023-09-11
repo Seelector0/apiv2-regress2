@@ -1,12 +1,7 @@
 from utils.admin_api.connections_delivery_services.connections_delivery_services import ApiModerationDeliveryServices
-from dotenv import load_dotenv, find_dotenv
 from utils.http_methods import HttpMethod
 from utils.dicts import Dict
 import requests
-import os
-
-
-load_dotenv(find_dotenv())
 
 
 class Admin:
@@ -21,8 +16,7 @@ class Admin:
 
     def admin_session(self):
         """Метод для открытия сессии под admin."""
-        data = self.dict.form_authorization(client_id=os.getenv("ADMIN_ID"), client_secret=os.getenv("ADMIN_SECRET"),
-                                            admin=True)
+        data = self.dict.form_authorization(admin=True)
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
         if self.response.status_code == 200:
             return self.response
@@ -32,7 +26,3 @@ class Admin:
     def admin_token(self):
         """Метод получения токена для авторизации в admin api."""
         return self.dict.form_token(authorization=self.response.json()["access_token"])
-
-    def close_session(self):
-        """Метод для закрытия сессии."""
-        self.session.close()
