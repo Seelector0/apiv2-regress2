@@ -18,10 +18,7 @@ class Admin:
         """Метод для открытия сессии под admin."""
         data = self.dict.form_authorization(admin=True)
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
-        if self.response.status_code == 200:
-            return self.response
-        else:
-            self.session.close()
+        return self.http_method.return_result(response=self.response)
 
     def admin_token(self):
         """Метод получения токена для авторизации в admin api."""
