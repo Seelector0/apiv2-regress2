@@ -27,7 +27,7 @@ def admin():
     return api_admin
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="module")
 def connections():
     """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'."""
     return DataBaseConnections()
