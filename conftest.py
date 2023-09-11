@@ -52,10 +52,10 @@ def widget_api():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def stop(app, request, connections, customer_api, tracking_api, widget_api):
+def stop(request, app, connections, customer_api, tracking_api, widget_api):
     """Фикстура для завершения сессии"""
     def fin():
-        app.close_session()
+        app.session.close()
         for id_ in connections.get_list_shops():
             customer_api.delete_connection(shop_id=id_)
             widget_api.delete_widgets_id(shop_id=id_)
