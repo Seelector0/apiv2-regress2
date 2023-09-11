@@ -25,13 +25,14 @@ class Dict:
         r"""Тело для создания токена.
         :param admin: Для использования admin api.
         """
-        client_id = ENV_OBJECT.client_id()
-        client_secret = ENV_OBJECT.client_secret()
-        body_authorization = dict(grant_type="client_credentials", client_id=client_id, client_secret=client_secret)
+        body_authorization = dict(grant_type="client_credentials", client_id=str(), client_secret=str())
         if admin:
             body_authorization["client_id"] = os.getenv("ADMIN_ID")
             body_authorization["client_secret"] = os.getenv("ADMIN_SECRET")
             body_authorization["scope"] = "admin"
+        else:
+            body_authorization["client_id"] = ENV_OBJECT.client_id()
+            body_authorization["client_secret"] = ENV_OBJECT.client_secret()
         return body_authorization
 
     @staticmethod
