@@ -1,5 +1,5 @@
-from fixture.database import DataBase
-from environment import ENV_OBJECT
+from databases.connections import DataBaseConnections
+from databases.customer_api import DataBaseCustomerApi
 from random import randrange, randint
 import datetime
 import allure
@@ -11,8 +11,8 @@ class Dict:
     def __init__(self, app, admin):
         self.app = app
         self.admin = admin
-        self.database_connections = DataBase(database=ENV_OBJECT.db_connections())
-        self.database_customer = DataBase(database=ENV_OBJECT.db_customer_api())
+        self.db_connections = DataBaseConnections()
+        self.db_customer_api = DataBaseCustomerApi()
 
     @staticmethod
     def form_authorization(client_id: str, client_secret: str, admin: bool = None):
@@ -97,7 +97,7 @@ class Dict:
         :param data: Желаемая дата доставки.
         """
         body_info = Dict.form_delivery_service_code(delivery_service_code=delivery_service_code)
-        body_info["shopId"] = self.database_connections.metaship.get_list_shops()[0]
+        body_info["shopId"] = self.db_connections.get_list_shops()[0]
         body_info["deliveryDate"] = data
         return body_info
 
@@ -117,13 +117,13 @@ class Dict:
         r"""Тело для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         """
-        shop_id = self.database_connections.metaship.get_list_shops()[0]
+        shop_id = self.db_connections.get_list_shops()[0]
         body_connection = {
             "shopId": shop_id,
-            "customerId": ENV_OBJECT.customer_id(),
-            "connectionId": self.database_customer.customer.get_connections_id(shop_id=shop_id)[0],
+            "customerId": self.db_connections.user_id,
+            "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id)[0],
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
-            "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
+            "customerAgreementId": self.db_customer_api.customer_agreements_id,
             "credential": dict(),
             "deliveryService": delivery_service_code
         }
@@ -132,8 +132,8 @@ class Dict:
     def form_offers(self, types: str):
         """Тело для получения офферов"""
         body_offers = {
-            "warehouseId": self.database_connections.metaship.get_list_warehouses()[0],
-            "shopId": self.database_connections.metaship.get_list_shops()[0],
+            "warehouseId": self.db_connections.get_list_warehouses()[0],
+            "shopId": self.db_connections.get_list_shops()[0],
             "address": "г Москва, пр-кт Мира, д 45 стр 2",
             "declaredValue": randrange(1000, 5000),
             "height": randrange(10, 45),
@@ -172,10 +172,10 @@ class Dict:
         """
         body_order = {
             "warehouse": {
-                "id": self.database_connections.metaship.get_list_warehouses()[0],
+                "id": self.db_connections.get_list_warehouses()[0],
             },
             "shop": {
-                "id": self.database_connections.metaship.get_list_shops()[0],
+                "id": self.db_connections.get_list_shops()[0],
                 "number": f"{randrange(1000000, 9999999)}",
                 "barcode": shop_barcode,
             },
@@ -238,8 +238,8 @@ class Dict:
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
         body_order = {
-            "shopId": self.database_connections.metaship.get_list_shops()[0],
-            "warehouseId": self.database_connections.metaship.get_list_warehouses()[0]
+            "shopId": self.db_connections.get_list_shops()[0],
+            "warehouseId": self.db_connections.get_list_warehouses()[0]
         }
         if type_:
             body_order["type"] = type_
@@ -297,15 +297,15 @@ class Dict:
             "deliveryService": delivery_service,
             "date": str(tomorrow),
             "shop": {
-                "id": self.database_connections.metaship.get_list_shops()[0],
+                "id": self.db_connections.get_list_shops()[0],
                 "number": f"intake{randrange(1000000, 9999999)}"
             },
             "comment": "Позвонить за 3 часа до забора!",
             "from": {
-                "warehouseId": self.database_connections.metaship.get_list_warehouses()[0]
+                "warehouseId": self.db_connections.get_list_warehouses()[0]
             },
             "to": {
-                "warehouseId": self.database_connections.metaship.get_list_warehouses()[0]
+                "warehouseId": self.db_connections.get_list_warehouses()[0]
             },
             "dimension": {
                 "length": randint(10, 50),
