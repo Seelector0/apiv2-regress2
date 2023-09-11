@@ -133,7 +133,7 @@ def test_user_clients(app):
 
 @allure.description("Получение информации о ключе подключения")
 def test_user_clients_by_id(app, connections):
-    if connections.db_connections == "metaship":
+    if connections == "metaship":
         clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID_LOCAL"))

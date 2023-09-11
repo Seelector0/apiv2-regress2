@@ -15,7 +15,7 @@ def test_create_shop(app, execution_number):
     
 @allure.description("Создание веб-хука")
 def test_create_webhook(app, connections):
-    for shop_id in connections.metaship.get_list_shops():
+    for shop_id in connections.get_list_shops():
         webhooks = app.webhook.post_webhook(shop_id=shop_id)
         Checking.check_status_code(response=webhooks, expected_status_code=200)
         Checking.checking_json_key(response=webhooks, expected_value=INFO.entity_webhook)
@@ -30,7 +30,7 @@ def test_get_webhooks(app):
 
 @allure.description("Получение веб-хука по его Id")
 def test_webhook_by_id(app, connections):
-    random_webhook_id = choice(connections.metaship.get_list_webhook())
+    random_webhook_id = choice(connections.get_list_webhook())
     webhook_id = app.webhook.get_webhook_id(webhook_id=random_webhook_id)
     Checking.check_status_code(response=webhook_id, expected_status_code=200)
     Checking.checking_json_key(response=webhook_id, expected_value=INFO.entity_webhook)

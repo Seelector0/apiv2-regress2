@@ -1,15 +1,17 @@
+from fixture.database import DataBase
+from environment import ENV_OBJECT
 
 
-class DataBaseTrackingApi:
+class DataBaseTrackingApi(DataBase):
 
-    def __init__(self, tracking):
-        self.tracking = tracking
+    def __init__(self):
+        super().__init__(database=ENV_OBJECT.db_tracking_api())
 
     def delete_list_orders_in_tracking(self, order_id):
         r"""Функция чистит таблицу 'public.order'.
         :param order_id: ID заказа в БД.
         """
-        cursor = self.tracking.connection_open().cursor()
+        cursor = self.connection.cursor()
         try:
             cursor.execute("""delete from "tracking-api".public."order" """
                            """where "order".order_id = '{order_id}'""".format(order_id=order_id))

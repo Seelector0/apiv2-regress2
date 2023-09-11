@@ -22,7 +22,7 @@ def test_get_shop(app):
 
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, connections):
-    random_shop_id = choice(connections.metaship.get_list_shops())
+    random_shop_id = choice(connections.get_list_shops())
     shop = app.shop.get_shop_id(shop_id=random_shop_id)
     Checking.check_status_code(response=shop, expected_status_code=200)
     Checking.checking_json_key(response=shop, expected_value=INFO.entity_shops)
@@ -30,7 +30,7 @@ def test_get_shop_by_id(app, connections):
 
 @allure.description("Обновление магазина")
 def test_put_shop(app, connections):
-    random_shop_id = choice(connections.metaship.get_list_shops())
+    random_shop_id = choice(connections.get_list_shops())
     put_shop = app.shop.put_shop(shop_id=random_shop_id, shop_name="new_shop_12345", shop_url="new_shop_url.su",
                                  contact_person="Кулебакин Максим Юрьевич", phone="79169326511")
     Checking.check_status_code(response=put_shop, expected_status_code=204)
@@ -45,7 +45,7 @@ def test_put_shop(app, connections):
 
 @allure.description("Редактирование полей магазина")
 def test_patch_shop(app, connections):
-    random_shop_id = choice(connections.metaship.get_list_shops())
+    random_shop_id = choice(connections.get_list_shops())
     patch_shop = app.shop.patch_shop(shop_id=random_shop_id, value=False)
     Checking.check_status_code(response=patch_shop, expected_status_code=200)
     Checking.checking_json_value(response=patch_shop, key_name="visibility", expected_value=False)

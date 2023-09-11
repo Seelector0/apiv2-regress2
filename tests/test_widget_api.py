@@ -15,7 +15,7 @@ def test_create_shop(app, execution_number):
 
 @allure.description("Создание токена для виджета")
 def test_create_token_for_widget(app, connections):
-    for shop_id in connections.metaship.get_list_shops():
+    for shop_id in connections.get_list_shops():
         token = app.widget.post_widget_tokens(shop_id=shop_id)
         Checking.check_status_code(response=token, expected_status_code=201)
         Checking.checking_json_key(response=token, expected_value=INFO.created_entity_widget)
@@ -30,7 +30,7 @@ def test_get_tokens(app):
 
 @allure.description("Получение токена по его Id")
 def test_get_token_by_id(app, widget_api, connections):
-    widget_id = choice(widget_api.widget.get_widgets_id(shop_id=connections.metaship.get_list_shops()[0]))
+    widget_id = choice(widget_api.get_widgets_id(shop_id=connections.get_list_shops()[0]))
     token_id = app.widget.get_widget_tokens_id(widget_id=widget_id)
     Checking.check_status_code(response=token_id, expected_status_code=200)
     Checking.checking_json_key(response=token_id, expected_value=INFO.entity_widget)

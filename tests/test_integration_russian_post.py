@@ -12,10 +12,10 @@ def test_create_shop(app, connections):
     Checking.check_status_code(response=new_shop, expected_status_code=201)
     Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
     Checking.check_value_comparison(
-        one_value=connections.metaship.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
+        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
         two_value=[False])
     Checking.check_value_comparison(
-        one_value=connections.metaship.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
+        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
         two_value=[True])
 
 
@@ -25,12 +25,10 @@ def test_create_warehouse(app, connections):
     Checking.check_status_code(response=new_warehouse, expected_status_code=201)
     Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
     Checking.check_value_comparison(
-        one_value=connections.metaship.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
-                                                                 value="deleted"),
+        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
         two_value=[False])
     Checking.check_value_comparison(
-        one_value=connections.metaship.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
-                                                                 value="visibility"),
+        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="visibility"),
         two_value=[True])
 
 
@@ -74,12 +72,12 @@ def test_create_order_courier(app, connections):
                                             tariff=choice(INFO.rp_courier_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="status"),
+    connections.wait_create_order(order_id=new_order.json()["id"])
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="status"),
                                     two_value=["created"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="state"),
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="state"),
                                     two_value=["succeeded"])
 
 
@@ -92,12 +90,12 @@ def test_create_delivery_point(app, connections):
                                             declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="status"),
+    connections.wait_create_order(order_id=new_order.json()["id"])
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="status"),
                                     two_value=["created"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="state"),
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="state"),
                                     two_value=["succeeded"])
 
 
@@ -108,18 +106,18 @@ def test_create_order_post_office(app, payment_type, connections):
                                             tariff=choice(INFO.rp_po_tariffs), declared_value=500)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    connections.metaship.wait_create_order(order_id=new_order.json()["id"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="status"),
+    connections.wait_create_order(order_id=new_order.json()["id"])
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="status"),
                                     two_value=["created"])
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=new_order.json()["id"],
-                                                                                        value="state"),
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="state"),
                                     two_value=["succeeded"])
 
 
 @allure.description("Редактирование заказа СД RussianPost")
 def test_editing_order(app, connections):
-    random_order = choice(connections.metaship.get_list_all_orders_out_parcel())
+    random_order = choice(connections.get_list_all_orders_out_parcel())
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -132,7 +130,7 @@ def test_editing_order(app, connections):
 
 @allure.description("Редактирование веса в заказе СД RussianPost")
 def test_patch_order_weight(app, connections):
-    random_order = choice(connections.metaship.get_list_all_orders_out_parcel())
+    random_order = choice(connections.get_list_all_orders_out_parcel())
     order_patch = app.order.patch_order_weight(order_id=random_order, weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
@@ -144,12 +142,12 @@ def test_create_order_from_file(app, file_extension, connections):
     new_orders = app.order.post_import_order_format_metaship(code="russian_post", file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
-        connections.metaship.wait_create_order(order_id=order["id"])
-        Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=order["id"],
-                                                                                            value="status"),
+        connections.wait_create_order(order_id=order["id"])
+        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order["id"],
+                                                                                   value="status"),
                                         two_value=["created"])
-        Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=order["id"],
-                                                                                            value="state"),
+        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order["id"],
+                                                                                   value="state"),
                                         two_value=["succeeded"])
 
 
@@ -159,12 +157,12 @@ def test_create_order_from_file_format_russian_post(app, file_extension, connect
     new_orders = app.order.post_import_order_format_russian_post(file_extension=file_extension)
     Checking.check_status_code(response=new_orders, expected_status_code=200)
     for order in new_orders.json().values():
-        connections.metaship.wait_create_order(order_id=order["id"])
-        Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=order["id"],
-                                                                                            value="status"),
+        connections.wait_create_order(order_id=order["id"])
+        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order["id"],
+                                                                                   value="status"),
                                         two_value=["created"])
-        Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=order["id"],
-                                                                                            value="state"),
+        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order["id"],
+                                                                                   value="state"),
                                         two_value=["succeeded"])
 
 
@@ -177,24 +175,24 @@ def test_get_orders(app):
 
 @allure.description("Получение информации о заказе CД RussianPost")
 def test_get_order_by_id(app, connections):
-    random_order = app.order.get_order_id(order_id=choice(connections.metaship.get_list_all_orders_out_parcel()))
+    random_order = app.order.get_order_id(order_id=choice(connections.get_list_all_orders_out_parcel()))
     Checking.check_status_code(response=random_order, expected_status_code=200)
     Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
 
 
 @allure.description("Удаление заказа СД RussianPost")
 def test_delete_order(app, connections):
-    random_order_id = choice(connections.metaship.get_list_all_orders_out_parcel())
+    random_order_id = choice(connections.get_list_all_orders_out_parcel())
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
-    Checking.check_value_comparison(one_value=connections.metaship.get_list_order_value(order_id=random_order_id,
-                                                                                        value="deleted"),
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=random_order_id,
+                                                                               value="deleted"),
                                     two_value=[True])
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД RussianPost")
 def test_order_status(app, connections):
-    for order_id in connections.metaship.get_list_all_orders_out_parcel():
+    for order_id in connections.get_list_all_orders_out_parcel():
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
@@ -202,7 +200,7 @@ def test_order_status(app, connections):
 
 @allure.description("Получение подробной информации о заказе СД RussianPost")
 def test_order_details(app, connections):
-    for order_id in connections.metaship.get_list_all_orders_out_parcel():
+    for order_id in connections.get_list_all_orders_out_parcel():
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
@@ -210,7 +208,7 @@ def test_order_details(app, connections):
 
 @allure.description("Создание партии СД RussianPost")
 def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(value=choice(connections.metaship.get_list_all_orders_out_parcel()))
+    create_parcel = app.parcel.post_parcel(value=choice(connections.get_list_all_orders_out_parcel()))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
@@ -224,23 +222,23 @@ def test_get_parcels(app):
 
 @allure.description("Получение информации о партии CД RussianPost")
 def test_get_parcel_by_id(app, connections):
-    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.metaship.get_list_parcels()))
+    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.get_list_parcels()))
     Checking.check_status_code(response=random_parcel, expected_status_code=200)
     Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
 
 
 @allure.description("Редактирование партии СД RussianPost (Добавление заказов)")
 def test_add_order_in_parcel(app, connections):
-    list_parcel_id = connections.metaship.get_list_parcels()
-    for order in connections.metaship.get_list_all_orders_out_parcel():
+    list_parcel_id = connections.get_list_parcels()
+    for order in connections.get_list_all_orders_out_parcel():
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        assert order in connections.metaship.get_list_all_orders_in_parcel()
+        assert order in connections.get_list_all_orders_in_parcel()
 
 
 @allure.description("Редактирование партии СД RussianPost (Изменение даты отправки партии)")
 def test_change_shipment_date(app, connections):
-    parcel_id = connections.metaship.get_list_parcels()
+    parcel_id = connections.get_list_parcels()
     shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id[0], day=5)
     Checking.check_status_code(response=shipment_date, expected_status_code=200)
     new_date = shipment_date.json()["data"]["request"]["shipmentDate"]
@@ -249,7 +247,7 @@ def test_change_shipment_date(app, connections):
 
 @allure.description("Получение этикетки СД RussianPost")
 def test_get_label(app, connections):
-    for order_id in connections.metaship.get_list_all_orders_in_parcel():
+    for order_id in connections.get_list_all_orders_in_parcel():
         label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
@@ -268,8 +266,8 @@ def test_get_documents(app):
 
 @allure.description("Редактирование партии СД RussianPost (Удаление заказа из партии)")
 def test_remove_order_in_parcel(app, connections):
-    list_order = connections.metaship.get_list_all_orders_in_parcel()
-    list_parcel_id = connections.metaship.get_list_parcels()
+    list_order = connections.get_list_all_orders_in_parcel()
+    list_parcel_id = connections.get_list_parcels()
     remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(list_order), parcel_id=list_parcel_id[0])
     Checking.check_status_code(response=remove_order, expected_status_code=200)
-    assert remove_order is not connections.metaship.get_list_all_orders_in_parcel()
+    assert remove_order is not connections.get_list_all_orders_in_parcel()

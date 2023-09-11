@@ -1,16 +1,15 @@
-from fixture.database import DataBase
-from environment import ENV_OBJECT
+from databases.connections import DataBaseConnections
 
 
 class ApiDocument:
 
     def __init__(self, app):
         self.app = app
-        self.database = DataBase(database=ENV_OBJECT.db_connections())
+        self.db_connections = DataBaseConnections()
 
     def link_documents(self):
         """Метод получения ссылки для документов."""
-        return f"{self.app.parcel.link}/{self.database.metaship.get_list_parcels()[0]}"
+        return f"{self.app.parcel.link}/{self.db_connections.get_list_parcels()[0]}"
 
     def get_label(self, order_id: str, type_: str = None, size_format: str = None):
         r"""Метод получения этикетки.
