@@ -85,13 +85,13 @@ class HttpMethod:
             else:
                 raise Exception(f"Получен неверный HTTP метод '{method}'")
         if params:
-            with allure.step(title=f"Request: {params}"):
+            with allure.step(title=f"""Request: {str(params).replace("'", '"')}"""):
                 pass
         elif data:
-            with allure.step(title=f"Request: {data}"):
+            with allure.step(title=f"""Request: {str(data).replace("'", '"')}"""):
                 pass
         else:
-            with allure.step(title=f"Request: {json}"):
+            with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
                 pass
         return response
 
@@ -102,7 +102,7 @@ class HttpMethod:
         """
         response = response
         try:
-            with allure.step(title=f"Response: {response.json()}"):
+            with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
                 return response
         except simplejson.errors.JSONDecodeError:
             raise AssertionError(f"API method Failed\nResponse status code: {response.status_code}")
