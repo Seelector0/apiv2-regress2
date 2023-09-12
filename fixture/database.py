@@ -9,7 +9,3 @@ class DataBase:
         self.db_name = ENV_OBJECT.db_connections()
         self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=database, user=self.db_name,
                                            password=ENV_OBJECT.password())
-
-    def close_database(self):
-        """Метод закрытия подключения к БД"""
-        self.connection.close()
