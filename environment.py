@@ -25,23 +25,33 @@ class Environment:
         DEVELOP: os.getenv("CLIENT_SECRET")
     }
 
+    ADMIN_IDS = {
+        LOCAL: os.getenv("ADMIN_ID"),
+        DEVELOP: os.getenv("ADMIN_ID")
+    }
+
+    ADMIN_SECRETS = {
+        LOCAL: os.getenv("ADMIN_SECRET"),
+        DEVELOP: os.getenv("ADMIN_SECRET")
+    }
+
     DATABASE_CONNECTIONS = {
-        LOCAL: os.getenv("CONNECTIONS_LOCAL"),
+        LOCAL: os.getenv("METASHIP"),
         DEVELOP: os.getenv("CONNECTIONS")
     }
 
     DATABASE_CUSTOMER_API = {
-        LOCAL: os.getenv("CUSTOMER_API_LOCAL"),
+        LOCAL: os.getenv("CUSTOMER_API"),
         DEVELOP: os.getenv("CUSTOMER_API")
     }
 
     DATABASE_TRACKING_API = {
-        LOCAL: os.getenv("TRACKING_API_LOCAL"),
+        LOCAL: os.getenv("TRACKING_API"),
         DEVELOP: os.getenv("TRACKING_API")
     }
 
     DATABASE_WIDGET_API = {
-        LOCAL: os.getenv("WIDGET_API_LOCAL"),
+        LOCAL: os.getenv("WIDGET_API"),
         DEVELOP: os.getenv("WIDGET_API")
     }
 
@@ -101,6 +111,20 @@ class Environment:
         """Метод для получения client_secret для работы за определённым стендом"""
         if self.env in self.CLIENT_SECRETS:
             return self.CLIENT_SECRETS[self.env]
+        else:
+            raise Exception(f"{Environment.error_massage} {self.env}")
+
+    def admin_id(self):
+        """Метод для получения admin_id для работы за определённым стендом"""
+        if self.env in self.ADMIN_IDS:
+            return self.ADMIN_IDS[self.env]
+        else:
+            raise Exception(f"{Environment.error_massage} {self.env}")
+
+    def admin_secret(self):
+        """Метод для получения admin_secret для работы за определённым стендом"""
+        if self.env in self.ADMIN_SECRETS:
+            return self.ADMIN_SECRETS[self.env]
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
 
