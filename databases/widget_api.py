@@ -1,12 +1,13 @@
-from fixture.database import DataBase
 from environment import ENV_OBJECT
 from psycopg2.extras import DictCursor
+import psycopg2
 
 
-class DataBaseWidgetApi(DataBase):
+class DataBaseWidgetApi:
 
     def __init__(self):
-        super().__init__(database=ENV_OBJECT.db_widget_api())
+        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_widget_api(),
+                                           user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def get_widgets_id(self, shop_id):
         r"""Метод получения widget_id из БД.

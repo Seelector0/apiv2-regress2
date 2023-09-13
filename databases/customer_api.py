@@ -1,13 +1,13 @@
-from fixture.database import DataBase
 from environment import ENV_OBJECT
 from psycopg2.extras import DictCursor
+import psycopg2
 
 
-class DataBaseCustomerApi(DataBase):
+class DataBaseCustomerApi:
 
     def __init__(self):
-        super().__init__(database=ENV_OBJECT.db_customer_api())
-        self.customer_agreements_id = ENV_OBJECT.customer_agreements_id()
+        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_customer_api(),
+                                           user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def get_connections_id(self, shop_id):
         r"""Метод получения connection_id из БД.
