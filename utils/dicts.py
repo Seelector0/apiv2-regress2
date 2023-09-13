@@ -1,15 +1,10 @@
 from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
-from dotenv import load_dotenv, find_dotenv
 from environment import ENV_OBJECT
 from random import randrange, randint
 import datetime
 import allure
 import uuid
-import os
-
-
-load_dotenv(find_dotenv())
 
 
 class Dict:
@@ -27,8 +22,8 @@ class Dict:
         """
         body_authorization = dict(grant_type="client_credentials", client_id=str(), client_secret=str())
         if admin:
-            body_authorization["client_id"] = os.getenv("ADMIN_ID")
-            body_authorization["client_secret"] = os.getenv("ADMIN_SECRET")
+            body_authorization["client_id"] = ENV_OBJECT.admin_id()
+            body_authorization["client_secret"] = ENV_OBJECT.admin_secret()
             body_authorization["scope"] = "admin"
         else:
             body_authorization["client_id"] = ENV_OBJECT.client_id()
@@ -50,10 +45,8 @@ class Dict:
         """
         x_trace_id = str(uuid.uuid4())
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
-            body_token = {
-                "x-trace-id": x_trace_id,
-                "Authorization": f"Bearer {authorization}"
-            }
+            body_token = dict(Authorization=f"Bearer {authorization}")
+            body_token["x-trace-id"] = x_trace_id
             return body_token
 
     @staticmethod
@@ -248,33 +241,6 @@ class Dict:
         return body_order
 
     @staticmethod
-    def form_search(query):
-        r"""Тело для поиска по заказам.
-        :param query: Поле поиска по ID, shop_number и тд.
-        """
-        search = dict(query=query)
-        return search
-
-    @staticmethod
-    def form_raw(raw: str):
-        """Тело для разбора адреса.
-        :param raw: Адрес.
-        """
-        body_raw = dict(raw=raw)
-        return body_raw
-
-    @staticmethod
-    def form_label(key: str, value):
-        r"""Тело для получения этикеток.
-        :param key: Название поля.
-        :param value: Значения поля.
-        """
-        body_label = {
-            f"{key}": value
-        }
-        return body_label
-
-    @staticmethod
     def form_parcel_body(orders_ids, data: str):
         r"""Тело для создания партии.
         :param orders_ids: Список id заказов.
@@ -316,11 +282,6 @@ class Dict:
             "description": "Классный груз"
         }
         return body_intake
-
-    @staticmethod
-    def form_widget(shop_id: str):
-        body_widget = dict(shopId=shop_id)
-        return body_widget
 
     @staticmethod
     def form_webhook(shop_id: str):
