@@ -84,6 +84,6 @@ class ApiInfo:
         r"""Разбор адреса.
         :param raw: Адрес.
         """
-        params = self.app.dict.form_raw(raw=raw)
+        params = dict(raw=raw)
         result = self.app.http_method.get(link="info/address", params=params)
         return self.app.http_method.return_result(response=result)
