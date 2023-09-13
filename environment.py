@@ -163,13 +163,6 @@ class Environment:
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
 
-    def user(self):
-        """Метод для определения user для базы данных"""
-        if self.env in self.DATABASE_USERS:
-            return self.DATABASE_USERS[self.env]
-        else:
-            raise Exception(f"{Environment.error_massage} {self.env}")
-
     def password(self):
         """Метод для определения пароля для базы данных"""
         if self.env in self.DATABASE_PASSWORDS:
