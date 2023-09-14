@@ -60,11 +60,6 @@ class Environment:
         DEVELOP: os.getenv("HOST")
     }
 
-    DATABASE_USERS = {
-        LOCAL: os.getenv("USER"),
-        DEVELOP: os.getenv("USER_LOCAL")
-    }
-
     DATABASE_PASSWORDS = {
         LOCAL: os.getenv("DATABASE_PASSWORD_LOCAL"),
         DEVELOP: os.getenv("DATABASE_PASSWORD")
