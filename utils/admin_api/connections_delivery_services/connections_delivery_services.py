@@ -36,7 +36,7 @@ class ApiModerationDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=boxberry, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def moderation_cdek(self):
+    def post_connections_cdek(self):
         """Снятие с модерации СД Cdek."""
         cdek = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Cdek")
         cdek["credential"]["account"] = os.getenv("CDEK_ACCOUNT")
