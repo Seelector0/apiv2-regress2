@@ -102,7 +102,7 @@ def test_create_multi_order_courier(app, payment_type, connections):
 
 @allure.description("Создание Courier заказа по CД Dalli")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app,  payment_type, connections):
+def test_create_order_courier(app, payment_type, connections):
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
     if payment_type == "PayOnDelivery":
         new_order = app.order.post_single_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
