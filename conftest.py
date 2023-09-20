@@ -14,9 +14,9 @@ url = f"{ENV_OBJECT.get_base_url()}/auth/access_token"
 @pytest.fixture(scope="module")
 def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
-    apiv2_metaship = Application(base_url=url)
-    apiv2_metaship.open_session()
-    return apiv2_metaship
+    apiv2 = Application(base_url=url)
+    apiv2.open_session()
+    return apiv2
 
 
 @pytest.fixture(scope="function")
