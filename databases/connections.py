@@ -11,6 +11,16 @@ class DataBaseConnections:
         self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
+    def delete_cabinet_settings(self):
+        """Метод удаляет настройки кабинета из таблицы 'cabinet'"""
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(f"""DELETE FROM {ENV_OBJECT.db_connections()}.cabinet.setting """
+                           f"""WHERE user_id = '{ENV_OBJECT.user_id()}'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def get_list_shops(self):
         """Метод собирает (возвращает) список магазинов из таблицы 'customer.shop'."""
         db_list_shops = []
@@ -359,6 +369,7 @@ class DataBaseConnections:
 
     def delete_all_setting(self):
         """Метод чистит все таблицы."""
+        self.delete_cabinet_settings()
         self.delete_list_shops()
         self.delete_list_warehouses()
         self.delete_list_delivery_services()
