@@ -15,8 +15,8 @@ class DataBaseConnections:
         """Метод удаляет настройки кабинета из таблицы 'cabinet'"""
         cursor = self.connection.cursor()
         try:
-            cursor.execute(f"""DELETE FROM {ENV_OBJECT.db_connections()}.cabinet.setting """
-                           f"""WHERE user_id = '{ENV_OBJECT.user_id()}'""")
+            cursor.execute(f"""delete from {ENV_OBJECT.db_connections()}.cabinet.setting """
+                           f"""where user_id = '{ENV_OBJECT.user_id()}'""")
             cursor.connection.commit()
         finally:
             cursor.close()
