@@ -40,21 +40,6 @@ class Environment:
         DEVELOP: os.getenv("CONNECTIONS")
     }
 
-    DATABASE_CUSTOMER_API = {
-        LOCAL: os.getenv("CUSTOMER_API"),
-        DEVELOP: os.getenv("CUSTOMER_API")
-    }
-
-    DATABASE_TRACKING_API = {
-        LOCAL: os.getenv("TRACKING_API"),
-        DEVELOP: os.getenv("TRACKING_API")
-    }
-
-    DATABASE_WIDGET_API = {
-        LOCAL: os.getenv("WIDGET_API"),
-        DEVELOP: os.getenv("WIDGET_API")
-    }
-
     DATABASE_HOSTS = {
         LOCAL: os.getenv("HOST_LOCAL"),
         DEVELOP: os.getenv("HOST")
@@ -123,33 +108,12 @@ class Environment:
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
 
-    def db_customer_api(self):
-        """Метод для определения имени базы данных для работы за определённым стендом (customer-api)"""
-        if self.env in self.DATABASE_CUSTOMER_API:
-            return self.DATABASE_CUSTOMER_API[self.env]
-        else:
-            raise Exception(f"{Environment.error_massage} {self.env}")
-
     def db_connections(self):
         """Метод для определения имени базы данных для работы за определённым стендом (connections или metaship)"""
         if self.env in self.DATABASE_CONNECTIONS:
             return self.DATABASE_CONNECTIONS[self.env]
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
-
-    def db_tracking_api(self):
-        if self.env in self.DATABASE_TRACKING_API:
-            """Метод для определения имени базы данных для работы за определённым стендом (tracking-api)"""
-            return self.DATABASE_TRACKING_API[self.env]
-        else:
-            raise Exception(f"{self.error_massage} {self.env}")
-
-    def db_widget_api(self):
-        if self.env in self.DATABASE_WIDGET_API:
-            """Метод для определения имени базы данных для работы за определённым стендом (widget-api)"""
-            return self.DATABASE_WIDGET_API[self.env]
-        else:
-            raise Exception(f"{self.error_massage} {self.env}")
 
     def host(self):
         """Метод для определения host для базы данных"""
