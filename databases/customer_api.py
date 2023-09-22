@@ -6,7 +6,7 @@ import psycopg2
 class DataBaseCustomerApi:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_customer_api(),
+        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database="customer-api",
                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def get_connections_id(self, shop_id):

@@ -5,7 +5,7 @@ import psycopg2
 class DataBaseTrackingApi:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_tracking_api(),
+        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database="tracking-api",
                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def delete_list_orders_in_tracking(self, order_id):

@@ -6,7 +6,7 @@ import psycopg2
 class DataBaseWidgetApi:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_widget_api(),
+        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database="widget-api",
                                            user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
 
     def get_widgets_id(self, shop_id):
