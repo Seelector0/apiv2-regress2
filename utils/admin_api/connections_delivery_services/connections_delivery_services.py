@@ -65,7 +65,7 @@ class ApiModerationDeliveryServices:
         """Снятие с модерации СД YandexGo"""
         yandex_go = self.admin.dict.form_moderation_delivery_services(delivery_service_code="YandexGo")
         yandex_go["credential"]["yandexGoToken"] = os.getenv("YA_GO_TOKEN")
-        yandex_go["credential"]["inn"] = "7734381257"
+        yandex_go["credential"]["inn"] = os.getenv("YA_DELIVERY_INN")
         result = self.admin.http_method.post(link=self.link, json=yandex_go, admin=True)
         return self.admin.http_method.return_result(response=result)
 
