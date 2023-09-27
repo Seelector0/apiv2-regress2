@@ -1409,5 +1409,20 @@ class OtherInfo:
         }
     ]
 
+    halva_vats = [
+        {
+            "code": "NO_VAT",
+            "name": "Без НДС"
+        },
+        {
+            "code": "10",
+            "name": "НДС 10%"
+        },
+        {
+            "code": "20",
+            "name": "НДС 20%"
+        }
+    ]
+
 
 INFO = OtherInfo()
