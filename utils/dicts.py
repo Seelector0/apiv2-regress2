@@ -33,10 +33,7 @@ class Dict:
     @staticmethod
     def form_headers():
         """Тело headers."""
-        body_headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-        return body_headers
+        return {"Content-Type": "application/x-www-form-urlencoded"}
 
     @staticmethod
     def form_token(authorization: str):
@@ -52,18 +49,17 @@ class Dict:
     @staticmethod
     def form_shop_body():
         """Тело для создания магазина."""
-        shop_body = {
+        return {
             "name": f"INT{randrange(100000, 999999)}",
             "uri": f"integration-shop{randrange(1000, 9999)}.ru",
             "phone": f"7916{randrange(1000000, 9999999)}",
             "sender": "Иванов Иван Иванович"
         }
-        return shop_body
 
     @staticmethod
     def form_warehouse_body():
         """Тело для создания склада."""
-        body_warehouse = {
+        return {
             "name": f"{randrange(100000, 999999)}",
             "address": {
                 "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
@@ -77,15 +73,13 @@ class Dict:
                 "email": "test@email.ru"
             }
         }
-        return body_warehouse
 
     @staticmethod
     def form_delivery_service_code(delivery_service_code):
         r"""Тело СД.
         :param delivery_service_code: Код СД.
         """
-        body_delivery_service_code = dict(deliveryServiceCode=delivery_service_code)
-        return body_delivery_service_code
+        return dict(deliveryServiceCode=delivery_service_code)
 
     def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
         """Тело для Info methods.
@@ -113,7 +107,7 @@ class Dict:
         :param delivery_service_code: Название СД.
         """
         shop_id = self.db_connections.get_list_shops()[0]
-        body_connection = {
+        return {
             "shopId": shop_id,
             "customerId": ENV_OBJECT.customer_id(),
             "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id)[0],
@@ -122,11 +116,10 @@ class Dict:
             "credential": dict(),
             "deliveryService": delivery_service_code
         }
-        return body_connection
 
     def form_offers(self, types: str):
         """Тело для получения офферов"""
-        body_offers = {
+        return {
             "warehouseId": self.db_connections.get_list_warehouses()[0],
             "shopId": self.db_connections.get_list_shops()[0],
             "address": "г Москва, пр-кт Мира, д 45 стр 2",
@@ -137,7 +130,6 @@ class Dict:
             "weight": randrange(1, 10),
             "types[0]": types
         }
-        return body_offers
 
     def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, shop_barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
@@ -165,7 +157,7 @@ class Dict:
         :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         """
-        body_order = {
+        return {
             "warehouse": {
                 "id": self.db_connections.get_list_warehouses()[0],
             },
@@ -209,7 +201,6 @@ class Dict:
             "datePickup": date_pickup,
             "routes": routes
         }
-        return body_order
 
     @staticmethod
     def form_cargo_items(items: dict, dimension: dict = None):
@@ -217,7 +208,7 @@ class Dict:
         :param items: Товарная позиция.
         :param dimension: Габариты грузоместа.
         """
-        body_cargo = {
+        return {
             "items": [
                 items
             ],
@@ -226,7 +217,6 @@ class Dict:
             "weight": randint(10, 30),
             "dimension": dimension
         }
-        return body_cargo
 
     def form_order_from_file(self, type_: str = None):
         r"""Тело для создания заказа из файла.
@@ -246,15 +236,14 @@ class Dict:
         :param orders_ids: Список id заказов.
         :param data: Дата отгрузки партии.
         """
-        body_parcel = dict(orderIds=orders_ids, shipmentDate=data)
-        return body_parcel
+        return dict(orderIds=orders_ids, shipmentDate=data)
 
     def form_intakes(self, delivery_service: str):
         r"""Тело для создания забора.
         :param delivery_service: Код СД.
         """
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        body_intake = {
+        return {
             "deliveryService": delivery_service,
             "date": str(tomorrow),
             "shop": {
@@ -281,21 +270,19 @@ class Dict:
             },
             "description": "Классный груз"
         }
-        return body_intake
 
     @staticmethod
     def form_webhook(shop_id: str):
         r"""Тело для создания веб-хука.
         :param shop_id: Идентификатор магазина.
         """
-        body_webhook = {
+        return {
             "shopId": shop_id,
             "url": "https://develop.mock.metaship.ppdev.ru/castlemock/mock/rest/project/gCaSpB/application/JYW0LQ/ok",
             "name": "Подписка на обновление статусов",
             "eventType": "StatusUpdate",
             "secret": "string"
         }
-        return body_webhook
 
     @staticmethod
     def form_patch_body(op: str, path: str, value):
@@ -304,5 +291,4 @@ class Dict:
         :param path: Изменяемое поле.
         :param value: Значение.
         """
-        body_patch = [dict(op=op, path=path, value=value)]
-        return body_patch
+        return [dict(op=op, path=path, value=value)]
