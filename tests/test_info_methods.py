@@ -8,7 +8,7 @@ import os
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
                                                    "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
-                                                   "YandexDelivery"])
+                                                   "YandexDelivery", "Halva"])
 def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
@@ -38,6 +38,8 @@ def test_info_vats(app, delivery_service_code):
         Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_go_vats)
     elif delivery_service_code == "YandexDelivery":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_delivery_vats)
+    elif delivery_service_code == "Halva":
+        Checking.checking_json_key(response=info_vats, expected_value=INFO.halva_vats)
 
 
 @allure.description("Получение списка точек сдачи СД")
