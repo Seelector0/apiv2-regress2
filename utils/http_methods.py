@@ -10,17 +10,6 @@ class HttpMethod:
         self.app = app
         self.admin = admin
 
-    @staticmethod
-    def url(admin: bool = None):
-        r"""Метод для получения url.
-        :param admin: Для использования admin url.
-        """
-        if admin:
-            url = f"{ENV_OBJECT.get_base_url()}/admin/v2"
-        else:
-            url = f"{ENV_OBJECT.get_base_url()}/v2"
-        return url
-
     def get(self, link: str, params: dict = None, admin: bool = None):
         r"""GET запрос.
         :param link: Ссылка на запрос.
@@ -61,6 +50,17 @@ class HttpMethod:
         :param admin: Для использования admin URL.
         """
         return self._send(method="DELETE", url=link, admin=admin)
+
+    @staticmethod
+    def url(admin: bool = None):
+        r"""Метод для получения url.
+        :param admin: Для использования admin url.
+        """
+        if admin:
+            url = f"{ENV_OBJECT.get_base_url()}/admin/v2"
+        else:
+            url = f"{ENV_OBJECT.get_base_url()}/v2"
+        return url
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
               files: list = None, admin: bool = None):
