@@ -1,6 +1,7 @@
 from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
 from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
 from utils.apiv2_metaship.documents.documents import ApiDocument
+from utils.apiv2_metaship.reports.reports import ApiReports
 from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook
 from utils.apiv2_metaship.intakes.intakes import ApiIntakes
 from utils.apiv2_metaship.widgets.widgets import ApiWidget
@@ -10,7 +11,7 @@ from utils.apiv2_metaship.orders.orders import ApiOrder
 from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
 from utils.http_methods import HttpMethod
-from utils.dicts import Dict
+from utils.dicts import Dicts
 import requests
 
 
@@ -32,14 +33,15 @@ class Application:
         self.widget = ApiWidget(self)
         self.webhook = ApiWebhook(self)
         self.intakes = ApiIntakes(self)
-        self.dict = Dict(self, self)
+        self.reports = ApiReports(self)
+        self.dicts = Dicts(self, self)
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = self.dict.form_authorization()
-        self.response = self.session.post(url=self.base_url, data=data, headers=self.dict.form_headers())
+        data = self.dicts.form_authorization()
+        self.response = self.session.post(url=self.base_url, data=data, headers=self.dicts.form_headers())
         return self.http_method.return_result(response=self.response)
 
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
-        return self.dict.form_token(authorization=self.response.json()["access_token"])
+        return self.dicts.form_token(authorization=self.response.json()["access_token"])

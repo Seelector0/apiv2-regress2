@@ -7,7 +7,7 @@ import allure
 import uuid
 
 
-class Dict:
+class Dicts:
 
     def __init__(self, app, admin):
         self.app = app
@@ -282,6 +282,24 @@ class Dict:
             "name": "Подписка на обновление статусов",
             "eventType": "StatusUpdate",
             "secret": "string"
+        }
+
+    def form_reports(self):
+        """Тело для создания отчёта по заказам."""
+        return {
+            "filter": {
+                "created": {
+                    "dateTime": {
+                        "from": "2020-07-20 13:00:00",
+                        "to": "2020-07-20 14:00:00"
+                    }
+                },
+                "shops": [
+                    {
+                        "id": self.db_connections.get_list_shops()[0]
+                    }
+                ]
+            }
         }
 
     @staticmethod
