@@ -8,7 +8,7 @@ class ApiWarehouse:
 
     def post_warehouse(self):
         """Метод создания склада."""
-        warehouse = self.app.dict.form_warehouse_body()
+        warehouse = self.app.dicts.form_warehouse_body()
         result = self.app.http_method.post(link=self.link, json=warehouse)
         return self.app.http_method.return_result(response=result)
 
@@ -39,7 +39,7 @@ class ApiWarehouse:
         :param email: Email контактного лица склада.
         :param working_time: Время работы склада.
         """
-        put_warehouse = self.app.dict.form_warehouse_body()
+        put_warehouse = self.app.dicts.form_warehouse_body()
         put_warehouse["name"] = name
         put_warehouse["pickup"] = pickup
         put_warehouse["comment"] = comment
@@ -58,7 +58,7 @@ class ApiWarehouse:
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        patch_warehouse = self.app.dict.form_patch_body(op="replace", path=path, value=value)
+        patch_warehouse = self.app.dicts.form_patch_body(op="replace", path=path, value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", json=patch_warehouse)
         return self.app.http_method.return_result(response=result)
 

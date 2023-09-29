@@ -39,14 +39,14 @@ class ApiOrder:
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
-        single_order = self.app.dict.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
-                                                declared_value=declared_value + price_1 + price_2 + price_3,
-                                                delivery_sum=delivery_sum, cod=cod, length=length, width=width,
-                                                height=height, type_ds=type_ds, service=service, tariff=tariff,
-                                                data=data, delivery_time=delivery_time,
-                                                delivery_point_code=delivery_point_code,
-                                                pickup_time_period=pickup_time_period, date_pickup=date_pickup,
-                                                routes=routes)
+        single_order = self.app.dicts.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
+                                                 declared_value=declared_value + price_1 + price_2 + price_3,
+                                                 delivery_sum=delivery_sum, cod=cod, length=length, width=width,
+                                                 height=height, type_ds=type_ds, service=service, tariff=tariff,
+                                                 data=data, delivery_time=delivery_time,
+                                                 delivery_point_code=delivery_point_code,
+                                                 pickup_time_period=pickup_time_period, date_pickup=date_pickup,
+                                                 routes=routes)
 
         single_order["places"] = [
             {
@@ -114,12 +114,12 @@ class ApiOrder:
         :param date_pickup: Временной интервал.
         :param tariff: Тариф создания заказа.
         """
-        multi_order = self.app.dict.form_order(payment_type=payment_type,
-                                               declared_value=declared_value + price_1 + price_2,
-                                               delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
-                                               tariff=tariff, data=data, delivery_time=delivery_time,
-                                               delivery_point_code=delivery_point_code, date_pickup=date_pickup,
-                                               pickup_time_period=pickup_time_period)
+        multi_order = self.app.dicts.form_order(payment_type=payment_type,
+                                                declared_value=declared_value + price_1 + price_2,
+                                                delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
+                                                tariff=tariff, data=data, delivery_time=delivery_time,
+                                                delivery_point_code=delivery_point_code, date_pickup=date_pickup,
+                                                pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             {
                 "items": [
@@ -172,7 +172,7 @@ class ApiOrder:
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_{code}.{file_extension}"
-        body = self.app.dict.form_order_from_file()
+        body = self.app.dicts.form_order_from_file()
         if file_extension == "xls":
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
@@ -187,7 +187,7 @@ class ApiOrder:
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_format_russian_post.{file_extension}"
-        body = self.app.dict.form_order_from_file(type_="russian_post")
+        body = self.app.dicts.form_order_from_file(type_="russian_post")
         if file_extension == "xls":
             file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
@@ -241,7 +241,7 @@ class ApiOrder:
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
-        patch_weight = self.app.dict.form_patch_body(op="replace", path="weight", value=weight)
+        patch_weight = self.app.dicts.form_patch_body(op="replace", path="weight", value=weight)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_weight)
         return self.app.http_method.return_result(response=result)
 
@@ -253,8 +253,8 @@ class ApiOrder:
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
         """
-        patch_order = self.app.dict.form_patch_body(op="replace", path="places", value=[
-            self.app.dict.form_cargo_items(items={
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
+            self.app.dicts.form_cargo_items(items={
                 "article": f"ART_1{randrange(1000000, 9999999)}",
                 "name": name,
                 "price": price,
@@ -273,9 +273,9 @@ class ApiOrder:
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"]
-        patch_order = self.app.dict.form_patch_body(op="replace", path="places", value=[
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
             *items,
-            self.app.dict.form_cargo_items(items={
+            self.app.dicts.form_cargo_items(items={
                 "article": f"ART_3{randrange(1000000, 9999999)}",
                 "name": "Пуфик",
                 "price": 1000,
@@ -295,12 +295,12 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            list_items.append(self.app.dict.form_cargo_items(items=i, dimension={
+            list_items.append(self.app.dicts.form_cargo_items(items=i, dimension={
                 "length": randint(10, 30),
                 "width": randint(10, 30),
                 "height": randint(10, 30)
             }))
-        path_order = self.app.dict.form_patch_body(op="replace", path="places", value=list_items)
+        path_order = self.app.dicts.form_patch_body(op="replace", path="places", value=list_items)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=path_order)
         return self.app.http_method.return_result(response=result)
 

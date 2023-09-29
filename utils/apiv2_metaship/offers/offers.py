@@ -15,10 +15,10 @@ class ApiOffers:
         :param format_: Получение в формате виджета.
         """
         if format_:
-            params = self.app.dict.form_offers(types="DeliveryPoint")
+            params = self.app.dicts.form_offers(types="DeliveryPoint")
             params["format"] = format_
         else:
-            params = self.app.dict.form_offers(types=types)
+            params = self.app.dicts.form_offers(types=types)
             params["paymentType"] = payment_type,
             params["deliveryServiceCode"] = delivery_service_code,
             params["deliveryPointNumber"] = delivery_point_number

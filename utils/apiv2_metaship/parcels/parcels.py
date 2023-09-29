@@ -13,9 +13,9 @@ class ApiParcel:
         :param data: Дата отправки партии.
         """
         if type(value) is list:
-            parcel = self.app.dict.form_parcel_body(orders_ids=value, data=str(data))
+            parcel = self.app.dicts.form_parcel_body(orders_ids=value, data=str(data))
         else:
-            parcel = self.app.dict.form_parcel_body(orders_ids=[value], data=str(data))
+            parcel = self.app.dicts.form_parcel_body(orders_ids=[value], data=str(data))
         result = self.app.http_method.post(link=self.link, json=parcel)
         return self.app.http_method.return_result(response=result)
 
@@ -37,7 +37,7 @@ class ApiParcel:
         :param order_id: Идентификатор партии.
         :param parcel_id: Идентификатор партии.
         """
-        patch_parcel = self.app.dict.form_patch_body(op=op, path="orderIds", value=[order_id])
+        patch_parcel = self.app.dicts.form_patch_body(op=op, path="orderIds", value=[order_id])
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         return self.app.http_method.return_result(response=result)
 
@@ -48,6 +48,6 @@ class ApiParcel:
         """
         data = datetime.date.today()
         data += datetime.timedelta(days=day)
-        patch_parcel = self.app.dict.form_patch_body(op="replace", path="shipmentDate", value=str(data))
+        patch_parcel = self.app.dicts.form_patch_body(op="replace", path="shipmentDate", value=str(data))
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         return self.app.http_method.return_result(response=result)

@@ -13,7 +13,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_russian_post(self):
         """Снятие с модерация СД RussianPost."""
-        russian_post = self.admin.dict.form_moderation_delivery_services(delivery_service_code="RussianPost")
+        russian_post = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="RussianPost")
         russian_post["credential"]["token"] = os.getenv("RP_TOKEN")
         russian_post["credential"]["secret"] = os.getenv("RP_SECRET")
         result = self.admin.http_method.post(link=self.link, json=russian_post, admin=True)
@@ -21,7 +21,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_topdelivery(self):
         """Снятие с модерации СД TopDelivery."""
-        topdelivery = self.admin.dict.form_moderation_delivery_services(delivery_service_code="TopDelivery")
+        topdelivery = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="TopDelivery")
         topdelivery["credential"]["username"] = os.getenv("TD_USER_NAME")
         topdelivery["credential"]["password"] = os.getenv("TD_PASSWORD")
         topdelivery["credential"]["basicLogin"] = os.getenv("TD_BASIC_LOGIN")
@@ -31,14 +31,14 @@ class ApiModerationDeliveryServices:
 
     def post_connections_boxberry(self):
         """Снятие с модерации СД Boxberry."""
-        boxberry = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Boxberry")
+        boxberry = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="Boxberry")
         boxberry["credential"]["token"] = os.getenv("BB_API_TOKEN")
         result = self.admin.http_method.post(link=self.link, json=boxberry, admin=True)
         return self.admin.http_method.return_result(response=result)
 
     def post_connections_cdek(self):
         """Снятие с модерации СД Cdek."""
-        cdek = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Cdek")
+        cdek = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="Cdek")
         cdek["credential"]["account"] = os.getenv("CDEK_ACCOUNT")
         cdek["credential"]["password"] = os.getenv("CDEK_PASSWORD")
         result = self.admin.http_method.post(link=self.link, json=cdek, admin=True)
@@ -46,7 +46,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_dpd(self):
         """Снятие с модерации СД Dpd."""
-        dpd = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Dpd")
+        dpd = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="Dpd")
         dpd["credential"]["clientNumber"] = os.getenv("DPD_CLIENT_NUMBER")
         dpd["credential"]["clientKey"] = os.getenv("DPD_CLIENT_KEY")
         result = self.admin.http_method.post(link=self.link, json=dpd, admin=True)
@@ -54,7 +54,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_five_post(self):
         """Снятие с модерации СД FivePost"""
-        five_post = self.admin.dict.form_moderation_delivery_services(delivery_service_code="FivePost")
+        five_post = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="FivePost")
         five_post["credential"]["apiKey"] = os.getenv("FIVE_POST_API_KEY")
         five_post["credential"]["partnerNumber"] = os.getenv("FIVE_POST_PARTNER_NUMBER")
         five_post["credential"]["baseWeight"] = int(os.getenv("FIVE_POST_BASE_WEIGHT"))
@@ -63,7 +63,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_yandex_go(self):
         """Снятие с модерации СД YandexGo"""
-        yandex_go = self.admin.dict.form_moderation_delivery_services(delivery_service_code="YandexGo")
+        yandex_go = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="YandexGo")
         yandex_go["credential"]["yandexGoToken"] = os.getenv("YA_GO_TOKEN")
         yandex_go["credential"]["inn"] = os.getenv("YA_DELIVERY_INN")
         result = self.admin.http_method.post(link=self.link, json=yandex_go, admin=True)
@@ -71,7 +71,7 @@ class ApiModerationDeliveryServices:
 
     def post_connections_yandex_delivery(self):
         """Снятие с модерации СД YandexDelivery"""
-        yandex_delivery = self.admin.dict.form_moderation_delivery_services(delivery_service_code="YandexDelivery")
+        yandex_delivery = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="YandexDelivery")
         yandex_delivery["credential"]["yandexDeliveryToken"] = os.getenv("YA_DELIVERY_TOKEN")
         yandex_delivery["credential"]["inn"] = os.getenv("YA_DELIVERY_INN")
         yandex_delivery["credential"]["intakePointCode"] = os.getenv("YA_DELIVERY_INTAKE_POINT_CODE")
@@ -80,14 +80,14 @@ class ApiModerationDeliveryServices:
 
     def post_connections_dalli(self):
         """Снятие с модерации СД Dalli"""
-        dalli = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Dalli")
+        dalli = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="Dalli")
         dalli["credential"]["token"] = os.getenv("DALLI_TOKEN")
         result = self.admin.http_method.post(link=self.link, json=dalli, admin=True)
         return self.admin.http_method.return_result(response=result)
 
     def post_connections_halva(self):
         """Снятие с модерации СД Halva"""
-        halva = self.admin.dict.form_moderation_delivery_services(delivery_service_code="Halva")
+        halva = self.admin.dicts.form_moderation_delivery_services(delivery_service_code="Halva")
         halva["credential"]["client"] = os.getenv("HALVA_CLIENT_AND_KEY")
         halva["credential"]["key"] = os.getenv("HALVA_CLIENT_AND_KEY")
         result = self.admin.http_method.post(link=self.link, json=halva, admin=True)

@@ -8,7 +8,7 @@ class ApiWebhook:
 
     def post_webhook(self, shop_id: str):
         """Метод создания веб-хука."""
-        webhook = self.app.dict.form_webhook(shop_id=shop_id)
+        webhook = self.app.dicts.form_webhook(shop_id=shop_id)
         result = self.app.http_method.post(link=self.link, json=webhook)
         return self.app.http_method.return_result(response=result)
 
