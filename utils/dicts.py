@@ -20,7 +20,7 @@ class Dicts:
         r"""Тело для создания токена.
         :param admin: Для использования admin api.
         """
-        body_authorization = dict(grant_type="client_credentials", client_id=str(), client_secret=str())
+        body_authorization = dict(grant_type="client_credentials")
         if admin:
             body_authorization["client_id"] = ENV_OBJECT.admin_id()
             body_authorization["client_secret"] = ENV_OBJECT.admin_secret()
@@ -82,7 +82,7 @@ class Dicts:
         return dict(deliveryServiceCode=delivery_service_code)
 
     def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
-        """Тело для Info methods.
+        r"""Тело для Info methods.
         :param delivery_service_code: Код СД.
         :param data: Желаемая дата доставки.
         """
@@ -118,7 +118,9 @@ class Dicts:
         }
 
     def form_offers(self, types: str):
-        """Тело для получения офферов"""
+        r"""Тело для получения офферов.
+        :param types: Параметр получения оферов.
+        """
         return {
             "warehouseId": self.db_connections.get_list_warehouses()[0],
             "shopId": self.db_connections.get_list_shops()[0],
