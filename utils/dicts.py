@@ -314,6 +314,7 @@ class Dicts:
         }
 
     def form_forms_labels(self):
+        """Тело для создания формы с этикетками партии."""
         return {
             "id": "aaf1a0dd-3c6a-44eb-9bef-879eb5fd1963",
             "state": "ready",
