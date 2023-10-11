@@ -40,11 +40,20 @@ class Dicts:
         r"""Тело для получения токена.
         :param authorization: Токен для авторизации.
         """
-        x_trace_id = str(uuid.uuid4())
+        x_trace_id = uuid.uuid4()
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
             body_token = dict(Authorization=f"Bearer {authorization}")
             body_token["x-trace-id"] = x_trace_id
             return body_token
+
+    @staticmethod
+    def form_patch_body(op: str, path: str, value: object):
+        r"""Тело для редактирования полей.
+        :param op: Тип операции.
+        :param path: Изменяемое поле.
+        :param value: Значение.
+        """
+        return [dict(op=op, path=path, value=value)]
 
     @staticmethod
     def form_shop_body():
@@ -286,14 +295,14 @@ class Dicts:
             "secret": "string"
         }
 
-    def form_reports(self):
+    def form_reports(self, data: str = datetime.date.today()):
         """Тело для создания отчёта по заказам."""
         return {
             "filter": {
                 "created": {
                     "dateTime": {
-                        "from": "2020-07-20 13:00:00",
-                        "to": "2020-07-20 14:00:00"
+                        "from": f"{data} 13:00:00",
+                        "to": f"{data} 14:00:00"
                     }
                 },
                 "shops": [
@@ -304,11 +313,27 @@ class Dicts:
             }
         }
 
-    @staticmethod
-    def form_patch_body(op: str, path: str, value):
-        r"""Тело для редактирования полей.
-        :param op: Тип операции.
-        :param path: Изменяемое поле.
-        :param value: Значение.
-        """
-        return [dict(op=op, path=path, value=value)]
+    def form_forms_labels(self):
+        return {
+            "id": "aaf1a0dd-3c6a-44eb-9bef-879eb5fd1963",
+            "state": "ready",
+            "message": "Невозможно создать этикетку",
+            "type": "parcel_label",
+            "data": {
+                "filter": {
+                    "parcels": [
+                        {
+                            "id": f"{self.db_connections.get_list_parcels()[0]}"
+                        }
+                    ]
+                }
+            },
+            "artifacts": [
+                {
+                    "format": "link",
+                    "data": "https://test.test/test.xlsx"
+                }
+            ],
+            "createdAt": "2021-07-01T14:51:56+00:00",
+            "stateTime": "2021-07-01T14:51:56+00:00"
+        }
