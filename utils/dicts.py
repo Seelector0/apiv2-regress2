@@ -40,7 +40,7 @@ class Dicts:
         r"""Тело для получения токена.
         :param authorization: Токен для авторизации.
         """
-        x_trace_id = uuid.uuid4()
+        x_trace_id = str(uuid.uuid4())
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
             body_token = dict(Authorization=f"Bearer {authorization}")
             body_token["x-trace-id"] = x_trace_id
