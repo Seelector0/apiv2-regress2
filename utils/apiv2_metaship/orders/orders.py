@@ -330,3 +330,10 @@ class ApiOrder:
         """
         result = self.app.http_method.get(link=f"{self.link}/{order_id}/details")
         return self.app.http_method.return_result(response=result)
+
+    def get_generate_security_code(self, order_id):
+        r"""Получение кода выдачи заказа.
+        :param order_id: Идентификатор заказа.
+        """
+        result = self.app.http_method.get(link=f"{self.link}/{order_id}/generate_security_code")
+        return self.app.http_method.return_result(response=result)
