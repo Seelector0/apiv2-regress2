@@ -1,8 +1,8 @@
 from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
 from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
 from utils.apiv2_metaship.documents.documents import ApiDocument
-from utils.apiv2_metaship.reports.reports import ApiReports
 from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook
+from utils.apiv2_metaship.reports.reports import ApiReports
 from utils.apiv2_metaship.intakes.intakes import ApiIntakes
 from utils.apiv2_metaship.widgets.widgets import ApiWidget
 from utils.apiv2_metaship.parcels.parcels import ApiParcel
@@ -10,6 +10,7 @@ from utils.apiv2_metaship.offers.offers import ApiOffers
 from utils.apiv2_metaship.orders.orders import ApiOrder
 from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
+from utils.apiv2_metaship.forms.forms import Forms
 from utils.http_methods import HttpMethod
 from utils.dicts import Dicts
 import requests
@@ -34,6 +35,7 @@ class Application:
         self.webhook = ApiWebhook(self)
         self.intakes = ApiIntakes(self)
         self.reports = ApiReports(self)
+        self.forms = Forms(self)
         self.dicts = Dicts(self, self)
 
     def open_session(self):
