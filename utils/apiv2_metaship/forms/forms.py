@@ -21,6 +21,8 @@ class Forms:
         return self.app.http_method.return_result(response=result)
 
     def get_forms_id(self, forms_id):
-        """Получение формы по идентификатору."""
+        r"""Получение формы по идентификатору.
+        :param forms_id: Id формы.
+        """
         result = self.app.http_method.get(link=f"{self.link}/{forms_id}")
         return self.app.http_method.return_result(response=result)
