@@ -166,7 +166,7 @@ class ApiOrder:
         """
         return [("file", (f"{file}", open(file=f"folder_with_orders/{folder}/{file}", mode="rb"), method))]
 
-    def post_import_order_format_metaship(self, code: str = None, file_extension: str = None):
+    def post_import_order_format_metaship(self, code: str, file_extension: str):
         r"""Метод создания заказа из файла XLSX или XLS формата Metaship.
         :param code: Код СД.
         :param file_extension: Exel файл с расширением xlsx или xls.
