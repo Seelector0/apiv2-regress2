@@ -6,6 +6,9 @@ import pytest
 import allure
 
 
+# Todo Многоместная {"type_": "termo}
+
+
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()

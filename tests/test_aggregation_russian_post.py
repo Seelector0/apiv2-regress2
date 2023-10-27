@@ -6,6 +6,9 @@ import pytest
 import allure
 
 
+# Todo расширить метод PUT для редактирования заказа
+
+
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()

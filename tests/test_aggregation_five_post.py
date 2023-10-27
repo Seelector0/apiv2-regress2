@@ -6,6 +6,9 @@ import pytest
 import allure
 
 
+# Todo Редактирование заказ места и телефон один метод, а место другим методом PATCH, получение сесурити кода,
+
+
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()

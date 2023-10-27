@@ -5,6 +5,9 @@ import pytest
 import allure
 
 
+# Todo редактирование заказа, получение многоместной этикетки меташип.
+
+
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
