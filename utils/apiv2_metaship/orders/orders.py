@@ -245,6 +245,47 @@ class ApiOrder:
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_weight)
         return self.app.http_method.return_result(response=result)
 
+    def patch_order_recipient(self, order_id: str, phone_number: str, email: str):
+        r"""Редактирование полей phoneNumber и email в заказе для СД FivePost.
+        :param order_id: Идентификатор заказа.
+        :param phone_number: Новый телефонный номер получателя.
+        :param email: Новый email получателя.
+        """
+        result_get_order_by_id = self.get_order_id(order_id=order_id)
+        recipient_order = result_get_order_by_id.json()["data"]["request"]["recipient"]
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="recipient", value={
+            "familyName": recipient_order["familyName"],
+            "firstName": recipient_order["firstName"],
+            "secondName": recipient_order["secondName"],
+            "phoneNumber": phone_number,
+            "email": email,
+            "address": recipient_order["address"]
+        })
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
+        return self.app.http_method.return_result(response=result)
+
+    def patch_order_items(self, order_id: str, items_name: str):
+        r"""Метод редактирования заказа для СД FivPost.
+        Все созданные места стираются и заменяются новыми.
+        :param order_id: Идентификатор заказа.
+        :param items_name: Название товара.
+        """
+        patch_items = self.app.dicts.form_patch_body(op="replace", path="places", value=[
+            {
+                "items": [
+                    {
+                        "article": f"ART_1{randrange(1000000, 9999999)}",
+                        "name": items_name,
+                        "price": 500,
+                        "count": 2,
+                        "vat": "10"
+                    }
+                ]
+            }
+        ])
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_items)
+        return self.app.http_method.return_result(response=result)
+
     def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
         r"""Метод редактирования поля в заказе для СД Cdek и Dpd.
         :param order_id: Идентификатор заказа.
