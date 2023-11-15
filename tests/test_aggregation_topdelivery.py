@@ -160,8 +160,8 @@ def test_patch_single_order(app, connections):
     Checking.check_status_code(response=patch_single_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_single_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=patch_single_order, key_name="state", expected_value="succeeded")
-    assert len(patch_single_order.json()["data"]["request"]["places"]) > \
-           len(single_order.json()["data"]["request"]["places"])
+    Checking.check_value_comparison(one_value=len(single_order.json()["data"]["request"]["places"]), two_value=1)
+    Checking.check_value_comparison(one_value=len(patch_single_order.json()["data"]["request"]["places"]), two_value=3)
 
 
 @allure.description("Создание заказа из файла СД TopDelivery")

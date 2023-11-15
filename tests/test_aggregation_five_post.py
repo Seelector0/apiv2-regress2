@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo Редактирование заказ места и телефон один метод, а место другим методом PATCH, получение сесурити кода,
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
@@ -129,6 +126,50 @@ def test_patch_order_weight(app, connections):
     order_patch = app.order.patch_order_weight(order_id=random_order, weight=4)
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
+    assert_order_patch = app.order.get_order_patches(order_id=order_patch.json()["id"])
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    Checking.checking_in_list_json_value(response=assert_order_patch, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Редактирование информации о получателе в заказе СД FivePost")
+def test_patch_order_recipient(app, connections):
+    random_order = choice(connections.get_list_all_orders_out_parcel())
+    order_patch = app.order.patch_order_recipient(order_id=random_order, phone_number="+79266967503",
+                                                  email="new_test_email@bk.ru")
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    Checking.checking_big_json(response=order_patch, key_name="recipient", field="phoneNumber",
+                               expected_value="+79266967503")
+    Checking.checking_big_json(response=order_patch, key_name="recipient", field="email",
+                               expected_value="new_test_email@bk.ru")
+    assert_order_patch = app.order.get_order_patches(order_id=order_patch.json()["id"])
+    Checking.check_status_code(response=assert_order_patch, expected_status_code=200)
+    Checking.checking_in_list_json_value(response=assert_order_patch, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Редактирование одноместного заказа СД FivePost")
+def test_patch_single_order(app, connections):
+    random_order_id = choice(connections.get_list_all_orders_out_parcel())
+    order_patch = app.order.patch_order_items(order_id=random_order_id, items_name="семена бамбука")
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    connections.wait_create_order(order_id=random_order_id)
+    order_by_id = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=order_by_id, expected_status_code=200)
+    field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
+    Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
+    Checking.check_value_comparison(one_value=field["name"], two_value="семена бамбука")
+    assert_order_patch = app.order.get_order_patches(order_id=order_patch.json()["id"])
+    Checking.check_status_code(response=assert_order_patch, expected_status_code=200)
+    Checking.checking_in_list_json_value(response=assert_order_patch, key_name="state", expected_value="succeeded")
+
+
+@allure.description("Получение кода выдачи заказа для СД FivePost")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
+def test_generate_security_code(app, connections):
+    random_order_id = choice(connections.get_list_all_orders_out_parcel())
+    security_code = app.order.get_generate_security_code(order_id=random_order_id)
+    Checking.check_status_code(response=security_code, expected_status_code=200)
+    Checking.checking_json_key(response=security_code, expected_value=["code"])
 
 
 @allure.description("Удаление заказа СД FivePost")
