@@ -1,6 +1,6 @@
 from utils.global_enums import INFO
 from utils.checking import Checking
-from random import choice, randint
+from random import choice
 import datetime
 import pytest
 import allure
