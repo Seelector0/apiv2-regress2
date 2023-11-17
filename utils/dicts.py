@@ -398,7 +398,7 @@ class Dicts:
             "barcode": f"{randrange(1000000, 9999999)}",
             "shopNumber": f"{randrange(1000000, 9999999)}",
             "weight": randint(1, 5),
-            "dimension": self.app.dicts.dimension(),
+            "dimension": self.dimension(),
             "items": [
                 self.items(name=name, price=1000, count=randint(1, 3), weight=randint(1, 5),
                            vat=str(choice(INFO.cdek_vats)["code"]))
