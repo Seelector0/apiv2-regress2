@@ -5,7 +5,7 @@ import pytest
 import allure
 
 
-# Todo редактирование заказа, получение многоместной этикетки меташип.
+# Todo получение многоместной этикетки меташип.
 
 
 @allure.description("Создание магазина")
@@ -168,6 +168,22 @@ def test_create_order_delivery_point(app, payment_type, connections):
                                     two_value=["succeeded"])
 
 
+@allure.description("Создание многоместного заказа из одноместного")
+def test_patch_single_order(app, connections):
+    random_order_id = choice(connections.get_order_id_from_database(not_in_parcel=True, single_order=True))
+    single_order = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=single_order, expected_status_code=200)
+    patch_single_order = app.order.patch_order_items_cdek(order_id=random_order_id, name_1="Бамбук", name_2="Книга")
+    Checking.check_status_code(response=patch_single_order, expected_status_code=200)
+    connections.wait_create_order(order_id=random_order_id)
+    order_by_id = app.order.get_order_id(order_id=random_order_id)
+    Checking.check_status_code(response=order_by_id, expected_status_code=200)
+    Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+    Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
+    Checking.check_value_comparison(one_value=len(single_order.json()["data"]["request"]["places"]), two_value=1)
+    Checking.check_value_comparison(one_value=len(order_by_id.json()["data"]["request"]["places"]), two_value=2)
+
+
 @allure.description("Создание заказа из файла СД Cdek")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, file_extension, connections):
@@ -222,6 +238,38 @@ def test_patch_order_weight(app, connections):
     connections.wait_create_order(order_id=random_order_id)
     get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
     Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+
+
+@allure.description("Редактирование информации о получателе в заказе СД Cdek")
+def test_patch_order_recipient(app, connections):
+    random_order = choice(connections.get_order_id_from_database(not_in_parcel=True, single_order=True))
+    order_patch = app.order.patch_order_recipient(order_id=random_order, family_name="Иванов", first_name="Авдотий",
+                                                  second_name="Николаевич", phone_number="+79266967503",
+                                                  email="new_test_email@bk.ru",
+                                                  address={
+                                                      "raw": "119633, г Москва, ул. Лукинская, дом 5, кв. 23",
+                                                      "countryCode": None
+                                                  })
+    Checking.check_status_code(response=order_patch, expected_status_code=200)
+    connections.wait_create_order(order_id=order_patch.json()["id"])
+    assert_order_patch = app.order.get_order_patches(order_id=order_patch.json()["id"])
+    Checking.check_status_code(response=assert_order_patch, expected_status_code=200)
+    Checking.checking_in_list_json_value(response=assert_order_patch, key_name="state", expected_value="succeeded")
+    order_by_id = app.order.get_order_id(order_id=random_order)
+    Checking.check_status_code(response=order_by_id, expected_status_code=200)
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="familyName", expected_value="Иванов")
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="firstName", expected_value="Авдотий")
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="secondName",
+                               expected_value="Николаевич")
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="phoneNumber",
+                               expected_value="+79266967503")
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="email",
+                               expected_value="new_test_email@bk.ru")
+    Checking.checking_big_json(response=order_by_id, key_name="recipient", field="address",
+                               expected_value={
+                                   "raw": "119633, г Москва, ул. Лукинская, дом 5, кв. 23",
+                                   "countryCode": None
+                               })
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД Cdek")
