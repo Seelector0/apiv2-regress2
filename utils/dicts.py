@@ -1,10 +1,13 @@
 from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
+from utils.global_enums import INFO
 from environment import ENV_OBJECT
-from random import randrange, randint
+from random import randrange, randint, choice
 import datetime
 import allure
 import uuid
+
+
 
 
 class Dicts:
@@ -183,11 +186,7 @@ class Dicts:
                 "deliverySum": delivery_sum,
                 "cod": cod
             },
-            "dimension": {
-                "length": length,
-                "width": width,
-                "height": height
-            },
+            "dimension": self.dimension(length=length, width=width, height=height),
             "weight": weight,
             "delivery": {
                 "type": type_ds,
@@ -214,18 +213,20 @@ class Dicts:
         }
 
     @staticmethod
-    def form_cargo_items(items: dict, dimension: dict = None):
+    def form_cargo_items(items: dict, barcode: str = None, shop_number: str = None, dimension: dict = None):
         r"""Тело для создания грузоместа.
         :param items: Товарная позиция.
+        :param barcode: Штрихкод грузоместа.
+        :param shop_number: Номер грузоместа.
         :param dimension: Габариты грузоместа.
         """
         return {
             "items": [
                 items
             ],
-            "barcode": f"Box_3{randrange(100000, 999999)}",
-            "shopNumber": f"{randrange(100000, 999999)}",
-            "weight": randint(10, 30),
+            "barcode": barcode,
+            "shopNumber": shop_number,
+            "weight": randint(1, 5),
             "dimension": dimension
         }
 
@@ -338,3 +339,122 @@ class Dicts:
             "createdAt": "2021-07-01T14:51:56+00:00",
             "stateTime": "2021-07-01T14:51:56+00:00"
         }
+
+    @staticmethod
+    def places(places: list):
+        r"""Создание в заказе мест.
+        :param places: Места.
+        """
+        return [
+            {
+                "items": places
+            }
+        ]
+
+    @staticmethod
+    def items(name, price: float = 1000, count: int = randint(1, 3), weight: float = randint(1, 5), vat: str = "0",
+              items_declared_value: int = None):
+        r"""Товарная позиция.
+        :param name: Название товарной позиции.
+        :param price: Цена товарной позиции
+        :param count: Количество.
+        :param weight: Вес товарной позиции.
+        :param vat: Ставка НДС.
+        :param items_declared_value: Цена одной товарной позиции.
+        """
+        return {
+            "article": f"ART_{randrange(1000000, 9999999)}",
+            "name": name,
+            "price": price,
+            "count": count,
+            "weight": weight,
+            "vat": vat,
+            "declaredValue": items_declared_value,
+        }
+
+    @staticmethod
+    def dimension(length: float = randint(10, 30), width: float = randint(10, 30), height: float = randint(10, 30)):
+        r"""Габариты товара или грузоместа.
+        :param length: Длинна.
+        :param width: Ширина.
+        :param height: Высота.
+        """
+        return {
+            "length": length,
+            "width": width,
+            "height": height
+        }
+
+    @staticmethod
+    def recipient(family_name: str, first_name: str, second_name: str, phone_number: str, email: str, address: str):
+        r"""Информация о получателе.
+        :param family_name: Фамилия получателя.
+        :param first_name: Имя получателя.
+        :param second_name: Отчество получателя.
+        :param phone_number: Контактный телефон получателя.
+        :param email: Email получателя.
+        :param address: Адрес получателя.
+        """
+        return {
+            "familyName": family_name,
+            "firstName": first_name,
+            "secondName": second_name,
+            "phoneNumber": phone_number,
+            "email": email,
+            "address": address
+        }
+
+    def replace_items_cdek(self, name):
+        r"""Для редактирования товарных позиций для СД Cek.
+        :param name: Наименование товара.
+        """
+        return {
+            "barcode": f"{randrange(1000000, 9999999)}",
+            "shopNumber": f"{randrange(1000000, 9999999)}",
+            "weight": randint(1, 5),
+            "dimension": self.app.dicts.dimension(),
+            "items": [
+                self.items(name=name, price=1000, count=randint(1, 3), weight=randint(1, 5),
+                           vat=str(choice(INFO.cdek_vats)["code"]))
+            ]
+        }
+
+    @staticmethod
+    def delivery_interval(tariff: str, time_from: str, time_to: str):
+        r"""Для редактирования времени доставки СД Cdek только курьер.
+        :param tariff: Тариф заказа
+        :param time_from: С какого часа доставка.
+        :param time_to: По какой час доставка.
+        :return:
+        """
+        return {
+            "type": "Courier",
+            "service": "Cdek",
+            "tariff": tariff,
+            "date": str(datetime.date.today()),
+            "time": {
+                "from": time_from,
+                "to": time_to
+            }
+        }
+
+# @allure.description("Изменение времени доставки заказа")
+# def test_patch_delivery_intervals(app, connections):
+#     order = list()
+#     singles_orders_ids: list = connections.get_list_all_orders_out_parcel()
+#     for single_order in singles_orders_ids:
+#         orders = app.order.get_order_id(order_id=single_order)
+#         if orders.json()["data"]["request"]["delivery"]["type"] == "Courier":
+#             order.append(orders.json()["id"])
+#     random_order_id = choice(order)
+#     patch_order = app.order.patch_delivery_courier_cdek(order_id=random_order_id, time_from="10:00", time_to="14:00")
+#     Checking.check_status_code(response=patch_order, expected_status_code=200)
+#     Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
+#     Checking.checking_json_value(response=patch_order, key_name="state", expected_value="editing-external-processing")
+#     connections.wait_create_order(order_id=random_order_id)
+#     order_by_id = app.order.get_order_id(order_id=random_order_id)
+#     Checking.check_status_code(response=order_by_id, expected_status_code=200)
+#     Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+#     Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
+#     print(order_by_id.json()["id"])
+#     print(order_by_id.json()["data"]["request"]["delivery"])
