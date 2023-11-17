@@ -142,7 +142,7 @@ def test_patch_order_recipient(app, connections):
 @allure.description("Редактирование одноместного заказа СД FivePost")
 def test_patch_single_order(app, connections):
     random_order_id = choice(connections.get_list_all_orders_out_parcel())
-    order_patch = app.order.patch_order_items(order_id=random_order_id, items_name="семена бамбука")
+    order_patch = app.order.patch_order_items_five_post(order_id=random_order_id, items_name="семена бамбука")
     Checking.check_status_code(response=order_patch, expected_status_code=200)
     connections.wait_create_order(order_id=random_order_id)
     order_by_id = app.order.get_order_id(order_id=random_order_id)
