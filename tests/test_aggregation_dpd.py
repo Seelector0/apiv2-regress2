@@ -125,7 +125,8 @@ def test_patch_add_single_order_from_multi_order(app, connections):
     random_order_id = choice(connections.get_list_all_orders_out_parcel())
     multi_order = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=multi_order, expected_status_code=200)
-    patch_multi_order = app.order.patch_order(order_id=random_order_id, name="Пуфик", price=500, count=2, weight=2)
+    patch_multi_order = app.order.patch_order(order_id=random_order_id, name="Пуфик", price=500, count=2, weight=2,
+                                              barcode=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=patch_multi_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_multi_order, key_name="status", expected_value="created")
     Checking.checking_json_value(response=patch_multi_order, key_name="state", expected_value="succeeded")
