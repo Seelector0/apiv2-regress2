@@ -18,7 +18,7 @@ class Dicts:
 
     @staticmethod
     def form_authorization(admin: bool = None):
-        r"""Тело для создания токена.
+        r"""Форма для создания токена.
         :param admin: Для использования admin api.
         """
         body_authorization = dict(grant_type="client_credentials")
@@ -33,12 +33,12 @@ class Dicts:
 
     @staticmethod
     def form_headers():
-        """Тело headers."""
+        """Форма headers."""
         return {"Content-Type": "application/x-www-form-urlencoded"}
 
     @staticmethod
     def form_token(authorization: str):
-        r"""Тело для получения токена.
+        r"""Форма для получения токена.
         :param authorization: Токен для авторизации.
         """
         x_trace_id = str(uuid.uuid4())
@@ -49,7 +49,7 @@ class Dicts:
 
     @staticmethod
     def form_patch_body(op: str, path: str, value: object):
-        r"""Тело для редактирования полей.
+        r"""Форма для редактирования полей.
         :param op: Тип операции.
         :param path: Изменяемое поле.
         :param value: Значение.
@@ -58,7 +58,7 @@ class Dicts:
 
     @staticmethod
     def form_shop_body():
-        """Тело для создания магазина."""
+        """Форма для создания магазина."""
         return {
             "name": f"INT{randrange(100000, 999999)}",
             "uri": f"integration-shop{randrange(1000, 9999)}.ru",
@@ -68,7 +68,7 @@ class Dicts:
 
     @staticmethod
     def form_warehouse_body():
-        """Тело для создания склада."""
+        """Форма для создания склада."""
         return {
             "name": f"{randrange(100000, 999999)}",
             "address": {
@@ -86,13 +86,13 @@ class Dicts:
 
     @staticmethod
     def form_delivery_service_code(delivery_service_code):
-        r"""Тело СД.
+        r"""Форма СД.
         :param delivery_service_code: Код СД.
         """
         return dict(deliveryServiceCode=delivery_service_code)
 
     def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
-        r"""Тело для Info methods.
+        r"""Форма для Info methods.
         :param delivery_service_code: Код СД.
         :param data: Желаемая дата доставки.
         """
@@ -102,7 +102,7 @@ class Dicts:
         return body_info
 
     def form_connection_type(self, delivery_service_code: str, aggregation: bool = None):
-        r"""Тело для подключения СД.
+        r"""Форма для подключения СД.
         :param delivery_service_code: Название СД.
         :param aggregation: Признак того, что настройка выполнена или выполняется на агрегацию.
         """
@@ -113,7 +113,7 @@ class Dicts:
         return body_connection_type
 
     def form_moderation_delivery_services(self, delivery_service_code: str):
-        r"""Тело для снятия с модерации СД.
+        r"""Форма для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         """
         shop_id = self.db_connections.get_list_shops()[0]
@@ -128,7 +128,7 @@ class Dicts:
         }
 
     def form_offers(self, types: str):
-        r"""Тело для получения офферов.
+        r"""Форма для получения офферов.
         :param types: Параметр получения оферов.
         """
         return {
@@ -136,9 +136,9 @@ class Dicts:
             "shopId": self.db_connections.get_list_shops()[0],
             "address": "г Москва, пр-кт Мира, д 45 стр 2",
             "declaredValue": randrange(1000, 5000),
-            "height": randrange(10, 45),
             "length": randrange(10, 45),
             "width": randrange(10, 45),
+            "height": randrange(10, 45),
             "weight": randrange(1, 10),
             "types[0]": types
         }
@@ -149,7 +149,7 @@ class Dicts:
                    delivery_sum: float = None, data: str = None, delivery_time: dict = None,
                    delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
                    routes: list = None, ):
-        r"""Тело для создания заказов.
+        r"""Форма для создания заказов.
         :param shop_barcode: Штрих код заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
@@ -212,7 +212,7 @@ class Dicts:
 
     @staticmethod
     def form_cargo_items(items: dict, barcode: str = None, shop_number: str = None, dimension: dict = None):
-        r"""Тело для создания грузоместа.
+        r"""Форма для создания грузоместа.
         :param items: Товарная позиция.
         :param barcode: Штрихкод грузоместа.
         :param shop_number: Номер грузоместа.
@@ -229,7 +229,7 @@ class Dicts:
         }
 
     def form_order_from_file(self, type_: str = None):
-        r"""Тело для создания заказа из файла.
+        r"""Форма для создания заказа из файла.
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
         body_order = {
@@ -242,14 +242,14 @@ class Dicts:
 
     @staticmethod
     def form_parcel_body(orders_ids, data: str):
-        r"""Тело для создания партии.
+        r"""Форма для создания партии.
         :param orders_ids: Список id заказов.
         :param data: Дата отгрузки партии.
         """
         return dict(orderIds=orders_ids, shipmentDate=data)
 
     def form_intakes(self, delivery_service: str):
-        r"""Тело для создания забора.
+        r"""Форма для создания забора.
         :param delivery_service: Код СД.
         """
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -267,11 +267,7 @@ class Dicts:
             "to": {
                 "warehouseId": self.db_connections.get_list_warehouses()[0]
             },
-            "dimension": {
-                "length": randint(10, 50),
-                "width": randint(10, 50),
-                "height": randint(10, 50)
-            },
+            "dimension": self.dimension(),
             "weight": randint(1, 5),
             "countCargoPlace": 1,
             "time": {
@@ -283,7 +279,7 @@ class Dicts:
 
     @staticmethod
     def form_webhook(shop_id: str):
-        r"""Тело для создания веб-хука.
+        r"""Форма для создания веб-хука.
         :param shop_id: Идентификатор магазина.
         """
         return {
@@ -295,7 +291,7 @@ class Dicts:
         }
 
     def form_reports(self, data: str = datetime.date.today()):
-        """Тело для создания отчёта по заказам."""
+        """Форма для создания отчёта по заказам."""
         return {
             "filter": {
                 "created": {
@@ -313,7 +309,7 @@ class Dicts:
         }
 
     def form_forms_labels(self):
-        """Тело для создания формы с этикетками партии."""
+        """Форма для создания формы с этикетками партии."""
         return {
             "id": "aaf1a0dd-3c6a-44eb-9bef-879eb5fd1963",
             "state": "ready",
@@ -343,11 +339,7 @@ class Dicts:
         r"""Создание в заказе мест.
         :param places: Места.
         """
-        return [
-            {
-                "items": places
-            }
-        ]
+        return [dict(items=places)]
 
     @staticmethod
     def items(name, price: float = 1000, count: int = randint(1, 3), weight: float = randint(1, 5), vat: str = "0",
@@ -377,11 +369,7 @@ class Dicts:
         :param width: Ширина.
         :param height: Высота.
         """
-        return {
-            "length": length,
-            "width": width,
-            "height": height
-        }
+        return dict(length=length, width=width, height=height)
 
     @staticmethod
     def recipient(family_name: str, first_name: str, second_name: str, phone_number: str, email: str, address: str):
