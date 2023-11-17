@@ -8,8 +8,6 @@ import allure
 import uuid
 
 
-
-
 class Dicts:
 
     def __init__(self, app, admin):
