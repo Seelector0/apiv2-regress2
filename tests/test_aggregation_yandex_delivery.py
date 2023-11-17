@@ -78,11 +78,9 @@ def test_create_multi_order_courier(app, payment_type, connections):
     new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="YandexDelivery",
                                            declared_value=500, delivery_sum=0,
                                            barcode_1=f"{randrange(100000000, 999999999)}",
-                                           barcode_2=f"{randrange(100000000, 999999999)}", dimension={
-                                                "length": randint(1, 4),
-                                                "width": randint(1, 4),
-                                                "height": randint(1, 4)
-                                           })
+                                           barcode_2=f"{randrange(100000000, 999999999)}",
+                                           dimension=app.dicts.dimension(length=randint(1, 4), width=randint(1, 4),
+                                                                         height=randint(1, 4)))
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.wait_create_order(order_id=new_order.json()["id"])
@@ -101,11 +99,8 @@ def test_create_order_multi_delivery_point(app, payment_type, connections):
                                            delivery_point_code="6d93897c-9e8b-4284-8eef-32cd23a94b16",
                                            declared_value=500, delivery_sum=0,
                                            barcode_1=f"{randrange(100000000, 999999999)}",
-                                           barcode_2=f"{randrange(100000000, 999999999)}", dimension={
-                                                "length": 2,
-                                                "width": 2,
-                                                "height": 2
-                                           })
+                                           barcode_2=f"{randrange(100000000, 999999999)}",
+                                           dimension=app.dicts.dimension(length=2, width=2, height=2))
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.wait_create_order(order_id=new_order.json()["id"])

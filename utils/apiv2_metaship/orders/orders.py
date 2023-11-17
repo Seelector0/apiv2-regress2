@@ -1,4 +1,6 @@
 from random import randrange, randint
+from utils.global_enums import INFO
+from random import choice
 
 
 class ApiOrder:
@@ -47,40 +49,14 @@ class ApiOrder:
                                                  delivery_point_code=delivery_point_code,
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup,
                                                  routes=routes)
-
-        single_order["places"] = [
-            {
-                "items": [
-                    {
-                        "article": f"ART_1{randrange(1000000, 9999999)}",
-                        "name": "Стол",
-                        "price": price_1,
-                        "count": 1,
-                        "weight": 1,
-                        "vat": "10",
-                        "declaredValue": items_declared_value,
-                    },
-                    {
-                        "article": f"ART_2{randrange(1000000, 9999999)}",
-                        "name": "Стул",
-                        "price": price_2,
-                        "count": 1,
-                        "weight": 1,
-                        "vat": "10",
-                        "declaredValue": items_declared_value,
-                    },
-                    {
-                        "article": f"ART_3{randrange(1000000, 9999999)}",
-                        "name": "Пуфик",
-                        "price": price_3,
-                        "count": 1,
-                        "weight": 1,
-                        "vat": "10",
-                        "declaredValue": items_declared_value,
-                    }
-                ]
-            }
-        ]
+        single_order["places"] = self.app.dicts.places(places=[
+                    self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
+                                         items_declared_value=items_declared_value),
+                    self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="10",
+                                         items_declared_value=items_declared_value),
+                    self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
+                                         items_declared_value=items_declared_value)
+                ])
         result = self.app.http_method.post(link=self.link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
@@ -121,38 +97,12 @@ class ApiOrder:
                                                 delivery_point_code=delivery_point_code, date_pickup=date_pickup,
                                                 pickup_time_period=pickup_time_period)
         multi_order["places"] = [
-            {
-                "items": [
-                    {
-                        "article": f"ART_1{randrange(1000000, 9999999)}",
-                        "name": "Стол",
-                        "price": price_1,
-                        "count": 1,
-                        "weight": weight_1,
-                        "vat": "10"
-                    }
-                ],
-                "barcode": barcode_1,
-                "shopNumber": shop_number_1,
-                "weight": weight_1,
-                "dimension": dimension
-            },
-            {
-                "items": [
-                    {
-                        "article": f"ART_2{randrange(1000000, 9999999)}",
-                        "name": "Стул",
-                        "price": price_2,
-                        "count": 1,
-                        "weight": weight_2,
-                        "vat": "10"
-                    }
-                ],
-                "barcode": barcode_2,
-                "shopNumber": shop_number_2,
-                "weight": weight_2,
-                "dimension": dimension
-            }
+            self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
+                                                                       weight=weight_1,  vat="10"),
+                                            barcode=barcode_1, shop_number=shop_number_1, dimension=dimension),
+            self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стул", price=price_2, count=1,
+                                                                       weight=weight_2, vat="10"),
+                                            barcode=barcode_2, shop_number=shop_number_2, dimension=dimension)
         ]
         result = self.app.http_method.post(link=self.link, json=multi_order)
         return self.app.http_method.return_result(response=result)
@@ -237,7 +187,7 @@ class ApiOrder:
         return self.app.http_method.return_result(response=result)
 
     def patch_order_weight(self, order_id: str, weight: int):
-        r"""Редактирование веса в заказе для СД Boxberry, Cdek, Dpd, FivePost, RussianPost.
+        r"""Метод редактирования веса в заказе для СД Boxberry, Cdek, Dpd, FivePost, RussianPost.
         :param order_id: Идентификатор заказа.
         :param weight: Новый вес заказа.
         """
@@ -245,64 +195,92 @@ class ApiOrder:
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_weight)
         return self.app.http_method.return_result(response=result)
 
-    def patch_order_recipient(self, order_id: str, phone_number: str, email: str):
-        r"""Редактирование полей phoneNumber и email в заказе для СД FivePost.
+    def patch_order_recipient(self, order_id: str, phone_number: str, email: str, family_name: str = None,
+                              first_name: str = None, second_name: str = None, address: dict = None):
+        r"""Метод редактирования данных о получателе для СД FivePost и Cdek.
         :param order_id: Идентификатор заказа.
+        :param family_name: Фамилия получателя.
+        :param first_name: Имя получателя.
+        :param second_name: Отчество получателя.
         :param phone_number: Новый телефонный номер получателя.
         :param email: Новый email получателя.
+        :param address: Адрес получателя.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         recipient_order = result_get_order_by_id.json()["data"]["request"]["recipient"]
-        patch_order = self.app.dicts.form_patch_body(op="replace", path="recipient", value={
-            "familyName": recipient_order["familyName"],
-            "firstName": recipient_order["firstName"],
-            "secondName": recipient_order["secondName"],
-            "phoneNumber": phone_number,
-            "email": email,
-            "address": recipient_order["address"]
-        })
+        if family_name is None:
+            family_name = recipient_order["familyName"]
+        if first_name is None:
+            first_name = recipient_order["firstName"]
+        if second_name is None:
+            second_name = recipient_order["secondName"]
+        if address is None:
+            address = recipient_order["address"]
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="recipient",
+                                                     value=self.app.dicts.recipient(address=address, email=email,
+                                                                                    family_name=family_name,
+                                                                                    first_name=first_name,
+                                                                                    second_name=second_name,
+                                                                                    phone_number=phone_number))
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         return self.app.http_method.return_result(response=result)
 
-    def patch_order_items(self, order_id: str, items_name: str):
+    def patch_order_items_five_post(self, order_id: str, items_name: str):
         r"""Метод редактирования заказа для СД FivPost.
         Все созданные места стираются и заменяются новыми.
         :param order_id: Идентификатор заказа.
         :param items_name: Название товара.
         """
-        patch_items = self.app.dicts.form_patch_body(op="replace", path="places", value=[
-            {
-                "items": [
-                    {
-                        "article": f"ART_1{randrange(1000000, 9999999)}",
-                        "name": items_name,
-                        "price": 500,
-                        "count": 2,
-                        "vat": "10"
-                    }
-                ]
-            }
-        ])
+
+        patch_items = self.app.dicts.form_patch_body(op="replace", path="places",
+                                                     value=self.app.dicts.places(places=[self.app.dicts.items(
+                                                         name=items_name, price=500, count=2, weight=1,
+                                                         vat=choice(INFO.five_post_vats)["code"])]))
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_items)
         return self.app.http_method.return_result(response=result)
 
-    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float):
+    def patch_order_items_cdek(self, order_id: str, name_1: str, name_2: str):
+        r"""Метод редактирования заказа для СД Cdek.
+        Все созданные места стираются и заменяются новыми.
+        :param order_id: Идентификатор заказа.
+        :param name_1: Название первого товара.
+        :param name_2: Название второго товара.
+        """
+
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
+            self.app.dicts.replace_items_cdek(name=name_1), self.app.dicts.replace_items_cdek(name=name_2)
+        ])
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
+        return self.app.http_method.return_result(response=result)
+
+    def patch_delivery_courier_cdek(self, order_id: str, time_from: str, time_to: str):
+        r"""Метод редактирование интервалов доставки для СД Cdek.
+        :param order_id: Идентификатор заказа
+        :param time_from: Время с кого часа ожидания.
+        :param time_to: Время по какой час ожидания.
+        :return:
+        """
+        result_get_order_by_id = self.get_order_id(order_id=order_id)
+        tariff = result_get_order_by_id.json()["data"]["request"]["delivery"]["tariff"]
+        patch_order = self.app.dicts.form_patch_body(op="replace", path="delivery",
+                                                     value=self.app.dicts.delivery_interval(tariff=tariff,
+                                                                                            time_from=time_from,
+                                                                                            time_to=time_to))
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
+        return self.app.http_method.return_result(response=result)
+
+    def patch_order(self, order_id: str, name: str, price: float, count: int, weight: float, barcode: str = None):
         r"""Метод редактирования поля в заказе для СД Cdek и Dpd.
         :param order_id: Идентификатор заказа.
         :param name: Наименование товарной позиции.
         :param price: Цена товарной позиции.
         :param count: Количество штук.
         :param weight: Вес товарной позиции.
+        :param barcode: Штрих код товарной позиции
         """
         patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
-            self.app.dicts.form_cargo_items(items={
-                "article": f"ART_1{randrange(1000000, 9999999)}",
-                "name": name,
-                "price": price,
-                "count": count,
-                "weight": weight,
-                "vat": "0"
-            })
+            self.app.dicts.form_cargo_items(items=self.app.dicts.items(name=name, price=price, count=count,
+                                                                       weight=weight, vat="0"), barcode=barcode)
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         return self.app.http_method.return_result(response=result)
@@ -316,14 +294,8 @@ class ApiOrder:
         items = result_get_order_by_id.json()["data"]["request"]["places"]
         patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
             *items,
-            self.app.dicts.form_cargo_items(items={
-                "article": f"ART_3{randrange(1000000, 9999999)}",
-                "name": "Пуфик",
-                "price": 1000,
-                "count": 1,
-                "weight": randint(1, 5),
-                "vat": "10"
-            })
+            self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Пуфик", price=1000, count=1, vat="10"),
+                                            barcode=f"{randrange(1000000, 9999999)}")
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         return self.app.http_method.return_result(response=result)
@@ -336,11 +308,8 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
-            list_items.append(self.app.dicts.form_cargo_items(items=i, dimension={
-                "length": randint(10, 30),
-                "width": randint(10, 30),
-                "height": randint(10, 30)
-            }))
+            list_items.append(self.app.dicts.form_cargo_items(items=i, dimension=self.app.dicts.dimension(),
+                                                              shop_number=f"{randrange(1000000, 9999999)}"))
         path_order = self.app.dicts.form_patch_body(op="replace", path="places", value=list_items)
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=path_order)
         return self.app.http_method.return_result(response=result)

@@ -51,18 +51,12 @@ def test_offers_courier(app, payment_type):
 def test_create_multi_order_courier(app, payment_type, connections):
     if payment_type == "Paid":
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=0, delivery_sum=0, price_1=0, price_2=0, dimension={
-                                                    "length": randint(10, 30),
-                                                    "width": randint(10, 30),
-                                                    "height": randint(10, 30)
-                                               })
+                                               declared_value=0, delivery_sum=0, price_1=0, price_2=0,
+                                               dimension=app.dicts.dimension())
     else:
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=500, price_1=1000, price_2=1000, dimension={
-                                                    "length": randint(10, 30),
-                                                    "width": randint(10, 30),
-                                                    "height": randint(10, 30)
-                                               })
+                                               declared_value=500, price_1=1000, price_2=1000,
+                                               dimension=app.dicts.dimension())
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
     connections.wait_create_order(order_id=new_order.json()["id"])
