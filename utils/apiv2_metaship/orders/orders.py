@@ -246,7 +246,6 @@ class ApiOrder:
         :param name_1: Название первого товара.
         :param name_2: Название второго товара.
         """
-
         patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
             self.app.dicts.replace_items_cdek(name=name_1), self.app.dicts.replace_items_cdek(name=name_2)
         ])
