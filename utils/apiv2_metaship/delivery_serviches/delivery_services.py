@@ -209,10 +209,8 @@ class ApiDeliveryServices:
         :param code: Код СД.
         :param tariffs: Тарифы СД.
         """
-        patch = self.app.dicts.form_patch_body(op="replace", path="settings.tariffs", value={
-            "exclude": tariffs,
-            "restrict": None
-            })
+        patch = self.app.dicts.form_patch_body(op="replace", path="settings.tariffs",
+                                               value=self.app.dictssettings_tariffs(tariffs=tariffs))
         result = self.app.http_method.patch(link=f"{self.link_delivery_services()}/{code}", json=patch)
         return self.app.http_method.return_result(response=result)
 
