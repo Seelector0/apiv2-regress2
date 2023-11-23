@@ -78,7 +78,7 @@ class HttpMethod:
             token = self.admin.admin_token()
         else:
             token = self.app.token()
-        with allure.step(title=f"{method} requests tu URL: {url}"):
+        with allure.step(title=f"{method} request to URL: {url}"):
             if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
                 response = requests.request(method=method, url=url, params=params, json=json, data=data, files=files,
                                             headers=token)
