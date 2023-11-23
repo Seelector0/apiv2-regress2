@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo печать многоместных этикеток и одноместных {"format": metaship}
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
@@ -81,15 +78,15 @@ def test_create_multi_order_courier(app, payment_type, connections):
     if payment_type == "PayOnDelivery":
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
                                                data=str(tomorrow), tariff="1", declared_value=0, delivery_time={
-                                                    "from": "18:00",
-                                                    "to": "22:00"
+                                                   "from": "18:00",
+                                                   "to": "22:00"
                                                }, barcode_1=f"{randrange(1000000, 9999999)}",
                                                barcode_2=f"{randrange(1000000, 9999999)}", cod=2100.24)
     else:
         new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="Dalli",
                                                data=str(tomorrow), tariff="1", declared_value=0, delivery_time={
-                                                    "from": "18:00",
-                                                    "to": "22:00"
+                                                   "from": "18:00",
+                                                   "to": "22:00"
                                                }, barcode_1=f"{randrange(1000000, 9999999)}",
                                                barcode_2=f"{randrange(1000000, 9999999)}")
     Checking.check_status_code(response=new_order, expected_status_code=201)
@@ -166,6 +163,14 @@ def test_order_status(app, connections):
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
+@allure.description("Получения этикеток CД Dalli вне партии")
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_labels_out_of_parcel(app, connections, labels):
+    for order_id in connections.get_list_all_orders_out_parcel():
+        label = app.document.get_label(order_id=order_id, type_=labels)
+        Checking.check_status_code(response=label, expected_status_code=200)
+
+
 @allure.description("Получение подробной информации о заказе СД Dalli")
 def test_order_details(app, connections):
     for order_id in connections.get_list_all_orders_out_parcel():
@@ -202,6 +207,14 @@ def test_add_order_in_parcel(app, connections):
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
         assert order in connections.get_list_all_orders_in_parcel()
+
+
+@allure.description("Получение этикеток СД Dalli")
+@pytest.mark.parametrize("labels", ["original", "termo"])
+def test_get_label(app, connections, labels):
+    for order_id in connections.get_list_all_orders_in_parcel():
+        label = app.document.get_label(order_id=order_id, type_=labels)
+        Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получения оригинальных этикеток CД Dalli в формате A4, A6")
