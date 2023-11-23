@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo Многоместная {"type_": "termo}
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
@@ -293,7 +290,7 @@ def test_patch_weight_random_order_in_parcel(app, connections):
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_label(app, connections, labels):
     for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id)
+        label = app.document.get_label(order_id=order_id, type_=labels)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
