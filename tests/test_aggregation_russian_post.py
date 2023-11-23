@@ -6,9 +6,6 @@ import pytest
 import allure
 
 
-# Todo расширить метод PUT для редактирования заказа
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     new_shop = app.shop.post_shop()
@@ -136,14 +133,28 @@ def test_create_order_post_office(app, payment_type, connections):
 @allure.description("Редактирование заказа СД RussianPost")
 def test_editing_order(app, connections):
     random_order = choice(connections.get_list_all_orders_out_parcel())
-    order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
-                                    family_name="Иванов")
+    order_put = app.order.put_order(order_id=random_order, delivery_service="RussianPost", weight=5, length=12,
+                                    width=14, height=11, family_name="Иванов", first_name="Петр",
+                                    second_name="Сергеевич", phone_number="+79097859012", email="new_test@mail.ru",
+                                    address="119634 ул. Лукинская, дом 1, кв. 1", comment="Всё зашибись.")
     Checking.check_status_code(response=order_put, expected_status_code=200)
     Checking.checking_big_json(response=order_put, key_name="weight", expected_value=5)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="length", expected_value=12)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="width", expected_value=14)
     Checking.checking_big_json(response=order_put, key_name="dimension", field="height", expected_value=11)
     Checking.checking_big_json(response=order_put, key_name="recipient", field="familyName", expected_value="Иванов")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="firstName", expected_value="Петр")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="secondName", expected_value="Сергеевич")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="phoneNumber",
+                               expected_value="+79097859012")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="email",
+                               expected_value="new_test@mail.ru")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="familyName", expected_value="Иванов")
+    Checking.checking_big_json(response=order_put, key_name="recipient", field="address",
+                               expected_value={
+                                   "raw": "119634 ул. Лукинская, дом 1, кв. 1",
+                                   "countryCode": None
+                               })
 
 
 @allure.description("Редактирование веса в заказе СД RussianPost")
