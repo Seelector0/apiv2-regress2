@@ -424,6 +424,14 @@ class Dicts:
             }
         }
 
+    @staticmethod
+    def settings_tariffs(tariffs):
+        r"""Форма для изменения тарифов СД.
+        :param tariffs: Тарифы СД.
+        :return:
+        """
+        return dict(exclude=tariffs, restrict=None)
+
 # @allure.description("Изменение времени доставки заказа")
 # def test_patch_delivery_intervals(app, connections):
 #     order = list()

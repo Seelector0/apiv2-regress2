@@ -167,14 +167,23 @@ class ApiOrder:
         result = self.app.http_method.get(link=f"{self.link}/{order_id}")
         return self.app.http_method.return_result(response=result)
 
-    def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str):
+    def put_order(self, order_id: str, weight: str, length: str, width: str, height: str, family_name: str,
+                  delivery_service: str = None, first_name: str = None, second_name: str = None,
+                  phone_number: str = None, email: str = None, address: str = None, comment: str = None):
         r"""Метод обновления заказа для СД RussianPost, LPost и Dalli.
         :param order_id: Идентификатор заказа.
         :param weight: Общий вес заказа.
         :param length: Длинна.
         :param width: Ширина.
         :param height: Высота.
-        :param family_name: ФИО получателя.
+        :param family_name: Фамилия получателя.
+        :param first_name: Имя получателя.
+        :param second_name: Отчество получателя.
+        :param phone_number: Телефон получателя.
+        :param email: Email получателя.
+        :param delivery_service: СД.
+        :param address: Адрес получателя.
+        :param comment: Комментарий к заказу.
         """
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         put_order = result_get_order_by_id.json()["data"]["request"]
@@ -183,6 +192,17 @@ class ApiOrder:
         put_order["dimension"]["width"] = width
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
+        if delivery_service == "RussianPost":
+            put_order["recipient"]["firstName"] = first_name
+            put_order["recipient"]["secondName"] = second_name
+            put_order["recipient"]["phoneNumber"] = phone_number
+            put_order["recipient"]["email"] = email
+            put_order["recipient"]["address"] = dict(raw=address)
+            put_order["comment"] = comment
+            put_order["places"] = self.app.dicts.places(places=[
+                    self.app.dicts.items(name="Книга", price=1000, count=1, weight=3, vat="10"),
+                    self.app.dicts.items(name="Шкаф", price=1000, count=1, weight=1, vat="10")
+            ])
         result = self.app.http_method.put(link=f"{self.link}/{order_id}", json=put_order)
         return self.app.http_method.return_result(response=result)
 
