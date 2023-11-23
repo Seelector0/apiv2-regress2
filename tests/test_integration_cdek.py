@@ -233,7 +233,7 @@ def test_patch_order_recipient(app, connections):
                                                   second_name="Николаевич", phone_number="+79266967503",
                                                   email="new_test_email@bk.ru",
                                                   address={
-                                                      "raw": "119633, г Москва, ул. Лукинская, дом 5, кв. 23",
+                                                      "raw": "119634, г Москва, ул. Лукинская, дом 5, кв. 23",
                                                       "countryCode": None
                                                   })
     Checking.check_status_code(response=order_patch, expected_status_code=200)
@@ -253,7 +253,7 @@ def test_patch_order_recipient(app, connections):
                                expected_value="new_test_email@bk.ru")
     Checking.checking_big_json(response=order_by_id, key_name="recipient", field="address",
                                expected_value={
-                                   "raw": "119633, г Москва, ул. Лукинская, дом 5, кв. 23",
+                                   "raw": "119634, г Москва, ул. Лукинская, дом 5, кв. 23",
                                    "countryCode": None
                                })
 
