@@ -14,6 +14,7 @@ from utils.apiv2_metaship.forms.forms import Forms
 from utils.http_methods import HttpMethod
 from utils.dicts import Dicts
 import requests
+import sys
 
 
 class Application:
@@ -42,6 +43,8 @@ class Application:
         """Метод для открытия сессии."""
         data = self.dicts.form_authorization()
         self.response = self.session.post(url=self.base_url, data=data, headers=self.dicts.form_headers())
+        if self.response.status_code >= 500:
+            sys.exit()
         return self.http_method.return_result(response=self.response)
 
     def token(self):
