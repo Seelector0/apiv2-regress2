@@ -8,28 +8,31 @@ import pytest
 
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
-    new_shop = app.shop.post_shop()
-    Checking.check_status_code(response=new_shop, expected_status_code=201)
-    Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-    Checking.check_value_comparison(
-        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
-        two_value=[False])
-    Checking.check_value_comparison(
-        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
-        two_value=[True])
+    if len(connections.get_list_shops()) == 0:
+        new_shop = app.shop.post_shop()
+        Checking.check_status_code(response=new_shop, expected_status_code=201)
+        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+        Checking.check_value_comparison(
+            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
+            two_value=[False])
+        Checking.check_value_comparison(
+            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
+            two_value=[True])
 
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, connections):
-    new_warehouse = app.warehouse.post_warehouse()
-    Checking.check_status_code(response=new_warehouse, expected_status_code=201)
-    Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
-    Checking.check_value_comparison(
-        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
-        two_value=[False])
-    Checking.check_value_comparison(
-        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="visibility"),
-        two_value=[True])
+    if len(connections.get_list_warehouses()) == 0:
+        new_warehouse = app.warehouse.post_warehouse()
+        Checking.check_status_code(response=new_warehouse, expected_status_code=201)
+        Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
+        Checking.check_value_comparison(
+            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
+            two_value=[False])
+        Checking.check_value_comparison(
+            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
+                                                            value="visibility"),
+            two_value=[True])
 
 
 @allure.description("Подключение настроек СД YandexGo по агрегации")

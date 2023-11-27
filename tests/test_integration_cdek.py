@@ -10,28 +10,31 @@ import allure
 
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
-    new_shop = app.shop.post_shop()
-    Checking.check_status_code(response=new_shop, expected_status_code=201)
-    Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-    Checking.check_value_comparison(
-        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
-        two_value=[False])
-    Checking.check_value_comparison(
-        one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
-        two_value=[True])
+    if len(connections.get_list_shops()) == 0:
+        new_shop = app.shop.post_shop()
+        Checking.check_status_code(response=new_shop, expected_status_code=201)
+        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+        Checking.check_value_comparison(
+            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
+            two_value=[False])
+        Checking.check_value_comparison(
+            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
+            two_value=[True])
 
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, connections):
-    new_warehouse = app.warehouse.post_warehouse()
-    Checking.check_status_code(response=new_warehouse, expected_status_code=201)
-    Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
-    Checking.check_value_comparison(
-        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
-        two_value=[False])
-    Checking.check_value_comparison(
-        one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="visibility"),
-        two_value=[True])
+    if len(connections.get_list_warehouses()) == 0:
+        new_warehouse = app.warehouse.post_warehouse()
+        Checking.check_status_code(response=new_warehouse, expected_status_code=201)
+        Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
+        Checking.check_value_comparison(
+            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
+            two_value=[False])
+        Checking.check_value_comparison(
+            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
+                                                            value="visibility"),
+            two_value=[True])
 
 
 @allure.description("Подключение настроек СД Cdek")
@@ -160,7 +163,8 @@ def test_patch_single_order(app, connections):
     patch_single_order = app.order.patch_order_items_cdek(order_id=random_order_id, name_1="Бамбук", name_2="Книга")
     Checking.check_status_code(response=patch_single_order, expected_status_code=200)
     Checking.checking_json_value(response=patch_single_order, key_name="status", expected_value="created")
-    Checking.checking_json_value(response=patch_single_order, key_name="state", expected_value="editing-external-processing")
+    Checking.checking_json_value(response=patch_single_order, key_name="state",
+                                 expected_value="editing-external-processing")
     connections.wait_create_order(order_id=random_order_id)
     order_by_id = app.order.get_order_id(order_id=random_order_id)
     Checking.check_status_code(response=order_by_id, expected_status_code=200)
