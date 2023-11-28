@@ -7,7 +7,6 @@ import allure
 
 
 @allure.description("Создание магазина")
-@allure.description("Создание магазина")
 def test_create_shop(app, connections):
     if len(connections.get_list_shops()) == 0:
         new_shop = app.shop.post_shop()

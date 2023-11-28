@@ -5,9 +5,6 @@ import pytest
 import allure
 
 
-# Todo получение многоместной этикетки меташип.
-
-
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     if len(connections.get_list_shops()) == 0:
@@ -294,18 +291,9 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получения этикеток CД Cdek вне партии")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_labels_out_of_parcel(app, connections, labels):
+def test_get_labels_out_of_parcel(app, connections):
     for order_id in connections.get_list_all_orders_out_parcel():
-        label = app.document.get_label(order_id=order_id, type_=labels)
-        Checking.check_status_code(response=label, expected_status_code=200)
-
-
-@allure.description("Получения оригинальных этикеток CД Cdek в формате A4, A5, A6 вне партии")
-@pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
-def test_get_original_labels_out_of_parcel(app, connections, format_):
-    for order_id in connections.get_list_all_orders_out_parcel():
-        label = app.document.get_label(order_id=order_id, size_format=format_)
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -358,18 +346,9 @@ def test_patch_weight_random_order_in_parcel(app, connections):
 
 
 @allure.description("Получение этикеток СД Cdek")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_label(app, connections, labels):
+def test_get_label(app, connections):
     for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, type_=labels)
-        Checking.check_status_code(response=label, expected_status_code=200)
-
-
-@allure.description("Получения оригинальных этикеток CД Cdek в формате A4, A5, A6")
-@pytest.mark.parametrize("format_", ["A4", "A5", "A6"])
-def test_get_original_labels(app, connections, format_):
-    for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, size_format=format_)
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 

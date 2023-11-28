@@ -174,10 +174,9 @@ def test_order_status(app, connections):
 
 
 @allure.description("Получения этикеток CД YandexDelivery вне партии")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_labels_out_of_parcel(app, connections, labels):
+def test_get_labels_out_of_parcel(app, connections):
     for order_id in connections.get_list_all_orders_out_parcel():
-        label = app.document.get_label(order_id=order_id, type_=labels)
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -211,10 +210,9 @@ def test_get_parcel_by_id(app, connections):
 
 
 @allure.description("Получение этикеток СД YandexDelivery")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_label(app, connections, labels):
+def test_get_label(app, connections):
     for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, type_=labels)
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
