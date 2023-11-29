@@ -7,7 +7,6 @@ from utils.dicts import Dicts
 class Admin:
 
     def __init__(self):
-        self.response = None
         self.http_method = HttpMethod(self, self)
         self.authorization = ApiAuthorization(self, self)
         self.moderation = ApiModerationDeliveryServices(self)
