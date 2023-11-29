@@ -10,7 +10,7 @@ class OtherInfo:
                         "dpdPickupNum", "lPostWarehouseId", "yandexWarehouseId", "comment"]
 
     entity_order = ['id', 'number', 'addressTo', 'data', 'parcel', 'status', 'statusReason', 'state', 'stateMessage',
-                    'created']
+                    'created', 'configurationType']
 
     entity_parcel = ['id', 'number', 'shop', 'deliveryServiceCode', 'data', 'created', 'deleted', 'state', 'stateTime']
 
