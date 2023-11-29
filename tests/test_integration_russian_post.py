@@ -280,6 +280,13 @@ def test_get_documents(app):
     Checking.check_status_code(response=documents, expected_status_code=200)
 
 
+@allure.description("Создание формы с этикетками партии СД RussianPost")
+def test_forms_parcels_labels(app):
+    forms_labels = app.forms.post_forms()
+    Checking.check_status_code(response=forms_labels, expected_status_code=201)
+    Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
+
+
 @allure.description("Редактирование партии СД RussianPost (Удаление заказа из партии)")
 def test_remove_order_in_parcel(app, connections):
     list_order = connections.get_list_all_orders_in_parcel()

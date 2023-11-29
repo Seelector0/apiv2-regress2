@@ -25,6 +25,8 @@ class OtherInfo:
 
     entity_webhook = ['id', 'shopId', 'url', 'name', 'secret', 'eventType', 'active', 'createdAt', 'updatedAt']
 
+    entity_forms_parcels_labels = ['id', 'state', 'type', 'data', 'artifacts', 'createdAt', 'stateTime', 'message']
+
     entity_order_statuses = [
         {
             "name": "accepted",

@@ -171,6 +171,13 @@ def test_get_app(app):
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
+@allure.description("Создание формы с этикетками партии СД LPost")
+def test_forms_parcels_labels(app):
+    forms_labels = app.forms.post_forms()
+    Checking.check_status_code(response=forms_labels, expected_status_code=201)
+    Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
+
+
 @allure.description("Получение документов СД LPost")
 def test_get_documents(app):
     documents = app.document.get_files()
