@@ -13,11 +13,6 @@ class Admin:
         self.moderation = ApiModerationDeliveryServices(self)
         self.dicts = Dicts(self, self)
 
-    def admin_session(self):
-        """Метод для открытия сессии под admin."""
-        self.response = self.authorization.post_access_token(admin=True)
-        return self.http_method.return_result(response=self.response)
-
     def admin_token(self):
         """Метод получения токена для авторизации в admin api."""
-        return self.dicts.form_token(authorization=self.response.json()["access_token"])
+        return self.dicts.form_token(authorization=self.authorization.response.json()["access_token"])

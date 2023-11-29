@@ -37,11 +37,6 @@ class Application:
         self.forms = Forms(self)
         self.dicts = Dicts(self, self)
 
-    def open_session(self):
-        """Метод для открытия сессии."""
-        self.response = self.authorization.post_access_token()
-        return self.http_method.return_result(response=self.response)
-
     def token(self):
         """Метод получения токена для авторизации в apiv2 metaship."""
-        return self.dicts.form_token(authorization=self.response.json()["access_token"])
+        return self.dicts.form_token(authorization=self.authorization.response.json()["access_token"])
