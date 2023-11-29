@@ -41,8 +41,6 @@ class Application:
     def open_session(self):
         """Метод для открытия сессии."""
         self.response = self.authorization.post_access_token()
-        if self.response.status_code >= 500:
-            sys.exit()
         return self.http_method.return_result(response=self.response)
 
     def token(self):

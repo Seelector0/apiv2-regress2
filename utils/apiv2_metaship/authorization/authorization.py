@@ -1,6 +1,7 @@
 from environment import ENV_OBJECT
 from utils.dicts import Dicts
 import requests
+import sys
 
 
 class ApiAuthorization:
@@ -16,4 +17,7 @@ class ApiAuthorization:
         """
         data = Dicts.form_authorization(admin=admin)
         headers = Dicts.form_headers()
-        return self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token", data=data, headers=headers)
+        result = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token", data=data, headers=headers)
+        if result.status_code >= 500:
+            sys.exit()
+        return result
