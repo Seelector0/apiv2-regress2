@@ -10,14 +10,18 @@ class ApiAuthorization:
         self.app = app
         self.admin = admin
         self.session = requests.Session()
+        self.response = None
 
     def post_access_token(self, admin: bool = None):
         r"""Метод получение bearer-токена.
         :param admin: Параметр для получения bearer-токена для AdminApi.
         """
-        data = Dicts.form_authorization(admin=admin)
-        headers = Dicts.form_headers()
-        result = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token", data=data, headers=headers)
-        if result.status_code >= 500:
+        self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
+                                          data=Dicts.form_authorization(admin=admin),
+                                          headers=Dicts.form_headers())
+        if self.response.status_code >= 500:
             sys.exit()
-        return result
+        if admin is True:
+            return self.admin.http_method.return_result(response=self.response)
+        else:
+            return self.app.http_method.return_result(response=self.response)
