@@ -11,7 +11,7 @@ import pytest
 def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
     apiv2 = Application()
-    apiv2.open_session()
+    apiv2.authorization.post_access_token()
     return apiv2
 
 
@@ -19,7 +19,7 @@ def app():
 def admin():
     """Фикстура для открытия сессии по Admin Api."""
     api_admin = Admin()
-    api_admin.admin_session()
+    api_admin.authorization.post_access_token(admin=True)
     return api_admin
 
 
