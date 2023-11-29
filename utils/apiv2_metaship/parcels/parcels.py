@@ -46,8 +46,7 @@ class ApiParcel:
         :param parcel_id: Идентификатор партии.
         :param day: Количество дней.
         """
-        data = datetime.date.today()
-        data += datetime.timedelta(days=day)
+        data = datetime.date.today() + datetime.timedelta(days=day)
         patch_parcel = self.app.dicts.form_patch_body(op="replace", path="shipmentDate", value=str(data))
         result = self.app.http_method.patch(link=f"{self.link}/{parcel_id}", json=patch_parcel)
         return self.app.http_method.return_result(response=result)
