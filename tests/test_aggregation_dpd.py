@@ -1,3 +1,4 @@
+import json
 from random import choice, randrange
 from utils.global_enums import INFO
 from utils.checking import Checking
@@ -281,18 +282,9 @@ def test_patch_weight_random_order_in_parcel(app, connections):
 
 
 @allure.description("Получение этикеток СД Dpd")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_label(app, connections, labels):
+def test_get_label(app, connections):
     for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, type_=labels)
-        Checking.check_status_code(response=label, expected_status_code=200)
-
-
-@allure.description("Получения оригинальных этикеток CД Dpd в формате A5, A6")
-@pytest.mark.parametrize("format_", ["A5", "A6"])
-def test_get_original_labels(app, connections, format_):
-    for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, size_format=format_)
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -306,6 +298,13 @@ def test_get_app(app):
 def test_get_documents(app):
     documents = app.document.get_files()
     Checking.check_status_code(response=documents, expected_status_code=200)
+
+
+@allure.description("Создание формы с этикетками партии СД Dpd")
+def test_forms_parcels_labels(app):
+    forms_labels = app.forms.post_forms()
+    Checking.check_status_code(response=forms_labels, expected_status_code=201)
+    Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
 
 
 @allure.description("Редактирование партии СД Dpd (Удаление заказа)")

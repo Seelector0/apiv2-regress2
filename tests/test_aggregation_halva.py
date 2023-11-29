@@ -194,6 +194,12 @@ def test_get_documents(app):
     Checking.check_status_code(response=documents, expected_status_code=200)
 
 
+@allure.description("Создание формы с этикетками партии СД Halva")
+def test_forms_parcels_labels(app):
+    forms = app.forms.post_forms()
+    Checking.check_status_code(response=forms, expected_status_code=201)
+
+
 @allure.description("Редактирование партии СД Halva (Удаление заказа)")
 def test_remove_order_in_parcel(app, connections):
     list_order = connections.get_list_all_orders_in_parcel()
