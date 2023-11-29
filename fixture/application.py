@@ -35,7 +35,3 @@ class Application:
         self.reports = ApiReports(self)
         self.forms = Forms(self)
         self.dicts = Dicts(self, self)
-
-    def token(self):
-        """Метод получения токена для авторизации в apiv2 metaship."""
-        return self.dicts.form_token(authorization=self.authorization.response.json()["access_token"])

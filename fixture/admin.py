@@ -11,7 +11,3 @@ class Admin:
         self.authorization = ApiAuthorization(self, self)
         self.moderation = ApiModerationDeliveryServices(self)
         self.dicts = Dicts(self, self)
-
-    def admin_token(self):
-        """Метод получения токена для авторизации в admin api."""
-        return self.dicts.form_token(authorization=self.authorization.response.json()["access_token"])
