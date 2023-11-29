@@ -1,3 +1,4 @@
+from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
 from utils.dicts import Dicts
 import requests
@@ -21,7 +22,4 @@ class ApiAuthorization:
                                           headers=Dicts.form_headers())
         if self.response.status_code >= 500:
             sys.exit()
-        if admin is True:
-            return self.admin.http_method.return_result(response=self.response)
-        else:
-            return self.app.http_method.return_result(response=self.response)
+        return HttpMethod.return_result(response=self.response)
