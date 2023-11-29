@@ -1,4 +1,5 @@
 from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
+from utils.apiv2_metaship.authorization.authorization import Authorization
 from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
 from utils.apiv2_metaship.documents.documents import ApiDocument
 from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook
@@ -13,17 +14,15 @@ from utils.apiv2_metaship.info.info import ApiInfo
 from utils.apiv2_metaship.forms.forms import Forms
 from utils.http_methods import HttpMethod
 from utils.dicts import Dicts
-import requests
 import sys
 
 
 class Application:
 
-    def __init__(self, base_url: str):
-        self.base_url = base_url
-        self.session = requests.Session()
+    def __init__(self):
         self.response = None
         self.http_method = HttpMethod(self, self)
+        self.authorization = Authorization(self, self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
@@ -41,8 +40,7 @@ class Application:
 
     def open_session(self):
         """Метод для открытия сессии."""
-        data = self.dicts.form_authorization()
-        self.response = self.session.post(url=self.base_url, data=data, headers=self.dicts.form_headers())
+        self.response = self.authorization.post_access_token()
         if self.response.status_code >= 500:
             sys.exit()
         return self.http_method.return_result(response=self.response)
