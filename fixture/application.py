@@ -14,7 +14,6 @@ from utils.apiv2_metaship.info.info import ApiInfo
 from utils.apiv2_metaship.forms.forms import Forms
 from utils.http_methods import HttpMethod
 from utils.dicts import Dicts
-import sys
 
 
 class Application:
