@@ -119,7 +119,7 @@ def test_get_order_by_id(app, connections):
 @allure.description("Получения этикетки Halva вне партии")
 def test_get_label_out_of_parcel(app, connections):
     for order_id in connections.get_list_all_orders_out_parcel():
-        label = app.document.get_label(order_id=order_id, type_="termo")
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
@@ -172,7 +172,7 @@ def test_add_order_in_parcel(app, connections):
 @allure.description("Получение этикеток СД Halva")
 def test_get_label(app, connections):
     for order_id in connections.get_list_all_orders_in_parcel():
-        label = app.document.get_label(order_id=order_id, type_="termo")
+        label = app.document.get_label(order_id=order_id)
         Checking.check_status_code(response=label, expected_status_code=200)
 
 
