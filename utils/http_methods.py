@@ -75,9 +75,9 @@ class HttpMethod:
         """
         url = f"{self.url(admin=admin)}/{url}"
         if admin:
-            token = self.admin.admin_token()
+            token = self.admin.dicts.form_token(authorization=self.admin.authorization.response.json()["access_token"])
         else:
-            token = self.app.token()
+            token = self.app.dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
         with allure.step(title=f"{method} request to URL: {url}"):
             if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
                 response = requests.request(method=method, url=url, params=params, json=json, data=data, files=files,
