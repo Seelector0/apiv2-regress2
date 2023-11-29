@@ -290,48 +290,27 @@ class Dicts:
             "secret": "string"
         }
 
-    def form_reports(self, data: str = datetime.date.today()):
+    def form_reports(self):
         """Форма для создания отчёта по заказам."""
         return {
             "filter": {
                 "created": {
                     "dateTime": {
-                        "from": f"{data} 13:00:00",
-                        "to": f"{data} 14:00:00"
+                        "from": "2020-07-20 13:00:00",
+                        "to": "2020-07-20 14:00:00"
                     }
                 },
                 "shops": [
                     {
                         "id": self.db_connections.get_list_shops()[0]
                     }
+                ],
+                "parcels": [
+                    {
+                        "id": self.db_connections.get_list_parcels()[0]
+                    }
                 ]
             }
-        }
-
-    def form_forms_labels(self):
-        """Форма для создания формы с этикетками партии."""
-        return {
-            "id": "aaf1a0dd-3c6a-44eb-9bef-879eb5fd1963",
-            "state": "ready",
-            "message": "Невозможно создать этикетку",
-            "type": "parcel_label",
-            "data": {
-                "filter": {
-                    "parcels": [
-                        {
-                            "id": f"{self.db_connections.get_list_parcels()[0]}"
-                        }
-                    ]
-                }
-            },
-            "artifacts": [
-                {
-                    "format": "link",
-                    "data": "https://test.test/test.xlsx"
-                }
-            ],
-            "createdAt": "2021-07-01T14:51:56+00:00",
-            "stateTime": "2021-07-01T14:51:56+00:00"
         }
 
     @staticmethod
