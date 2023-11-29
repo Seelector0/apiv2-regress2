@@ -1,5 +1,5 @@
 from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
-from utils.apiv2_metaship.authorization.authorization import Authorization
+from utils.apiv2_metaship.authorization.apiauthorization import ApiAuthorization
 from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
 from utils.apiv2_metaship.documents.documents import ApiDocument
 from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook
@@ -22,7 +22,7 @@ class Application:
     def __init__(self):
         self.response = None
         self.http_method = HttpMethod(self, self)
-        self.authorization = Authorization(self, self)
+        self.authorization = ApiAuthorization(self, self)
         self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
