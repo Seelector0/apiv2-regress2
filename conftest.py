@@ -3,18 +3,14 @@ from databases.customer_api import DataBaseCustomerApi
 from databases.tracking_api import DataBaseTrackingApi
 from databases.widget_api import DataBaseWidgetApi
 from fixture.application import Application
-from environment import ENV_OBJECT
 from fixture.admin import Admin
 import pytest
-
-
-url = f"{ENV_OBJECT.get_base_url()}/auth/access_token"
 
 
 @pytest.fixture(scope="module")
 def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
-    apiv2 = Application(base_url=url)
+    apiv2 = Application()
     apiv2.open_session()
     return apiv2
 
@@ -22,7 +18,7 @@ def app():
 @pytest.fixture(scope="function")
 def admin():
     """Фикстура для открытия сессии по Admin Api."""
-    api_admin = Admin(base_url=url)
+    api_admin = Admin()
     api_admin.admin_session()
     return api_admin
 
@@ -55,7 +51,7 @@ def widget_api():
 def stop(request, app, connections, customer_api, tracking_api, widget_api):
     """Фикстура для завершения сессии"""
     def fin():
-        app.session.close()
+        app.authorization.session.close()
         for id_ in connections.get_list_shops():
             customer_api.delete_connection(shop_id=id_)
             widget_api.delete_widgets_id(shop_id=id_)
