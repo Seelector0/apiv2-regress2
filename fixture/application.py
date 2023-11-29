@@ -1,5 +1,5 @@
 from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
-from utils.apiv2_metaship.authorization.apiauthorization import ApiAuthorization
+from utils.apiv2_metaship.authorization.authorization import ApiAuthorization
 from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
 from utils.apiv2_metaship.documents.documents import ApiDocument
 from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook

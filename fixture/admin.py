@@ -1,5 +1,5 @@
 from utils.admin_api.connections_delivery_services.connections_delivery_services import ApiModerationDeliveryServices
-from utils.apiv2_metaship.authorization.apiauthorization import ApiAuthorization
+from utils.apiv2_metaship.authorization.authorization import ApiAuthorization
 from utils.http_methods import HttpMethod
 from utils.dicts import Dicts
 
