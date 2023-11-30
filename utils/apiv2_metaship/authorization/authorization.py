@@ -15,7 +15,7 @@ class ApiAuthorization:
 
     def post_access_token(self, admin: bool = None):
         r"""Метод получение bearer-токена.
-        :param admin: Параметр для получения bearer-токена для AdminApi.
+        :param admin: Параметр для получения bearer-токена для admin api.
         """
         self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
                                           data=Dicts.form_authorization(admin=admin),
