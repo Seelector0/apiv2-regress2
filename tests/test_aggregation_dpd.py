@@ -1,4 +1,3 @@
-import json
 from random import choice, randrange
 from utils.global_enums import INFO
 from utils.checking import Checking
