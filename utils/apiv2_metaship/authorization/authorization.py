@@ -18,8 +18,7 @@ class ApiAuthorization:
         :param admin: Параметр для получения bearer-токена для admin api.
         """
         self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
-                                          data=Dicts.form_authorization(admin=admin),
-                                          headers=Dicts.form_headers())
+                                          data=Dicts.form_authorization(admin=admin), headers=Dicts.form_headers())
         if self.response.status_code >= 500:
             sys.exit()
         return HttpMethod.return_result(response=self.response)
