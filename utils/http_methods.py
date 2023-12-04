@@ -97,8 +97,8 @@ class HttpMethod:
 
     @staticmethod
     def return_result(response):
-        r"""Метод возвращает результат запроса.
-        :param response: Результат запроса.
+        r"""Метод возвращает результат ответа.
+        :param response: Результат ответа.
         """
         response = response
         try:
