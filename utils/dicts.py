@@ -22,13 +22,12 @@ class Dicts:
         :param admin: Для использования admin api.
         """
         body_authorization = dict(grant_type="client_credentials")
+        body_authorization["client_id"] = ENV_OBJECT.client_id()
+        body_authorization["client_secret"] = ENV_OBJECT.client_secret()
         if admin:
             body_authorization["client_id"] = ENV_OBJECT.admin_id()
             body_authorization["client_secret"] = ENV_OBJECT.admin_secret()
             body_authorization["scope"] = "admin"
-        else:
-            body_authorization["client_id"] = ENV_OBJECT.client_id()
-            body_authorization["client_secret"] = ENV_OBJECT.client_secret()
         return body_authorization
 
     @staticmethod
