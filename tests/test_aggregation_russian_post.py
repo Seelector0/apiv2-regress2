@@ -44,7 +44,7 @@ def test_aggregation_delivery_services(app):
 
 @allure.description("Модерация СД RussianPost")
 def test_moderation_delivery_services(admin):
-    moderation = admin.moderation.post_connections_russian_post()
+    moderation = admin.connections.post_connections_russian_post()
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
@@ -77,7 +77,7 @@ def test_offers_delivery_point(app):
 
 @allure.description("Получение PostOffice оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_russian_post(app, payment_type):
+def test_offers_post_office(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="PostOffice",
                                                   delivery_service_code="RussianPost")
     Checking.check_status_code(response=offers_delivery_point, expected_status_code=200)
