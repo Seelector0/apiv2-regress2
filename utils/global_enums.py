@@ -27,6 +27,8 @@ class OtherInfo:
 
     entity_forms_parcels_labels = ['id', 'state', 'type', 'data', 'artifacts', 'createdAt', 'stateTime', 'message']
 
+    entity_connections_id = ['id', 'shopId', 'deliveryService', 'data']
+
     entity_order_statuses = [
         {
             "name": "accepted",
