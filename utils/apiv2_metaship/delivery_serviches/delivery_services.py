@@ -87,7 +87,7 @@ class ApiDeliveryServices:
         return self.app.http_method.return_result(response=result)
 
     def post_delivery_services_cse(self):
-        """Настройки подключения службы доставки Cse к магазину."""
+        """Настройки подключения службы доставки Cse к магазину по интеграции."""
         cse = self.app.dicts.form_connection_type(delivery_service_code="Cse")
         cse["data"]["login"] = os.getenv("CSE_LOGIN")
         cse["data"]["password"] = os.getenv("CSE_PASSWORD")
@@ -161,7 +161,7 @@ class ApiDeliveryServices:
         return self.app.http_method.return_result(response=result)
 
     def post_delivery_services_l_post(self):
-        """Настройки подключения службы доставки LPost к магазину."""
+        """Настройки подключения службы доставки LPost к магазину по интеграции."""
         l_post = self.app.dicts.form_connection_type(delivery_service_code="LPost")
         l_post["data"]["secret"] = os.getenv("L_POST_SECRET")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=l_post)
@@ -190,6 +190,12 @@ class ApiDeliveryServices:
             halva["data"]["client"] = os.getenv("HALVA_CLIENT_AND_KEY")
             halva["data"]["key"] = os.getenv("HALVA_CLIENT_AND_KEY")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=halva)
+        return self.app.http_method.return_result(response=result)
+
+    def post_delivery_services_kaz_post(self):
+        """Настройки подключения службы доставки KazPost к магазину по агрегации."""
+        kaz_post = self.app.dicts.form_connection_type(delivery_service_code="KazPost", aggregation=True)
+        result = self.app.http_method.post(link=self.link_delivery_services(), json=kaz_post)
         return self.app.http_method.return_result(response=result)
 
     def get_delivery_services(self):

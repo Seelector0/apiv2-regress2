@@ -15,7 +15,7 @@ def app():
     return apiv2
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def admin():
     """Фикстура для открытия сессии по Admin Api."""
     api_admin = Admin()
@@ -48,9 +48,10 @@ def widget_api():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def stop(request, app, connections, customer_api, tracking_api, widget_api):
+def stop(request, admin, app, connections, customer_api, tracking_api, widget_api):
     """Фикстура для завершения сессии"""
     def fin():
+        admin.authorization.session.close()
         app.authorization.session.close()
         for id_ in connections.get_list_shops():
             customer_api.delete_connection(shop_id=id_)

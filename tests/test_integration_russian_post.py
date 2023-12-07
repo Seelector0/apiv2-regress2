@@ -61,7 +61,7 @@ def test_offers_delivery_point(app):
 
 @allure.description("Получение PostOffice оферов по СД RussianPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_russian_post(app, payment_type):
+def test_offers_post_office(app, payment_type):
     offers_delivery_point = app.offers.get_offers(payment_type=payment_type, types="PostOffice",
                                                   delivery_service_code="RussianPost")
     Checking.check_status_code(response=offers_delivery_point, expected_status_code=200)

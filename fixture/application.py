@@ -13,15 +13,15 @@ from utils.apiv2_metaship.shops.shops import ApiShop
 from utils.apiv2_metaship.info.info import ApiInfo
 from utils.apiv2_metaship.forms.forms import Forms
 from utils.http_methods import HttpMethod
-from utils.dicts import Dicts
+from utils.apiv2_metaship.dicts import Dicts
 
 
 class Application:
 
     def __init__(self):
         self.http_method = HttpMethod(self, self)
+        self.dicts = Dicts(self)
         self.authorization = ApiAuthorization(self, self)
-        self.info = ApiInfo(self)
         self.shop = ApiShop(self)
         self.warehouse = ApiWarehouse(self)
         self.service = ApiDeliveryServices(self)
@@ -29,9 +29,9 @@ class Application:
         self.order = ApiOrder(self)
         self.parcel = ApiParcel(self)
         self.document = ApiDocument(self)
+        self.info = ApiInfo(self)
+        self.intakes = ApiIntakes(self)
         self.widget = ApiWidget(self)
         self.webhook = ApiWebhook(self)
-        self.intakes = ApiIntakes(self)
         self.reports = ApiReports(self)
         self.forms = Forms(self)
-        self.dicts = Dicts(self, self)
