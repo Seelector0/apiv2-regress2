@@ -1,5 +1,4 @@
 from databases.connections import DataBaseConnections
-from databases.customer_api import DataBaseCustomerApi
 from utils.global_enums import INFO
 from environment import ENV_OBJECT
 from random import randrange, randint, choice
@@ -10,11 +9,9 @@ import uuid
 
 class Dicts:
 
-    def __init__(self, app, admin):
+    def __init__(self, app):
         self.app = app
-        self.admin = admin
         self.db_connections = DataBaseConnections()
-        self.db_customer_api = DataBaseCustomerApi()
 
     @staticmethod
     def form_authorization(admin: bool = None):
@@ -66,12 +63,18 @@ class Dicts:
         }
 
     @staticmethod
-    def form_warehouse_body():
-        """Форма для создания склада."""
+    def form_warehouse_body(country_code: str = None):
+        r"""Форма для создания склада.
+        :param country_code: Код страны склада.
+        """
+        address_raw = "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
+        if country_code == "KZ":
+            address_raw = "Алматы, микрорайон 10а, 13"
         return {
             "name": f"{randrange(100000, 999999)}",
             "address": {
-                "raw": "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
+                "raw": address_raw,
+                "countryCode": country_code
             },
             "lPostWarehouseId": "20537",
             "yandexWarehouseId": "4eb18cc4-329d-424d-a8a8-abfd8926463d",
@@ -111,43 +114,33 @@ class Dicts:
             body_connection_type["data"]["type"] = "aggregation"
         return body_connection_type
 
-    def form_moderation_delivery_services(self, delivery_service_code: str):
-        r"""Форма для снятия с модерации СД.
-        :param delivery_service_code: Название СД.
-        """
-        shop_id = self.db_connections.get_list_shops()[0]
-        return {
-            "shopId": shop_id,
-            "customerId": ENV_OBJECT.customer_id(),
-            "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id)[0],
-            "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
-            "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
-            "credential": dict(),
-            "deliveryService": delivery_service_code
-        }
-
-    def form_offers(self, types: str):
+    def form_offers(self, types: str, country_code: str = None):
         r"""Форма для получения офферов.
-        :param types: Параметр получения оферов.
+        :param types: Параметр получения офферов.
+        :param country_code: Код страны назначения.
         """
+        address = "г Москва, пр-кт Мира, д 45 стр 2"
+        if country_code == "KZ":
+            address = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
         return {
             "warehouseId": self.db_connections.get_list_warehouses()[0],
             "shopId": self.db_connections.get_list_shops()[0],
-            "address": "г Москва, пр-кт Мира, д 45 стр 2",
+            "address": address,
             "declaredValue": randrange(1000, 5000),
             "length": randrange(10, 45),
             "width": randrange(10, 45),
             "height": randrange(10, 45),
             "weight": randrange(1, 10),
-            "types[0]": types
+            "types[0]": types,
+            "countryCode": country_code
         }
 
     def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, shop_barcode: str = None,
                    cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
                    height: float = randint(10, 50), weight: float = randint(1, 5), tariff: str = None,
                    delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   delivery_point_code: str = None, pickup_time_period: str = None, date_pickup: str = None,
-                   routes: list = None, ):
+                   delivery_point_code: str = None, country_code: str = None, pickup_time_period: str = None,
+                   date_pickup: str = None, routes: list = None, ):
         r"""Форма для создания заказов.
         :param shop_barcode: Штрих код заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
@@ -163,11 +156,15 @@ class Dicts:
         :param tariff: Тариф создания заказа.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param country_code: Код страны назначения.
         :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         """
+        address_raw = "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
+        if country_code == "KZ":
+            address_raw = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
         return {
             "warehouse": {
                 "id": self.db_connections.get_list_warehouses()[0],
@@ -200,7 +197,8 @@ class Dicts:
                 "email": "test@mail.ru",
                 "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                 "address": {
-                    "raw": "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
+                    "raw": address_raw,
+                    "countryCode": country_code,
                 }
             },
             "comment": "",
