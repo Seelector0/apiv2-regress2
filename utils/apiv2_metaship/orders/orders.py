@@ -15,9 +15,10 @@ class ApiOrder:
                           shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
                           length: float = randint(10, 30), width: float = randint(10, 50),
                           height: float = randint(10, 50), tariff: str = None, data: str = None,
-                          delivery_time: dict = None, delivery_point_code: str = None, pickup_time_period: str = None,
-                          date_pickup: str = None, routes: list = None, price_1: float = 1000, price_2: float = 1000,
-                          price_3: float = 1000, items_declared_value: int = None):
+                          delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
+                          pickup_time_period: str = None, date_pickup: str = None, routes: list = None,
+                          price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
+                          items_declared_value: int = None):
         r"""Метод создания одноместного заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
@@ -35,6 +36,7 @@ class ApiOrder:
         :param width: Ширина.
         :param height: Высота.
         :param delivery_point_code: Идентификатор точки доставки.
+        :param country_code: Код страны назначения.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
         :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
@@ -46,7 +48,7 @@ class ApiOrder:
                                                  delivery_sum=delivery_sum, cod=cod, length=length, width=width,
                                                  height=height, type_ds=type_ds, service=service, tariff=tariff,
                                                  data=data, delivery_time=delivery_time,
-                                                 delivery_point_code=delivery_point_code,
+                                                 delivery_point_code=delivery_point_code, country_code=country_code,
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup,
                                                  routes=routes)
         single_order["places"] = self.app.dicts.places(places=[
