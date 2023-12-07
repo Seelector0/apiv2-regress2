@@ -6,9 +6,11 @@ class ApiWarehouse:
         self.app = app
         self.link = "customer/warehouses"
 
-    def post_warehouse(self):
-        """Метод создания склада."""
-        warehouse = self.app.dicts.form_warehouse_body()
+    def post_warehouse(self, country_code: str = None):
+        r"""Метод создания склада.
+        :param country_code: Код страны склада.
+        """
+        warehouse = self.app.dicts.form_warehouse_body(country_code=country_code)
         result = self.app.http_method.post(link=self.link, json=warehouse)
         return self.app.http_method.return_result(response=result)
 
