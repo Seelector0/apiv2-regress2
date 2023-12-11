@@ -1,20 +1,18 @@
-from environment import ENV_OBJECT
+from fixture.database import DataBase
 from psycopg2.extras import DictCursor
-import psycopg2
 
 
 class DataBaseWidgetApi:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database="widget-api",
-                                           user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
+        self.database = DataBase(database="widget-api")
 
     def get_widgets_id(self, shop_id):
         r"""Метод получения widget_id из БД.
         :param shop_id: ID магазина в БД.
         """
         list_widget_id = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query="""select id from "widget-api".public.credentials """
                                  """where credentials.shop_id = '{shop_id}'""".format(shop_id=shop_id))
@@ -28,7 +26,7 @@ class DataBaseWidgetApi:
         r"""Функция чистит таблицу '"widget-api".public.credentials'.
         :param shop_id: ID магазина в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query="""delete from "widget-api".public.credentials """
                                  """where credentials.shop_id = '{shop_id}'""".format(shop_id=shop_id))

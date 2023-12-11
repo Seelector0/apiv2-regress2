@@ -1,19 +1,20 @@
+from fixture.database import DataBase
 from environment import ENV_OBJECT
 from psycopg2.extras import DictCursor
-import psycopg2
 import time
 import json
+
+
 
 
 class DataBaseConnections:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database=ENV_OBJECT.db_connections(),
-                                           user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
+        self.database = DataBase(database=ENV_OBJECT.db_connections())
 
     def delete_cabinet_settings(self):
         """Метод удаляет настройки кабинета из таблицы 'cabinet'"""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(f"""delete from {ENV_OBJECT.db_connections()}.cabinet.setting """
                            f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -24,7 +25,7 @@ class DataBaseConnections:
     def get_list_shops(self):
         """Метод собирает (возвращает) список магазинов из таблицы 'customer.shop'."""
         db_list_shops = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.customer.shop """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -37,7 +38,7 @@ class DataBaseConnections:
     def get_list_shops_value(self, shop_id: str, value: str):
         """Метод возвращает список поля из БД."""
         db_list_shops = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select {value} from {ENV_OBJECT.db_connections()}.customer.shop """
                                  f"""where id = '{shop_id}' and user_id = '{ENV_OBJECT.user_id()}'""")
@@ -49,7 +50,7 @@ class DataBaseConnections:
 
     def delete_list_shops(self):
         """Метод чистит таблицу 'customer.shop'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.shop """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -60,7 +61,7 @@ class DataBaseConnections:
     def get_list_warehouses(self):
         """Метод собирает (возвращает) список складов из таблицы 'customer.warehouse'."""
         db_list_warehouses = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.customer.warehouse """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -73,7 +74,7 @@ class DataBaseConnections:
     def get_list_warehouses_value(self, warehouse_id: str, value: str):
         """Метод возвращает удален склад или нет (True - удалён, False - нет)"""
         db_list_warehouses = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select {value} from {ENV_OBJECT.db_connections()}.customer.warehouse """
                                  f"""where id = '{warehouse_id}' and user_id = '{ENV_OBJECT.user_id()}'""")
@@ -85,7 +86,7 @@ class DataBaseConnections:
 
     def delete_list_warehouses(self):
         """Метод чистит таблицу 'customer.warehouse'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.warehouse """
                                  f"""where warehouse.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -96,7 +97,7 @@ class DataBaseConnections:
     def get_list_delivery_services(self):
         """Метод собирает (возвращает) список подключенных служб доставок из таблицы 'customer.credential'"""
         db_list_delivery_service = []
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.customer.credential """
                                  f"""where customer.shop.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -108,7 +109,7 @@ class DataBaseConnections:
 
     def delete_list_delivery_services(self):
         """Метод чисти таблицу 'customer.credential'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.credential """
                                  f"""where credential.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -119,7 +120,7 @@ class DataBaseConnections:
     def get_list_drafts(self):
         """Метод собирает (возвращает) список черновиков из таблицы 'order.draft'."""
         db_list_drafts = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order".draft """
                                  f"""where draft.user_id = = '{ENV_OBJECT.user_id()}'""")
@@ -131,7 +132,7 @@ class DataBaseConnections:
 
     def delete_list_drafts(self):
         """Метод чистит таблицу 'order.draft'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".draft """
                                  f"""where draft.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -142,7 +143,7 @@ class DataBaseConnections:
     def get_list_orders(self):
         """Метод собирает (возвращает) id всех заказов из таблицы order."""
         db_list_order = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order"."order" """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -155,7 +156,7 @@ class DataBaseConnections:
     def get_list_all_orders_out_parcel(self):
         """Метод собирает (возвращает) список заказов который не удалены из таблицы order."""
         db_list_order = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order"."order" """
                                  f"""where state='succeeded' and deleted=false and user_id='{ENV_OBJECT.user_id()}'""")
@@ -168,7 +169,7 @@ class DataBaseConnections:
     def get_list_all_orders_in_parcel(self):
         """Метод собирает (возвращает) список заказов из таблицы order_parcel"""
         db_list_orders_in_parcel = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select order_id from {ENV_OBJECT.db_connections()}."order".order_parcel """
                                  f"""where deleted=false and parcel_id = '{self.get_list_parcels()[0]}'""")
@@ -184,7 +185,7 @@ class DataBaseConnections:
         :param value: Поле в БД.
         """
         db_list_order_id = []
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""select {value} from {ENV_OBJECT.db_connections()}."order"."order" """
                                  f"""where id='{order_id}' and user_id='{ENV_OBJECT.user_id()}'""")
@@ -207,7 +208,7 @@ class DataBaseConnections:
         db_list_data = []
         db_list_single_order_id = []
         db_list_multy_order_id = []
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         if in_parcel:
             list_orders = self.get_list_all_orders_in_parcel()
         elif not_in_parcel:
@@ -246,7 +247,7 @@ class DataBaseConnections:
 
     def delete_list_orders(self):
         """Метод чистит таблицу order."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order"."order" """
                                  f"""where "order".user_id = '{ENV_OBJECT.user_id()}'""")
@@ -257,7 +258,7 @@ class DataBaseConnections:
     def get_list_parcels(self):
         """Метод собирает (возвращает) список id партий из таблицы parcel."""
         db_list_parcel = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order".parcel """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -269,7 +270,7 @@ class DataBaseConnections:
 
     def delete_list_parcels(self):
         """Метод чистит таблицу parcel."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".parcel """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -279,7 +280,7 @@ class DataBaseConnections:
 
     def delete_failed_parcel(self):
         """Метод чистит таблицу failed_parcel."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".failed_parcel """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
@@ -291,7 +292,7 @@ class DataBaseConnections:
         r"""Метод чистит таблицу 'order.order_document'.
         :param order_id: ID заказа в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".order_document """
                                  f"""where order_document.order_id = '{order_id}'""")
@@ -303,7 +304,7 @@ class DataBaseConnections:
         r"""Метод чистит таблицу 'order.order_parcel'.
         :param parcel_id: ID партии в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".order_parcel """
                                  f"""where order_parcel.parcel_id = '{parcel_id}'""")
@@ -313,7 +314,7 @@ class DataBaseConnections:
 
     def delete_order_path(self):
         """Метод чистит таблицу 'order.order_path'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".order_patch """
                                  f"""where order_patch.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -324,7 +325,7 @@ class DataBaseConnections:
     def get_list_intakes_value(self, intake_id: str, value):
         """Метод возвращает список поля из таблицы intakes."""
         db_list_intakes = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select {value} from {ENV_OBJECT.db_connections()}.intake.intake """
                                  f"""where id = '{intake_id}' and user_id = '{ENV_OBJECT.user_id()}'""")
@@ -336,7 +337,7 @@ class DataBaseConnections:
 
     def delete_intakes(self):
         """Метод чистит таблицу 'intake.intake'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.intake.intake """
                                  f"""where intake.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -347,7 +348,7 @@ class DataBaseConnections:
     def get_list_webhook(self):
         """Метод возвращает список id веб-хуков."""
         db_list_webhook = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.webhook.webhook """
                                  f"""where webhook.user_id = '{ENV_OBJECT.user_id()}'""")
@@ -359,7 +360,7 @@ class DataBaseConnections:
 
     def delete_webhook(self):
         """Метод чистит таблицу 'webhook.webhook'."""
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.webhook.webhook """
                                  f"""where webhook.user_id = '{ENV_OBJECT.user_id()}'""")
