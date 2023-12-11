@@ -86,12 +86,15 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(), json=dpd)
         return self.app.http_method.return_result(response=result)
 
-    def post_delivery_services_cse(self):
+    def post_delivery_services_cse(self, aggregation: bool = None):
         """Настройки подключения службы доставки Cse к магазину по интеграции."""
-        cse = self.app.dicts.form_connection_type(delivery_service_code="Cse")
-        cse["data"]["login"] = os.getenv("CSE_LOGIN")
-        cse["data"]["password"] = os.getenv("CSE_PASSWORD")
-        cse["data"]["token"] = os.getenv("CSE_TOKEN")
+        if aggregation:
+            cse = self.app.dicts.form_connection_type(delivery_service_code="Cse", aggregation=True)
+        else:
+            cse = self.app.dicts.form_connection_type(delivery_service_code="Cse")
+            cse["data"]["login"] = os.getenv("CSE_LOGIN")
+            cse["data"]["password"] = os.getenv("CSE_PASSWORD")
+            cse["data"]["token"] = os.getenv("CSE_TOKEN")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=cse)
         return self.app.http_method.return_result(response=result)
 

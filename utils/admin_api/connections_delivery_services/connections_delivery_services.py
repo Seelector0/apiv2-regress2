@@ -104,6 +104,15 @@ class ApiConnectionDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=kaz_post, admin=True)
         return self.admin.http_method.return_result(response=result)
 
+    def post_connections_cse(self):
+        """Снятие с модерации СД Cse."""
+        cse = self.admin.dicts.form_connections_delivery_services(delivery_service_code="Cse")
+        cse["credential"]["login"] = os.getenv("CSE_LOGIN")
+        cse["credential"]["password"] = os.getenv("CSE_PASSWORD")
+        cse["credential"]["token"] = os.getenv("CSE_TOKEN")
+        result = self.admin.http_method.post(link=self.link, json=cse, admin=True)
+        return self.admin.http_method.return_result(response=result)
+
     def put_update_connection_id(self):
         """Обновления подключения СД."""
         shop_id = self.db_connections.get_list_shops()[0]
