@@ -10,4 +10,4 @@ class Admin:
         self.http_method = HttpMethod(admin=self, app=self)
         self.dicts = AdminDicts(admin=self)
         self.authorization = ApiAuthorization(admin=self, app=self)
-        self.connections = ApiConnectionDeliveryServices(admin=self)
+        self.moderation = ApiConnectionDeliveryServices(admin=self)
