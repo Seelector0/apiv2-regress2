@@ -5,8 +5,6 @@ import time
 import json
 
 
-
-
 class DataBaseConnections:
 
     def __init__(self):
