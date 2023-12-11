@@ -87,7 +87,9 @@ class ApiDeliveryServices:
         return self.app.http_method.return_result(response=result)
 
     def post_delivery_services_cse(self, aggregation: bool = None):
-        """Настройки подключения службы доставки Cse к магазину по интеграции."""
+        r"""Настройки подключения службы доставки Cse к магазину по интеграции.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
         if aggregation:
             cse = self.app.dicts.form_connection_type(delivery_service_code="Cse", aggregation=True)
         else:
