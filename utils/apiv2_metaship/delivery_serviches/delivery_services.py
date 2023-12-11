@@ -114,14 +114,6 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(), json=five_post)
         return self.app.http_method.return_result(response=result)
 
-    def post_delivery_services_svyaznoy(self):
-        """Настройки подключения службы доставки Svyaznoy к магазину."""
-        svyaznoy = self.app.dicts.form_connection_type(delivery_service_code="Svyaznoy")
-        svyaznoy["data"]["login"] = os.getenv("SL_LOGIN")
-        svyaznoy["data"]["password"] = os.getenv("SL_PASSWORD")
-        result = self.app.http_method.post(link=self.link_delivery_services(), json=svyaznoy)
-        return self.app.http_method.return_result(response=result)
-
     def post_delivery_services_yandex_go(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки YandexGo к магазину.
         :param aggregation: Тип подключения СД по агрегации.
