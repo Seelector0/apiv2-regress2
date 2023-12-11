@@ -59,8 +59,8 @@ def stop(request, admin, app, connections, customer_api, tracking_api, widget_ap
         for id_ in connections.get_list_orders():
             tracking_api.delete_list_orders_in_tracking(order_id=id_)
         connections.delete_all_setting()
-        connections.connection.close()
-        customer_api.connection.close()
-        tracking_api.connection.close()
-        widget_api.connection.close()
+        connections.database.connection.close()
+        customer_api.database.connection.close()
+        tracking_api.database.connection.close()
+        widget_api.database.connection.close()
     request.addfinalizer(finalizer=fin)

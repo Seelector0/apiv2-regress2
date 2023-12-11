@@ -1,20 +1,18 @@
-from environment import ENV_OBJECT
+from fixture.database import DataBase
 from psycopg2.extras import DictCursor
-import psycopg2
 
 
 class DataBaseCustomerApi:
 
     def __init__(self):
-        self.connection = psycopg2.connect(host=ENV_OBJECT.host(), database="customer-api",
-                                           user=ENV_OBJECT.db_connections(), password=ENV_OBJECT.password())
+        self.database = DataBase(database="customer-api")
 
     def get_connections_id(self, shop_id):
         r"""Метод получения connection_id из БД.
         :param shop_id: ID магазина в БД.
         """
         db_list_connection_id = []
-        cursor = self.connection.cursor(cursor_factory=DictCursor)
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
         try:
             cursor.execute(query="""select id from "customer-api".public.connection """
                                  """where connection.shop_id = '{shop_id}'""".format(shop_id=shop_id))
@@ -28,7 +26,7 @@ class DataBaseCustomerApi:
         r"""Метод чистит таблицу 'public.connection'.
         :param shop_id: ID магазина в БД.
         """
-        cursor = self.connection.cursor()
+        cursor = self.database.connection.cursor()
         try:
             cursor.execute(query="""delete from "customer-api".public.connection """
                                  """where connection.shop_id = '{shop_id}'""".format(shop_id=shop_id))
