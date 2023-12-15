@@ -2,7 +2,6 @@ from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
 from utils.apiv2_metaship.dicts import Dicts
 import requests
-import sys
 
 
 class ApiAuthorization:
@@ -20,5 +19,5 @@ class ApiAuthorization:
         self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
                                           data=Dicts.form_authorization(admin=admin), headers=Dicts.form_headers())
         if self.response.status_code >= 500:
-            sys.exit()
+            breakpoint()
         return HttpMethod.return_result(response=self.response)
