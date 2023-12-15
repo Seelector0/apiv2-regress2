@@ -111,7 +111,7 @@ class Dicts:
         body_connection_type = self.form_delivery_service_code(delivery_service_code=delivery_service_code)
         body_connection_type["data"] = dict()
         if aggregation:
-            body_connection_type["data"]["type"] = "aggregation"
+            body_connection_type["data"] = dict(type="aggregation")
         return body_connection_type
 
     def form_offers(self, types: str, country_code: str = None):
