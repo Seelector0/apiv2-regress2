@@ -43,7 +43,7 @@ def test_aggregation_delivery_services(app):
 
 @allure.description("Update Connection Id")
 def test_update_connection_id(admin):
-    update = admin.moderation.put_update_connection_id()
+    update = admin.moderation.put_update_connection_id(settings=admin.dicts.form_settings_ds_kaz_post())
     Checking.check_status_code(response=update, expected_status_code=200)
     Checking.checking_json_key(response=update, expected_value=INFO.entity_connections_id)
 

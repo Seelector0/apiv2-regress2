@@ -26,13 +26,27 @@ class AdminDicts:
         }
 
     @staticmethod
-    def form_update_connection():
-        """Форма для обновления connection."""
+    def form_update_connection(settings: dict):
+        r"""Форма для обновления connection.
+        :param settings: Настройки для разных СД.
+        """
+        return dict(data=settings)
+
+    @staticmethod
+    def form_settings_ds_kaz_post():
+        """Фома обновления connection для СД KazPost."""
         return {
-            "data": {
-                "intakePostOfficeCode": "7777",
-                "bin": "123456789012",
-                "counterparty": "888.664",
-                "acceptanceEmail": "test@mail.ru"
-            }
+            "intakePostOfficeCode": "7777",
+            "bin": "123456789012",
+            "counterparty": "888.664",
+            "acceptanceEmail": "test@mail.ru"
         }
+
+    @staticmethod
+    def form_settings_ds_alemtat():
+        """Фома обновления connection для СД AlemTat."""
+        return {
+        "card":"21543134",
+        "contract":"14378",
+        "receivingStation":"ALA"
+    }
