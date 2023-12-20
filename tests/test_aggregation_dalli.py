@@ -138,6 +138,16 @@ def test_get_orders(app):
     Checking.check_response_is_not_empty(response=list_orders)
 
 
+@allure.description("Удаление заказа СД Dalli")
+def test_delete_order(app, connections):
+    random_order_id = choice(connections.get_list_all_orders_out_parcel())
+    delete_order = app.order.delete_order(order_id=random_order_id)
+    Checking.check_status_code(response=delete_order, expected_status_code=204)
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=random_order_id,
+                                                                               value="deleted"),
+                                    two_value=[True])
+
+
 @allure.description("Получение информации о заказе CД Dalli")
 def test_get_order_by_id(app, connections):
     random_order = app.order.get_order_id(order_id=choice(connections.get_list_all_orders_out_parcel()))
