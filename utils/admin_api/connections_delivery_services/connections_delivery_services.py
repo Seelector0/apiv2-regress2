@@ -100,14 +100,14 @@ class ApiConnectionDeliveryServices:
     def post_connections_kaz_post(self):
         """Снятие с модерации СД KazPost."""
         kaz_post = self.admin.dicts.form_connections_delivery_services(delivery_service_code="KazPost")
-        kaz_post["credential"]["key"] = os.getenv("KEY_KAZ_POST")
+        kaz_post["credential"]["key"] = os.getenv("KAZ_POST_KEY")
         result = self.admin.http_method.post(link=self.link, json=kaz_post, admin=True)
         return self.admin.http_method.return_result(response=result)
 
     def post_connections_alemtat(self):
         """Снятие с модерации СД AlemTat."""
         alemtat = self.admin.dicts.form_connections_delivery_services(delivery_service_code="AlemTat")
-        alemtat["credential"]["apiKey"] = os.getenv("KEY_ALEMTAT")
+        alemtat["credential"]["apiKey"] = os.getenv("ALEMTAT_KEY")
         result = self.admin.http_method.post(link=self.link, json=alemtat, admin=True)
         return self.admin.http_method.return_result(response=result)
 
