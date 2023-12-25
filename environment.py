@@ -27,12 +27,12 @@ class Environment:
 
     ADMIN_IDS = {
         LOCAL: os.getenv("ADMIN_ID"),
-        DEVELOP: LOCAL
+        DEVELOP: os.getenv("ADMIN_ID")
     }
 
     ADMIN_SECRETS = {
         LOCAL: os.getenv("ADMIN_SECRET"),
-        DEVELOP: LOCAL
+        DEVELOP: os.getenv("ADMIN_SECRET")
     }
 
     DATABASE_CONNECTIONS = {
