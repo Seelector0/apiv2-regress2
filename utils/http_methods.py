@@ -11,46 +11,43 @@ class HttpMethod:
         self.app = app
         self.admin = admin
 
-    def get(self, link: str, params: dict = None, admin: bool = None):
+    def get(self, link: str, params: dict = None, admin: bool = None, **kwargs):
         r"""GET запрос.
         :param link: Ссылка на запрос.
         :param params: Тело запроса если нужно.
         :param admin: Для использования admin URL.
         """
-        return self._send(method="GET", url=link, params=params, admin=admin)
+        return self._send(method="GET", url=link, params=params, admin=admin, **kwargs)
 
-    def post(self, link: str, json: dict = None, data: dict = None, files: list = None, admin: bool = None):
+    def post(self, link: str, json: dict = None, data: dict = None, admin: bool = None, **kwargs):
         r"""POST запрос.
         :param link: Ссылка на запрос.
         :param json: Тело запроса в формате JSON.
         :param data: Тело в формате dict.
-        :param files: Передаваемый файл.
         :param admin: Для использования admin URL.
         """
-        return self._send(method="POST", url=link, json=json, data=data, files=files, admin=admin)
+        return self._send(method="POST", url=link, json=json, data=data, admin=admin, **kwargs)
 
-    def patch(self, link: str, json: dict, admin: bool = None):
+    def patch(self, link: str, admin: bool = None, **kwargs):
         r"""PATCH запрос.
         :param link: Ссылка на запрос.
-        :param json: Тело запроса в формате JSON.
         :param admin: Для использования admin URL.
         """
-        return self._send(method="PATCH", url=link, json=json, admin=admin)
+        return self._send(method="PATCH", url=link, admin=admin, **kwargs)
 
-    def put(self, link: str, json: dict = None, admin: bool = None):
+    def put(self, link: str, admin: bool = None, **kwargs):
         r"""PUT запрос.
         :param link: Ссылка на запрос.
-        :param json: Тело запроса в формате JSON.
         :param admin: Для использования admin URL.
         """
-        return self._send(method="PUT", url=link, json=json, admin=admin)
+        return self._send(method="PUT", url=link, admin=admin, **kwargs)
 
-    def delete(self, link: str, admin: bool = None):
+    def delete(self, link: str, admin: bool = None, **kwargs):
         r"""DELETE запрос.
         :param link: Ссылка на запрос.
         :param admin: Для использования admin URL.
         """
-        return self._send(method="DELETE", url=link, admin=admin)
+        return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
     @staticmethod
     def url(admin: bool = None):
@@ -58,13 +55,11 @@ class HttpMethod:
         :param admin: Для использования admin url.
         """
         if admin:
-            url = f"{ENV_OBJECT.get_base_url()}/admin/v2"
-        else:
-            url = f"{ENV_OBJECT.get_base_url()}/v2"
-        return url
+            return f"{ENV_OBJECT.get_base_url()}/admin/v2"
+        return f"{ENV_OBJECT.get_base_url()}/v2"
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              files: list = None, admin: bool = None):
+              admin: bool = None, **kwargs):
         r"""Метод для определения запросов.
         :param method: Метод запроса.
         :param url: URL запроса.
@@ -81,8 +76,8 @@ class HttpMethod:
             token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
         with allure.step(title=f"{method} request to URL: {url}"):
             if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-                response = requests.request(method=method, url=url, params=params, json=json, data=data, files=files,
-                                            headers=token)
+                response = requests.request(method=method, url=url, params=params, json=json, data=data, headers=token,
+                                            **kwargs)
             else:
                 raise Exception(f"Получен неверный HTTP метод '{method}'")
         if params:
@@ -101,7 +96,6 @@ class HttpMethod:
         r"""Метод возвращает результат ответа.
         :param response: Результат ответа.
         """
-        response = response
         try:
             with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
                 return response
