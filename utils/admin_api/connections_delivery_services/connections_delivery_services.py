@@ -120,6 +120,13 @@ class ApiConnectionDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=cse, admin=True)
         return self.admin.http_method.return_result(response=result)
 
+    def post_connections_pony_express(self):
+        """Снятие с модерации СД PonyExpress."""
+        pony_express = self.admin.dicts.form_connections_delivery_services(delivery_service_code="PonyExpress")
+        pony_express["credential"]["accessKey"] = os.getenv("PONY_ACCESS_KEY")
+        result = self.admin.http_method.post(link=self.link, json=pony_express, admin=True)
+        return self.admin.http_method.return_result(response=result)
+
     def put_update_connection_id(self, settings: dict):
         """Обновления подключения СД."""
         shop_id = self.db_connections.get_list_shops()[0]

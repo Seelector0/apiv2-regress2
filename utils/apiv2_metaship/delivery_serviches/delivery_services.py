@@ -190,6 +190,12 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(), json=alemtat)
         return self.app.http_method.return_result(response=result)
 
+    def post_delivery_services_pony_express(self):
+        """Настройки подключения службы доставки PonyExpress к магазину по агрегации."""
+        pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress", aggregation=True)
+        result = self.app.http_method.post(link=self.link_delivery_services(), json=pony_express)
+        return self.app.http_method.return_result(response=result)
+
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         result = self.app.http_method.get(link=self.link_delivery_services())
