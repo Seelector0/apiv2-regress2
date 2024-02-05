@@ -36,9 +36,9 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД AlemTat по агрегации")
 def test_aggregation_delivery_services(app):
-    boxberry = app.service.post_delivery_services_alemtat()
-    Checking.check_status_code(response=boxberry, expected_status_code=201)
-    Checking.checking_json_key(response=boxberry, expected_value=INFO.created_entity)
+    alemtat = app.service.post_delivery_services_alemtat(aggregation=True)
+    Checking.check_status_code(response=alemtat, expected_status_code=201)
+    Checking.checking_json_key(response=alemtat, expected_value=INFO.created_entity)
 
 
 @allure.description("Update Connection Id")
