@@ -128,7 +128,9 @@ class ApiConnectionDeliveryServices:
         return self.admin.http_method.return_result(response=result)
 
     def put_update_connection_id(self, settings: dict):
-        """Обновления подключения СД."""
+        r"""Обновления подключения СД.
+        :param settings: Настройки для разных СД.
+        """
         shop_id = self.db_connections.get_list_shops()[0]
         connections_id = self.db_customer_api.get_connections_id(shop_id=shop_id)[0]
         put_update = self.admin.dicts.form_update_connection(settings=settings)
