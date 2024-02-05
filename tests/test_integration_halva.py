@@ -36,9 +36,9 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек службы доставки СД Halva")
 def test_integration_delivery_services(app):
-    five_post = app.service.post_delivery_services_halva()
-    Checking.check_status_code(response=five_post, expected_status_code=201)
-    Checking.checking_json_key(response=five_post, expected_value=INFO.created_entity)
+    halva = app.service.post_delivery_services_halva()
+    Checking.check_status_code(response=halva, expected_status_code=201)
+    Checking.checking_json_key(response=halva, expected_value=INFO.created_entity)
 
 
 @allure.description("Получение списка ПВЗ СД Halva")
