@@ -37,9 +37,9 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД Cse по агрегации")
 def test_aggregation_delivery_services(app):
-    dalli = app.service.post_delivery_services_cse(aggregation=True)
-    Checking.check_status_code(response=dalli, expected_status_code=201)
-    Checking.checking_json_key(response=dalli, expected_value=INFO.created_entity)
+    cse = app.service.post_delivery_services_cse(aggregation=True)
+    Checking.check_status_code(response=cse, expected_status_code=201)
+    Checking.checking_json_key(response=cse, expected_value=INFO.created_entity)
 
 
 @allure.description("Модерация СД Cse")

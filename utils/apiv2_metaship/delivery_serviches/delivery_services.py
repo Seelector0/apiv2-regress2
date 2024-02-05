@@ -1,5 +1,5 @@
-from dotenv import load_dotenv, find_dotenv
 from databases.connections import DataBaseConnections
+from dotenv import load_dotenv, find_dotenv
 import os
 
 
@@ -178,21 +178,45 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(), json=halva)
         return self.app.http_method.return_result(response=result)
 
-    def post_delivery_services_kaz_post(self):
-        """Настройки подключения службы доставки KazPost к магазину по агрегации."""
-        kaz_post = self.app.dicts.form_connection_type(delivery_service_code="KazPost", aggregation=True)
+    def post_delivery_services_kaz_post(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки KazPost к магазину.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
+        kaz_post = self.app.dicts.form_connection_type(delivery_service_code="KazPost")
+        kaz_post["data"]["key"] = os.getenv("KAZ_POST_KEY")
+        kaz_post["data"]["intakePostOfficeCode"] = os.getenv("KAZ_POST_INTAKE_POST_OFFICE_CODE")
+        kaz_post["data"]["bin"] = os.getenv("KAZ_POST_BIN")
+        kaz_post["data"]["counterparty"] = os.getenv("KAZ_POST_COUNTERPARTY")
+        kaz_post["data"]["acceptanceEmail"] = os.getenv("KAZ_POST_ACCEPTANCE_EMAIL")
+        kaz_post["data"]["agreementDate"] = "2024-01-01"
+        kaz_post["data"]["agreementNumber"] = "1234"
+        if aggregation:
+            kaz_post = self.app.dicts.form_connection_type(delivery_service_code="KazPost", aggregation=True)
         result = self.app.http_method.post(link=self.link_delivery_services(), json=kaz_post)
         return self.app.http_method.return_result(response=result)
 
-    def post_delivery_services_alemtat(self):
-        """Настройки подключения службы доставки AlemTat к магазину по агрегации."""
-        alemtat = self.app.dicts.form_connection_type(delivery_service_code="AlemTat", aggregation=True)
+    def post_delivery_services_alemtat(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки AlemTat к магазину.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
+        alemtat = self.app.dicts.form_connection_type(delivery_service_code="AlemTat")
+        alemtat["data"]["apiKey"] = os.getenv("ALEMTAT_KEY")
+        alemtat["data"]["card"] = os.getenv("ALEMTAT_CARD")
+        alemtat["data"]["contract"] = os.getenv("ALEMTAT_CONTRACT")
+        alemtat["data"]["receivingStation"] = os.getenv("ALEMTAT_RECEIVING_STATION")
+        if aggregation:
+            alemtat = self.app.dicts.form_connection_type(delivery_service_code="AlemTat", aggregation=True)
         result = self.app.http_method.post(link=self.link_delivery_services(), json=alemtat)
         return self.app.http_method.return_result(response=result)
 
-    def post_delivery_services_pony_express(self):
-        """Настройки подключения службы доставки PonyExpress к магазину по агрегации."""
-        pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress", aggregation=True)
+    def post_delivery_services_pony_express(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки PonyExpress к магазину по агрегации.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
+        pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress")
+        pony_express["data"]["accessKey"] = os.getenv("PONY_ACCESS_KEY")
+        if aggregation:
+            pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress", aggregation=True)
         result = self.app.http_method.post(link=self.link_delivery_services(), json=pony_express)
         return self.app.http_method.return_result(response=result)
 

@@ -1,6 +1,11 @@
 from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
+from dotenv import load_dotenv, find_dotenv
 from environment import ENV_OBJECT
+import os
+
+
+load_dotenv(find_dotenv())
 
 
 class AdminDicts:
@@ -34,19 +39,19 @@ class AdminDicts:
 
     @staticmethod
     def form_settings_ds_kaz_post():
-        """Фома обновления connection для СД KazPost."""
+        """Фома обновления подключения для СД KazPost."""
         return {
-            "intakePostOfficeCode": "7777",
-            "bin": "123456789012",
-            "counterparty": "888.664",
-            "acceptanceEmail": "test@mail.ru"
+            "intakePostOfficeCode": os.getenv("KAZ_POST_INTAKE_POST_OFFICE_CODE"),
+            "bin": os.getenv("KAZ_POST_BIN"),
+            "counterparty": os.getenv("KAZ_POST_COUNTERPARTY"),
+            "acceptanceEmail": os.getenv("KAZ_POST_ACCEPTANCE_EMAIL")
         }
 
     @staticmethod
     def form_settings_ds_alemtat():
-        """Фома обновления connection для СД AlemTat."""
+        """Фома обновления подключения для СД AlemTat."""
         return {
-        "card":"21543134",
-        "contract":"14378",
-        "receivingStation":"ALA"
+        "card": os.getenv("ALEMTAT_CARD"),
+        "contract": os.getenv("ALEMTAT_CONTRACT"),
+        "receivingStation": os.getenv("ALEMTAT_RECEIVING_STATION")
     }
