@@ -41,6 +41,13 @@ def test_aggregation_delivery_services(app):
     Checking.checking_json_key(response=boxberry, expected_value=INFO.created_entity)
 
 
+@allure.description("Update Connection Id")
+def test_update_connection_id(admin):
+    update = admin.moderation.put_update_connection_id(settings=admin.dicts.form_settings_ds_boxberry())
+    Checking.check_status_code(response=update, expected_status_code=200)
+    Checking.checking_json_key(response=update, expected_value=INFO.entity_connections_id)
+
+
 @allure.description("Модерация СД Boxberry")
 def test_moderation_delivery_services(admin):
     moderation = admin.moderation.post_connections_boxberry()
