@@ -127,12 +127,21 @@ class ApiConnectionDeliveryServices:
         result = self.admin.http_method.post(link=self.link, json=pony_express, admin=True)
         return self.admin.http_method.return_result(response=result)
 
-    def put_update_connection_id(self, settings: dict):
+    def post_connections_metaship(self):
+        """Снятие с модерации СД MetaShip."""
+        metaship = self.admin.dicts.form_connections_delivery_services(delivery_service_code="MetaShip",
+                                                                       index_shop_id=-1)
+        metaship["credential"] = list()
+        result = self.admin.http_method.post(link=self.link, json=metaship, admin=True)
+        return self.admin.http_method.return_result(response=result)
+
+    def put_update_connection_id(self, settings: dict, index_shop_id: int = 0):
         r"""Обновления подключения СД.
         :param settings: Настройки для разных СД.
+        :param index_shop_id: Индекс магазина.
         """
-        shop_id = self.db_connections.get_list_shops()[0]
-        connections_id = self.db_customer_api.get_connections_id(shop_id=shop_id)[0]
+        shop_id = self.db_connections.get_list_shops()[index_shop_id]
+        connections_id = self.db_customer_api.get_connections_id(shop_id=shop_id)
         put_update = self.admin.dicts.form_update_connection(settings=settings)
-        result = self.admin.http_method.put(link=f"connection/{connections_id}", json=put_update, admin=True)
+        result = self.admin.http_method.put(link=f"connection/{connections_id[-1]}", json=put_update, admin=True)
         return self.admin.http_method.return_result(response=result)
