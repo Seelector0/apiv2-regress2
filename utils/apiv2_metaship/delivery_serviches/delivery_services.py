@@ -12,9 +12,11 @@ class ApiDeliveryServices:
         self.app = app
         self.db_connections = DataBaseConnections()
 
-    def link_delivery_services(self):
-        """Метод получения ссылки для подключения СД."""
-        return f"{self.app.shop.link}/{self.db_connections.get_list_shops()[0]}/delivery_services"
+    def link_delivery_services(self, index_shop_id: int = 0):
+        r"""Метод получения ссылки для подключения СД.
+        :param index_shop_id: Индекс магазина.
+        """
+        return f"{self.app.shop.link}/{self.db_connections.get_list_shops()[index_shop_id]}/delivery_services"
 
     def post_delivery_services_russian_post(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки RussianPost к магазину
@@ -51,7 +53,7 @@ class ApiDeliveryServices:
         boxberry["data"]["token"] = os.getenv("BB_API_TOKEN")
         if aggregation:
             boxberry = self.app.dicts.form_connection_type(delivery_service_code="Boxberry", aggregation=True)
-        boxberry["data"]["intakeDeliveryPointCode"] = "00127"
+        boxberry["data"]["intakeDeliveryPointCode"] = os.getenv("BB_INTAKE_DELIVERY_POINT_CODE")
         result = self.app.http_method.post(link=self.link_delivery_services(), json=boxberry)
         return self.app.http_method.return_result(response=result)
 
@@ -210,7 +212,7 @@ class ApiDeliveryServices:
         return self.app.http_method.return_result(response=result)
 
     def post_delivery_services_pony_express(self, aggregation: bool = None):
-        r"""Настройки подключения службы доставки PonyExpress к магазину по агрегации.
+        r"""Настройки подключения службы доставки PonyExpress к магазину.
         :param aggregation: Тип подключения СД по агрегации.
         """
         pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress")
@@ -218,6 +220,12 @@ class ApiDeliveryServices:
         if aggregation:
             pony_express = self.app.dicts.form_connection_type(delivery_service_code="PonyExpress", aggregation=True)
         result = self.app.http_method.post(link=self.link_delivery_services(), json=pony_express)
+        return self.app.http_method.return_result(response=result)
+
+    def post_delivery_services_metaship(self):
+        """Настройки подключения службы доставки MetaShip к магазину по агрегации."""
+        metaship = self.app.dicts.form_connection_type(delivery_service_code="MetaShip", aggregation=True)
+        result = self.app.http_method.post(link=self.link_delivery_services(index_shop_id=-1), json=metaship)
         return self.app.http_method.return_result(response=result)
 
     def get_delivery_services(self):
