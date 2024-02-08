@@ -15,11 +15,12 @@ class AdminDicts:
         self.db_connections = DataBaseConnections()
         self.db_customer_api = DataBaseCustomerApi()
 
-    def form_connections_delivery_services(self, delivery_service_code: str):
+    def form_connections_delivery_services(self, delivery_service_code: str,  index_shop_id = 0):
         r"""Форма для снятия с модерации СД.
         :param delivery_service_code: Название СД.
+        :param index_shop_id: Индекс магазина.
         """
-        shop_id = self.db_connections.get_list_shops()[0]
+        shop_id = self.db_connections.get_list_shops()[index_shop_id]
         return {
             "shopId": shop_id,
             "customerId": ENV_OBJECT.customer_id(),
@@ -55,3 +56,18 @@ class AdminDicts:
         "contract": os.getenv("ALEMTAT_CONTRACT"),
         "receivingStation": os.getenv("ALEMTAT_RECEIVING_STATION")
     }
+
+    @staticmethod
+    def form_settings_ds_boxberry():
+        return dict(intakeDeliveryPointCode=os.getenv("BB_INTAKE_DELIVERY_POINT_CODE"))
+
+    def form_settings_ds_metaship(self):
+        return {
+            "data": [
+                {
+                    "deliveryService": "Boxberry",
+                    "tariff": "_default",
+                    "shopId": self.db_connections.get_list_shops()[0]
+                }
+            ]
+        }
