@@ -124,7 +124,7 @@ class Dicts:
             address = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
         return {
             "warehouseId": self.db_connections.get_list_warehouses()[0],
-            "shopId": self.db_connections.get_list_shops()[0],
+            "shopId": self.db_connections.get_list_shops()[-1],
             "address": address,
             "declaredValue": randrange(1000, 5000),
             "length": randrange(10, 45),
@@ -170,7 +170,7 @@ class Dicts:
                 "id": self.db_connections.get_list_warehouses()[0],
             },
             "shop": {
-                "id": self.db_connections.get_list_shops()[0],
+                "id": self.db_connections.get_list_shops()[-1],
                 "number": f"{randrange(1000000, 9999999)}",
                 "barcode": shop_barcode,
             },
