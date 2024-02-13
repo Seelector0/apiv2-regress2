@@ -1,6 +1,6 @@
 from utils.http_methods import HttpMethod
 from environment import ENV_OBJECT
-from api.apiv2_metaship.dicts import Dicts
+from apiv2_metaship.dicts import Dicts
 import requests
 
 

@@ -1,4 +1,4 @@
-from api.apiv2_metaship.dicts import Dicts
+from apiv2_metaship.dicts import Dicts
 from environment import ENV_OBJECT
 import simplejson.errors
 import requests

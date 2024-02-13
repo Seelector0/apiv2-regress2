@@ -1,6 +1,6 @@
-from api.admin_api.connections_delivery_services.connections_delivery_services import ApiConnectionDeliveryServices
-from api.apiv2_metaship.authorization.authorization import ApiAuthorization
-from api.admin_api.dicts import AdminDicts
+from admin_api.connections_delivery_services.connections_delivery_services import ApiConnectionDeliveryServices
+from apiv2_metaship.authorization.authorization import ApiAuthorization
+from admin_api.dicts import AdminDicts
 from utils.http_methods import HttpMethod
 
 
