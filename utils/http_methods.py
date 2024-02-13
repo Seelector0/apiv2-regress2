@@ -1,4 +1,4 @@
-from utils.apiv2_metaship.dicts import Dicts
+from api.apiv2_metaship.dicts import Dicts
 from environment import ENV_OBJECT
 import simplejson.errors
 import requests
@@ -49,15 +49,6 @@ class HttpMethod:
         """
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
-    @staticmethod
-    def url(admin: bool = None):
-        r"""Метод для получения url.
-        :param admin: Для использования admin url.
-        """
-        if admin:
-            return f"{ENV_OBJECT.get_base_url()}/admin/v2"
-        return f"{ENV_OBJECT.get_base_url()}/v2"
-
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
               admin: bool = None, **kwargs):
         r"""Метод для определения запросов.
@@ -69,11 +60,12 @@ class HttpMethod:
         :param files: Передаваемый файл
         :param admin: Для использования admin URL.
         """
-        url = f"{self.url(admin=admin)}/{url}"
         if admin:
             token = Dicts.form_token(authorization=self.admin.authorization.response.json()["access_token"])
+            url = f"{ENV_OBJECT.get_base_url()}/admin/v2/{url}"
         else:
             token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
+            url = f"{ENV_OBJECT.get_base_url()}/v2/{url}"
         with allure.step(title=f"{method} request to URL: {url}"):
             if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
                 response = requests.request(method=method, url=url, params=params, json=json, data=data, headers=token,

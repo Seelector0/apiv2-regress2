@@ -1,19 +1,19 @@
-from utils.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
-from utils.apiv2_metaship.authorization.authorization import ApiAuthorization
-from utils.apiv2_metaship.warehouses.warehouses import ApiWarehouse
-from utils.apiv2_metaship.documents.documents import ApiDocument
-from utils.apiv2_metaship.webhooks.webhooks import ApiWebhook
-from utils.apiv2_metaship.reports.reports import ApiReports
-from utils.apiv2_metaship.intakes.intakes import ApiIntakes
-from utils.apiv2_metaship.widgets.widgets import ApiWidget
-from utils.apiv2_metaship.parcels.parcels import ApiParcel
-from utils.apiv2_metaship.offers.offers import ApiOffers
-from utils.apiv2_metaship.orders.orders import ApiOrder
-from utils.apiv2_metaship.shops.shops import ApiShop
-from utils.apiv2_metaship.info.info import ApiInfo
-from utils.apiv2_metaship.forms.forms import Forms
+from api.apiv2_metaship.delivery_serviches.delivery_services import ApiDeliveryServices
+from api.apiv2_metaship.authorization.authorization import ApiAuthorization
+from api.apiv2_metaship.warehouses.warehouses import ApiWarehouse
+from api.apiv2_metaship.documents.documents import ApiDocument
+from api.apiv2_metaship.webhooks.webhooks import ApiWebhook
+from api.apiv2_metaship.intakes.intakes import ApiIntakes
+from api.apiv2_metaship.reports.reports import ApiReports
+from api.apiv2_metaship.widgets.widgets import ApiWidget
+from api.apiv2_metaship.parcels.parcels import ApiParcel
+from api.apiv2_metaship.offers.offers import ApiOffers
+from api.apiv2_metaship.orders.orders import ApiOrder
+from api.apiv2_metaship.shops.shops import ApiShop
+from api.apiv2_metaship.info.info import ApiInfo
+from api.apiv2_metaship.forms.forms import Forms
+from api.apiv2_metaship.dicts import Dicts
 from utils.http_methods import HttpMethod
-from utils.apiv2_metaship.dicts import Dicts
 
 
 class Application:

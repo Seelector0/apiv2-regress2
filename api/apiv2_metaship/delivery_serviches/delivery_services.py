@@ -228,6 +228,19 @@ class ApiDeliveryServices:
         result = self.app.http_method.post(link=self.link_delivery_services(index_shop_id=-1), json=metaship)
         return self.app.http_method.return_result(response=result)
 
+    def post_delivery_services_pecom(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки Pecom к магазину.
+        :param aggregation: Тип подключения СД по агрегации.
+        """
+        pecom = self.app.dicts.form_connection_type(delivery_service_code="Pecom")
+        pecom["data"]["login"] = os.getenv("PECOM_LOGIN")
+        pecom["data"]["apiKey"] = os.getenv("PECOM_API_KEY")
+        pecom["data"]["senderWarehouseId"] = os.getenv("PECOM_SENDER_WAREHOUSE_ID")
+        if aggregation:
+            pecom = self.app.dicts.form_connection_type(delivery_service_code="Pecom", aggregation=True)
+        result = self.app.http_method.post(link=self.link_delivery_services(), json=pecom)
+        return self.app.http_method.return_result(response=result)
+
     def get_delivery_services(self):
         """Метод получения списка выполненных настроек СД к магазину."""
         result = self.app.http_method.get(link=self.link_delivery_services())

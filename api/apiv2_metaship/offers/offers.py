@@ -15,13 +15,12 @@ class ApiOffers:
         :param delivery_point_number: Идентификатор точки доставки.
         :param format_: Получение в формате виджета.
         """
+        params = self.app.dicts.form_offers(types=types, country_code=country_code)
+        params["paymentType"] = payment_type,
+        params["deliveryServiceCode"] = delivery_service_code,
+        params["deliveryPointNumber"] = delivery_point_number
         if format_:
             params = self.app.dicts.form_offers(types="DeliveryPoint")
             params["format"] = format_
-        else:
-            params = self.app.dicts.form_offers(types=types, country_code=country_code)
-            params["paymentType"] = payment_type,
-            params["deliveryServiceCode"] = delivery_service_code,
-            params["deliveryPointNumber"] = delivery_point_number
         result = self.app.http_method.get(link="offers", params=params)
         return self.app.http_method.return_result(response=result)
