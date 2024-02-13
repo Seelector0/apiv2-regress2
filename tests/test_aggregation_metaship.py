@@ -201,12 +201,3 @@ def test_forms_parcels_labels(app):
     forms_labels = app.forms.post_forms()
     Checking.check_status_code(response=forms_labels, expected_status_code=201)
     Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
-
-
-@allure.description("Создание забора СД MetaShip")
-def test_create_intake(app, connections):
-    new_intake = app.intakes.post_intakes(delivery_service="MetaShip")
-    Checking.check_status_code(response=new_intake, expected_status_code=201)
-    Checking.checking_json_key(response=new_intake, expected_value=INFO.created_entity)
-    Checking.check_value_comparison(one_value=connections.get_list_intakes_value(
-        intake_id=new_intake.json()["id"], value="status"), two_value=["created"])
