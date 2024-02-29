@@ -8,7 +8,7 @@ import os
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
                                                    "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
-                                                   "YandexDelivery", "Halva"])
+                                                   "YandexDelivery", "Halva", "Pecom"])
 def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
@@ -40,6 +40,8 @@ def test_info_vats(app, delivery_service_code):
         Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_delivery_vats)
     elif delivery_service_code == "Halva":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.halva_vats)
+    elif delivery_service_code == "Pecom":
+        Checking.checking_json_key(response=info_vats, expected_value=INFO.pecom_vats)
 
 
 @allure.description("Получение списка точек сдачи СД")
@@ -73,7 +75,7 @@ def tests_tariffs(app, code):
 @allure.description("Получение информации о дополнительных услугах поддерживаемых СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
                                                    "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
-                                                   "YandexDelivery"])
+                                                   "YandexDelivery", "Pecom", "KazPost"])
 def test_info_statuses(app, delivery_service_code):
     info_delivery_service_services = app.info.get_info_delivery_service_services(code=delivery_service_code)
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
@@ -103,6 +105,14 @@ def test_info_statuses(app, delivery_service_code):
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_go_services)
     elif delivery_service_code == "YandexDelivery":
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_delivery_services)
+    elif delivery_service_code == "Pecom":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.pecom_services)
+    elif delivery_service_code == "KazPost":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
+    elif delivery_service_code == "AlemTat":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
+    elif delivery_service_code == "PonyExpress":
+        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
 
 
 @allure.description("Получения интервалов доставки")
