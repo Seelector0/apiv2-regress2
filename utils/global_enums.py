@@ -1308,5 +1308,65 @@ class OtherInfo:
         }
     ]
 
+    pecom_services = [
+        {
+            "name": "crate",
+            "title": "Обрешётка(защитный каркас) груза",
+            "description": "Обрешётка(защитный каркас) груза"
+        },
+        {
+            "name": "lifting-elevator",
+            "title": "Подъем на этаж (лифт)",
+            "description": "Подъем на этаж (лифт)"
+        },
+        {
+            "name": "lifting-freight",
+            "title": "Подъем на этаж (грузовой лифт)",
+            "description": "Подъем на этаж (грузовой лифт)"
+        },
+        {
+            "name": "lifting-manual",
+            "title": "Подъем на этаж (ручной)",
+            "description": "Подъем на этаж (ручной)"
+        },
+        {
+            "name": "reverse",
+            "title": "Обратный заказ на доставку от получателя до отправителя",
+            "description": "Обратный заказ на доставку от получателя до отправителя"
+        },
+        {
+            "name": "strapping",
+            "title": "Упаковка стреппинг-лентой",
+            "description": "Упаковка стреппинг-лентой"
+        }
+    ]
+
+    pecom_vats = [
+        {
+            "code": "NO_VAT",
+            "name": "Без НДС"
+        },
+        {
+            "code": "0",
+            "name": "НДС 0%"
+        },
+        {
+            "code": "10",
+            "name": "НДС 10%"
+        },
+        {
+            "code": "20",
+            "name": "НДС 20%"
+        }
+    ]
+
+    ds_kazakhstan_services = [
+        {
+            "name": "sms",
+            "title": "SMS информирование",
+            "description": "SMS уведомление получателя"
+        }
+    ]
+
 
 INFO = OtherInfo()
