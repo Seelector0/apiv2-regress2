@@ -63,9 +63,10 @@ class Dicts:
         }
 
     @staticmethod
-    def form_warehouse_body(country_code: str = None):
+    def form_warehouse_body(country_code: str = None, pickup: bool = True):
         r"""Форма для создания склада.
         :param country_code: Код страны склада.
+        :param pickup: Осуществляется ли забор с данного склада.
         """
         address_raw = "115035, г Москва, р-н Замоскворечье, ул Садовническая, д 14 стр 2"
         if country_code == "KZ":
@@ -78,7 +79,7 @@ class Dicts:
             },
             "lPostWarehouseId": "20537",
             "yandexWarehouseId": "4eb18cc4-329d-424d-a8a8-abfd8926463d",
-            "pickup": True,
+            "pickup": pickup,
             "contact": {
                 "fullName": "Виктор Викторович",
                 "phone": f"+7910{randrange(1000000, 9999999)}",
