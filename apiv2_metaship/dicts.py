@@ -408,24 +408,3 @@ class Dicts:
         :return:
         """
         return dict(exclude=tariffs, restrict=None)
-
-# @allure.description("Изменение времени доставки заказа")
-# def test_patch_delivery_intervals(app, connections):
-#     order = list()
-#     singles_orders_ids: list = connections.get_list_all_orders_out_parcel()
-#     for single_order in singles_orders_ids:
-#         orders = app.order.get_order_id(order_id=single_order)
-#         if orders.json()["data"]["request"]["delivery"]["type"] == "Courier":
-#             order.append(orders.json()["id"])
-#     random_order_id = choice(order)
-#     patch_order = app.order.patch_delivery_courier_cdek(order_id=random_order_id, time_from="10:00", time_to="14:00")
-#     Checking.check_status_code(response=patch_order, expected_status_code=200)
-#     Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
-#     Checking.checking_json_value(response=patch_order, key_name="state", expected_value="editing-external-processing")
-#     connections.wait_create_order(order_id=random_order_id)
-#     order_by_id = app.order.get_order_id(order_id=random_order_id)
-#     Checking.check_status_code(response=order_by_id, expected_status_code=200)
-#     Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
-#     Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
-#     print(order_by_id.json()["id"])
-#     print(order_by_id.json()["data"]["request"]["delivery"])
