@@ -1,5 +1,5 @@
 from fixture.database import DataBase
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 from psycopg2.extras import DictCursor
 import time
 import json

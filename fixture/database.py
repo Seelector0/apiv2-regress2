@@ -1,4 +1,4 @@
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 import psycopg2
 
 

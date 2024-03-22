@@ -1,6 +1,6 @@
 from databases.connections import DataBaseConnections
 from utils.global_enums import INFO
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 from random import randrange, randint, choice
 import datetime
 import allure

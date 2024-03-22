@@ -1,6 +1,6 @@
 from utils.global_enums import INFO
 from utils.checking import Checking
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 from random import choice
 import pytest
 import allure

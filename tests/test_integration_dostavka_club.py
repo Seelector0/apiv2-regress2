@@ -1,4 +1,4 @@
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 from utils.checking import Checking
 from utils.global_enums import INFO
 from random import choice

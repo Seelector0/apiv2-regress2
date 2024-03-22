@@ -1,7 +1,7 @@
 from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
 from dotenv import load_dotenv, find_dotenv
-from environment import ENV_OBJECT
+from utils.environment import ENV_OBJECT
 import os
 
 
