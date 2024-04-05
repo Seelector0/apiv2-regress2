@@ -116,7 +116,7 @@ class ApiOrder:
         :param file: Имя файла.
         :param method: Метод отправки файла.
         """
-        return [("file", (f"{file}", open(file=f"folder_with_orders/{folder}/{file}", mode="rb"), method))]
+        return [("file", (f"{file}", open(file=f"utils/folder_with_orders/{folder}/{file}", mode="rb"), method))]
 
     def post_import_order_format_metaship(self, code: str, file_extension: str):
         r"""Метод создания заказа из файла XLSX или XLS формата Metaship.
