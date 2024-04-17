@@ -1,3 +1,4 @@
+from api.apiv2_metaship.settings_delivery_services.settings_delivery_services import SettingsDeliveryServices
 from api.apiv2_metaship.delivery_services import ApiDeliveryServices
 from api.apiv2_metaship.apiv2_dicts.dicts import Dicts
 from api.apiv2_metaship.warehouses import ApiWarehouse
@@ -13,7 +14,10 @@ from api.apiv2_metaship.orders import ApiOrder
 from api.apiv2_metaship.shops import ApiShop
 from api.apiv2_metaship.info import ApiInfo
 from api.apiv2_metaship.forms import Forms
+from tests.test_shops import TestsShop
+from tests.test_warehouses import TestsWarehouse
 from utils.http_methods import HttpMethod
+from utils.tests_helper import TestsHelper
 
 
 class Application:
@@ -35,3 +39,7 @@ class Application:
         self.webhook = ApiWebhook(app=self)
         self.reports = ApiReports(app=self)
         self.forms = Forms(app=self)
+        self.settings = SettingsDeliveryServices(app=self)
+        self.tests_helper = TestsHelper(app=self)
+        self.tests_shop = TestsShop(app=self)
+        self.tests_warehouse = TestsWarehouse(app=self)
