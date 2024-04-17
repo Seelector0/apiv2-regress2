@@ -36,21 +36,21 @@ def test_create_warehouse(app, connections):
 
 @allure.description("Подключение настроек СД AlemTat по агрегации")
 def test_aggregation_delivery_services(app):
-    alemtat = app.service.post_delivery_services_alemtat(aggregation=True)
+    alemtat = app.service.post_delivery_service(delivery_service=app.settings.alemtat(aggregation=True))
     Checking.check_status_code(response=alemtat, expected_status_code=201)
     Checking.checking_json_key(response=alemtat, expected_value=INFO.created_entity)
 
 
 @allure.description("Update Connection Id")
 def test_update_connection_id(admin):
-    update = admin.moderation.put_update_connection_id(settings=admin.dicts.form_settings_ds_alemtat())
+    update = admin.connection.put_update_connection_id(settings=admin.dicts.form_settings_ds_alemtat())
     Checking.check_status_code(response=update, expected_status_code=200)
     Checking.checking_json_key(response=update, expected_value=INFO.entity_connections_id)
 
 
 @allure.description("Модерация СД AlemTat")
 def test_moderation_delivery_services(admin):
-    moderation = admin.moderation.post_connections_alemtat()
+    moderation = admin.connection.post_connections_alemtat()
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 

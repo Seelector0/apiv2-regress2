@@ -43,7 +43,7 @@ def test_aggregation_delivery_services_boxberry(app):
 
 @allure.description("Модерация СД Boxberry")
 def test_moderation_delivery_services_boxberry(admin):
-    moderation = admin.moderation.post_connections_boxberry()
+    moderation = admin.connection.post_connections_boxberry()
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
@@ -57,7 +57,7 @@ def test_aggregation_delivery_services_metaship(app):
 
 @allure.description("Update Connection Id")
 def test_update_connection_id_for_metaship(admin):
-    update = admin.moderation.put_update_connection_id(settings=admin.dicts.form_settings_ds_metaship(),
+    update = admin.connection.put_update_connection_id(settings=admin.dicts.form_settings_ds_metaship(),
                                                        index_shop_id=-1)
     Checking.check_status_code(response=update, expected_status_code=200)
     Checking.checking_json_key(response=update, expected_value=INFO.entity_connections_id)
@@ -65,7 +65,7 @@ def test_update_connection_id_for_metaship(admin):
 
 @allure.description("Модерация СД MetaShip")
 def test_moderation_delivery_services_metaship(admin):
-    moderation = admin.moderation.post_connections_metaship()
+    moderation = admin.connection.post_connections_metaship()
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 
