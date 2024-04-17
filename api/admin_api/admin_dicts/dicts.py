@@ -15,7 +15,7 @@ class AdminDicts:
         self.db_connections = DataBaseConnections()
         self.db_customer_api = DataBaseCustomerApi()
 
-    def form_connections_delivery_services(self, delivery_service_code: str,  index_shop_id = 0):
+    def form_connections_delivery_services(self, delivery_service_code: str,  index_shop_id=0):
         r"""Форма для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         :param index_shop_id: Индекс магазина.
@@ -52,10 +52,10 @@ class AdminDicts:
     def form_settings_ds_alemtat():
         """Фома обновления подключения для СД AlemTat."""
         return {
-        "card": os.getenv("ALEMTAT_CARD"),
-        "contract": os.getenv("ALEMTAT_CONTRACT"),
-        "receivingStation": os.getenv("ALEMTAT_RECEIVING_STATION")
-    }
+            "card": os.getenv("ALEMTAT_CARD"),
+            "contract": os.getenv("ALEMTAT_CONTRACT"),
+            "receivingStation": os.getenv("ALEMTAT_RECEIVING_STATION")
+        }
 
     @staticmethod
     def form_settings_ds_boxberry():
