@@ -8,42 +8,25 @@ import allure
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     if len(connections.get_list_shops()) == 0:
-        new_shop = app.shop.post_shop()
-        Checking.check_status_code(response=new_shop, expected_status_code=201)
-        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-        Checking.check_value_comparison(
-            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
-            two_value=[False])
-        Checking.check_value_comparison(
-            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
-            two_value=[True])
+        app.tests_shop.post_shop()
 
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, connections):
     if len(connections.get_list_warehouses()) == 0:
-        new_warehouse = app.warehouse.post_warehouse(country_code="KZ")
-        Checking.check_status_code(response=new_warehouse, expected_status_code=201)
-        Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
-        Checking.check_value_comparison(
-            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
-            two_value=[False])
-        Checking.check_value_comparison(
-            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
-                                                            value="visibility"),
-            two_value=[True])
+        app.tests_warehouse.post_warehouse()
 
 
-@allure.description("Подключение настроек СД PonyExpress по агрегации")
-def test_aggregation_delivery_services(app):
-    pony_express = app.service.post_delivery_services_pony_express(aggregation=True)
+@allure.description("Подключение настроек службы доставки СД PonyExpress по агрегации")
+def test_integration_delivery_services(app):
+    pony_express = app.service.post_delivery_service(delivery_service=app.settings.pony_express(aggregation=True))
     Checking.check_status_code(response=pony_express, expected_status_code=201)
     Checking.checking_json_key(response=pony_express, expected_value=INFO.created_entity)
 
 
 @allure.description("Модерация СД PonyExpress")
 def test_moderation_delivery_services(admin):
-    moderation = admin.connection.post_connections_pony_express()
+    moderation = admin.connection.post_connections(delivery_service=admin.moderation.pony_express())
     Checking.check_status_code(response=moderation, expected_status_code=200)
     Checking.checking_json_key(response=moderation, expected_value=INFO.entity_moderation)
 

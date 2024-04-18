@@ -9,37 +9,20 @@ import allure
 @allure.description("Создание магазина")
 def test_create_shop(app, connections):
     if len(connections.get_list_shops()) == 0:
-        new_shop = app.shop.post_shop()
-        Checking.check_status_code(response=new_shop, expected_status_code=201)
-        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-        Checking.check_value_comparison(
-            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="deleted"),
-            two_value=[False])
-        Checking.check_value_comparison(
-            one_value=connections.get_list_shops_value(shop_id=new_shop.json()["id"], value="visibility"),
-            two_value=[True])
+        app.tests_shop.post_shop()
 
 
 @allure.description("Создание склада")
 def test_create_warehouse(app, connections):
     if len(connections.get_list_warehouses()) == 0:
-        new_warehouse = app.warehouse.post_warehouse()
-        Checking.check_status_code(response=new_warehouse, expected_status_code=201)
-        Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
-        Checking.check_value_comparison(
-            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"], value="deleted"),
-            two_value=[False])
-        Checking.check_value_comparison(
-            one_value=connections.get_list_warehouses_value(warehouse_id=new_warehouse.json()["id"],
-                                                            value="visibility"),
-            two_value=[True])
+        app.tests_warehouse.post_warehouse()
 
 
-@allure.description("Подключение настроек СД YandexGo")
+@allure.description("Подключение настроек службы доставки СД YandexGo")
 def test_integration_delivery_services(app):
-    yandex = app.service.post_delivery_services_yandex_go()
-    Checking.check_status_code(response=yandex, expected_status_code=201)
-    Checking.checking_json_key(response=yandex, expected_value=INFO.created_entity)
+    yandex_go = app.service.post_delivery_service(delivery_service=app.settings.yandex_go())
+    Checking.check_status_code(response=yandex_go, expected_status_code=201)
+    Checking.checking_json_key(response=yandex_go, expected_value=INFO.created_entity)
 
 
 @allure.description("Создание Courier заказа по CД YandexGo")
