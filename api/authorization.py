@@ -1,4 +1,4 @@
-from api.apiv2_metaship.apiv2_dicts.dicts import Dicts
+from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.http_methods import HttpMethod
 from utils.environment import ENV_OBJECT
 import requests

@@ -1,6 +1,6 @@
-from api.admin_api.connections_delivery_services import ApiConnectionDeliveryServices
-from api.admin_api.settings_moderation.settings_moderation import SettingsModeration
-from api.admin_api.admin_dicts.dicts import AdminDicts
+from api.admin_methods.connections_delivery_services import ApiConnectionDeliveryServices
+from api.admin_methods.moderation_settings.moderation_settings import SettingsModeration
+from api.admin_methods.admin_dicts.dicts import AdminDicts
 from api.authorization import ApiAuthorization
 from utils.http_methods import HttpMethod
 

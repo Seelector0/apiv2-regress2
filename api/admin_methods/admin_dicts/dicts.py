@@ -15,7 +15,7 @@ class AdminDicts:
         self.db_connections = DataBaseConnections()
         self.db_customer_api = DataBaseCustomerApi()
 
-    def form_connections_delivery_services(self, delivery_service_code: str,  index_shop_id=0):
+    def form_connections_delivery_services(self, delivery_service_code: str, index_shop_id=0):
         r"""Форма для снятия с модерации СД.
         :param delivery_service_code: Название СД.
         :param index_shop_id: Индекс магазина.
@@ -40,7 +40,7 @@ class AdminDicts:
 
     @staticmethod
     def form_settings_ds_kaz_post():
-        """Фома обновления подключения для СД KazPost."""
+        """Фоhма обновления подключения для СД KazPost."""
         return {
             "intakePostOfficeCode": os.getenv("KAZ_POST_INTAKE_POST_OFFICE_CODE"),
             "bin": os.getenv("KAZ_POST_BIN"),
