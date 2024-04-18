@@ -1,11 +1,9 @@
-from databases.connections import DataBaseConnections
 
 
 class TestsHelper:
 
     def __init__(self, app):
         self.app = app
-        self.db_connections = DataBaseConnections()
 
     def check_methods_shop(self):
         """Проверка всех методов Shop"""
@@ -33,8 +31,3 @@ class TestsHelper:
         self.app.tests_warehouse.patch_warehouse_working_time()
         self.app.tests_warehouse.patch_warehouse_l_post_warehouse_id()
         self.app.tests_warehouse.delete_warehouse()
-
-    def check_methods_delivery_service(self):
-        if len(self.db_connections.get_list_shops()) == 0:
-            self.app.tests_shop.post_shop()
-
