@@ -333,6 +333,8 @@ class OtherInfo:
 
     rp_po_tariffs = ["23", "47", "4"]
 
+    rp_dp_tariffs = ["54"]
+
     rp_list_tariffs = [
         {
             "id": "24",

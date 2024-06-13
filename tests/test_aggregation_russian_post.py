@@ -82,12 +82,30 @@ def test_create_order_courier(app, connections):
                                     two_value=["succeeded"])
 
 
+@allure.description("Создание DeliveryPoint(terminal) заказа по СД RussianPost")
+# @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "connections", reason="Не работает на dev стенде")
+def test_create_delivery_point_terminal(app, connections):
+    new_order = app.order.post_single_order(payment_type="Paid", length=15, width=15, height=15,
+                                            type_ds="DeliveryPoint", service="RussianPost",
+                                            tariff=INFO.rp_po_tariffs[0], delivery_point_code="911292",
+                                            declared_value=1000)
+    Checking.check_status_code(response=new_order, expected_status_code=201)
+    Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+    connections.wait_create_order(order_id=new_order.json()["id"])
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="status"),
+                                    two_value=["created"])
+    Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                               value="state"),
+                                    two_value=["succeeded"])
+
+
 @allure.description("Создание DeliveryPoint заказа по СД RussianPost")
-@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "connections", reason="Не работает на dev стенде")
+# @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "connections", reason="Не работает на dev стенде")
 def test_create_delivery_point(app, connections):
     new_order = app.order.post_single_order(payment_type="Paid", length=15, width=15, height=15,
                                             type_ds="DeliveryPoint", service="RussianPost",
-                                            tariff=INFO.rp_po_tariffs[0], delivery_point_code="914841",
+                                            tariff=INFO.rp_dp_tariffs[0], delivery_point_code="982116",
                                             declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
@@ -222,8 +240,9 @@ def test_order_details(app, connections):
 
 
 @allure.description("Создание партии СД RussianPost")
-def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(value=choice(connections.get_list_all_orders_out_parcel()))
+@pytest.mark.parametrize("types", ["Courier", "DeliveryPoint", "PostOffice"])
+def test_create_parcel(app, connections, types):
+    create_parcel = app.parcel.post_parcel(value=connections.get_list_all_orders_out_parcel_for_types(types=types))
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
 
@@ -243,12 +262,13 @@ def test_get_parcel_by_id(app, connections):
 
 
 @allure.description("Редактирование партии СД RussianPost (Добавление заказов)")
-def test_add_order_in_parcel(app, connections):
-    list_parcel_id = connections.get_list_parcels()
-    for order in connections.get_list_all_orders_out_parcel():
+@pytest.mark.parametrize("types", ["Courier", "PostOffice"])
+def test_add_order_in_parcel(app, connections, types):
+    list_parcel_id = connections.get_list_parcels_for_types(types=types)
+    for order in connections.get_list_all_orders_out_parcel_for_types(types=types):
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=list_parcel_id[0], op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
-        assert order in connections.get_list_all_orders_in_parcel()
+        assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=list_parcel_id[0])
 
 
 @allure.description("Редактирование партии СД RussianPost (Изменение даты отправки партии)")

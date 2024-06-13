@@ -164,6 +164,21 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order
 
+    def get_list_all_orders_out_parcel_for_types(self, types):
+        """Метод собирает (возвращает) список заказов который не удалены из таблицы order с возможностью указания типа
+        доставки."""
+        db_list_order = []
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order"."order" """
+                                 f"""where state='succeeded' and deleted=false and user_id='{ENV_OBJECT.user_id()}' 
+                                 and data::text LIKE '%{types}%'""")
+            for row in cursor:
+                db_list_order.append(*row)
+        finally:
+            cursor.close()
+        return db_list_order
+
     def get_list_all_orders_in_parcel(self):
         """Метод собирает (возвращает) список заказов из таблицы order_parcel"""
         db_list_orders_in_parcel = []
@@ -171,6 +186,19 @@ class DataBaseConnections:
         try:
             cursor.execute(query=f"""select order_id from {ENV_OBJECT.db_connections()}."order".order_parcel """
                                  f"""where deleted=false and parcel_id = '{self.get_list_parcels()[0]}'""")
+            for row in cursor:
+                db_list_orders_in_parcel.append(*row)
+        finally:
+            cursor.close()
+        return db_list_orders_in_parcel
+
+    def get_list_all_orders_in_parcel_for_parcel_id(self, parcel_id):
+        """Метод собирает (возвращает) список заказов из таблицы order_parcel с возможностью передачи номера партии"""
+        db_list_orders_in_parcel = []
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
+        try:
+            cursor.execute(query=f"""select order_id from {ENV_OBJECT.db_connections()}."order".order_parcel """
+                                 f"""where deleted=false and parcel_id = '{parcel_id}'""")
             for row in cursor:
                 db_list_orders_in_parcel.append(*row)
         finally:
@@ -264,6 +292,51 @@ class DataBaseConnections:
                 db_list_parcel.append(*row)
         finally:
             cursor.close()
+        return db_list_parcel
+
+    def get_list_parcels_for_types(self, types):
+        """Метод собирает (возвращает) список id партий из таблицы parcel с указанным типом доставки. Для КСЕ не
+        будет работать так как данные хранятся в словаре, а у остальных сд списком."""
+        db_list_parcel = []
+        order_ids_to_parcel = {}
+        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
+
+        try:
+            cursor.execute(f"""
+                SELECT id, data 
+                FROM {ENV_OBJECT.db_connections()}."order".parcel 
+                WHERE user_id = '{ENV_OBJECT.user_id()}'
+            """)
+
+            for row in cursor:
+                parcel_id, data = row['id'], row['data']
+                request_data = data.get('request', '{}')
+
+                try:
+                    order_ids_json = json.loads(request_data).get('orderIds', [])
+                except json.JSONDecodeError:
+                    order_ids_json = []
+
+                if order_ids_json and isinstance(order_ids_json, list):
+                    for order_id in order_ids_json:
+                        order_ids_to_parcel[order_id] = parcel_id
+
+            for order_id, parcel_id in order_ids_to_parcel.items():
+                cursor.execute(f"""
+                    SELECT id 
+                    FROM {ENV_OBJECT.db_connections()}."order"."order" 
+                    WHERE id = '{order_id}' 
+                      AND state = 'succeeded' 
+                      AND deleted = false 
+                      AND user_id = '{ENV_OBJECT.user_id()}' 
+                      AND data::text LIKE '%{types}%'
+                """)
+                if cursor.rowcount > 0:
+                    if parcel_id not in db_list_parcel:
+                        db_list_parcel.append(parcel_id)
+        finally:
+            cursor.close()
+
         return db_list_parcel
 
     def delete_list_parcels(self):
