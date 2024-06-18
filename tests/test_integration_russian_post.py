@@ -71,7 +71,7 @@ def test_create_order_courier(app, connections):
 def test_create_delivery_point_terminal(app, connections):
     new_order = app.order.post_single_order(payment_type="Paid", length=15, width=15, height=15,
                                             type_ds="DeliveryPoint", service="RussianPost",
-                                            tariff=INFO.rp_po_tariffs[0], delivery_point_code="911292",
+                                            tariff=INFO.rp_po_tariffs[0], delivery_point_code="914841",
                                             declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
