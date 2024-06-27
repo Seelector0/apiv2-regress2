@@ -252,12 +252,13 @@ def test_order_details(app, shared_data):
 @allure.description("Создание партии СД RussianPost")
 @pytest.mark.parametrize("types", ["orders_courier", "orders_delivery_point", "orders_post_office", "orders_terminal"])
 def test_create_parcel(app, shared_data, types):
-    create_parcel = app.parcel.post_parcel(value=shared_data[types])
+    order = shared_data[types].pop()
+    create_parcel = app.parcel.post_parcel(value=order)
     parcel_id = create_parcel.json()[0]["id"]
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
     shared_data["parcel_ids"].append(parcel_id)
-    shared_data["order_ids_in_parcel"].append(shared_data[types])
+    shared_data["order_ids_in_parcel"].append(order)
 
 
 @allure.description("Получение списка партий CД RussianPost")
@@ -269,7 +270,6 @@ def test_get_parcels(app):
 
 @allure.description("Получение информации о партии CД RussianPost")
 def test_get_parcel_by_id(app, shared_data):
-    print(shared_data["order_ids_in_parcel"])
     random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=random_parcel, expected_status_code=200)
     Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
@@ -296,10 +296,9 @@ def test_change_shipment_date(app, shared_data):
 
 @allure.description("Получение этикетки СД RussianPost")
 def test_get_label(app, shared_data):
-    for sublist in shared_data["order_ids_in_parcel"]:
-        for order_id in sublist:
-            label = app.document.get_label(order_id=order_id)
-            Checking.check_status_code(response=label, expected_status_code=200)
+    for order_id in shared_data["order_ids_in_parcel"]:
+        label = app.document.get_label(order_id=order_id)
+        Checking.check_status_code(response=label, expected_status_code=200)
 
 
 @allure.description("Получение АПП СД RussianPost")
@@ -324,7 +323,7 @@ def test_forms_parcels_labels(app, shared_data):
 
 @allure.description("Редактирование партии СД RussianPost (Удаление заказа из партии)")
 def test_remove_order_in_parcel(app, connections, shared_data):
-    remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(shared_data["order_ids_in_parcel"][0]),
+    remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(shared_data["order_ids_in_parcel"]),
                                            parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=remove_order, expected_status_code=200)
     assert remove_order is not connections.get_list_all_orders_in_parcel()
