@@ -5,73 +5,68 @@ import pytest
 import allure
 
 
-@allure.description("Создание магазина")
-def test_create_shop(app, connections):
-    if len(connections.get_list_shops()) == 0:
-        app.tests_shop.post_shop()
-
-
-@allure.description("Создание склада")
-def test_create_warehouse(app, connections):
-    if len(connections.get_list_warehouses()) == 0:
-        app.tests_warehouse.post_warehouse()
-
-
 @allure.description("Подключение настроек службы доставки СД LPost")
-def test_integration_delivery_services(app):
-    l_post = app.service.post_delivery_service(delivery_service=app.settings.l_post())
+def test_integration_delivery_services(app, shop_id):
+    l_post = app.service.post_delivery_service(shop_id=shop_id,
+                                               delivery_service=app.settings.l_post())
     Checking.check_status_code(response=l_post, expected_status_code=201)
     Checking.checking_json_key(response=l_post, expected_value=INFO.created_entity)
 
 
 @allure.description("Получение оферов Courier по СД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_courier(app, payment_type):
-    offers_courier = app.offers.get_offers(payment_type=payment_type, types="Courier", delivery_service_code="LPost")
+def test_offers_courier(app, shop_id, warehouse_id, payment_type):
+    offers_courier = app.offers.get_offers(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
+                                           types="Courier", delivery_service_code="LPost")
     Checking.check_status_code(response=offers_courier, expected_status_code=200)
     Checking.checking_json_key(response=offers_courier, expected_value=["Courier"])
 
 
 @allure.description("Создание Courier многоместного заказа по CД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_multi_order_courier(app, payment_type, connections):
+def test_create_multi_order_courier(app, shop_id, warehouse_id, payment_type, connections, shared_data):
     if payment_type == "Paid":
-        new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=0, delivery_sum=0, price_1=0, price_2=0,
-                                               dimension=app.dicts.dimension())
+        new_order = app.order.post_multi_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
+                                               type_ds="Courier", service="LPost", declared_value=0, delivery_sum=0,
+                                               price_1=0, price_2=0, dimension=app.dicts.dimension())
     else:
-        new_order = app.order.post_multi_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                               declared_value=500, price_1=1000, price_2=1000,
-                                               dimension=app.dicts.dimension())
+        new_order = app.order.post_multi_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
+                                               type_ds="Courier", service="LPost", declared_value=500, price_1=1000,
+                                               price_2=1000, dimension=app.dicts.dimension())
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    connections.wait_create_order(order_id=new_order.json()["id"])
+    order_id = new_order.json()["id"]
+    connections.wait_create_order(order_id=order_id)
     Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
                                                                                value="status"),
                                     two_value=["created"])
     Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
                                                                                value="state"),
                                     two_value=["succeeded"])
+    shared_data["order_ids"].append(order_id)
 
 
 @allure.description("Создание Courier заказа по СД LPost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, payment_type, connections):
+def test_create_order_courier(app, shop_id, warehouse_id, payment_type, connections, shared_data):
     if payment_type == "Paid":
-        new_order = app.order.post_single_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                                declared_value=0, delivery_sum=0, price_1=0, price_2=0, price_3=0)
+        new_order = app.order.post_single_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
+                                                type_ds="Courier", service="LPost", declared_value=0, delivery_sum=0,
+                                                price_1=0, price_2=0, price_3=0)
     else:
-        new_order = app.order.post_single_order(payment_type=payment_type, type_ds="Courier", service="LPost",
-                                                declared_value=1000)
+        new_order = app.order.post_single_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
+                                                type_ds="Courier", service="LPost", declared_value=1000)
     Checking.check_status_code(response=new_order, expected_status_code=201)
     Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
-    connections.wait_create_order(order_id=new_order.json()["id"])
+    order_id = new_order.json()["id"]
+    connections.wait_create_order(order_id=order_id)
     Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
                                                                                value="status"),
                                     two_value=["created"])
     Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
                                                                                value="state"),
                                     two_value=["succeeded"])
+    shared_data["order_ids"].append(order_id)
 
 
 @allure.description("Получение списка заказов CД LPost")
@@ -82,15 +77,15 @@ def test_get_orders(app):
 
 
 @allure.description("Получение информации о заказе CД LPost")
-def test_get_order_by_id(app, connections):
-    random_order = app.order.get_order_id(order_id=choice(connections.get_list_all_orders_out_parcel()))
+def test_get_order_by_id(app, shared_data):
+    random_order = app.order.get_order_id(order_id=choice(shared_data["order_ids"]))
     Checking.check_status_code(response=random_order, expected_status_code=200)
     Checking.checking_json_key(response=random_order, expected_value=INFO.entity_order)
 
 
 @allure.description("Редактирование заказа СД LPost")
-def test_editing_order(app, connections):
-    random_order = choice(connections.get_list_all_orders_out_parcel())
+def test_editing_order(app, shared_data):
+    random_order = choice(shared_data["order_ids"])
     order_put = app.order.put_order(order_id=random_order, weight=5, length=12, width=14, height=11,
                                     family_name="Иванов")
     Checking.check_status_code(response=order_put, expected_status_code=200)
@@ -102,16 +97,16 @@ def test_editing_order(app, connections):
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД LPost")
-def test_order_status(app, connections):
-    for order_id in connections.get_list_all_orders_out_parcel():
+def test_order_status(app, shared_data):
+    for order_id in shared_data["order_ids"]:
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
         Checking.checking_in_list_json_value(response=order_status, key_name="status", expected_value="created")
 
 
 @allure.description("Удаление заказа LPost")
-def test_delete_order(app, connections):
-    random_order_id = choice(connections.get_list_all_orders_out_parcel())
+def test_delete_order(app, connections, shared_data):
+    random_order_id = shared_data["order_ids"].pop()
     delete_order = app.order.delete_order(order_id=random_order_id)
     Checking.check_status_code(response=delete_order, expected_status_code=204)
     Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=random_order_id,
@@ -120,18 +115,22 @@ def test_delete_order(app, connections):
 
 
 @allure.description("Получение подробной информации о заказе СД LPost")
-def test_order_details(app, connections):
-    for order_id in connections.get_list_all_orders_out_parcel():
+def test_order_details(app, shared_data):
+    for order_id in shared_data["order_ids"]:
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
         Checking.checking_json_key(response=order_details, expected_value=INFO.details)
 
 
 @allure.description("Создание партии CД LPost")
-def test_create_parcel(app, connections):
-    create_parcel = app.parcel.post_parcel(value=connections.get_list_all_orders_out_parcel())
+def test_create_parcel(app, shared_data):
+    random_order_id = shared_data["order_ids"].pop()
+    create_parcel = app.parcel.post_parcel(value=random_order_id)
+    parcel_id = create_parcel.json()[0]["id"]
     Checking.check_status_code(response=create_parcel, expected_status_code=207)
     Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+    shared_data["parcel_ids"].append(parcel_id)
+    shared_data["order_ids_in_parcel"].append(random_order_id)
 
 
 @allure.description("Получение списка партий CД LPost")
@@ -142,26 +141,27 @@ def test_get_parcels(app):
 
 
 @allure.description("Получение информации о партии CД LPost")
-def test_get_parcel_by_id(app, connections):
-    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(connections.get_list_parcels()))
+def test_get_parcel_by_id(app, shared_data):
+    random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=random_parcel, expected_status_code=200)
     Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
 
 
 @allure.description("Получение АПП СД LPost")
-def test_get_app(app):
-    acceptance = app.document.get_acceptance()
+def test_get_app(app, shared_data):
+    acceptance = app.document.get_acceptance(parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=acceptance, expected_status_code=200)
 
 
 @allure.description("Создание формы с этикетками партии СД LPost")
-def test_forms_parcels_labels(app):
-    forms_labels = app.forms.post_forms()
+@pytest.mark.not_parallel
+def test_forms_parcels_labels(app, shared_data):
+    forms_labels = app.forms.post_forms(parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=forms_labels, expected_status_code=201)
     Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
 
 
 @allure.description("Получение документов СД LPost")
-def test_get_documents(app):
-    documents = app.document.get_files()
+def test_get_documents(app, shared_data):
+    documents = app.document.get_files(parcel_id=choice(shared_data["parcel_ids"]))
     Checking.check_status_code(response=documents, expected_status_code=200)

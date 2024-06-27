@@ -15,16 +15,16 @@ class AdminDicts:
         self.db_connections = DataBaseConnections()
         self.db_customer_api = DataBaseCustomerApi()
 
-    def form_connections_delivery_services(self, delivery_service_code: str, index_shop_id=0):
+    def form_connections_delivery_services(self, shop_id, delivery_service_code: str):
         r"""Форма для снятия с модерации СД.
         :param delivery_service_code: Название СД.
-        :param index_shop_id: Индекс магазина.
+        :param shop_id: Id магазина.
         """
-        shop_id = self.db_connections.get_list_shops()[index_shop_id]
         return {
             "shopId": shop_id,
             "customerId": ENV_OBJECT.customer_id(),
-            "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id)[0],
+            "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id,
+                                                                    delivery_service=delivery_service_code),
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
             "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
             "credential": dict(),
@@ -40,7 +40,7 @@ class AdminDicts:
 
     @staticmethod
     def form_settings_ds_kaz_post():
-        """Фоhма обновления подключения для СД KazPost."""
+        """Форма обновления подключения для СД KazPost."""
         return {
             "intakePostOfficeCode": os.getenv("KAZ_POST_INTAKE_POST_OFFICE_CODE"),
             "bin": os.getenv("KAZ_POST_BIN"),
@@ -61,13 +61,14 @@ class AdminDicts:
     def form_settings_ds_boxberry():
         return dict(intakeDeliveryPointCode=os.getenv("BB_INTAKE_DELIVERY_POINT_CODE"))
 
-    def form_settings_ds_metaship(self):
+    @staticmethod
+    def form_settings_ds_metaship(shop_id):
         return {
             "data": [
                 {
                     "deliveryService": "Boxberry",
                     "tariff": "_default",
-                    "shopId": self.db_connections.get_list_shops()[0]
+                    "shopId": shop_id
                 }
             ]
         }

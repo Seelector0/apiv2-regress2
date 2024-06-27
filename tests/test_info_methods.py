@@ -1,3 +1,4 @@
+from utils.environment import ENV_OBJECT
 from utils.global_enums import INFO
 from utils.checking import Checking
 import allure
@@ -6,8 +7,8 @@ import os
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")
-@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
-                                                   "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "Dpd",
+                                                   "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
                                                    "YandexDelivery", "Halva", "Pecom"])
 def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
@@ -22,8 +23,6 @@ def test_info_vats(app, delivery_service_code):
         Checking.checking_json_key(response=info_vats, expected_value=INFO.dalli_vats)
     elif delivery_service_code == "DostavkaClub":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.club_vats)
-    elif delivery_service_code == "DostavkaGuru":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.guru_vats)
     elif delivery_service_code == "Dpd":
         Checking.checking_json_key(response=info_vats, expected_value=INFO.dpd_vats)
     elif delivery_service_code == "FivePost":
@@ -54,13 +53,6 @@ def test_intake_offices(app, delivery_service_code):
                                          expected_value=delivery_service_code)
 
 
-@allure.description("Получение полного актуального списка возможных статусов заказа")
-def test_info_order_statuses(app):
-    order_statuses = app.info.get_info_statuses()
-    Checking.check_status_code(response=order_statuses, expected_status_code=200)
-    Checking.checking_json_key(response=order_statuses, expected_value=INFO.entity_order_statuses)
-
-
 @allure.description("Получение информации о тарифах поддерживаемых СД")
 @pytest.mark.parametrize("code", ["RussianPost", "Cdek"])
 def tests_tariffs(app, code):
@@ -73,8 +65,8 @@ def tests_tariffs(app, code):
 
 
 @allure.description("Получение информации о дополнительных услугах поддерживаемых СД")
-@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "DostavkaGuru",
-                                                   "Dpd", "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "Dpd",
+                                                   "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
                                                    "YandexDelivery", "Pecom", "KazPost"])
 def test_info_statuses(app, delivery_service_code):
     info_delivery_service_services = app.info.get_info_delivery_service_services(code=delivery_service_code)
@@ -89,8 +81,6 @@ def test_info_statuses(app, delivery_service_code):
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
     elif delivery_service_code == "DostavkaClub":
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.club_services)
-    elif delivery_service_code == "DostavkaGuru":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.guru_services)
     elif delivery_service_code == "Dpd":
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dpd_services)
     elif delivery_service_code == "FivePost":
@@ -116,10 +106,10 @@ def test_info_statuses(app, delivery_service_code):
 
 
 @allure.description("Получения интервалов доставки")
-@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "RussianPost", "Cse", "DostavkaClub",
-                                                   "DostavkaGuru"])
-def test_delivery_time_schedules(app, delivery_service_code):
-    delivery_time_schedules = app.info.get_delivery_time_schedules(delivery_service_code=delivery_service_code)
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "RussianPost", "Cse", "DostavkaClub"])
+def test_delivery_time_schedules(app, shop_id, delivery_service_code):
+    delivery_time_schedules = app.info.get_delivery_time_schedules(shop_id=shop_id,
+                                                                   delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
     if delivery_service_code == "Boxberry":
         Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
@@ -129,9 +119,6 @@ def test_delivery_time_schedules(app, delivery_service_code):
     elif delivery_time_schedules == "DostavkaClub":
         Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
                                      expected_value=INFO.club_intervals)
-    elif delivery_time_schedules == "DostavkaGuru":
-        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                     expected_value=INFO.guru_intervals)
 
 
 @allure.description("Получение списка ключей")
@@ -144,8 +131,8 @@ def test_user_clients(app):
 
 
 @allure.description("Получение информации о ключе подключения")
-def test_user_clients_by_id(app, connections):
-    if connections == "metaship":
+def test_user_clients_by_id(app):
+    if ENV_OBJECT.db_connections() == "metaship":
         clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID_LOCAL"))

@@ -281,6 +281,16 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
+    def delete_list_orders_for_shop(self, shop_id):
+        """Метод чистит таблицу order по shop_id."""
+        cursor = self.database.connection.cursor()
+        try:
+            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order"."order" 
+            where "order".user_id = '{ENV_OBJECT.user_id()}' and data::text LIKE '%{shop_id}%'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def get_list_parcels(self):
         """Метод собирает (возвращает) список id партий из таблицы parcel."""
         db_list_parcel = []
@@ -345,6 +355,16 @@ class DataBaseConnections:
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".parcel """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
+    def delete_list_parcels_for_id(self, parcel_id):
+        """Метод чистит таблицу parcel по id партии."""
+        cursor = self.database.connection.cursor()
+        try:
+            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}."order".parcel """
+                                 f"""where user_id = '{ENV_OBJECT.user_id()}' and id='{parcel_id}'""")
             cursor.connection.commit()
         finally:
             cursor.close()

@@ -8,9 +8,9 @@ class Forms:
         self.link = "forms"
         self.db_connections = DataBaseConnections()
 
-    def post_forms(self):
+    def post_forms(self, parcel_id):
         """Создание формы с этикетками партии."""
-        forms_url = f"{self.link}/{self.app.parcel.link}/{self.db_connections.get_list_parcels()[0]}/labels"
+        forms_url = f"{self.link}/{self.app.parcel.link}/{parcel_id}/labels"
         result = self.app.http_method.post(link=forms_url)
         return self.app.http_method.return_result(response=result)
 
