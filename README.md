@@ -17,5 +17,6 @@
 
 Запуск тестов:
 
-1. Запустить тесты с помощью команды pytest -s -v tests/ --alluredir=result
-2. Формирование отчёта командой allure serve result
+1. Запустить тесты с помощью команды pytest tests/ --alluredir=result
+2. Запуск тестов в параллельном режиме pytest -c pytest_parallel.ini tests/ --alluredir=result
+3. Формирование отчёта командой allure serve result

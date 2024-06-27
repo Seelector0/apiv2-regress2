@@ -94,13 +94,14 @@ class Dicts:
         """
         return dict(deliveryServiceCode=delivery_service_code)
 
-    def form_info_body(self, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
+    def form_info_body(self, shop_id, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
         r"""Форма для Info methods.
+          :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
         :param data: Желаемая дата доставки.
         """
         body_info = self.form_delivery_service_code(delivery_service_code=delivery_service_code)
-        body_info["shopId"] = self.db_connections.get_list_shops()[0]
+        body_info["shopId"] = shop_id
         body_info["deliveryDate"] = data
         return body_info
 
@@ -115,8 +116,11 @@ class Dicts:
             body_connection_type["data"] = dict(type="aggregation")
         return body_connection_type
 
-    def form_offers(self, types: str, country_code: str = None):
+    @staticmethod
+    def form_offers(shop_id, warehouse_id, types: str, country_code: str = None):
         r"""Форма для получения офферов.
+        :param shop_id: Идентификатор магазина.
+        :param warehouse_id: Идентификатор склада.
         :param types: Параметр получения офферов.
         :param country_code: Код страны назначения.
         """
@@ -124,25 +128,28 @@ class Dicts:
         if country_code == "KZ":
             address = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
         return {
-            "warehouseId": self.db_connections.get_list_warehouses()[0],
-            "shopId": self.db_connections.get_list_shops()[-1],
+            "warehouseId": warehouse_id,
+            "shopId": shop_id,
             "address": address,
             "declaredValue": randrange(1000, 5000),
-            "length": randrange(10, 45),
-            "width": randrange(10, 45),
-            "height": randrange(10, 45),
+            "length": randrange(1, 35),
+            "width": randrange(1, 35),
+            "height": randrange(1, 35),
             "weight": randrange(1, 10),
             "types[0]": types,
             "countryCode": country_code
         }
 
-    def form_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, shop_barcode: str = None,
-                   cod: float = None, length: float = randint(10, 30), width: float = randint(10, 50),
-                   height: float = randint(10, 50), weight: float = randint(1, 5), tariff: str = None,
-                   delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   delivery_point_code: str = None, country_code: str = None, pickup_time_period: str = None,
+    def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str, service: str,
+                   shop_barcode: str = None, cod: float = None, length: float = randint(10, 30),
+                   width: float = randint(10, 50), height: float = randint(10, 50),
+                   weight: float = randint(1, 5), tariff: str = None, delivery_sum: float = None,
+                   data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
+                   country_code: str = None, pickup_time_period: str = None,
                    date_pickup: str = None, routes: list = None, ):
         r"""Форма для создания заказов.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param shop_barcode: Штрих код заказа.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
@@ -168,10 +175,10 @@ class Dicts:
             address_raw = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
         return {
             "warehouse": {
-                "id": self.db_connections.get_list_warehouses()[0],
+                "id": warehouse_id,
             },
             "shop": {
-                "id": self.db_connections.get_list_shops()[-1],
+                "id": shop_id,
                 "number": f"{randrange(1000000, 9999999)}",
                 "barcode": shop_barcode,
             },
@@ -226,13 +233,16 @@ class Dicts:
             "dimension": dimension
         }
 
-    def form_order_from_file(self, type_: str = None):
+    @staticmethod
+    def form_order_from_file(shop_id, warehouse_id, type_: str = None):
         r"""Форма для создания заказа из файла.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param type_: Параметр для создания заказа из файла формата СД RussianPost.
         """
         body_order = {
-            "shopId": self.db_connections.get_list_shops()[0],
-            "warehouseId": self.db_connections.get_list_warehouses()[0]
+            "shopId": shop_id,
+            "warehouseId": warehouse_id
         }
         if type_:
             body_order["type"] = type_
@@ -246,8 +256,10 @@ class Dicts:
         """
         return dict(orderIds=orders_ids, shipmentDate=data)
 
-    def form_intakes(self, delivery_service: str):
+    def form_intakes(self, shop_id, warehouse_id, delivery_service: str):
         r"""Форма для создания забора.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param delivery_service: Код СД.
         """
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -255,15 +267,15 @@ class Dicts:
             "deliveryService": delivery_service,
             "date": str(tomorrow),
             "shop": {
-                "id": self.db_connections.get_list_shops()[0],
+                "id": shop_id,
                 "number": f"intake{randrange(1000000, 9999999)}"
             },
             "comment": "Позвонить за 3 часа до забора!",
             "from": {
-                "warehouseId": self.db_connections.get_list_warehouses()[0]
+                "warehouseId": warehouse_id
             },
             "to": {
-                "warehouseId": self.db_connections.get_list_warehouses()[0]
+                "warehouseId": warehouse_id
             },
             "dimension": self.dimension(),
             "weight": randint(1, 5),

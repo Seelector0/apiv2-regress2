@@ -6,29 +6,31 @@ class ApiInfo:
     def __init__(self, app):
         self.app = app
 
-    def get_delivery_time_schedules(self, delivery_service_code: str, tariff_id: str = None):
+    def get_delivery_time_schedules(self, shop_id, delivery_service_code: str, tariff_id: str = None):
         r"""Получение интервалов доставки конкретной СД.
+        :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
         :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал только для СД Dalli.
         """
         if delivery_service_code == "Dalli":
-            params = self.app.dicts.form_info_body(delivery_service_code=delivery_service_code)
+            params = self.app.dicts.form_info_body(shop_id, delivery_service_code=delivery_service_code)
             params["tariffId"] = tariff_id
         elif delivery_service_code == "TopDelivery":
             tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-            params = self.app.dicts.form_info_body(delivery_service_code=delivery_service_code, data=tomorrow)
+            params = self.app.dicts.form_info_body(shop_id, delivery_service_code=delivery_service_code, data=tomorrow)
             params["postalCode"] = "119633"
         else:
             params = self.app.dicts.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
         return self.app.http_method.return_result(response=result)
 
-    def get_delivery_service_points(self, delivery_service_code: str, city_raw: str = "г. Москва"):
+    def get_delivery_service_points(self, shop_id, delivery_service_code: str, city_raw: str = "г. Москва"):
         r"""Получение списка ПВЗ конкретной СД.
+        :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
         :param city_raw: Адресная строка по умолчанию г. Москва.
         """
-        params = self.app.dicts.form_info_body(delivery_service_code=delivery_service_code)
+        params = self.app.dicts.form_info_body(shop_id=shop_id, delivery_service_code=delivery_service_code)
         params["cityRaw"] = city_raw
         result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
         return self.app.http_method.return_result(response=result)
@@ -47,11 +49,6 @@ class ApiInfo:
         """
         params = self.app.dicts.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/intake_offices", params=params)
-        return self.app.http_method.return_result(response=result)
-
-    def get_info_statuses(self):
-        """Получение полного актуального списка возможных статусов заказа."""
-        result = self.app.http_method.get(link="info/statuses")
         return self.app.http_method.return_result(response=result)
 
     def get_tariffs(self, code):

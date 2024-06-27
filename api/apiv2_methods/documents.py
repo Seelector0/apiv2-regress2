@@ -7,9 +7,9 @@ class ApiDocument:
         self.app = app
         self.db_connections = DataBaseConnections()
 
-    def link_documents(self):
+    def link_documents(self, parcel_id):
         """Метод получения ссылки для документов."""
-        return f"{self.app.parcel.link}/{self.db_connections.get_list_parcels()[0]}"
+        return f"{self.app.parcel.link}/{parcel_id}"
 
     def get_label(self, order_id: str, type_: str = None, size_format: str = None):
         r"""Метод получения этикетки.
@@ -26,17 +26,18 @@ class ApiDocument:
             return self.app.http_method.get(link=link)
         return self.app.http_method.get(link=link, params=params)
 
-    def post_labels(self, order_ids: list):
+    def post_labels(self, parcel_id, order_ids: list):
         r"""Метод получения этикеток из партии.
         :param order_ids: Список идентификаторов заказа.
+        :param parcel_id: Id партии.
         """
         labels = dict(orderIds=order_ids)
-        return self.app.http_method.post(link=f"{self.link_documents()}/labels", json=labels)
+        return self.app.http_method.post(link=f"{self.link_documents(parcel_id=parcel_id)}/labels", json=labels)
 
-    def get_acceptance(self):
+    def get_acceptance(self, parcel_id):
         """Метод получения АПП."""
-        return self.app.http_method.get(link=f"{self.link_documents()}/acceptance")
+        return self.app.http_method.get(link=f"{self.link_documents(parcel_id=parcel_id)}/acceptance")
 
-    def get_files(self):
+    def get_files(self, parcel_id):
         """Получение документов."""
-        return self.app.http_method.get(link=f"{self.link_documents()}/files")
+        return self.app.http_method.get(link=f"{self.link_documents(parcel_id=parcel_id)}/files")

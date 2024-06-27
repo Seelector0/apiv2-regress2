@@ -11,8 +11,8 @@ class ApiOrder:
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
-    def post_single_order(self, payment_type: str, declared_value: float, type_ds: str, service: str,
-                          shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
+    def post_single_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
+                          service: str, shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
                           length: float = randint(10, 30), width: float = randint(10, 50),
                           height: float = randint(10, 50), tariff: str = None, data: str = None,
                           delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
@@ -20,6 +20,8 @@ class ApiOrder:
                           price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
                           items_declared_value: int = None):
         r"""Метод создания одноместного заказа.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
@@ -43,7 +45,8 @@ class ApiOrder:
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
-        single_order = self.app.dicts.form_order(shop_barcode=shop_barcode, payment_type=payment_type,
+        single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
+                                                 payment_type=payment_type,
                                                  declared_value=declared_value + price_1 + price_2 + price_3,
                                                  delivery_sum=delivery_sum, cod=cod, length=length, width=width,
                                                  height=height, type_ds=type_ds, service=service, tariff=tariff,
@@ -52,24 +55,27 @@ class ApiOrder:
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup,
                                                  routes=routes)
         single_order["places"] = self.app.dicts.places(places=[
-                    self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
-                                         items_declared_value=items_declared_value),
-                    self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="10",
-                                         items_declared_value=items_declared_value),
-                    self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
-                                         items_declared_value=items_declared_value)
-                ])
+            self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
+                                 items_declared_value=items_declared_value),
+            self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="10",
+                                 items_declared_value=items_declared_value),
+            self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
+                                 items_declared_value=items_declared_value)
+        ])
         result = self.app.http_method.post(link=self.link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
-    def post_multi_order(self, payment_type: str, declared_value: float, type_ds: str, service: str, tariff: str = None,
-                         data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
-                         date_pickup: str = None, pickup_time_period: str = None, price_1: float = 1000,
-                         weight_1: float = randint(1, 5), barcode_1: str = None, delivery_sum: float = 100.24,
-                         cod: float = None, shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
+    def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
+                         service: str, tariff: str = None, data: str = None, delivery_time: dict = None,
+                         delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
+                         price_1: float = 1000, weight_1: float = randint(1, 5), barcode_1: str = None,
+                         delivery_sum: float = 100.24, cod: float = None,
+                         shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
                          weight_2: float = randint(1, 5), barcode_2: str = None,
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
@@ -92,7 +98,7 @@ class ApiOrder:
         :param date_pickup: Временной интервал.
         :param tariff: Тариф создания заказа.
         """
-        multi_order = self.app.dicts.form_order(payment_type=payment_type,
+        multi_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
                                                 declared_value=declared_value + price_1 + price_2,
                                                 delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
                                                 tariff=tariff, data=data, delivery_time=delivery_time,
@@ -100,7 +106,7 @@ class ApiOrder:
                                                 pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
-                                                                       weight=weight_1,  vat="10"),
+                                                                       weight=weight_1, vat="10"),
                                             barcode=barcode_1, shop_number=shop_number_1, dimension=dimension),
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стул", price=price_2, count=1,
                                                                        weight=weight_2, vat="10"),
@@ -118,13 +124,15 @@ class ApiOrder:
         """
         return [("file", (f"{file}", open(file=f"utils/folder_with_orders/{folder}/{file}", mode="rb"), method))]
 
-    def post_import_order_format_metaship(self, code: str, file_extension: str):
+    def post_import_order_format_metaship(self, shop_id, warehouse_id, code: str, file_extension: str):
         r"""Метод создания заказа из файла XLSX или XLS формата Metaship.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param code: Код СД.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_{code}.{file_extension}"
-        body = self.app.dicts.form_order_from_file()
+        body = self.app.dicts.form_order_from_file(shop_id=shop_id, warehouse_id=warehouse_id)
         if file_extension == "xls":
             file = self.open_file(folder="format_metaship", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
@@ -134,12 +142,14 @@ class ApiOrder:
         result = self.app.http_method.post(link=f"import/{self.link}", data=body, files=file)
         return self.app.http_method.return_result(response=result)
 
-    def post_import_order_format_russian_post(self, file_extension: str):
+    def post_import_order_format_russian_post(self, shop_id, warehouse_id, file_extension: str):
         r"""Метод создания заказа из файла XLSX или XLS формата СД RussianPost.
+        :param shop_id: Id магазина.
+        :param warehouse_id: Id склада.
         :param file_extension: Exel файл с расширением xlsx или xls.
         """
         orders = f"orders_format_russian_post.{file_extension}"
-        body = self.app.dicts.form_order_from_file(type_="russian_post")
+        body = self.app.dicts.form_order_from_file(shop_id=shop_id, warehouse_id=warehouse_id, type_="russian_post")
         if file_extension == "xls":
             file = self.open_file(folder="format_russian_post", file=orders, method=self.method_xls)
         elif file_extension == "xlsx":
@@ -202,8 +212,8 @@ class ApiOrder:
             put_order["recipient"]["address"] = dict(raw=address)
             put_order["comment"] = comment
             put_order["places"] = self.app.dicts.places(places=[
-                    self.app.dicts.items(name="Книга", price=1000, count=1, weight=3, vat="10"),
-                    self.app.dicts.items(name="Шкаф", price=1000, count=1, weight=1, vat="10")
+                self.app.dicts.items(name="Книга", price=1000, count=1, weight=3, vat="10"),
+                self.app.dicts.items(name="Шкаф", price=1000, count=1, weight=1, vat="10")
             ])
         result = self.app.http_method.put(link=f"{self.link}/{order_id}", json=put_order)
         return self.app.http_method.return_result(response=result)

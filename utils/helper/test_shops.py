@@ -16,6 +16,8 @@ class TestsShop:
         new_shop = self.app.shop.post_shop()
         Checking.check_status_code(response=new_shop, expected_status_code=201)
         Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+        shop_id = new_shop.json().get('id')
+        return shop_id
 
     @allure.description("Получение списка магазинов")
     def get_shop(self):
