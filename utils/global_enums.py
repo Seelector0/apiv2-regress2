@@ -1,7 +1,4 @@
-
-
 class OtherInfo:
-
     created_entity = ["id", "type", "url", "status"]
 
     entity_shops = ["id", "number", "name", "uri", "phone", "sender", "trackingTag", "visibility"]
@@ -127,32 +124,50 @@ class OtherInfo:
         {
             "name": "fragile",
             "title": "Хрупкое",
-            "description": "Хрупкое"
+            "description": "Хрупкое",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "no-return",
             "title": "Возврату не подлежит",
-            "description": "Возврату не подлежит"
+            "description": "Возврату не подлежит",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "open",
             "title": "Можно вскрывать до получения оплаты с клиента",
-            "description": "Можно вскрывать до получения оплаты с клиента"
+            "description": "Можно вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "pay-by-card",
             "title": "COD (картой или наличными)",
-            "description": "COD (картой или наличными)"
+            "description": "COD (картой или наличными)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "shelf-life-days",
             "title": "Срок хранения заказа в ОПС",
-            "description": "Срок хранения заказа в ОПС"
+            "description": "Срок хранения заказа в ОПС",
+            "options": {
+                "hasParameter": True
+            }
         },
         {
             "name": "sms",
             "title": "SMS информирование",
-            "description": "SMS уведомление получателя"
+            "description": "SMS уведомление получателя",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -224,47 +239,74 @@ class OtherInfo:
         {
             "name": "dress-fitting",
             "title": "Имеется возможность примерки",
-            "description": "Имеется возможность примерки"
-         },
+            "description": "Имеется возможность примерки",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"
-         },
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "lifting-freight",
             "title": "Подъем на этаж (грузовой лифт)",
-            "description": "Подъем на этаж (грузовой лифт)"
-         },
+            "description": "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
-         },
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "no-autocall",
             "title": "Отключение автоматического звонка клиенту",
-            "description": "Отключение автоматического звонка клиенту"
+            "description": "Отключение автоматического звонка клиенту",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "not-open", "title":
             "Не вскрывать до получения оплаты с клиента",
-            "description": "Не вскрывать до получения оплаты с клиента"
+            "description": "Не вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "reverse",
             "title": "Обратный заказ на доставку от получателя до отправителя",
-            "description": "Обратный заказ на доставку от получателя до отправителя"
+            "description": "Обратный заказ на доставку от получателя до отправителя",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "sms",
             "title": "SMS информирование",
-            "description": "SMS уведомление получателя"
+            "description": "SMS уведомление получателя",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -533,16 +575,26 @@ class OtherInfo:
         {
             "name": "not-open",
             "title": "Не вскрывать до получения оплаты с клиента",
-            "description": "Не вскрывать до получения оплаты с клиента"
+            "description": "Не вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "open-test",
             "title": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
-            "description": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности"},
+            "description": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -573,7 +625,10 @@ class OtherInfo:
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -615,15 +670,26 @@ class OtherInfo:
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"},
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "lifting-freight",
             "title": "Подъем на этаж (грузовой лифт)",
-            "description": "Подъем на этаж (грузовой лифт)"},
+            "description": "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -652,67 +718,106 @@ class OtherInfo:
         {
             "name": "barcode-generation",
             "title": "Генерация штрихкода на стороне Меташипа",
-            "description": "Генерация штрихкода на стороне Меташипа"
+            "description": "Генерация штрихкода на стороне Меташипа",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "crate",
             "title": "Обрешётка(защитный каркас) груза",
-            "description": "Обрешётка(защитный каркас) груза"
+            "description": "Обрешётка(защитный каркас) груза",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "dress-fitting",
             "title": "Имеется возможность примерки",
-            "description": "Имеется возможность примерки"
+            "description": "Имеется возможность примерки",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-freight",
             "title": "Подъем на этаж (грузовой лифт)",
-            "description": "Подъем на этаж (грузовой лифт)"
+            "description": "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "open",
             "title": "Можно вскрывать до получения оплаты с клиента",
-            "description": "Можно вскрывать до получения оплаты с клиента"
+            "description": "Можно вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "open-test",
             "title": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
-            "description": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности"
+            "description": "Можно вскрывать до получения оплаты с клиента для проверки работоспособности",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "sms",
             "title": "SMS информирование",
-            "description": "SMS уведомление получателя"
+            "description": "SMS уведомление получателя",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "temperature-restrictions",
             "title": "Температурный режим",
-            "description": "Температурный режим"
+            "description": "Температурный режим",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "weekend-delivery",
             "title": "Доставка в выходные дни",
-            "description": "Доставка в выходные дни"
+            "description": "Доставка в выходные дни",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "weekend-pickup",
             "title": "Приём в выходные дни",
-            "description": "Приём в выходные дни"
+            "description": "Приём в выходные дни",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -739,7 +844,10 @@ class OtherInfo:
         {
             "name": "no-return",
             "title": "Возврату не подлежит",
-            "description": "Возврату не подлежит"
+            "description": "Возврату не подлежит",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -766,32 +874,50 @@ class OtherInfo:
         {
             "name": "find-closest-delivery-interval",
             "title": "Поиск ближайшего интервала доставки",
-            "description": "Поиск ближайшего интервала доставки"
+            "description": "Поиск ближайшего интервала доставки",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-freight", "title":
             "Подъем на этаж (грузовой лифт)", "description":
-            "Подъем на этаж (грузовой лифт)"
+            "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "not-open",
             "title": "Не вскрывать до получения оплаты с клиента",
-            "description": "Не вскрывать до получения оплаты с клиента"
+            "description": "Не вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -821,32 +947,50 @@ class OtherInfo:
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-freight",
             "title": "Подъем на этаж (грузовой лифт)",
-            "description": "Подъем на этаж (грузовой лифт)"
+            "description": "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "not-open",
             "title": "Не вскрывать до получения оплаты с клиента",
-            "description": "Не вскрывать до получения оплаты с клиента"
+            "description": "Не вскрывать до получения оплаты с клиента",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "return-documents",
             "title": "Возврат документов",
-            "description": "Возврат документов"
+            "description": "Возврат документов",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -877,7 +1021,10 @@ class OtherInfo:
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -1051,12 +1198,18 @@ class OtherInfo:
         {
             "name": "no-recipient-confirmation",
             "title": "Отключение подтверждения кодом для получателя",
-            "description": "Отключение подтверждения кодом для получателя"
+            "description": "Отключение подтверждения кодом для получателя",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "no-sender-confirmation",
             "title": "Отключение подтверждения кодом для отправителя",
-            "description": "Отключение подтверждения кодом для отправителя"
+            "description": "Отключение подтверждения кодом для отправителя",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -1091,12 +1244,18 @@ class OtherInfo:
         {
             "name": "barcode-generation",
             "title": "Генерация штрихкода на стороне Меташипа",
-            "description": "Генерация штрихкода на стороне Меташипа"
+            "description": "Генерация штрихкода на стороне Меташипа",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
-            "description": "Частичная реализация"
+            "description": "Частичная реализация",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -1119,32 +1278,50 @@ class OtherInfo:
         {
             "name": "crate",
             "title": "Обрешётка(защитный каркас) груза",
-            "description": "Обрешётка(защитный каркас) груза"
+            "description": "Обрешётка(защитный каркас) груза",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
-            "description": "Подъем на этаж (лифт)"
+            "description": "Подъем на этаж (лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-freight",
             "title": "Подъем на этаж (грузовой лифт)",
-            "description": "Подъем на этаж (грузовой лифт)"
+            "description": "Подъем на этаж (грузовой лифт)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "lifting-manual",
             "title": "Подъем на этаж (ручной)",
-            "description": "Подъем на этаж (ручной)"
+            "description": "Подъем на этаж (ручной)",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "reverse",
             "title": "Обратный заказ на доставку от получателя до отправителя",
-            "description": "Обратный заказ на доставку от получателя до отправителя"
+            "description": "Обратный заказ на доставку от получателя до отправителя",
+            "options": {
+                "hasParameter": False
+            }
         },
         {
             "name": "strapping",
             "title": "Упаковка стреппинг-лентой",
-            "description": "Упаковка стреппинг-лентой"
+            "description": "Упаковка стреппинг-лентой",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
@@ -1171,7 +1348,10 @@ class OtherInfo:
         {
             "name": "sms",
             "title": "SMS информирование",
-            "description": "SMS уведомление получателя"
+            "description": "SMS уведомление получателя",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
