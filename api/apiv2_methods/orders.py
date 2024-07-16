@@ -212,8 +212,8 @@ class ApiOrder:
         put_order["comment"] = comment
         if delivery_service == "RussianPost":
             put_order["places"] = self.app.dicts.places(places=[
-                self.app.dicts.items(name="Книга", price=0, count=1, weight=3, vat="10"),
-                self.app.dicts.items(name="Шкаф", price=0, count=1, weight=1, vat="10")
+                self.app.dicts.items(name="Книга", price=1000, count=1, weight=3, vat="10"),
+                self.app.dicts.items(name="Шкаф", price=1000, count=1, weight=1, vat="10")
             ])
         result = self.app.http_method.put(link=f"{self.link}/{order_id}", json=put_order)
         return self.app.http_method.return_result(response=result)
