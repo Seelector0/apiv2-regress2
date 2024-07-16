@@ -1,9 +1,9 @@
-from utils.environment import ENV_OBJECT
-from utils.global_enums import INFO
-from utils.checking import Checking
 import allure
 import pytest
 import os
+from utils.environment import ENV_OBJECT
+from utils.global_enums import INFO
+from utils.checking import Checking
 
 
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")

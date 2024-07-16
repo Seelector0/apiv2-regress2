@@ -78,7 +78,7 @@ class Dicts:
                 "countryCode": country_code
             },
             "lPostWarehouseId": "20537",
-            "yandexWarehouseId": "4eb18cc4-329d-424d-a8a8-abfd8926463d",
+            "yandexWarehouseId": "fbed3aa1-2cc6-4370-ab4d-59c5cc9bb924",
             "pickup": pickup,
             "contact": {
                 "fullName": "Виктор Викторович",
@@ -141,8 +141,8 @@ class Dicts:
         }
 
     def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str, service: str,
-                   shop_barcode: str = None, cod: float = None, length: float = randint(10, 30),
-                   width: float = randint(10, 50), height: float = randint(10, 50),
+                   shop_barcode: str = None, cod: float = None, length: float = randint(1, 10),
+                   width: float = randint(1, 10), height: float = randint(1, 10),
                    weight: float = randint(1, 5), tariff: str = None, delivery_sum: float = None,
                    data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
                    country_code: str = None, pickup_time_period: str = None,
@@ -229,7 +229,7 @@ class Dicts:
             ],
             "barcode": barcode,
             "shopNumber": shop_number,
-            "weight": randint(1, 5),
+            "weight": randint(1, 2),
             "dimension": dimension
         }
 

@@ -1,0 +1,112 @@
+from random import choice
+from utils.checking import Checking
+from utils.global_enums import INFO
+
+
+class CommonParcels:
+
+    @staticmethod
+    def create_parcel_common(app, shared_data, types=None, **kwargs):
+        """Создание партии"""
+        if types:
+            order = shared_data[types].pop()
+        else:
+            order = shared_data["order_ids"].pop()
+        create_parcel = app.parcel.post_parcel(value=order, **kwargs)
+        Checking.check_status_code(response=create_parcel, expected_status_code=207)
+        Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+        parcel_id = create_parcel.json()[0]["id"]
+        shared_data["parcel_ids"].append(parcel_id)
+        shared_data["order_ids_in_parcel"].append(order)
+
+    @staticmethod
+    def test_patch_weight_random_order_in_parcel_common(app, connections, shared_data):
+        """Редактирование веса заказа в партии"""
+        order_patch = app.order.patch_order_weight(order_id=choice(shared_data["order_ids_in_parcel"]), weight=4)
+        Checking.check_status_code(response=order_patch, expected_status_code=200)
+        connections.wait_create_order(order_id=order_patch.json()["id"])
+        get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
+        Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+
+    @staticmethod
+    def test_get_parcels_common(app):
+        """Получение списка партий CД RussianPost"""
+        list_parcel = app.parcel.get_parcels()
+        Checking.check_status_code(response=list_parcel, expected_status_code=200)
+        Checking.check_response_is_not_empty(response=list_parcel)
+
+    @staticmethod
+    def test_get_parcel_by_id_common(app, shared_data):
+        """Получение информации о партии CД RussianPost"""
+        random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=random_parcel, expected_status_code=200)
+        Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
+
+    @staticmethod
+    def add_order_in_parcel_common(app, connections, shared_data, types=None):
+        """Добавление заказов в партию"""
+        if types:
+            orders = shared_data[types]
+        else:
+            orders = shared_data["order_ids"]
+        for order in orders:
+            random_parcel = choice(shared_data["parcel_ids"])
+            parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=random_parcel, op="add")
+            Checking.check_status_code(response=parcel_add, expected_status_code=200)
+            shared_data["order_ids_in_parcel"].append(order)
+            assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=random_parcel)
+
+    @staticmethod
+    def test_change_shipment_date_common(app, shared_data):
+        """Редактирование партии СД (Изменение даты отправки партии)"""
+        parcel_id = choice(shared_data["parcel_ids"])
+        shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id, day=5)
+        Checking.check_status_code(response=shipment_date, expected_status_code=200)
+        new_date = shipment_date.json()["data"]["request"]["shipmentDate"]
+        Checking.check_date_change(calendar_date=new_date, number_of_days=5)
+
+    @staticmethod
+    def test_get_label_common(app, shared_data, labels=None, format_=None):
+        """Получение этикетки СД"""
+        for order_id in shared_data["order_ids_in_parcel"]:
+            if labels:
+                label = app.document.get_label(order_id=order_id, type_=labels)
+            elif format_:
+                label = app.document.get_label(order_id=order_id, size_format=format_)
+            else:
+                label = app.document.get_label(order_id=order_id)
+            Checking.check_status_code(response=label, expected_status_code=200)
+
+    @staticmethod
+    def test_get_labels_from_parcel_common(app, shared_data):
+        """Получение этикеток заказов из партии"""
+        labels_from_parcel = app.document.post_labels(parcel_id=choice(shared_data["parcel_ids"]),
+                                                      order_ids=shared_data["order_ids_in_parcel"])
+        Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
+
+    @staticmethod
+    def test_get_app_common(app, shared_data):
+        """Получение АПП"""
+        acceptance = app.document.get_acceptance(parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=acceptance, expected_status_code=200)
+
+    @staticmethod
+    def test_get_documents_common(app, shared_data):
+        """Получение документов архивом"""
+        documents = app.document.get_files(parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=documents, expected_status_code=200)
+
+    @staticmethod
+    def test_forms_parcels_labels_common(app, shared_data):
+        """Создание формы с этикетками партии"""
+        forms_labels = app.forms.post_forms(parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=forms_labels, expected_status_code=201)
+        Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
+
+    @staticmethod
+    def test_remove_order_in_parcel_common(app, connections, shared_data):
+        """Редактирование партии (Удаление заказа из партии)"""
+        remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(shared_data["order_ids_in_parcel"]),
+                                               parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=remove_order, expected_status_code=200)
+        assert remove_order is not connections.get_list_all_orders_in_parcel()
