@@ -13,8 +13,8 @@ class ApiOrder:
 
     def post_single_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
                           service: str, shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
-                          length: float = randint(10, 30), width: float = randint(10, 50),
-                          height: float = randint(10, 50), tariff: str = None, data: str = None,
+                          length: float = randint(5, 15), width: float = randint(5, 15),
+                          height: float = randint(5, 15), tariff: str = None, data: str = None,
                           delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
                           pickup_time_period: str = None, date_pickup: str = None, routes: list = None,
                           price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
@@ -68,10 +68,10 @@ class ApiOrder:
     def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
                          service: str, tariff: str = None, data: str = None, delivery_time: dict = None,
                          delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
-                         price_1: float = 1000, weight_1: float = randint(1, 5), barcode_1: str = None,
+                         price_1: float = 1000, weight_1: float = randint(1, 2), barcode_1: str = None,
                          delivery_sum: float = 100.24, cod: float = None,
                          shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
-                         weight_2: float = randint(1, 5), barcode_2: str = None,
+                         weight_2: float = randint(1, 3), barcode_2: str = None,
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
         :param shop_id: Id магазина.
@@ -204,16 +204,16 @@ class ApiOrder:
         put_order["dimension"]["width"] = width
         put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
+        put_order["recipient"]["firstName"] = first_name
+        put_order["recipient"]["secondName"] = second_name
+        put_order["recipient"]["phoneNumber"] = phone_number
+        put_order["recipient"]["email"] = email
+        put_order["recipient"]["address"] = dict(raw=address)
+        put_order["comment"] = comment
         if delivery_service == "RussianPost":
-            put_order["recipient"]["firstName"] = first_name
-            put_order["recipient"]["secondName"] = second_name
-            put_order["recipient"]["phoneNumber"] = phone_number
-            put_order["recipient"]["email"] = email
-            put_order["recipient"]["address"] = dict(raw=address)
-            put_order["comment"] = comment
             put_order["places"] = self.app.dicts.places(places=[
-                self.app.dicts.items(name="Книга", price=1000, count=1, weight=3, vat="10"),
-                self.app.dicts.items(name="Шкаф", price=1000, count=1, weight=1, vat="10")
+                self.app.dicts.items(name="Книга", price=0, count=1, weight=3, vat="10"),
+                self.app.dicts.items(name="Шкаф", price=0, count=1, weight=1, vat="10")
             ])
         result = self.app.http_method.put(link=f"{self.link}/{order_id}", json=put_order)
         return self.app.http_method.return_result(response=result)
