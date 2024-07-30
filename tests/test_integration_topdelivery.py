@@ -93,10 +93,10 @@ def test_delete_order(app, connections, shared_data):
 
 
 @allure.description("Получения этикеток СД TopDelivery вне партии")
-@pytest.mark.parametrize("labels", [pytest.param("original", marks=pytest.mark.xfail), "termo"])
+@pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels_out_of_parcel(app, shared_data, labels):
     combined_order_ids = shared_data["order_ids"] + shared_data["order_ids_single"]
-    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels="termo", shared_data=combined_order_ids)
+    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels=labels, shared_data=combined_order_ids)
 
 
 @allure.description("Получение подробной информации о заказе СД TopDelivery")
@@ -121,9 +121,9 @@ def test_get_parcel_by_id(app, shared_data):
 
 
 @allure.description("Получение этикеток СД TopDelivery")
-@pytest.mark.parametrize("labels", [pytest.param("original", marks=pytest.mark.xfail), "termo"])
+@pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels(app, shared_data, labels):
-    CommonParcels.test_get_label_common(app=app, labels="termo", shared_data=shared_data)
+    CommonParcels.test_get_label_common(app=app, labels=labels, shared_data=shared_data)
 
 
 @allure.description("Получение этикеток заказов из партии СД TopDelivery")

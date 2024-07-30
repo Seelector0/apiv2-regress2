@@ -82,7 +82,6 @@ def test_get_app(app, shared_data):
 
 
 @allure.description("Получение документов СД PonyExpress")
-@pytest.mark.skip("Добавить когда будет полноценная поддержка в ЛК")
 def test_get_documents(app, shared_data):
     CommonParcels.test_get_documents_common(app=app, shared_data=shared_data)
 

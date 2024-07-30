@@ -67,6 +67,5 @@ def test_get_app(app, shared_data):
 
 @allure.description("Получение документов СД YandexGo")
 @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
-@pytest.mark.xfail
 def test_get_documents(app, shared_data):
     CommonParcels.test_get_documents_common(app=app, shared_data=shared_data)
