@@ -28,16 +28,16 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
 
 
 @allure.description("Создание многоместного заказа по CД Dpd")
-@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code, tariff",
-                         [("Paid", "Courier", None, INFO.dpd_courier_tariffs),
-                          ("PayOnDelivery", "Courier", None, INFO.dpd_courier_tariffs),
-                          ("Paid", "DeliveryPoint", "LED", INFO.dpd_ds_tariffs),
-                          ("PayOnDelivery", "DeliveryPoint", "LED", INFO.dpd_ds_tariffs)])
-def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code, tariff,
-                            connections, shared_data):
+@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code",
+                         [("Paid", "Courier", None),
+                          ("PayOnDelivery", "Courier", None),
+                          ("Paid", "DeliveryPoint", "LED"),
+                          ("PayOnDelivery", "DeliveryPoint", "LED")])
+def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code, connections,
+                            shared_data):
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type, service="Dpd",
-                                         tariff=choice(tariff), delivery_point_code=delivery_point_code,
+                                         tariff=choice(INFO.dpd_ds_tariffs), delivery_point_code=delivery_point_code,
                                          date_pickup=str(tomorrow), pickup_time_period="9-18",
                                          shared_data=shared_data["order_ids"])
 
@@ -54,17 +54,17 @@ def test_patch_multi_order(app, connections, shared_data):
 
 
 @allure.description("Создание Courier заказа по CД Dpd")
-@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code, tariff",
-                         [("Paid", "Courier", None, INFO.dpd_courier_tariffs),
-                          ("PayOnDelivery", "Courier", None, INFO.dpd_courier_tariffs),
-                          ("Paid", "DeliveryPoint", "LED", INFO.dpd_ds_tariffs),
-                          ("PayOnDelivery", "DeliveryPoint", "LED", INFO.dpd_ds_tariffs)])
-def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, tariff, delivery_point_code,
-                             connections, shared_data):
+@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code",
+                         [("Paid", "Courier", None),
+                          ("PayOnDelivery", "Courier", None),
+                          ("Paid", "DeliveryPoint", "LED"),
+                          ("PayOnDelivery", "DeliveryPoint", "LED")])
+def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code, connections,
+                             shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           shop_barcode=f"{randrange(100000000, 999999999)}",
                                           payment_type=payment_type, delivery_type=delivery_type, service="Dpd",
-                                          tariff=choice(tariff),
+                                          tariff=choice(INFO.dpd_ds_tariffs),
                                           delivery_point_code=delivery_point_code,
                                           date_pickup=str(tomorrow), pickup_time_period="9-18",
                                           shared_data=shared_data["order_ids"])

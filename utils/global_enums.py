@@ -837,9 +837,7 @@ class OtherInfo:
         }
     ]
 
-    dpd_courier_tariffs = ["MAX", "NDY", "BZP", "CUR", "ECN", "CSM", "PCL", "IND", "DAY", "MXO"]
-
-    dpd_ds_tariffs = ["BZP", "CUR", "ECN", "CSM", "PCL", "MXO"]
+    dpd_ds_tariffs = ["NDY", "CUR", "ECN", "CSM", "PCL",  "MXO"]
 
     five_post_vats = [
         {
