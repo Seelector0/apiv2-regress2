@@ -1,15 +1,14 @@
-from databases.connections import DataBaseConnections
+from random import choice
 from utils.global_enums import INFO
 from utils.checking import Checking
-from random import choice
 import allure
 
 
 class TestsShop:
 
-    def __init__(self, app):
+    def __init__(self, app, connections):
         self.app = app
-        self.db_connections = DataBaseConnections()
+        self.connections = connections
 
     @allure.description("Создание магазина")
     def post_shop(self):
@@ -27,14 +26,14 @@ class TestsShop:
 
     @allure.description("Получение магазина по его id")
     def get_shop_by_id(self):
-        random_shop_id = choice(self.db_connections.get_list_shops())
+        random_shop_id = choice(self.connections.get_list_shops())
         shop = self.app.shop.get_shop_id(shop_id=random_shop_id)
         Checking.check_status_code(response=shop, expected_status_code=200)
         Checking.checking_json_key(response=shop, expected_value=INFO.entity_shops)
 
     @allure.description("Обновление магазина")
     def put_shop(self):
-        random_shop_id = choice(self.db_connections.get_list_shops())
+        random_shop_id = choice(self.connections.get_list_shops())
         put_shop = self.app.shop.put_shop(shop_id=random_shop_id, shop_name="new_shop_12345",
                                           shop_url="new_shop_url.su", contact_person="Кулебакин Максим Юрьевич",
                                           phone="79169326511")
@@ -50,7 +49,7 @@ class TestsShop:
 
     @allure.description("Редактирование полей магазина")
     def patch_shop(self):
-        random_shop_id = choice(self.db_connections.get_list_shops())
+        random_shop_id = choice(self.connections.get_list_shops())
         patch_shop = self.app.shop.patch_shop(shop_id=random_shop_id, value=False)
         Checking.check_status_code(response=patch_shop, expected_status_code=200)
         Checking.checking_json_value(response=patch_shop, key_name="visibility", expected_value=False)

@@ -10,6 +10,9 @@ class DataBaseConnections:
     def __init__(self):
         self.database = DataBase(database=ENV_OBJECT.db_connections())
 
+    def close_connection(self):
+        self.database.connection.close()
+
     def delete_cabinet_settings(self):
         """Метод удаляет настройки кабинета из таблицы 'cabinet'"""
         cursor = self.database.connection.cursor()

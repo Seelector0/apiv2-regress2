@@ -7,9 +7,9 @@ from utils.http_methods import HttpMethod
 
 class Admin:
 
-    def __init__(self):
+    def __init__(self, customer_api):
         self.http_method = HttpMethod(admin=self, app=self)
-        self.dicts = AdminDicts(admin=self)
+        self.dicts = AdminDicts(admin=self, customer_api=customer_api)
         self.authorization = ApiAuthorization(admin=self, app=self)
-        self.connection = ApiConnectionDeliveryServices(admin=self)
+        self.connection = ApiConnectionDeliveryServices(admin=self, customer_api=customer_api)
         self.moderation = SettingsModeration(admin=self)

@@ -1,19 +1,15 @@
-from databases.connections import DataBaseConnections
-from databases.customer_api import DataBaseCustomerApi
 from dotenv import load_dotenv, find_dotenv
 from utils.environment import ENV_OBJECT
 import os
-
 
 load_dotenv(find_dotenv())
 
 
 class AdminDicts:
 
-    def __init__(self, admin):
+    def __init__(self, admin, customer_api):
         self.admin = admin
-        self.db_connections = DataBaseConnections()
-        self.db_customer_api = DataBaseCustomerApi()
+        self.customer_api = customer_api
 
     def form_connections_delivery_services(self, shop_id, delivery_service_code: str):
         r"""Форма для снятия с модерации СД.
@@ -23,8 +19,8 @@ class AdminDicts:
         return {
             "shopId": shop_id,
             "customerId": ENV_OBJECT.customer_id(),
-            "connectionId": self.db_customer_api.get_connections_id(shop_id=shop_id,
-                                                                    delivery_service=delivery_service_code),
+            "connectionId": self.customer_api.get_connections_id(shop_id=shop_id,
+                                                                 delivery_service=delivery_service_code),
             "agreementId": "19852a56-8e10-4516-8218-8acefc2c2bd2",
             "customerAgreementId": ENV_OBJECT.customer_agreements_id(),
             "credential": dict(),

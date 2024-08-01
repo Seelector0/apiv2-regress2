@@ -1,11 +1,9 @@
-from databases.connections import DataBaseConnections
 
 
 class ApiDocument:
 
     def __init__(self, app):
         self.app = app
-        self.db_connections = DataBaseConnections()
 
     def link_documents(self, parcel_id):
         """Метод получения ссылки для документов."""

@@ -10,17 +10,17 @@ import pytest
 
 
 @pytest.fixture(scope="module")
-def app():
+def app(connections):
     """Фикстура для открытия сессии по Apiv2 metaship."""
-    apiv2 = Application()
+    apiv2 = Application(connections=connections)
     apiv2.authorization.post_access_token()
     return apiv2
 
 
 @pytest.fixture(scope="module")
-def admin():
+def admin(customer_api):
     """Фикстура для открытия сессии по Admin Api."""
-    api_admin = Admin()
+    api_admin = Admin(customer_api=customer_api)
     api_admin.authorization.post_access_token(admin=True)
     return api_admin
 
@@ -28,13 +28,17 @@ def admin():
 @pytest.fixture(scope="module")
 def connections():
     """Фикстура для подключения к базе данных 'connections' для dev stage или 'metaship для local stage'."""
-    return DataBaseConnections()
+    db_connections = DataBaseConnections()
+    yield db_connections
+    db_connections.close_connection()
 
 
 @pytest.fixture(scope="module")
 def customer_api():
     """Фикстура для подключения к базе данных 'customer-api'"""
-    return DataBaseCustomerApi()
+    db_customer_api = DataBaseCustomerApi()
+    yield db_customer_api
+    db_customer_api.close_connection()
 
 
 @pytest.fixture(scope="module")
@@ -52,6 +56,7 @@ def widget_api():
 @pytest.fixture(scope="module", autouse=True)
 def stop(request, admin, app, connections, shop_id, shared_data):
     """Фикстура для завершения сессии"""
+
     def fin():
         admin.authorization.session.close()
         app.authorization.session.close()
@@ -84,32 +89,32 @@ def shared_data():
 
 
 @pytest.fixture(scope='module')
-def shop_id(app):
+def shop_id(app, connections):
     """Фикстура создания магазина"""
-    tests_shop = TestsShop(app)
+    tests_shop = TestsShop(app, connections)
     shop_id = tests_shop.post_shop()
     return shop_id
 
 
 @pytest.fixture(scope='module')
-def shop_id_metaship(app):
+def shop_id_metaship(app, connections):
     """Фикстура создания магазина для сд меташип"""
-    tests_shop = TestsShop(app)
+    tests_shop = TestsShop(app, connections)
     shop_id_metaship = tests_shop.post_shop()
     return shop_id_metaship
 
 
 @pytest.fixture(scope='module')
-def warehouse_id(app):
+def warehouse_id(app, connections):
     """Фикстура создания склада"""
-    tests_warehouse = TestsWarehouse(app)
+    tests_warehouse = TestsWarehouse(app, connections)
     warehouse_id = tests_warehouse.post_warehouse()
     return warehouse_id
 
 
 @pytest.fixture(scope='module')
-def warehouse_id_kz(app):
+def warehouse_id_kz(app, connections):
     """Фикстура создания склада для Казахстана"""
-    tests_warehouse = TestsWarehouse(app)
+    tests_warehouse = TestsWarehouse(app, connections)
     warehouse_id_kz = tests_warehouse.post_warehouse(country_code="KZ")
     return warehouse_id_kz

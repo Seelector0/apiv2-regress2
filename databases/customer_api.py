@@ -7,6 +7,9 @@ class DataBaseCustomerApi:
     def __init__(self):
         self.database = DataBase(database="customer-api")
 
+    def close_connection(self):
+        self.database.connection.close()
+
     def get_connections_id(self, shop_id, delivery_service):
         r"""Метод получения connection_id из БД.
         :param shop_id: ID магазина в БД.

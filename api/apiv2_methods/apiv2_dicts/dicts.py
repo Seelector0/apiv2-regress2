@@ -1,4 +1,3 @@
-from databases.connections import DataBaseConnections
 from utils.global_enums import INFO
 from utils.environment import ENV_OBJECT
 from random import randrange, randint, choice
@@ -9,9 +8,9 @@ import uuid
 
 class Dicts:
 
-    def __init__(self, app):
+    def __init__(self, app, connections):
         self.app = app
-        self.db_connections = DataBaseConnections()
+        self.connections = connections
 
     @staticmethod
     def form_authorization(admin: bool = None):
@@ -312,12 +311,12 @@ class Dicts:
                 },
                 "shops": [
                     {
-                        "id": self.db_connections.get_list_shops()[0]
+                        "id": self.connections.get_list_shops()[0]
                     }
                 ],
                 "parcels": [
                     {
-                        "id": self.db_connections.get_list_parcels()[0]
+                        "id": self.connections.get_list_parcels()[0]
                     }
                 ]
             }

@@ -1,11 +1,9 @@
-from databases.connections import DataBaseConnections
 
 
 class ApiDeliveryServices:
 
     def __init__(self, app):
         self.app = app
-        self.db_connections = DataBaseConnections()
 
     def link_delivery_services(self, shop_id):
         r"""Метод получения ссылки для подключения СД."""
