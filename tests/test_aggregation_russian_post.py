@@ -117,7 +117,7 @@ def test_order_details(app, shared_data):
 
 
 @allure.description("Создание партии СД RussianPost")
-@pytest.mark.parametrize("types", ["orders_courier"])
+@pytest.mark.parametrize("types", ["orders_courier", "orders_post_office", "orders_delivery_point", "orders_terminal"])
 def test_create_parcel(app, shared_data, types):
     CommonParcels.create_parcel_common(app=app, shared_data=shared_data, types=types)
 
@@ -133,7 +133,7 @@ def test_get_parcel_by_id(app, shared_data):
 
 
 @allure.description("Редактирование партии СД RussianPost (Добавление заказов)")
-@pytest.mark.parametrize("types", ["orders_courier"])
+@pytest.mark.parametrize("types", ["orders_courier", "orders_post_office", "orders_delivery_point", "orders_terminal"])
 def test_add_order_in_parcel(app, connections, shared_data, types):
     CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_data=shared_data, types=types)
 

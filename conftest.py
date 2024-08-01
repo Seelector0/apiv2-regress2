@@ -70,11 +70,15 @@ def shared_data():
         "order_ids": [],
         "order_ids_single": [],
         "orders_courier": [],
-        "orders_delivery_point": [],
         "orders_post_office": [],
+        "orders_delivery_point": [],
         "orders_terminal": [],
         "order_ids_in_parcel": [],
         "parcel_ids": [],
+        "parcel_ids_courier": [],
+        "parcel_ids_post_office": [],
+        "parcel_ids_delivery_point": [],
+        "parcel_ids_terminal": []
     }
     return data
 

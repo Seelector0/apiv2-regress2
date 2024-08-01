@@ -18,6 +18,15 @@ class CommonParcels:
         parcel_id = create_parcel.json()[0]["id"]
         shared_data["parcel_ids"].append(parcel_id)
         shared_data["order_ids_in_parcel"].append(order)
+        if types == "orders_courier":
+            shared_data["parcel_ids_courier"].append(parcel_id)
+        elif types == "orders_post_office":
+            shared_data["parcel_ids_post_office"].append(parcel_id)
+        elif types == "orders_delivery_point":
+            shared_data["parcel_ids_delivery_point"].append(parcel_id)
+        elif types == "orders_terminal":
+            shared_data["parcel_ids_terminal"].append(parcel_id)
+
 
     @staticmethod
     def test_patch_weight_random_order_in_parcel_common(app, connections, shared_data):
@@ -50,11 +59,20 @@ class CommonParcels:
         else:
             orders = shared_data["order_ids"]
         for order in orders:
-            random_parcel = choice(shared_data["parcel_ids"])
-            parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=random_parcel, op="add")
+            if types == "orders_courier":
+                parcel_id = choice(shared_data["parcel_ids_courier"])
+            elif types == "orders_post_office":
+                parcel_id = choice(shared_data["parcel_ids_post_office"])
+            elif types == "orders_delivery_point":
+                parcel_id = choice(shared_data["parcel_ids_delivery_point"])
+            elif types == "orders_terminal":
+                parcel_id = choice(shared_data["parcel_ids_terminal"])
+            else:
+                parcel_id = choice(shared_data["parcel_ids"])
+            parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id, op="add")
             Checking.check_status_code(response=parcel_add, expected_status_code=200)
             shared_data["order_ids_in_parcel"].append(order)
-            assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=random_parcel)
+            assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=parcel_id)
 
     @staticmethod
     def test_change_shipment_date_common(app, shared_data):
