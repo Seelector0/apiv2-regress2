@@ -2,13 +2,15 @@ from fixture.database import DataBase
 from utils.environment import ENV_OBJECT
 from psycopg2.extras import DictCursor
 import time
-import json
 
 
 class DataBaseConnections:
 
     def __init__(self):
         self.database = DataBase(database=ENV_OBJECT.db_connections())
+
+    def close_connection(self):
+        self.database.connection.close()
 
     def delete_cabinet_settings(self):
         """Метод удаляет настройки кабинета из таблицы 'cabinet'"""
@@ -27,19 +29,6 @@ class DataBaseConnections:
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.customer.shop """
                                  f"""where user_id = '{ENV_OBJECT.user_id()}'""")
-            for row in cursor:
-                db_list_shops.append(*row)
-        finally:
-            cursor.close()
-        return db_list_shops
-
-    def get_list_shops_value(self, shop_id: str, value: str):
-        """Метод возвращает список поля из БД."""
-        db_list_shops = []
-        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
-        try:
-            cursor.execute(query=f"""select {value} from {ENV_OBJECT.db_connections()}.customer.shop """
-                                 f"""where id = '{shop_id}' and user_id = '{ENV_OBJECT.user_id()}'""")
             for row in cursor:
                 db_list_shops.append(*row)
         finally:
@@ -92,19 +81,6 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
-    def get_list_delivery_services(self):
-        """Метод собирает (возвращает) список подключенных служб доставок из таблицы 'customer.credential'"""
-        db_list_delivery_service = []
-        cursor = self.database.connection.cursor()
-        try:
-            cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.customer.credential """
-                                 f"""where customer.shop.user_id = '{ENV_OBJECT.user_id()}'""")
-            for row in cursor:
-                db_list_delivery_service.append(*row)
-        finally:
-            cursor.close()
-        return db_list_delivery_service
-
     def delete_list_delivery_services(self):
         """Метод чисти таблицу 'customer.credential'."""
         cursor = self.database.connection.cursor()
@@ -114,19 +90,6 @@ class DataBaseConnections:
             cursor.connection.commit()
         finally:
             cursor.close()
-
-    def get_list_drafts(self):
-        """Метод собирает (возвращает) список черновиков из таблицы 'order.draft'."""
-        db_list_drafts = []
-        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
-        try:
-            cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order".draft """
-                                 f"""where draft.user_id = = '{ENV_OBJECT.user_id()}'""")
-            for row in cursor:
-                db_list_drafts.append(*row)
-        finally:
-            cursor.close()
-        return db_list_drafts
 
     def delete_list_drafts(self):
         """Метод чистит таблицу 'order.draft'."""
@@ -158,21 +121,6 @@ class DataBaseConnections:
         try:
             cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order"."order" """
                                  f"""where state='succeeded' and deleted=false and user_id='{ENV_OBJECT.user_id()}'""")
-            for row in cursor:
-                db_list_order.append(*row)
-        finally:
-            cursor.close()
-        return db_list_order
-
-    def get_list_all_orders_out_parcel_for_types(self, types):
-        """Метод собирает (возвращает) список заказов который не удалены из таблицы order с возможностью указания типа
-        доставки."""
-        db_list_order = []
-        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
-        try:
-            cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}."order"."order" """
-                                 f"""where state='succeeded' and deleted=false and user_id='{ENV_OBJECT.user_id()}' 
-                                 and data::text LIKE '%{types}%'""")
             for row in cursor:
                 db_list_order.append(*row)
         finally:
@@ -221,43 +169,6 @@ class DataBaseConnections:
             cursor.close()
         return db_list_order_id
 
-    def get_order_id_from_database(self, not_in_parcel: bool = None, in_parcel: bool = None, single_order: bool = None,
-                                   multy_order: bool = None):
-        r"""Метод получения id заказов.
-        :param not_in_parcel: Все заказы не в партии.
-        :param in_parcel: Все заказы в партии.
-        :param single_order: Одноместные заказы.
-        :param multy_order: Многоместные заказы.
-        """
-        order_id = None
-        list_orders = None
-        db_list_data = []
-        db_list_single_order_id = []
-        db_list_multy_order_id = []
-        cursor = self.database.connection.cursor()
-        if in_parcel:
-            list_orders = self.get_list_all_orders_in_parcel()
-        elif not_in_parcel:
-            list_orders = self.get_list_all_orders_out_parcel()
-        try:
-            for order_id in list_orders:
-                cursor.execute(query=f"""select data from {ENV_OBJECT.db_connections()}."order"."order" """
-                                     f"""where id='{order_id}' and state='succeeded' and deleted=false """
-                                     f"""and user_id='{ENV_OBJECT.user_id()}'""")
-                for row in cursor:
-                    db_list_data.append(*row)
-            for i in db_list_data:
-                if len(json.loads(i["request"].replace('\"', '"'))["places"]) == 1:
-                    db_list_single_order_id.append(order_id)
-                elif len(json.loads(i["request"].replace('\"', '"'))["places"]) > 1:
-                    db_list_multy_order_id.append(order_id)
-        finally:
-            cursor.close()
-        if single_order:
-            return db_list_single_order_id
-        if multy_order:
-            return db_list_multy_order_id
-
     def wait_create_order(self, order_id: str):
         r"""Метод ждёт загрузки заказа по его id.
         :param order_id: ID заказа.
@@ -302,51 +213,6 @@ class DataBaseConnections:
                 db_list_parcel.append(*row)
         finally:
             cursor.close()
-        return db_list_parcel
-
-    def get_list_parcels_for_types(self, types):
-        """Метод собирает (возвращает) список id партий из таблицы parcel с указанным типом доставки. Для КСЕ не
-        будет работать так как данные хранятся в словаре, а у остальных сд списком."""
-        db_list_parcel = []
-        order_ids_to_parcel = {}
-        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
-
-        try:
-            cursor.execute(f"""
-                SELECT id, data 
-                FROM {ENV_OBJECT.db_connections()}."order".parcel 
-                WHERE user_id = '{ENV_OBJECT.user_id()}'
-            """)
-
-            for row in cursor:
-                parcel_id, data = row['id'], row['data']
-                request_data = data.get('request', '{}')
-
-                try:
-                    order_ids_json = json.loads(request_data).get('orderIds', [])
-                except json.JSONDecodeError:
-                    order_ids_json = []
-
-                if order_ids_json and isinstance(order_ids_json, list):
-                    for order_id in order_ids_json:
-                        order_ids_to_parcel[order_id] = parcel_id
-
-            for order_id, parcel_id in order_ids_to_parcel.items():
-                cursor.execute(f"""
-                    SELECT id 
-                    FROM {ENV_OBJECT.db_connections()}."order"."order" 
-                    WHERE id = '{order_id}' 
-                      AND state = 'succeeded' 
-                      AND deleted = false 
-                      AND user_id = '{ENV_OBJECT.user_id()}' 
-                      AND data::text LIKE '%{types}%'
-                """)
-                if cursor.rowcount > 0:
-                    if parcel_id not in db_list_parcel:
-                        db_list_parcel.append(parcel_id)
-        finally:
-            cursor.close()
-
         return db_list_parcel
 
     def delete_list_parcels(self):
@@ -436,29 +302,6 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
-    def get_list_webhook(self):
-        """Метод возвращает список id веб-хуков."""
-        db_list_webhook = []
-        cursor = self.database.connection.cursor(cursor_factory=DictCursor)
-        try:
-            cursor.execute(query=f"""select id from {ENV_OBJECT.db_connections()}.webhook.webhook """
-                                 f"""where webhook.user_id = '{ENV_OBJECT.user_id()}'""")
-            for row in cursor:
-                db_list_webhook.append(*row)
-        finally:
-            cursor.close()
-        return db_list_webhook
-
-    def delete_webhook(self):
-        """Метод чистит таблицу 'webhook.webhook'."""
-        cursor = self.database.connection.cursor()
-        try:
-            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.webhook.webhook """
-                                 f"""where webhook.user_id = '{ENV_OBJECT.user_id()}'""")
-            cursor.connection.commit()
-        finally:
-            cursor.close()
-
     def delete_all_setting(self):
         """Метод чистит все таблицы."""
         self.delete_cabinet_settings()
@@ -475,4 +318,3 @@ class DataBaseConnections:
         self.delete_list_parcels()
         self.delete_failed_parcel()
         self.delete_intakes()
-        self.delete_webhook()

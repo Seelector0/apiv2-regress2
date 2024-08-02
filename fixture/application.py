@@ -22,9 +22,9 @@ from utils.tests_helper import TestsHelper
 
 class Application:
 
-    def __init__(self):
+    def __init__(self, connections):
         self.http_method = HttpMethod(app=self, admin=self)
-        self.dicts = Dicts(app=self)
+        self.dicts = Dicts(app=self, connections=connections)
         self.authorization = ApiAuthorization(app=self, admin=self)
         self.shop = ApiShop(app=self)
         self.warehouse = ApiWarehouse(app=self)
@@ -41,5 +41,5 @@ class Application:
         self.forms = Forms(app=self)
         self.settings = SettingsDeliveryServices(app=self)
         self.tests_helper = TestsHelper(app=self)
-        self.tests_shop = TestsShop(app=self)
-        self.tests_warehouse = TestsWarehouse(app=self)
+        self.tests_shop = TestsShop(app=self, connections=connections)
+        self.tests_warehouse = TestsWarehouse(app=self, connections=connections)

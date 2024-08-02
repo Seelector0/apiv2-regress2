@@ -1,4 +1,3 @@
-from databases.connections import DataBaseConnections
 
 
 class Forms:
@@ -6,7 +5,6 @@ class Forms:
     def __init__(self, app):
         self.app = app
         self.link = "forms"
-        self.db_connections = DataBaseConnections()
 
     def post_forms(self, parcel_id):
         """Создание формы с этикетками партии."""
