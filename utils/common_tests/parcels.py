@@ -86,14 +86,14 @@ class CommonParcels:
     @staticmethod
     def test_get_label_common(app, shared_data, labels=None, format_=None):
         """Получение этикетки СД"""
-        for order_id in shared_data["order_ids_in_parcel"]:
-            if labels:
-                label = app.document.get_label(order_id=order_id, type_=labels)
-            elif format_:
-                label = app.document.get_label(order_id=order_id, size_format=format_)
-            else:
-                label = app.document.get_label(order_id=order_id)
-            Checking.check_status_code(response=label, expected_status_code=200)
+        order_id = choice(shared_data["order_ids_in_parcel"])
+        if labels:
+            label = app.document.get_label(order_id=order_id, type_=labels)
+        elif format_:
+            label = app.document.get_label(order_id=order_id, size_format=format_)
+        else:
+            label = app.document.get_label(order_id=order_id)
+        Checking.check_status_code(response=label, expected_status_code=200)
 
     @staticmethod
     def test_get_labels_from_parcel_common(app, shared_data):

@@ -9,4 +9,4 @@ RUN cd /app && \
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["pytest -s -v tests/test_aggregation_russian_post.py tests/test_integration_russian_post.py"]
+ENTRYPOINT ["pytest -c pytest_parallel.ini tests/"]
