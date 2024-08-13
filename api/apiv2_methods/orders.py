@@ -169,7 +169,7 @@ class ApiOrder:
 
     def get_orders(self):
         """Метод возвращает список заказов."""
-        result = self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link, params={'limit': 10})
         return self.app.http_method.return_result(response=result)
 
     def get_order_id(self, order_id: str):

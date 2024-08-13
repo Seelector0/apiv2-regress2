@@ -21,7 +21,7 @@ class ApiParcel:
 
     def get_parcels(self):
         """Метод получения списка партий."""
-        result = self.app.http_method.get(link=self.link)
+        result = self.app.http_method.get(link=self.link, params={'limit': 10})
         return self.app.http_method.return_result(response=result)
 
     def get_parcel_id(self, parcel_id: str):
