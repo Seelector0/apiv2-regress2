@@ -9,4 +9,4 @@ RUN cd /app && \
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["pytest -c pytest_parallel.ini tests/"]
+ENTRYPOINT ["pytest", "-c", "pytest_parallel.ini", "tests/"]
