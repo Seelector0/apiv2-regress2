@@ -19,9 +19,9 @@ class ApiAuthorization:
             self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
                                               data=Dicts.form_authorization(admin=admin), headers=Dicts.form_headers())
             if self.response.status_code >= 400:
-                print(f"Ошибка при получение токена: {self.response.status_code} - {self.response.text}")
+                raise AssertionError(f"Ошибка при получение токена: {self.response.status_code} - {self.response.text}")
 
             return HttpMethod.return_result(response=self.response)
         except requests.RequestException as e:
-            print(f"Ошибка при получение токена: {e}")
-            return None
+            raise AssertionError(f"Ошибка при получение токена: {e}")
+
