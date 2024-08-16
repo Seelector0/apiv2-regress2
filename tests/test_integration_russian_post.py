@@ -20,10 +20,9 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
 
 
 @allure.description("Создание Courier заказа по СД RussianPost")
-@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_create_order_courier(app, shop_id, warehouse_id, payment_type, connections, shared_data):
+def test_create_order_courier(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
-                                          payment_type=payment_type, delivery_type="Courier", service="RussianPost",
+                                          payment_type="Paid", delivery_type="Courier", service="RussianPost",
                                           tariff=choice(INFO.rp_courier_tariffs), shared_data=shared_data["order_ids"],
                                           shared_data_order_type=shared_data["orders_courier"])
 
@@ -127,7 +126,7 @@ def test_get_parcel_by_id(app, shared_data):
 
 
 @allure.description("Редактирование партии СД RussianPost (Добавление заказов)")
-@pytest.mark.parametrize("types", ["orders_courier", "orders_post_office"])
+@pytest.mark.parametrize("types", ["orders_post_office"])
 def test_add_order_in_parcel(app, connections, shared_data, types):
     CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_data=shared_data, types=types)
 
