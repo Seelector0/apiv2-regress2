@@ -2,11 +2,27 @@ from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
 from databases.tracking_api import DataBaseTrackingApi
 from databases.widget_api import DataBaseWidgetApi
+from utils.environment import ENV_OBJECT
 from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from fixture.application import Application
 from fixture.admin import Admin
 import pytest
+import requests
+
+@pytest.fixture(scope="session", autouse=True)
+def check_api_availability():
+    """Фикстура для проверки доступности API перед запуском тестов с ограниченным количеством попыток."""
+    response = None
+    for attempt in range(30):
+        try:
+            response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
+            if response.status_code == 200:
+                return
+        except requests.exceptions.RequestException:
+            pass
+
+    pytest.fail(f"API не доступно. Статус-код ответа: {response.status_code}")
 
 
 @pytest.fixture(scope="module")
