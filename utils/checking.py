@@ -7,75 +7,110 @@ import json
 class Checking:
 
     @staticmethod
+    def _assert_with_trace(response: Response, condition: bool, message: str):
+        """Проверяет условие и добавляет x-trace-id в сообщение об ошибке."""
+        x_trace_id = response.request.headers.get("x-trace-id", "No x-trace-id")
+        assert condition, f"{message} | x-trace-id: {x_trace_id}"
+
+    @staticmethod
     def check_status_code(response: Response, expected_status_code: int):
-        """Метод для проверки статус кода"""
-        with allure.step(title=f"Проверяю что статус код равен {expected_status_code}"):
-            assert response.status_code == expected_status_code, \
-                f"Не ожидаемый status code! Ожидаемый: {expected_status_code}. Фактический: {response.status_code}"
+        """Проверяет статус код ответа."""
+        with allure.step(title=f"Проверка что статус код равен {expected_status_code}"):
+            Checking._assert_with_trace(response=response, condition=response.status_code == expected_status_code,
+                                        message=f"Не ожидаемый статус код! Ожидаемый: {expected_status_code}. "
+                                                f"Фактический: {response.status_code}")
 
     @staticmethod
     def checking_json_key(response: Response, expected_value: list):
-        """Метод для проверки обязательных полей (ключей) в ответе"""
-        with allure.step(title=f"Проверяю что в ответе есть ключи {expected_value}"):
-            assert list(json.loads(response.text)) == expected_value, \
-                f"Не ожидаемые ключи! Ожидаемые {expected_value}. Фактические {list(json.loads(response.text))}"
+        """Проверяет наличие обязательных ключей в JSON-ответе."""
+        with allure.step(title=f"Проверка что в ответе есть ключи {expected_value}"):
+            Checking._assert_with_trace(response=response, condition=list(json.loads(response.text)) == expected_value,
+                                        message=f"Не ожидаемые ключи! Ожидаемые {expected_value}. "
+                                                f"Фактические {list(json.loads(response.text))}")
 
     @staticmethod
     def checking_json_value(response: Response, key_name: str, expected_value, field=None):
-        """Метод для проверки обязательного ключа в ответе"""
-        with allure.step(title=f"Проверяю что в ответе есть значение {expected_value}"):
+        """Проверяет значение по ключу в JSON-ответе."""
+        with allure.step(title=f"Проверка что в ответе есть значение {expected_value}"):
             if field is None:
-                assert response.json()[key_name] == expected_value, \
-                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {response.json()[key_name]}"
+                Checking._assert_with_trace(response=response, condition=response.json()[key_name] == expected_value,
+                                            message=f"Не совпадает значение! Ожидаемое значение {expected_value}!!! "
+                                                    f"Фактическое значение {response.json()[key_name]}")
             else:
-                assert response.json()[key_name][field] == expected_value, \
-                    f"FAILED! У ключа {response.json()[key_name][field]} фактическое значение {expected_value}"
+                Checking._assert_with_trace(response=response,
+                                            condition=response.json()[key_name][field] == expected_value,
+                                            message=f"Не совпадает значение! У ключа {response.json()[key_name][field]} "
+                                                    f"фактическое значение {expected_value}")
 
     @staticmethod
     def checking_big_json(response: Response, key_name: str, expected_value, field=None):
-        with allure.step(title=f"Проверяю что в ответе есть значение {expected_value}"):
+        """Проверяет значение по ключу в большом JSON-ответе."""
+        with allure.step(title=f"Проверка что в ответе есть значение {expected_value}"):
             check = response.json()["data"]["request"]
             if field is None:
-                assert check.get(key_name) == expected_value, \
-                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {check.get(key_name)}"
+                Checking._assert_with_trace(response=response, condition=check.get(key_name) == expected_value,
+                                            message=f"Не совпадает значение! Ожидаемое значение {expected_value}!!! "
+                                                    f"Фактическое значение {check.get(key_name)}")
             else:
-                assert check.get(key_name)[field] == expected_value, \
-                    f"FAILED! У ключа {check.get(key_name)[field]} фактическое значение {expected_value}"
+                Checking._assert_with_trace(response=response, condition=check.get(key_name)[field] == expected_value,
+                                            message=f"Не совпадает значение! У ключа {check.get(key_name)[field]} "
+                                                    f"фактическое значение {expected_value}")
 
     @staticmethod
     def checking_in_list_json_value(response: Response, key_name, expected_value):
-        with allure.step(title=f"Проверяю что в списке есть значение {expected_value}"):
+        """Проверяет наличие значения в списке объектов JSON-ответа."""
+        with allure.step(title=f"Проверка что в списке есть значение {expected_value}"):
             for element in response.json():
-                assert element[key_name] == expected_value, \
-                    f"FAILED! Ожидаемое значение {expected_value}!!! Фактическое значение {element[key_name]}"
+                Checking._assert_with_trace(response=response, condition=element[key_name] == expected_value,
+                                            message=f"Значение {expected_value} не найдено в списке "
+                                                    f"по ключу {element[key_name]}")
 
     @staticmethod
-    def checking_sum_len_lists(old_list: list, new_list: list):
-        """Метод проверяет увеличения длинны старого списка и сравнения его с длинной нового списка"""
-        with allure.step(title="Проверяю длины списков"):
-            assert len(old_list) + 1 == len(new_list), \
-                f"FAILED! Длинна старого списка {len(old_list)} и длинна нового списка {len(new_list)}"
+    def checking_sum_len_lists(responses: dict, old_list: list, new_list: list):
+        """Проверяет увеличение длины списка при переходе от старого списка к новому."""
+        response_info = ', '.join(
+            f"{name}: x-trace-id: {resp.request.headers.get('x-trace-id', 'No x-trace-id')}"
+            for name, resp in responses.items())
+        with allure.step(title="Проверка длины списков"):
+            condition = len(old_list) + 1 == len(new_list)
+            assert condition, (f"Не совпадает длина списков! Старый список: {len(old_list)}, "
+                               f"Новый список:  {len(new_list)} | {response_info}")
 
     @staticmethod
-    def check_date_change(calendar_date, number_of_days: int):
+    def check_date_change(response: Response, calendar_date, number_of_days: int):
+        """Проверяет изменение даты на заданное количество дней."""
         with allure.step(title=f"Проверка, что дата отправки изменилась на {number_of_days} день/дней"):
             day = datetime.date.today()
             day += datetime.timedelta(days=number_of_days)
-            assert calendar_date == str(day), f"{calendar_date} не равна дате {day}"
+            Checking._assert_with_trace(response=response, condition=calendar_date == str(day),
+                                        message=f"Дата {calendar_date} не соответствует ожидаемой дате {day}")
 
     @staticmethod
-    def check_value_comparison(one_value, two_value):
+    def check_value_comparison(responses: dict, one_value, two_value):
+        """Сравнивает два значения на равенство."""
+        response_info = ', '.join(
+            f"{name}: x-trace-id: {resp.request.headers.get('x-trace-id', 'No x-trace-id')}"
+            for name, resp in responses.items())
         with allure.step(title="Проверка двух значений на равенство"):
-            assert one_value == two_value, f"FAILED! первое значение: {one_value}, второе значение: {two_value}"
+            condition = one_value == two_value
+            assert condition, (f"Значения не равны!Первое значение: {one_value}, "
+                               f"второе значение: {two_value}| {response_info}")
 
     @staticmethod
     def check_delivery_services_in_widget_offers(response: Response, delivery_service: str):
-        with allure.step(title=f"Проверяю что в ответе есть СД {delivery_service}"):
-            assert response.json()["features"] != [], f"Ответ {response.json()['features']}"
+        """Проверяет наличие службы доставки в ответе от виджета предложений."""
+        with allure.step(title=f"Проверка что в ответе есть СД {delivery_service}"):
+            Checking._assert_with_trace(response=response, condition=response.json()["features"] != [],
+                                        message=f"Список служб доставки пуст: {response.json()['features']}")
             for i in response.json()["features"]:
-                assert i["point"]["deliveryServiceCode"] == delivery_service, f"В ответе нет СД {delivery_service}"
+                Checking._assert_with_trace(response=response,
+                                            condition=i["point"]["deliveryServiceCode"] == delivery_service,
+                                            message=f"Служба доставки {delivery_service} не найдена в ответе")
 
     @staticmethod
     def check_response_is_not_empty(response: Response):
-        with allure.step(title="Проверяю, что ответ не пустой"):
-            assert len(response.json()) != 0, f"Failed Ответ: {response.json()}, длинна ответа {len(response.json())}"
+        """Проверяет, что ответ не пустой."""
+        with allure.step(title="Проверка, что ответ не пустой"):
+            Checking._assert_with_trace(response=response, condition=len(response.json()) != 0,
+                                        message=f"Ответ пустой! Ответ: {response.json()}, "
+                                                f"длинна ответа {len(response.json())}")

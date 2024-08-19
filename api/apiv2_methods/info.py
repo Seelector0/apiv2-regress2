@@ -25,14 +25,17 @@ class ApiInfo:
         result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)
         return self.app.http_method.return_result(response=result)
 
-    def get_delivery_service_points(self, shop_id, delivery_service_code: str, city_raw: str = "г. Москва"):
+    def get_delivery_service_points(self, shop_id, delivery_service_code: str, city_raw: str = "г. Москва",
+                                    limit: int = 10):
         r"""Получение списка ПВЗ конкретной СД.
         :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
         :param city_raw: Адресная строка по умолчанию г. Москва.
+        :param limit: Максимальное количество возвращаемых пунктов выдачи, по умолчанию 10.
         """
         params = self.app.dicts.form_info_body(shop_id=shop_id, delivery_service_code=delivery_service_code)
         params["cityRaw"] = city_raw
+        params["limit"] = limit
         result = self.app.http_method.get(link="customer/info/delivery_service_points", params=params)
         return self.app.http_method.return_result(response=result)
 

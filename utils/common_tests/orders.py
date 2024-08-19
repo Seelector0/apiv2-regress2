@@ -17,7 +17,8 @@ class CommonOrders:
         Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
-        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order_id,
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=order_id,
                                                                                    value="status"),
                                         two_value=["created"])
         shared_data.append(order_id)
@@ -40,7 +41,8 @@ class CommonOrders:
         Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
-        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order_id,
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=order_id,
                                                                                    value="status"),
                                         two_value=["created"])
         shared_data.append(order_id)
@@ -60,7 +62,8 @@ class CommonOrders:
         for order in new_orders.json().values():
             order_id = order["id"]
             connections.wait_create_order(order_id=order_id)
-            Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=order_id,
+            Checking.check_value_comparison(responses={"POST v2/import/orders": new_orders},
+                                            one_value=connections.get_list_order_value(order_id=order_id,
                                                                                        value="status"),
                                             two_value=["created"])
             shared_data.append(order_id)
@@ -101,6 +104,7 @@ class CommonOrders:
         patch_single_order = None
         order_id = shared_data.pop()
         single_order = app.order.get_order_id(order_id=order_id)
+        items = single_order.json()["data"]["request"]["places"][0]["items"]
         Checking.check_status_code(response=single_order, expected_status_code=200)
         if delivery_service == "Cdek":
             patch_single_order = app.order.patch_order_items_cdek(order_id=order_id, name_1="Бамбук", name_2="Книга")
@@ -109,7 +113,7 @@ class CommonOrders:
             patch_single_order = app.order.patch_order_items_five_post(order_id=order_id, items_name="семена бамбука")
             Checking.check_status_code(response=patch_single_order, expected_status_code=200)
         elif delivery_service == "TopDelivery":
-            patch_single_order = app.order.patch_create_multy_order(order_id=order_id)
+            patch_single_order = app.order.patch_create_multy_order(order_id=order_id, items=items)
             Checking.check_status_code(response=patch_single_order, expected_status_code=200)
         connections.wait_create_order(order_id=order_id)
         order_by_id = app.order.get_order_id(order_id=order_id)
@@ -118,16 +122,31 @@ class CommonOrders:
         assert_order_patch = app.order.get_order_patches(order_id=patch_single_order.json()["id"])
         Checking.check_status_code(response=assert_order_patch, expected_status_code=200)
         if delivery_service == "Cdek":
-            Checking.check_value_comparison(one_value=len(single_order.json()["data"]["request"]["places"]),
+            Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_single_order,
+                                                      "GET v2/order/{id} created": single_order,
+                                                      "GET v2/order/{id} patched": order_by_id},
+                                            one_value=len(single_order.json()["data"]["request"]["places"]),
                                             two_value=1)
-            Checking.check_value_comparison(one_value=len(order_by_id.json()["data"]["request"]["places"]), two_value=2)
+            Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_single_order,
+                                                      "GET v2/order/{id} created": single_order,
+                                                      "GET v2/order/{id} patched": order_by_id},
+                                            one_value=len(order_by_id.json()["data"]["request"]["places"]), two_value=2)
         elif delivery_service == "FivePost":
             field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
-            Checking.check_value_comparison(one_value=field["name"], two_value="семена бамбука")
+            Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_single_order,
+                                                      "GET v2/order/{id} created": single_order,
+                                                      "GET v2/order/{id} patched": order_by_id}, one_value=field["name"],
+                                            two_value="семена бамбука")
         elif delivery_service == "TopDelivery":
-            Checking.check_value_comparison(one_value=len(single_order.json()["data"]["request"]["places"]),
+            Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_single_order,
+                                                      "GET v2/order/{id} created": single_order,
+                                                      "GET v2/order/{id} patched": order_by_id},
+                                            one_value=len(single_order.json()["data"]["request"]["places"]),
                                             two_value=1)
-            Checking.check_value_comparison(one_value=len(patch_single_order.json()["data"]["request"]["places"]),
+            Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_single_order,
+                                                      "GET v2/order/{id} created": single_order,
+                                                      "GET v2/order/{id} patched": order_by_id},
+                                            one_value=len(patch_single_order.json()["data"]["request"]["places"]),
                                             two_value=3)
 
     @staticmethod
@@ -148,8 +167,7 @@ class CommonOrders:
     def test_patch_multi_order_common(app, connections, shared_data, delivery_service=None):
         """Добавление items в многоместный заказ"""
         order_id = choice(shared_data)
-        old_len_order_list = app.order.get_order_id(order_id=order_id)
-        patch_order = app.order.patch_order_add_item(order_id=order_id)
+        old_len_order_list, patch_order = app.order.patch_order_add_item(order_id=order_id)
         Checking.check_status_code(response=patch_order, expected_status_code=200)
         Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
         if delivery_service == "Cdek":
@@ -161,7 +179,10 @@ class CommonOrders:
         new_len_order_list = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
         Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
-        Checking.checking_sum_len_lists(old_list=old_len_order_list.json()["data"]["request"]["places"],
+        Checking.checking_sum_len_lists(responses={"PATCH v2/order/{id}": patch_order,
+                                                   "GET v2/order/{id} created": old_len_order_list,
+                                                   "GET v2/order/{id} patched": new_len_order_list},
+                                        old_list=old_len_order_list.json()["data"]["request"]["places"],
                                         new_list=new_len_order_list.json()["data"]["request"]["places"])
 
     @staticmethod
@@ -175,10 +196,14 @@ class CommonOrders:
         Checking.check_status_code(response=order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
         field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
-        Checking.check_value_comparison(one_value=field["name"], two_value="Пуфик")
-        Checking.check_value_comparison(one_value=field["price"], two_value=500)
-        Checking.check_value_comparison(one_value=field["count"], two_value=2)
-        Checking.check_value_comparison(one_value=field["weight"], two_value=2)
+        Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_order},
+                                        one_value=field["name"], two_value="Пуфик")
+        Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_order},
+                                        one_value=field["price"], two_value=500)
+        Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_order},
+                                        one_value=field["count"], two_value=2)
+        Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_order},
+                                        one_value=field["weight"], two_value=2)
 
     @staticmethod
     def patch_order_recipient_common(app, connections, shared_data, **kwargs):
@@ -276,7 +301,8 @@ class CommonOrders:
         random_order_id = shared_data["order_ids"].pop()
         delete_order = app.order.delete_order(order_id=random_order_id)
         Checking.check_status_code(response=delete_order, expected_status_code=204)
-        Checking.check_value_comparison(one_value=connections.get_list_order_value(order_id=random_order_id,
+        Checking.check_value_comparison(responses={"DELETE v2/order/{id}": delete_order},
+                                        one_value=connections.get_list_order_value(order_id=random_order_id,
                                                                                    value="deleted"),
                                         two_value=[True])
         if delivery_service == "RussianPost":
@@ -297,4 +323,5 @@ class CommonOrders:
             expected_status = ["pending"]
         else:
             expected_status = ["created"]
-        Checking.check_value_comparison(one_value=status, two_value=expected_status)
+        Checking.check_value_comparison(responses={"POST v2/intakes": new_intake},
+                                        one_value=status, two_value=expected_status)

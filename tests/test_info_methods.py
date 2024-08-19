@@ -126,8 +126,10 @@ def test_user_clients(app):
     user_clients = app.info.get_user_clients()
     Checking.check_status_code(response=user_clients, expected_status_code=200)
     for user in user_clients.json():
-        Checking.check_value_comparison(one_value=user["name"], two_value="Клиент APIv2")
-        Checking.check_value_comparison(one_value=user["active"], two_value=True)
+        Checking.check_value_comparison(responses={"GET v2/user/clients": user_clients}, one_value=user["name"],
+                                        two_value="Клиент APIv2")
+        Checking.check_value_comparison(responses={"GET v2/user/clients": user_clients}, one_value=user["active"],
+                                        two_value=True)
 
 
 @allure.description("Получение информации о ключе подключения")
