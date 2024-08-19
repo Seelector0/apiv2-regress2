@@ -14,7 +14,7 @@ import requests
 def check_api_availability():
     """Фикстура для проверки доступности API перед запуском тестов с ограниченным количеством попыток."""
     response = None
-    for attempt in range(30):
+    for attempt in range(60):
         try:
             response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
             if response.status_code == 200:
