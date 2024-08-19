@@ -143,6 +143,6 @@ class TestsWarehouse:
         random_warehouse_id = choice(self.connections.get_list_warehouses())
         delete_warehouse = self.app.warehouse.delete_warehouse(warehouse_id=random_warehouse_id)
         Checking.check_status_code(response=delete_warehouse, expected_status_code=204)
-        Checking.check_value_comparison(
-            one_value=self.connections.get_list_warehouses_value(warehouse_id=random_warehouse_id, value="deleted"),
-            two_value=[True])
+        Checking.check_value_comparison(responses={"DELETE v2/customer/warehouses/{id}": delete_warehouse},
+                                        one_value=self.connections.get_list_warehouses_value
+                                        (warehouse_id=random_warehouse_id, value="deleted"), two_value=[True])

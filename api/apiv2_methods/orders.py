@@ -329,15 +329,14 @@ class ApiOrder:
                                             barcode=f"{randrange(1000000, 9999999)}")
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
-        return self.app.http_method.return_result(response=result)
+        return result_get_order_by_id, self.app.http_method.return_result(response=result)
 
-    def patch_create_multy_order(self, order_id: str):
+    def patch_create_multy_order(self, order_id: str, items: list):
         r"""Создание многоместного из одноместного заказа для СД TopDelivery.
         :param order_id: Идентификатор заказа.
+        :param items: Список товаров из заказа.
         """
         list_items = []
-        result_get_order_by_id = self.get_order_id(order_id=order_id)
-        items = result_get_order_by_id.json()["data"]["request"]["places"][0]["items"]
         for i in items:
             list_items.append(self.app.dicts.form_cargo_items(items=i, dimension=self.app.dicts.dimension(),
                                                               shop_number=f"{randrange(1000000, 9999999)}"))

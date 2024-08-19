@@ -46,7 +46,7 @@ class CommonParcels:
 
     @staticmethod
     def test_get_parcel_by_id_common(app, shared_data):
-        """Получение информации о партии CД RussianPost"""
+        """Получение информации о партии СД RussianPost"""
         random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=random_parcel, expected_status_code=200)
         Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
@@ -58,21 +58,23 @@ class CommonParcels:
             orders = shared_data[types]
         else:
             orders = shared_data["order_ids"]
-        for order in orders:
-            if types == "orders_courier":
-                parcel_id = choice(shared_data["parcel_ids_courier"])
-            elif types == "orders_post_office":
-                parcel_id = choice(shared_data["parcel_ids_post_office"])
-            elif types == "orders_delivery_point":
-                parcel_id = choice(shared_data["parcel_ids_delivery_point"])
-            elif types == "orders_terminal":
-                parcel_id = choice(shared_data["parcel_ids_terminal"])
-            else:
-                parcel_id = choice(shared_data["parcel_ids"])
-            parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id, op="add")
-            Checking.check_status_code(response=parcel_add, expected_status_code=200)
-            shared_data["order_ids_in_parcel"].append(order)
-            assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=parcel_id)
+
+        order = choice(orders)
+
+        if types == "orders_courier":
+            parcel_id = choice(shared_data["parcel_ids_courier"])
+        elif types == "orders_post_office":
+            parcel_id = choice(shared_data["parcel_ids_post_office"])
+        elif types == "orders_delivery_point":
+            parcel_id = choice(shared_data["parcel_ids_delivery_point"])
+        elif types == "orders_terminal":
+            parcel_id = choice(shared_data["parcel_ids_terminal"])
+        else:
+            parcel_id = choice(shared_data["parcel_ids"])
+        parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id, op="add")
+        Checking.check_status_code(response=parcel_add, expected_status_code=200)
+        shared_data["order_ids_in_parcel"].append(order)
+        assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=parcel_id)
 
     @staticmethod
     def test_change_shipment_date_common(app, shared_data):
@@ -81,7 +83,7 @@ class CommonParcels:
         shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id, day=5)
         Checking.check_status_code(response=shipment_date, expected_status_code=200)
         new_date = shipment_date.json()["data"]["request"]["shipmentDate"]
-        Checking.check_date_change(calendar_date=new_date, number_of_days=5)
+        Checking.check_date_change(response=shipment_date, calendar_date=new_date, number_of_days=5)
 
     @staticmethod
     def test_get_label_common(app, shared_data, labels=None, format_=None):
