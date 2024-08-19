@@ -7,22 +7,34 @@ from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from fixture.application import Application
 from fixture.admin import Admin
+import time
 import pytest
 import requests
 
-@pytest.fixture(scope="session", autouse=True)
+
 def check_api_availability():
-    """Фикстура для проверки доступности API перед запуском тестов с ограниченным количеством попыток."""
+    """Функция для проверки доступности API с ограниченным количеством попыток и интервалом между запросами."""
+    start_time = time.time()
+    timeout = 60
     response = None
-    for attempt in range(60):
+    while True:
+        elapsed_time = time.time() - start_time
+        if elapsed_time > timeout:
+            break
         try:
             response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
             if response.status_code == 200:
                 return
         except requests.exceptions.RequestException:
             pass
+        time.sleep(5)
 
-    pytest.fail(f"API не доступно. Статус-код ответа: {response.status_code}")
+    pytest.fail(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
+
+def pytest_sessionstart(session):
+    """Хук для выполнения проверки, только в главном процессе (мастере)."""
+    if not hasattr(session.config, "workerinput"):
+        check_api_availability()
 
 
 @pytest.fixture(scope="module")
