@@ -23,7 +23,7 @@ def check_api_availability():
             break
         try:
             response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
-            if response.status_code == 200:
+            if response.status_code == 201:
                 return
         except requests.exceptions.RequestException:
             pass
