@@ -31,6 +31,7 @@ def check_api_availability():
 
     pytest.fail(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
 
+
 def pytest_sessionstart(session):
     """Хук для выполнения проверки, только в главном процессе (мастере)."""
     if not hasattr(session.config, "workerinput"):
@@ -42,7 +43,8 @@ def app(connections):
     """Фикстура для открытия сессии по Apiv2 metaship."""
     apiv2 = Application(connections=connections)
     apiv2.authorization.post_access_token()
-    return apiv2
+    yield apiv2
+    apiv2.authorization.session.close()
 
 
 @pytest.fixture(scope="module")
@@ -50,7 +52,8 @@ def admin(customer_api):
     """Фикстура для открытия сессии по Admin Api."""
     api_admin = Admin(customer_api=customer_api)
     api_admin.authorization.post_access_token(admin=True)
-    return api_admin
+    yield api_admin
+    api_admin.authorization.session.close()
 
 
 @pytest.fixture(scope="module")
@@ -82,16 +85,17 @@ def widget_api():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def stop(request, admin, app, connections, shop_id, shared_data):
-    """Фикстура для завершения сессии"""
+def stop(request, connections, shop_id, shared_data):
+    """Фикстура для очистки данных после тестов."""
 
     def fin():
-        admin.authorization.session.close()
-        app.authorization.session.close()
-        connections.delete_list_orders_for_shop(shop_id=shop_id)
-        for id_ in shared_data["parcel_ids"]:
-            connections.delete_list_parcels_for_id(id_)
-            connections.delete_order_parcel(id_)
+        try:
+            connections.delete_list_orders_for_shop(shop_id=shop_id)
+            for id_ in shared_data["parcel_ids"]:
+                connections.delete_list_parcels_for_id(id_)
+                connections.delete_order_parcel(id_)
+        except Exception as e:
+            print(f"Ошибка при очистке данных: {e}")
 
     request.addfinalizer(finalizer=fin)
 
