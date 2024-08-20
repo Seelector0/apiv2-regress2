@@ -30,9 +30,9 @@ def check_api_availability():
         time.sleep(5)
 
     if response is not None:
-        pytest.fail(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
+        pytest.exit(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
     else:
-        pytest.fail(f"API не доступно по истечению {timeout} секунд.")
+        pytest.exit(f"API не доступно по истечению {timeout} секунд.")
 
 
 def pytest_sessionstart(session):
