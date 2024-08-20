@@ -3,6 +3,7 @@ import allure
 from utils.environment import ENV_OBJECT
 from utils.common_tests import CommonConnections, CommonOrders, CommonParcels
 
+@allure.description("Подключение настроек службы доставки СД YandexGo")
 def test_integration_delivery_services(app, shop_id):
     CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id,
                                                           connection_settings=app.settings.yandex_go())

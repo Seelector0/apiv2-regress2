@@ -3,7 +3,7 @@ import allure
 from random import randrange, randint
 from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, CommonOrders, CommonParcels
 
-
+@allure.description("Подключение настроек службы доставки СД YandexDelivery")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
                                                           connection_settings=app.settings.yandex_delivery(
