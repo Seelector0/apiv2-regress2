@@ -12,11 +12,15 @@ class TestsShop:
 
     @allure.description("Создание магазина")
     def post_shop(self):
-        new_shop = self.app.shop.post_shop()
-        Checking.check_status_code(response=new_shop, expected_status_code=201)
-        Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
-        shop_id = new_shop.json().get('id')
-        return shop_id
+        """Создает магазин и возвращает его ID."""
+        try:
+            new_shop = self.app.shop.post_shop()
+            Checking.check_status_code(response=new_shop, expected_status_code=201)
+            Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+            shop_id = new_shop.json().get('id')
+            return shop_id
+        except Exception as e:
+            raise AssertionError(f"Ошибка при создании магазина: {e}")
 
     @allure.description("Получение списка магазинов")
     def get_shop(self):
