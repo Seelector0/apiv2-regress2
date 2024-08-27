@@ -18,7 +18,7 @@ class ApiOrder:
                           delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
                           pickup_time_period: str = None, date_pickup: str = None, routes: list = None,
                           price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
-                          items_declared_value: int = None):
+                          items_declared_value: int = 1000):
         r"""Метод создания одноместного заказа.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
@@ -68,10 +68,10 @@ class ApiOrder:
     def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
                          service: str, tariff: str = None, data: str = None, delivery_time: dict = None,
                          delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
-                         price_1: float = 1000, weight_1: float = randint(1, 2), barcode_1: str = None,
+                         price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
                          delivery_sum: float = 100.24, cod: float = None,
                          shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
-                         weight_2: float = randint(1, 3), barcode_2: str = None,
+                         weight_2: float = 2, barcode_2: str = None,
                          shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
         r"""Метод создания многоместного заказа.
         :param shop_id: Id магазина.
@@ -107,10 +107,11 @@ class ApiOrder:
         multi_order["places"] = [
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
                                                                        weight=weight_1, vat="10"),
-                                            barcode=barcode_1, shop_number=shop_number_1, dimension=dimension),
+                                            barcode=barcode_1, shop_number=shop_number_1,
+                                            dimension=dimension, weight=1),
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стул", price=price_2, count=1,
                                                                        weight=weight_2, vat="10"),
-                                            barcode=barcode_2, shop_number=shop_number_2, dimension=dimension)
+                                            barcode=barcode_2, shop_number=shop_number_2, dimension=dimension, weight=2)
         ]
         result = self.app.http_method.post(link=self.link, json=multi_order)
         return self.app.http_method.return_result(response=result)
@@ -326,7 +327,7 @@ class ApiOrder:
         patch_order = self.app.dicts.form_patch_body(op="replace", path="places", value=[
             *items,
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Пуфик", price=1000, count=1, vat="10"),
-                                            barcode=f"{randrange(1000000, 9999999)}")
+                                            barcode=f"{randrange(1000000, 9999999)}", weight=4)
         ])
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_order)
         return result_get_order_by_id, self.app.http_method.return_result(response=result)

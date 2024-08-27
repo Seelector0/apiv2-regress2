@@ -143,13 +143,21 @@ def shop_id_metaship(app, connections):
 def warehouse_id(app, connections):
     """Фикстура создания склада"""
     tests_warehouse = TestsWarehouse(app, connections)
-    warehouse_id = tests_warehouse.post_warehouse()
+    warehouse_id = tests_warehouse.post_warehouse(pickup=True)
     return warehouse_id
+
+
+@pytest.fixture(scope='module')
+def warehouse_without_pickup(app, connections):
+    """Фикстура создания склада"""
+    tests_warehouse = TestsWarehouse(app, connections)
+    warehouse_without_pickup = tests_warehouse.post_warehouse(pickup=False)
+    return warehouse_without_pickup
 
 
 @pytest.fixture(scope='module')
 def warehouse_id_kz(app, connections):
     """Фикстура создания склада для Казахстана"""
     tests_warehouse = TestsWarehouse(app, connections)
-    warehouse_id_kz = tests_warehouse.post_warehouse(country_code="KZ")
+    warehouse_id_kz = tests_warehouse.post_warehouse(country_code="KZ", pickup=True)
     return warehouse_id_kz

@@ -54,6 +54,13 @@ class AdminDicts:
         }
 
     @staticmethod
+    def form_settings_ds_pecom():
+        """Фома обновления подключения для СД AlemTat."""
+        return {
+            "senderWarehouseId": os.getenv("PECOM_SENDER_WAREHOUSE_ID"),
+        }
+
+    @staticmethod
     def form_settings_ds_boxberry():
         return dict(intakeDeliveryPointCode=os.getenv("BB_INTAKE_DELIVERY_POINT_CODE"))
 

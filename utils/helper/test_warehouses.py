@@ -11,7 +11,7 @@ class TestsWarehouse:
         self.connections = connections
 
     @allure.description("Создание склада")
-    def post_warehouse(self, country_code: str = None, pickup: bool = True):
+    def post_warehouse(self, country_code: str = None, pickup: bool = None):
         try:
             new_warehouse = self.app.warehouse.post_warehouse(country_code=country_code, pickup=pickup)
             Checking.check_status_code(response=new_warehouse, expected_status_code=201)

@@ -142,7 +142,7 @@ class Dicts:
     def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str, service: str,
                    shop_barcode: str = None, cod: float = None, length: float = randint(1, 10),
                    width: float = randint(1, 10), height: float = randint(1, 10),
-                   weight: float = randint(1, 5), tariff: str = None, delivery_sum: float = None,
+                   weight: float = 3, tariff: str = None, delivery_sum: float = None,
                    data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
                    country_code: str = None, pickup_time_period: str = None,
                    date_pickup: str = None, routes: list = None, ):
@@ -215,12 +215,14 @@ class Dicts:
         }
 
     @staticmethod
-    def form_cargo_items(items: dict, barcode: str = None, shop_number: str = None, dimension: dict = None):
+    def form_cargo_items(items: dict, barcode: str = None, shop_number: str = None, dimension: dict = None,
+                         weight: str = None):
         r"""Форма для создания грузоместа.
         :param items: Товарная позиция.
         :param barcode: Штрихкод грузоместа.
         :param shop_number: Номер грузоместа.
         :param dimension: Габариты грузоместа.
+        :param weight: Вес грузоместа.
         """
         return {
             "items": [
@@ -228,7 +230,7 @@ class Dicts:
             ],
             "barcode": barcode,
             "shopNumber": shop_number,
-            "weight": randint(1, 2),
+            "weight": weight,
             "dimension": dimension
         }
 
@@ -331,7 +333,7 @@ class Dicts:
 
     @staticmethod
     def items(name, price: float = 1000, count: int = randint(1, 3), weight: float = randint(1, 5), vat: str = "0",
-              items_declared_value: int = None):
+              items_declared_value: int = 1000):
         r"""Товарная позиция.
         :param name: Название товарной позиции.
         :param price: Цена товарной позиции
