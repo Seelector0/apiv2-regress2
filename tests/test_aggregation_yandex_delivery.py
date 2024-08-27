@@ -2,6 +2,7 @@ import pytest
 import allure
 from random import randrange, randint
 from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, CommonOrders, CommonParcels
+from utils.environment import ENV_OBJECT
 
 
 @allure.description("Подключение настроек службы доставки СД YandexDelivery")
@@ -34,6 +35,8 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
                           ("PayOnDelivery", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16")])
 def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code,
                             connections, shared_data):
+    if payment_type == "PayOnDelivery" and delivery_type == "Courier" and ENV_OBJECT.db_connections() == "metaship":
+        pytest.xfail("Тест только для dev стенда")
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type,
                                          service="YandexDelivery", delivery_point_code=delivery_point_code,
@@ -51,6 +54,8 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
                           ("PayOnDelivery", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16")])
 def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code,
                              connections, shared_data):
+    if payment_type == "PayOnDelivery" and delivery_type == "Courier" and ENV_OBJECT.db_connections() == "metaship":
+        pytest.xfail("Тест только для dev стенда")
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           shop_barcode=f"{randrange(100000000, 999999999)}",
                                           payment_type=payment_type, delivery_type=delivery_type,

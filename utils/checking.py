@@ -62,8 +62,8 @@ class Checking:
         with allure.step(title=f"Проверка что в списке есть значение {expected_value}"):
             for element in response.json():
                 Checking._assert_with_trace(response=response, condition=element[key_name] == expected_value,
-                                            message=f"Значение {expected_value} не найдено в списке "
-                                                    f"по ключу {element[key_name]}")
+                                            message=f"Не ожидаемое значение! Ожидаемое значение {expected_value}!!! "
+                                                    f"Фактическое значение {element[key_name]}")
 
     @staticmethod
     def checking_sum_len_lists(responses: dict, old_list: list, new_list: list):

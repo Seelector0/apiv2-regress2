@@ -2,6 +2,7 @@ import pytest
 import allure
 from utils.dates import today, tomorrow
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonInfo, CommonParcels
+from utils.environment import ENV_OBJECT
 
 
 @allure.description("Подключение настроек службы доставки СД Dalli")
@@ -26,6 +27,7 @@ def test_offers(app, shop_id, warehouse_id, payment_type):
 
 @allure.description("Создание многоместного заказа по CД Dalli")
 @pytest.mark.parametrize("payment_type, declared_value,  cod", [("Paid", 0, None), ("PayOnDelivery", 3000, 2100.24)])
+@pytest.mark.xfail(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_create_multi_order(app, shop_id, warehouse_id, payment_type, cod, declared_value, connections, shared_data):
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, declared_value=declared_value, cod=cod,
