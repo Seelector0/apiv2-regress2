@@ -2,6 +2,7 @@ import pytest
 import allure
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
+
 @allure.description("Подключение настроек службы доставки СД MetaShip")
 def test_aggregation_delivery_services_boxberry(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,

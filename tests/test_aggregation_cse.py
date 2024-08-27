@@ -3,6 +3,7 @@ import allure
 from utils.dates import today
 from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, CommonOrders, CommonParcels
 
+
 @allure.description("Подключение настроек службы доставки СД Cse")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
@@ -17,9 +18,8 @@ def test_delivery_service_points(app, shop_id):
 
 @allure.description("Получение оферов в формате 'widget'")
 @pytest.mark.not_parallel
-@pytest.mark.xfail
-def test_offers_format_widget(app, shop_id, warehouse_id):
-    CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, format_="widget",
+def test_offers_format_widget(app, shop_id, warehouse_without_pickup):
+    CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_without_pickup, format_="widget",
                                     delivery_service_code="Cse")
 
 
@@ -27,11 +27,10 @@ def test_offers_format_widget(app, shop_id, warehouse_id):
 @pytest.mark.parametrize("offer_type, payment_type",
                          [("Courier", "Paid"), ("Courier", "PayOnDelivery"),
                           ("DeliveryPoint", "Paid"), ("DeliveryPoint", "PayOnDelivery")])
-def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
-    if offer_type == "DeliveryPoint":
-        pytest.xfail("Ошибка, если атрибут в складе pickup == true")
-    CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
-                                    types=offer_type, delivery_service_code="Cse", expected_value=[f"{offer_type}"])
+def test_offers(app, shop_id, warehouse_without_pickup, offer_type, payment_type):
+    CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_without_pickup,
+                                    payment_type=payment_type, types=offer_type, delivery_service_code="Cse",
+                                    expected_value=[f"{offer_type}"])
 
 
 @allure.description("Создание многоместного заказа по CД Cse")
@@ -40,13 +39,13 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
                           ("PayOnDelivery", "Courier", None),
                           ("Paid", "DeliveryPoint", "0299ca01-ed73-11e8-80c9-7cd30aebf951"),
                           ("PayOnDelivery", "DeliveryPoint", "0299ca01-ed73-11e8-80c9-7cd30aebf951")])
-def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code,
+def test_create_multi_order(app, shop_id, warehouse_without_pickup, payment_type, delivery_type, delivery_point_code,
                             connections, shared_data):
-    CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
-                                         payment_type=payment_type, delivery_type=delivery_type, service="Cse",
-                                         tariff="64", delivery_point_code=delivery_point_code,
-                                         date_pickup=str(today), dimension=app.dicts.dimension(),
-                                         shared_data=shared_data["order_ids"])
+    CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id,
+                                         warehouse_id=warehouse_without_pickup, payment_type=payment_type,
+                                         delivery_type=delivery_type, service="Cse", tariff="64",
+                                         delivery_point_code=delivery_point_code, date_pickup=str(today),
+                                         dimension=app.dicts.dimension(), shared_data=shared_data["order_ids"])
 
 
 @allure.description("Создание заказа по СД Cse")
@@ -55,12 +54,12 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
                           ("PayOnDelivery", "Courier", None),
                           ("Paid", "DeliveryPoint", "0299ca01-ed73-11e8-80c9-7cd30aebf951"),
                           ("PayOnDelivery", "DeliveryPoint", "0299ca01-ed73-11e8-80c9-7cd30aebf951")])
-def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code,
+def test_create_single_order(app, shop_id, warehouse_without_pickup, payment_type, delivery_type, delivery_point_code,
                              connections, shared_data):
-    CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
-                                          payment_type=payment_type, delivery_type=delivery_type, service="Cse",
-                                          tariff="64", delivery_point_code=delivery_point_code,
-                                          date_pickup=str(today),
+    CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id,
+                                          warehouse_id=warehouse_without_pickup, payment_type=payment_type,
+                                          delivery_type=delivery_type, service="Cse", tariff="64",
+                                          delivery_point_code=delivery_point_code, date_pickup=str(today),
                                           shared_data=shared_data["order_ids"])
 
 
@@ -141,6 +140,6 @@ def test_remove_order_in_parcel(app, connections, shared_data):
 
 
 @allure.description("Создание забора СД Cse")
-def test_create_intake(app, shop_id, warehouse_id, connections):
-    CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
-                                           delivery_service="Cse")
+def test_create_intake(app, shop_id, warehouse_without_pickup, connections):
+    CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_without_pickup,
+                                           connections=connections, delivery_service="Cse")

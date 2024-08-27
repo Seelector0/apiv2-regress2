@@ -4,6 +4,7 @@ from random import choice
 from utils.global_enums import INFO
 from utils.common_tests import CommonConnections, CommonOffers, CommonInfo, CommonOrders, CommonParcels
 
+
 @allure.description("Подключение настроек службы доставки СД RussianPost")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,

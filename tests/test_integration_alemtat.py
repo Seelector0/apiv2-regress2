@@ -2,6 +2,7 @@ import pytest
 import allure
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
+
 @allure.description("Подключение настроек службы доставки СД AlemTat")
 def test_integration_delivery_services(app, shop_id):
     CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id,

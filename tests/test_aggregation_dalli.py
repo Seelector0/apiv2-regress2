@@ -3,6 +3,7 @@ import allure
 from utils.dates import today, tomorrow
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonInfo, CommonParcels
 
+
 @allure.description("Подключение настроек службы доставки СД Dalli")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
