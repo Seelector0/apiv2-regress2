@@ -94,18 +94,13 @@ def stop(request, connections, shop_id, shop_id_metaship, warehouse_id, warehous
 
     def fin():
         try:
-            if shop_id:
-                connections.delete_list_orders_for_shop(shop_id=shop_id)
-                connections.delete_list_shops_for_id(shop_id=shop_id)
-            if shop_id_metaship:
-                connections.delete_list_orders_for_shop(shop_id=shop_id_metaship)
-                connections.delete_list_shops_for_id(shop_id=shop_id_metaship)
-            if warehouse_id:
-                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_id)
-            if warehouse_without_pickup:
-                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_without_pickup)
-            if warehouse_id_kz:
-                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_id_kz)
+            for id_ in [shop_id, shop_id_metaship]:
+                if id_:
+                    connections.delete_list_orders_for_shop(shop_id=id_)
+                    connections.delete_list_shops_for_id(shop_id=id_)
+            for id_ in [warehouse_id, warehouse_without_pickup, warehouse_id_kz]:
+                if id_:
+                    connections.delete_list_warehouses_for_id(warehouse_id=id_)
             for id_ in shared_data["parcel_ids"]:
                 connections.delete_list_parcels_for_id(id_)
                 connections.delete_order_parcel(id_)
