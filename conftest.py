@@ -91,7 +91,6 @@ def widget_api():
 def stop(request, connections, shop_id, shop_id_metaship, warehouse_id, warehouse_without_pickup, warehouse_id_kz,
          shared_data):
     """Фикстура для очистки данных после тестов."""
-
     def fin():
         try:
             for id_ in [shop_id, shop_id_metaship]:
