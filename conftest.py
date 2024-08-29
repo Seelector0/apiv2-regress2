@@ -88,12 +88,24 @@ def widget_api():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def stop(request, connections, shop_id, shared_data):
+def stop(request, connections, shop_id, shop_id_metaship, warehouse_id, warehouse_without_pickup, warehouse_id_kz,
+         shared_data):
     """Фикстура для очистки данных после тестов."""
 
     def fin():
         try:
-            connections.delete_list_orders_for_shop(shop_id=shop_id)
+            if shop_id:
+                connections.delete_list_orders_for_shop(shop_id=shop_id)
+                connections.delete_list_shops_for_id(shop_id=shop_id)
+            if shop_id_metaship:
+                connections.delete_list_orders_for_shop(shop_id=shop_id_metaship)
+                connections.delete_list_shops_for_id(shop_id=shop_id_metaship)
+            if warehouse_id:
+                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_id)
+            if warehouse_without_pickup:
+                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_without_pickup)
+            if warehouse_id_kz:
+                connections.delete_list_warehouses_for_id(warehouse_id=warehouse_id_kz)
             for id_ in shared_data["parcel_ids"]:
                 connections.delete_list_parcels_for_id(id_)
                 connections.delete_order_parcel(id_)
@@ -124,17 +136,17 @@ def shared_data():
 
 
 @pytest.fixture(scope='module')
-def shop_id(app, connections):
+def shop_id(app):
     """Фикстура создания магазина"""
-    tests_shop = TestsShop(app, connections)
+    tests_shop = TestsShop(app)
     shop_id = tests_shop.post_shop()
     return shop_id
 
 
 @pytest.fixture(scope='module')
-def shop_id_metaship(app, connections):
+def shop_id_metaship(app):
     """Фикстура создания магазина для сд меташип"""
-    tests_shop = TestsShop(app, connections)
+    tests_shop = TestsShop(app)
     shop_id_metaship = tests_shop.post_shop()
     return shop_id_metaship
 

@@ -41,5 +41,5 @@ class Application:
         self.forms = Forms(app=self)
         self.settings = SettingsDeliveryServices(app=self)
         self.tests_helper = TestsHelper(app=self)
-        self.tests_shop = TestsShop(app=self, connections=connections)
+        self.tests_shop = TestsShop(app=self)
         self.tests_warehouse = TestsWarehouse(app=self, connections=connections)

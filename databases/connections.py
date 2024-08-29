@@ -45,6 +45,16 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
+    def delete_list_shops_for_id(self, shop_id):
+        """Метод чистит таблицу 'customer.shop'."""
+        cursor = self.database.connection.cursor()
+        try:
+            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.shop """
+                                 f"""where id = '{shop_id}'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def get_list_warehouses(self):
         """Метод собирает (возвращает) список складов из таблицы 'customer.warehouse'."""
         db_list_warehouses = []
@@ -77,6 +87,16 @@ class DataBaseConnections:
         try:
             cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.warehouse """
                                  f"""where warehouse.user_id = '{ENV_OBJECT.user_id()}'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
+    def delete_list_warehouses_for_id(self, warehouse_id):
+        """Метод чистит таблицу 'customer.warehouse'."""
+        cursor = self.database.connection.cursor()
+        try:
+            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.customer.warehouse """
+                                 f"""where id = '{warehouse_id}'""")
             cursor.connection.commit()
         finally:
             cursor.close()

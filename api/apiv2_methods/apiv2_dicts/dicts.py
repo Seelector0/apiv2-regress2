@@ -52,6 +52,92 @@ class Dicts:
         return [dict(op=op, path=path, value=value)]
 
     @staticmethod
+    def form_patch_body_warehouses_all():
+        """Форма для редактирования всех полей склада."""
+        return [
+            {
+                "op": "replace",
+                "path": "contact.fullName",
+                "value": "Гадя Петрович Хренова"
+            },
+            {
+                "op": "replace",
+                "path": "contact.phone",
+                "value": "+79095630011"
+            },
+            {
+                "op": "replace",
+                "path": "contact.email",
+                "value": "cool_email@ya.ru"
+            },
+            {
+                "op": "replace",
+                "path": "lPostWarehouseId",
+                "value": "123456"
+            },
+            {
+                "op": "replace",
+                "path": "yandexWarehouseId",
+                "value": "4eb18cc4-329d-424d-a8a8-abfd8926463d"
+            },
+            {
+                "op": "replace",
+                "path": "visibility",
+                "value": False
+            },
+            {
+                "op": "replace",
+                "path": "dpdPickupNum",
+                "value": "92929200"
+            },
+            {
+                "op": "replace",
+                "path": "pickup",
+                "value": False
+            },
+            {
+                "op": "replace",
+                "path": "comment",
+                "value": "здесь могла быть ваша реклама"
+            },
+            {
+                "op": "replace",
+                "path": "workingTime",
+                "value": {
+                    "timezone": "+03:00",
+                    "monday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "tuesday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "wednesday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "thursday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "friday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "saturday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    },
+                    "sunday": {
+                        "from": "09:00",
+                        "to": "18:00"
+                    }
+                }
+            }
+        ]
+
+    @staticmethod
     def form_shop_body():
         """Форма для создания магазина."""
         return {
