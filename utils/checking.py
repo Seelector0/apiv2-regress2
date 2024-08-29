@@ -39,8 +39,8 @@ class Checking:
             else:
                 Checking._assert_with_trace(response=response,
                                             condition=response.json()[key_name][field] == expected_value,
-                                            message=f"Не совпадает значение! У ключа {response.json()[key_name][field]} "
-                                                    f"фактическое значение {expected_value}")
+                                            message=f"Не совпадает значение! У ключа {response.json()[key_name][field]}"
+                                                    f" фактическое значение {expected_value}")
 
     @staticmethod
     def checking_big_json(response: Response, key_name: str, expected_value, field=None):

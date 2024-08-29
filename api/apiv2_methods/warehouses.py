@@ -1,5 +1,3 @@
-
-
 class ApiWarehouse:
 
     def __init__(self, app):
@@ -55,13 +53,17 @@ class ApiWarehouse:
         put_warehouse["workingTime"] = working_time
         return self.app.http_method.put(link=f"{self.link}/{warehouse_id}", json=put_warehouse)
 
-    def patch_warehouse(self, warehouse_id: str, path: str, value):
+    def patch_warehouse(self, warehouse_id: str, path: str = None, value=None):
         r"""Метод для редактирования полей склада.
         :param warehouse_id: Идентификатор склада.
         :param path: Изменяемое поле.
         :param value: Новое значение поля.
         """
-        patch_warehouse = self.app.dicts.form_patch_body(op="replace", path=path, value=value)
+
+        if path is not None:
+            patch_warehouse = self.app.dicts.form_patch_body(op="replace", path=path, value=value)
+        else:
+            patch_warehouse = self.app.dicts.form_patch_body_warehouses_all()
         result = self.app.http_method.patch(link=f"{self.link}/{warehouse_id}", json=patch_warehouse)
         return self.app.http_method.return_result(response=result)
 
