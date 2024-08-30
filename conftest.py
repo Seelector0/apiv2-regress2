@@ -88,8 +88,7 @@ def widget_api():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def stop(request, connections, shop_id, shop_id_metaship, warehouse_id, warehouse_without_pickup, warehouse_id_kz,
-         shared_data):
+def stop(request, connections, shared_data):
     """Фикстура для очистки данных после тестов."""
     def fin():
         try:
