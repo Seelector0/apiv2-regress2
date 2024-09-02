@@ -15,7 +15,7 @@ import requests
 def check_api_availability():
     """Функция для проверки доступности API с ограниченным количеством попыток и интервалом между запросами."""
     start_time = time.time()
-    timeout = 60
+    timeout = 120
     response = None
     while True:
         elapsed_time = time.time() - start_time

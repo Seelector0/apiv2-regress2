@@ -17,7 +17,6 @@ from api.apiv2_methods.forms import Forms
 from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from utils.http_methods import HttpMethod
-from utils.tests_helper import TestsHelper
 
 
 class Application:
@@ -40,6 +39,5 @@ class Application:
         self.reports = ApiReports(app=self)
         self.forms = Forms(app=self)
         self.settings = SettingsDeliveryServices(app=self)
-        self.tests_helper = TestsHelper(app=self)
         self.tests_shop = TestsShop(app=self)
         self.tests_warehouse = TestsWarehouse(app=self, connections=connections)
