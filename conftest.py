@@ -15,7 +15,7 @@ import requests
 def check_api_availability():
     """Функция для проверки доступности API с ограниченным количеством попыток и интервалом между запросами."""
     start_time = time.time()
-    timeout = 120
+    timeout = 180
     response = None
     while True:
         elapsed_time = time.time() - start_time
@@ -27,7 +27,7 @@ def check_api_availability():
                 return
         except requests.exceptions.RequestException:
             pass
-        time.sleep(5)
+        time.sleep(10)
 
     if response is not None:
         pytest.exit(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
