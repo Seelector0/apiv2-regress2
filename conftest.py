@@ -92,11 +92,12 @@ def stop(request, connections, shared_data):
     """Фикстура для очистки данных после тестов."""
     def fin():
         try:
-            for id_ in [shop_id, shop_id_metaship]:
+            for id_ in [shared_data["shop_id"], shared_data["shop_id_metaship"]]:
                 if id_:
                     connections.delete_list_orders_for_shop(shop_id=id_)
                     connections.delete_list_shops_for_id(shop_id=id_)
-            for id_ in [warehouse_id, warehouse_without_pickup, warehouse_id_kz]:
+            for id_ in [shared_data["warehouse_id"], shared_data["warehouse_without_pickup"],
+                        shared_data["warehouse_id_kz"]]:
                 if id_:
                     connections.delete_list_warehouses_for_id(warehouse_id=id_)
             for id_ in shared_data["parcel_ids"]:
@@ -123,46 +124,56 @@ def shared_data():
         "parcel_ids_courier": [],
         "parcel_ids_post_office": [],
         "parcel_ids_delivery_point": [],
-        "parcel_ids_terminal": []
+        "parcel_ids_terminal": [],
+        "shop_id": None,
+        "shop_id_metaship": None,
+        "warehouse_id": None,
+        "warehouse_without_pickup": None,
+        "warehouse_id_kz": None
     }
     return data
 
 
 @pytest.fixture(scope='module')
-def shop_id(app):
+def shop_id(app, shared_data):
     """Фикстура создания магазина"""
     tests_shop = TestsShop(app)
     shop_id = tests_shop.post_shop()
+    shared_data["shop_id"] = shop_id
     return shop_id
 
 
 @pytest.fixture(scope='module')
-def shop_id_metaship(app):
+def shop_id_metaship(app, shared_data):
     """Фикстура создания магазина для сд меташип"""
     tests_shop = TestsShop(app)
     shop_id_metaship = tests_shop.post_shop()
+    shared_data["shop_id_metaship"] = shop_id_metaship
     return shop_id_metaship
 
 
 @pytest.fixture(scope='module')
-def warehouse_id(app, connections):
+def warehouse_id(app, connections, shared_data):
     """Фикстура создания склада"""
     tests_warehouse = TestsWarehouse(app, connections)
     warehouse_id = tests_warehouse.post_warehouse(pickup=True)
+    shared_data["warehouse_id"] = warehouse_id
     return warehouse_id
 
 
 @pytest.fixture(scope='module')
-def warehouse_without_pickup(app, connections):
+def warehouse_without_pickup(app, connections, shared_data):
     """Фикстура создания склада"""
     tests_warehouse = TestsWarehouse(app, connections)
     warehouse_without_pickup = tests_warehouse.post_warehouse(pickup=False)
+    shared_data["warehouse_without_pickup"] = warehouse_without_pickup
     return warehouse_without_pickup
 
 
 @pytest.fixture(scope='module')
-def warehouse_id_kz(app, connections):
+def warehouse_id_kz(app, connections, shared_data):
     """Фикстура создания склада для Казахстана"""
     tests_warehouse = TestsWarehouse(app, connections)
     warehouse_id_kz = tests_warehouse.post_warehouse(country_code="KZ", pickup=True)
+    shared_data["warehouse_id_kz"] = warehouse_id_kz
     return warehouse_id_kz
