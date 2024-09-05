@@ -9,4 +9,4 @@ RUN cd /app && \
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["sleep", "30", "&&", "pytest", "-c", "pytest_parallel.ini", "tests/"]
+ENTRYPOINT ["/bin/sh", "-c", "sleep 30 && pytest -c pytest_parallel.ini tests/"]
