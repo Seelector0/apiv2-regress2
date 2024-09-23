@@ -24,6 +24,7 @@ def check_api_availability():
         try:
             response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
             if response.status_code == 200:
+                time.sleep(30)
                 return
         except requests.exceptions.RequestException:
             pass
