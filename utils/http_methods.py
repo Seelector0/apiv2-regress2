@@ -96,7 +96,7 @@ class HttpMethod:
 
                 if response.status_code in server_error_codes:
                     self.logger.error(
-                        f"Ошибка сервера: статус-код {response.status_code}. "
+                        f"Ошибка при запросе {method} to URL: {url}. Статус-код {response.status_code}. "
                         f"Затраченное время:: {elapsed_time:.2f} секунд.")
                 else:
                     return response
@@ -104,7 +104,7 @@ class HttpMethod:
             except requests.RequestException as e:
                 elapsed_time = time.time() - start_time
                 self.logger.error(
-                    f"Ошибка запроса: {e}. Затраченное время: {elapsed_time:.2f} секунд.")
+                    f"Ошибка при запросе {method} to URL: {url}. {e}. Затраченное время: {elapsed_time:.2f} секунд.")
 
             time.sleep(retry_interval)
 
