@@ -1,3 +1,5 @@
+import time
+
 from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.environment import ENV_OBJECT
 import simplejson.errors
@@ -50,38 +52,58 @@ class HttpMethod:
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, **kwargs):
-        r"""Метод для определения запросов.
+              admin: bool = None, timeout: int = 180, retry_interval: int = 5, **kwargs):
+        r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
-        :param params: Параметр запроса для метода GET.
-        :param json: Тело запроса в формате json.
-        :param data: Тело запроса в формате data.
-        :param files: Передаваемый файл
+        :param params: Параметры запроса для метода GET.
+        :param json: Тело запроса в формате JSON.
+        :param data: Тело запроса в формате dict.
         :param admin: Для использования admin URL.
+        :param timeout: Максимальное время ожидания в секундах.
+        :param retry_interval: Интервал между попытками.
         """
+        start_time = time.time()
+        server_error_codes = {502, 503, 504}
+
         if admin:
             token = Dicts.form_token(authorization=self.admin.authorization.response.json()["access_token"])
             url = f"{ENV_OBJECT.get_base_url()}/admin/v2/{url}"
         else:
             token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
             url = f"{ENV_OBJECT.get_base_url()}/v2/{url}"
-        with allure.step(title=f"{method} request to URL: {url}"):
-            if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-                response = requests.request(method=method, url=url, params=params, json=json, data=data, headers=token,
-                                            **kwargs)
-            else:
-                raise Exception(f"Получен неверный HTTP метод '{method}'")
-        if params:
-            with allure.step(title=f"""Request: {str(params).replace("'", '"')}"""):
-                pass
-        elif data:
-            with allure.step(title=f"""Request: {str(data).replace("'", '"')}"""):
-                pass
-        else:
-            with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
-                pass
-        return response
+
+        while time.time() - start_time < timeout:
+            try:
+                with allure.step(title=f"{method} request to URL: {url}"):
+                    if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+                        response = requests.request(method=method, url=url, params=params, json=json, data=data,
+                                                    headers=token, **kwargs)
+                    else:
+                        raise Exception(f"Получен неверный HTTP метод '{method}'")
+                if params:
+                    with allure.step(title=f"""Request: {str(params).replace("'", '"')}"""):
+                        pass
+                elif data:
+                    with allure.step(title=f"""Request: {str(data).replace("'", '"')}"""):
+                        pass
+                else:
+                    with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
+                        pass
+
+                if response.status_code in server_error_codes:
+                    print(
+                        f"{response.status_code} Ошибка сервера. Попробуем снова через {retry_interval} секунд...")
+                else:
+                    return response
+
+            except requests.RequestException as e:
+                print(f"Ошибка запроса: {e}")
+
+            time.sleep(retry_interval)
+
+        raise AssertionError(f"Не удалось выполнить {method} запрос на {url} за {timeout} секунд. "
+                             f"Статус код {response.status_code}")
 
     @staticmethod
     def return_result(response):

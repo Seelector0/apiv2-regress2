@@ -22,6 +22,10 @@ class CommonOrders:
                                         one_value=connections.get_list_order_value(order_id=order_id,
                                                                                    value="status"),
                                         two_value=["created"])
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                                   value="state"),
+                                        two_value=["succeeded"])
         shared_data.append(order_id)
         if shared_data_order_type is not None:
             shared_data_order_type.append(order_id)
@@ -46,6 +50,10 @@ class CommonOrders:
                                         one_value=connections.get_list_order_value(order_id=order_id,
                                                                                    value="status"),
                                         two_value=["created"])
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                                   value="state"),
+                                        two_value=["succeeded"])
         shared_data.append(order_id)
 
     @staticmethod
@@ -67,6 +75,10 @@ class CommonOrders:
                                             one_value=connections.get_list_order_value(order_id=order_id,
                                                                                        value="status"),
                                             two_value=["created"])
+            Checking.check_value_comparison(responses={"POST v2/import/orders": new_orders},
+                                            one_value=connections.get_list_order_value(order_id=order_id,
+                                                                                       value="state"),
+                                            two_value=["succeeded"])
             shared_data.append(order_id)
 
     @staticmethod
@@ -124,6 +136,7 @@ class CommonOrders:
         order_by_id = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
         assert_order_patch = app.order.get_order_patches(order_id=patch_single_order.json()["id"])
         Checking.check_status_code(response=assert_order_patch, expected_status_code=200)
         if delivery_service == "Cdek":
@@ -168,6 +181,7 @@ class CommonOrders:
         Checking.check_status_code(response=patch_multi_order, expected_status_code=200)
         connections.wait_create_order(order_id=order_id)
         Checking.checking_json_value(response=patch_multi_order, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=patch_multi_order, key_name="state", expected_value="succeeded")
         assert len(multi_order.json()["data"]["request"]["places"]) > \
                len(patch_multi_order.json()["data"]["request"]["places"])
 
@@ -189,6 +203,7 @@ class CommonOrders:
         new_len_order_list = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=new_len_order_list, expected_status_code=200)
         Checking.checking_json_value(response=new_len_order_list, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=new_len_order_list, key_name="state", expected_value="succeeded")
         Checking.checking_sum_len_lists(responses={"PATCH v2/order/{id}": patch_order,
                                                    "GET v2/order/{id} created": old_len_order_list,
                                                    "GET v2/order/{id} patched": new_len_order_list},
@@ -207,6 +222,7 @@ class CommonOrders:
         order_by_id = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=order_by_id, expected_status_code=200)
         Checking.checking_json_value(response=order_by_id, key_name="status", expected_value="created")
+        Checking.checking_json_value(response=order_by_id, key_name="state", expected_value="succeeded")
         field = order_by_id.json()["data"]["request"]["places"][0]["items"][0]
         Checking.check_value_comparison(responses={"PATCH v2/order/{id}": patch_order},
                                         one_value=field["name"], two_value="Пуфик")

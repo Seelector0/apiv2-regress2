@@ -11,35 +11,35 @@ import time
 import pytest
 import requests
 
-
-def check_api_availability():
-    """Функция для проверки доступности API с ограниченным количеством попыток и интервалом между запросами."""
-    start_time = time.time()
-    timeout = 180
-    response = None
-    while True:
-        elapsed_time = time.time() - start_time
-        if elapsed_time > timeout:
-            break
-        try:
-            response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
-            if response.status_code == 200:
-                time.sleep(30)
-                return
-        except requests.exceptions.RequestException:
-            pass
-        time.sleep(10)
-
-    if response is not None:
-        pytest.exit(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
-    else:
-        pytest.exit(f"API не доступно по истечению {timeout} секунд.")
-
-
-def pytest_sessionstart(session):
-    """Хук для выполнения проверки, только в главном процессе (мастере)."""
-    if not hasattr(session.config, "workerinput"):
-        check_api_availability()
+# Временно отключен так как реализовано на уровне запросов
+# def check_api_availability():
+#     """Функция для проверки доступности API с ограниченным количеством попыток и интервалом между запросами."""
+#     start_time = time.time()
+#     timeout = 180
+#     response = None
+#     while True:
+#         elapsed_time = time.time() - start_time
+#         if elapsed_time > timeout:
+#             break
+#         try:
+#             response = requests.get(url=f"{ENV_OBJECT.get_base_url()}/health/check")
+#             if response.status_code == 200:
+#                 time.sleep(30)
+#                 return
+#         except requests.exceptions.RequestException:
+#             pass
+#         time.sleep(10)
+#
+#     if response is not None:
+#         pytest.exit(f"API не доступно по истечению {timeout} секунд. Статус-код ответа: {response.status_code}")
+#     else:
+#         pytest.exit(f"API не доступно по истечению {timeout} секунд.")
+#
+#
+# def pytest_sessionstart(session):
+#     """Хук для выполнения проверки, только в главном процессе (мастере)."""
+#     if not hasattr(session.config, "workerinput"):
+#         check_api_availability()
 
 
 @pytest.fixture(scope="module")

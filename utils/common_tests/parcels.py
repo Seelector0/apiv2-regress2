@@ -55,7 +55,7 @@ class CommonParcels:
     def test_get_parcel_by_id_common(app, shared_data):
         """Получение информации о партии СД RussianPost"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.fail("Список партий 'parcel_ids' пуст, невозможно выполнить тест.")
         random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=random_parcel, expected_status_code=200)
         Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
