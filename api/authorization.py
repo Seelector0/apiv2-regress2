@@ -20,7 +20,6 @@ class ApiAuthorization:
         :param retry_interval: Интервал между повторными попытками в секундах (по умолчанию 5 секунд).
         """
         start_time = time.time()
-        last_exception = None
         while time.time() - start_time < timeout:
             try:
                 self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
