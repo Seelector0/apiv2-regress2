@@ -10,6 +10,8 @@ from fixture.admin import Admin
 import time
 import pytest
 import requests
+import logging
+
 
 # Временно отключен так как реализовано на уровне запросов
 # def check_api_availability():
@@ -40,6 +42,10 @@ import requests
 #     """Хук для выполнения проверки, только в главном процессе (мастере)."""
 #     if not hasattr(session.config, "workerinput"):
 #         check_api_availability()
+
+@pytest.fixture(scope="session", autouse=True)
+def configure_logging():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", force=True)
 
 
 @pytest.fixture(scope="module")
@@ -91,6 +97,7 @@ def widget_api():
 @pytest.fixture(scope="module", autouse=True)
 def stop(request, connections, shared_data):
     """Фикстура для очистки данных после тестов."""
+
     def fin():
         try:
             for id_ in [shared_data["shop_id"], shared_data["shop_id_metaship"]]:

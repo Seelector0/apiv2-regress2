@@ -1,10 +1,10 @@
-import time
-
 from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.environment import ENV_OBJECT
 import simplejson.errors
 import requests
+import logging
 import allure
+import time
 
 
 class HttpMethod:
@@ -12,6 +12,7 @@ class HttpMethod:
     def __init__(self, app, admin):
         self.app = app
         self.admin = admin
+        self.logger = logging.getLogger(__name__)
 
     def get(self, link: str, params: dict = None, admin: bool = None, **kwargs):
         r"""GET запрос.
@@ -91,14 +92,19 @@ class HttpMethod:
                     with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
                         pass
 
+                elapsed_time = time.time() - start_time
+
                 if response.status_code in server_error_codes:
-                    print(
-                        f"{response.status_code} Ошибка сервера. Попробуем снова через {retry_interval} секунд...")
+                    self.logger.error(
+                        f"Ошибка сервера: статус-код {response.status_code}. "
+                        f"Затраченное время:: {elapsed_time:.2f} секунд.")
                 else:
                     return response
 
             except requests.RequestException as e:
-                print(f"Ошибка запроса: {e}")
+                elapsed_time = time.time() - start_time
+                self.logger.error(
+                    f"Ошибка запроса: {e}. Затраченное время: {elapsed_time:.2f} секунд.")
 
             time.sleep(retry_interval)
 
