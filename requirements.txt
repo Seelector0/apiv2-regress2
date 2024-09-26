@@ -17,3 +17,4 @@ six==1.16.0
 urllib3==2.2.2
 simplejson==3.19.3
 pytest-sugar==1.0.0
+pytest-rerunfailures==14.0

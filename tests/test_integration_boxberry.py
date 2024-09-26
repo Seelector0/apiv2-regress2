@@ -53,6 +53,7 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_
                                           shared_data=shared_data["order_ids"])
 
 
+@pytest.mark.flaky(reruns=3, reruns_delay=2)
 @allure.description("Создание заказа из файла СД Boxberry")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, connections, shared_data):
