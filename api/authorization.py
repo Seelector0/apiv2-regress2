@@ -33,8 +33,8 @@ class ApiAuthorization:
                     return HttpMethod.return_result(response=self.response)
                 else:
                     self.logger.error(
-                        f"Ошибка при получении токена: статус-код {self.response.status_code}, ответ: {self.response.text}. "
-                        f"Затраченное время:: {elapsed_time:.2f} секунд.")
+                        f"Ошибка при получении токена: статус-код {self.response.status_code}, "
+                        f"ответ: {self.response.text}. Затраченное время: {elapsed_time:.2f} секунд.")
             except requests.RequestException as e:
                 elapsed_time = time.time() - start_time
                 self.logger.error(

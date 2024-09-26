@@ -78,7 +78,8 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
 
 @allure.description("Создание заказа из файла формата СД RussianPost")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
-def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, connections, shared_data):
+def test_create_order_from_file_format_russian_post(app, shop_id, warehouse_id, file_extension,
+                                                    connections, shared_data):
     CommonOrders.test_create_order_from_file_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id,
                                                     connections=connections, shared_data=shared_data["order_ids"],
                                                     file_extension=file_extension)
