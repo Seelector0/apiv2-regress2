@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM europe-west1-docker.pkg.dev/pimpay-cloud/dockerhub-remote-proxy/python:3.10-slim
 
 WORKDIR /app
 COPY ./ /app

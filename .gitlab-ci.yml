@@ -1,24 +1,16 @@
+include:
+  - project: "infra/gitlab-runner"
+    ref: "common-app-template-v1.0.2"
+    file: "files2include/common_app.gitlab-ci.yml"
+
 stages:
   - build
 
-.setup_werf_version: &setup_werf_version
-  - type multiwerf && . $(multiwerf use 1.2 ea --as-file)
-  - type werf && source $(werf ci-env gitlab --as-file)
-
-.before_script: &before_script
-  - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-
 Build:
-  stage: build
-  before_script:
-    - *before_script
   script:
-    - *setup_werf_version
     - werf build
-      --add-custom-tag=master
+      --add-custom-tag=${CI_COMMIT_SHORT_SHA}
       ${EXTRA_VARS}
-  tags:
-    - werf-berushiptor-stage
   except:
     - schedules
   only:
