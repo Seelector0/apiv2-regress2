@@ -1,4 +1,4 @@
 include:
   - project: "infra/gitlab-runner"
-    ref: "image-build-template-v1.0.0"
+    ref: "image-build-template-v1.0.1"
     file: "files2include/image_build.gitlab-ci.yml"
