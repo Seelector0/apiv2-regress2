@@ -1,26 +1,4 @@
-stages:
-  - build
-
-.setup_werf_version: &setup_werf_version
-  - type multiwerf && . $(multiwerf use 1.2 ea --as-file)
-  - type werf && source $(werf ci-env gitlab --as-file)
-
-.before_script: &before_script
-  - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-
-Build:
-  stage: build
-  before_script:
-    - *before_script
-  script:
-    - *setup_werf_version
-    - werf build
-      --add-custom-tag=master
-      ${EXTRA_VARS}
-  tags:
-    - werf-berushiptor-stage
-  except:
-    - schedules
-  only:
-    - master
-
+include:
+  - project: "infra/gitlab-runner"
+    ref: "image-build-template-v1.0.1"
+    file: "files2include/image_build.gitlab-ci.yml"
