@@ -1,18 +1,4 @@
 include:
   - project: "infra/gitlab-runner"
-    ref: "common-app-template-v1.0.2"
-    file: "files2include/common_app.gitlab-ci.yml"
-
-stages:
-  - build
-
-Build:
-  script:
-    - werf build
-      --add-custom-tag=${CI_COMMIT_SHORT_SHA}
-      ${EXTRA_VARS}
-  except:
-    - schedules
-  only:
-    - master
-
+    ref: "image-build-template-v1.0.0"
+    file: "files2include/image_build.gitlab-ci.yml"
