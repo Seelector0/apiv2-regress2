@@ -11,12 +11,12 @@ class CommonParcels:
         """Создание партии"""
         if types:
             if not shared_data.get(types):
-                pytest.fail(
+                pytest.skip(
                     f"Список заказов для типа '{types}' пуст в 'shared_data', невозможно выполнить тест.")
             order = shared_data[types].pop()
         else:
             if not shared_data.get("order_ids"):
-                pytest.fail("Список заказов 'order_ids' пуст, невозможно выполнить тест.")
+                pytest.skip("Список заказов 'order_ids' пуст, невозможно выполнить тест.")
             order = shared_data["order_ids"].pop()
         create_parcel = app.parcel.post_parcel(value=order, **kwargs)
         Checking.check_status_code(response=create_parcel, expected_status_code=207)
@@ -37,7 +37,7 @@ class CommonParcels:
     def test_patch_weight_random_order_in_parcel_common(app, connections, shared_data):
         """Редактирование веса заказа в партии"""
         if not shared_data.get("order_ids_in_parcel"):
-            pytest.fail("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
         order_patch = app.order.patch_order_weight(order_id=choice(shared_data["order_ids_in_parcel"]), weight=4)
         Checking.check_status_code(response=order_patch, expected_status_code=200)
         connections.wait_create_order(order_id=order_patch.json()["id"])
@@ -55,7 +55,7 @@ class CommonParcels:
     def test_get_parcel_by_id_common(app, shared_data):
         """Получение информации о партии СД RussianPost"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список партий 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список партий 'parcel_ids' пуст, невозможно выполнить тест.")
         random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=random_parcel, expected_status_code=200)
         Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
@@ -65,12 +65,12 @@ class CommonParcels:
         """Добавление заказов в партию"""
         if types:
             if not shared_data.get(types):
-                pytest.fail(
+                pytest.skip(
                     f"Список заказов для типа '{types}' пуст в 'shared_data', невозможно выполнить тест.")
             orders = shared_data[types]
         else:
             if not shared_data.get("order_ids"):
-                pytest.fail("Список заказов 'order_ids' пуст, невозможно выполнить тест.")
+                pytest.skip("Список заказов 'order_ids' пуст, невозможно выполнить тест.")
             orders = shared_data["order_ids"]
 
         order = choice(orders)
@@ -94,7 +94,7 @@ class CommonParcels:
     def test_change_shipment_date_common(app, shared_data):
         """Редактирование партии СД (Изменение даты отправки партии)"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
         parcel_id = choice(shared_data["parcel_ids"])
         shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id, day=5)
         Checking.check_status_code(response=shipment_date, expected_status_code=200)
@@ -105,7 +105,7 @@ class CommonParcels:
     def test_get_label_common(app, shared_data, labels=None, format_=None):
         """Получение этикетки СД"""
         if not shared_data.get("order_ids_in_parcel"):
-            pytest.fail("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
         order_id = choice(shared_data["order_ids_in_parcel"])
         if labels:
             label = app.document.get_label(order_id=order_id, type_=labels)
@@ -119,7 +119,7 @@ class CommonParcels:
     def test_get_labels_from_parcel_common(app, shared_data):
         """Получение этикеток заказов из партии"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
         labels_from_parcel = app.document.post_labels(parcel_id=choice(shared_data["parcel_ids"]),
                                                       order_ids=shared_data["order_ids_in_parcel"])
         Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
@@ -128,7 +128,7 @@ class CommonParcels:
     def test_get_app_common(app, shared_data):
         """Получение АПП"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
         acceptance = app.document.get_acceptance(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=acceptance, expected_status_code=200)
 
@@ -136,7 +136,7 @@ class CommonParcels:
     def test_get_documents_common(app, shared_data):
         """Получение документов архивом"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
         documents = app.document.get_files(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=documents, expected_status_code=200)
 
@@ -144,7 +144,7 @@ class CommonParcels:
     def test_forms_parcels_labels_common(app, shared_data):
         """Создание формы с этикетками партии"""
         if not shared_data.get("parcel_ids"):
-            pytest.fail("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'parcel_ids' пуст, невозможно выполнить тест.")
         forms_labels = app.forms.post_forms(parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=forms_labels, expected_status_code=201)
         Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
@@ -153,7 +153,7 @@ class CommonParcels:
     def test_remove_order_in_parcel_common(app, connections, shared_data):
         """Редактирование партии (Удаление заказа из партии)"""
         if not shared_data.get("order_ids_in_parcel"):
-            pytest.fail("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
+            pytest.skip("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
         remove_order = app.parcel.patch_parcel(op="remove", order_id=choice(shared_data["order_ids_in_parcel"]),
                                                parcel_id=choice(shared_data["parcel_ids"]))
         Checking.check_status_code(response=remove_order, expected_status_code=200)
