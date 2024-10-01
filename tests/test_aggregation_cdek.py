@@ -102,7 +102,7 @@ def test_editing_order(app, connections, shared_data):
 
 @allure.description("Редактирование веса в заказе СД Cdek")
 def test_patch_order_weight(app, connections, shared_data):
-    CommonOrders.test_patch_order_weight_common(app=app, connections=connections,
+    CommonOrders.test_patch_order_weight_common(app=app, connections=connections, delivery_service="Cdek",
                                                 shared_data=shared_data["order_ids_single"])
 
 

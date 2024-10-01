@@ -266,16 +266,19 @@ class CommonOrders:
                                        expected_value=kwargs["address"])
 
     @staticmethod
-    def test_patch_order_weight_common(app, connections, shared_data):
+    def test_patch_order_weight_common(app, connections, shared_data, delivery_service=None):
         """Редактирование веса в заказе"""
         if not shared_data:
             pytest.fail("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
         order_id = shared_data.pop()
         order_patch = app.order.patch_order_weight(order_id=order_id, weight=4)
         Checking.check_status_code(response=order_patch, expected_status_code=200)
-        connections.wait_create_order(order_id=order_id)
-        get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
-        Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+        if delivery_service == "Cdek":
+            connections.wait_create_order(order_id=order_id)
+            get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
+            Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+        if delivery_service is None:
+            Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
     @staticmethod
     def test_get_orders_common(app):
