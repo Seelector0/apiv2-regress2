@@ -101,8 +101,8 @@ def test_delete_order(app, connections, shared_data):
 
 
 @allure.description("Получение списка заказов CД RussianPost")
-def test_get_orders(app):
-    CommonOrders.test_get_orders_common(app=app)
+def test_get_orders(app, shared_data):
+    CommonOrders.test_get_orders_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о заказе CД RussianPost")
@@ -127,8 +127,8 @@ def test_create_parcel(app, shared_data, types):
 
 
 @allure.description("Получение списка партий CД RussianPost")
-def test_get_parcels(app):
-    CommonParcels.test_get_parcels_common(app=app)
+def test_get_parcels(app, shared_data):
+    CommonParcels.test_get_parcels_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о партии CД RussianPost")

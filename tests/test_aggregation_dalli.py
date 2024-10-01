@@ -48,8 +48,8 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, cod, decl
 
 
 @allure.description("Получение списка заказов CД Dalli")
-def test_get_orders(app):
-    CommonOrders.test_get_orders_common(app=app)
+def test_get_orders(app, shared_data):
+    CommonOrders.test_get_orders_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Удаление заказа СД Dalli")
@@ -88,8 +88,8 @@ def test_create_parcel(app, shared_data):
 
 
 @allure.description("Получение списка партий CД Dalli")
-def test_get_parcels(app):
-    CommonParcels.test_get_parcels_common(app=app)
+def test_get_parcels(app, shared_data):
+    CommonParcels.test_get_parcels_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о партии CД Dalli")

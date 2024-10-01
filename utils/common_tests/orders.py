@@ -281,8 +281,10 @@ class CommonOrders:
             Checking.checking_big_json(response=order_patch, key_name="weight", expected_value=4)
 
     @staticmethod
-    def test_get_orders_common(app):
+    def test_get_orders_common(app, shared_data):
         """Получение списка заказов"""
+        if not shared_data["order_ids"]:
+            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
         list_orders = app.order.get_orders()
         Checking.check_status_code(response=list_orders, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_orders)

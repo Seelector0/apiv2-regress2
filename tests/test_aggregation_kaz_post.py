@@ -29,8 +29,8 @@ def test_create_order_post_office(app, shop_id, warehouse_id_kz, execution_numbe
 
 
 @allure.description("Получение списка заказов CД KazPost")
-def test_get_orders(app):
-    CommonOrders.test_get_orders_common(app=app)
+def test_get_orders(app, shared_data):
+    CommonOrders.test_get_orders_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о заказе CД KazPost")
@@ -59,8 +59,8 @@ def test_create_parcel(app, shared_data):
 
 
 @allure.description("Получение списка партий CД KazPost")
-def test_get_parcels(app):
-    CommonParcels.test_get_parcels_common(app=app)
+def test_get_parcels(app, shared_data):
+    CommonParcels.test_get_parcels_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о партии CД KazPost")

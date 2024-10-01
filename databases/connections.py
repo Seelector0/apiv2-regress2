@@ -195,7 +195,7 @@ class DataBaseConnections:
         """
         value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
-        while str(*value) != "succeeded" and counter < 120:
+        while str(*value) != "succeeded" and counter < 50:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1

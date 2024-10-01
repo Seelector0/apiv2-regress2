@@ -45,8 +45,10 @@ class CommonParcels:
         Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
 
     @staticmethod
-    def test_get_parcels_common(app):
+    def test_get_parcels_common(app, shared_data):
         """Получение списка партий CД RussianPost"""
+        if not shared_data["order_ids_in_parcel"]:
+            pytest.skip("Список заказов 'order_ids_in_parcel' пуст, невозможно выполнить тест.")
         list_parcel = app.parcel.get_parcels()
         Checking.check_status_code(response=list_parcel, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_parcel)

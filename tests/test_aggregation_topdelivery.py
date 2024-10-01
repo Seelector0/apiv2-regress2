@@ -82,8 +82,8 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
 
 
 @allure.description("Получение списка заказов CД TopDelivery")
-def test_get_orders(app):
-    CommonOrders.test_get_orders_common(app=app)
+def test_get_orders(app, shared_data):
+    CommonOrders.test_get_orders_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о заказе CД TopDelivery")
@@ -119,8 +119,8 @@ def test_create_parcel(app, shared_data):
 
 
 @allure.description("Получение списка партий CД TopDelivery")
-def test_get_parcels(app):
-    CommonParcels.test_get_parcels_common(app=app)
+def test_get_parcels(app, shared_data):
+    CommonParcels.test_get_parcels_common(app=app, shared_data=shared_data)
 
 
 @allure.description("Получение информации о партии CД Topdelivery")
