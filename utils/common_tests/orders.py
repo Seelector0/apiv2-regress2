@@ -1,7 +1,7 @@
+from utils.utils import check_shared_data
 from random import choice, randrange
 from utils.global_enums import INFO
 from utils.checking import Checking
-import pytest
 
 
 class CommonOrders:
@@ -84,8 +84,7 @@ class CommonOrders:
     @staticmethod
     def test_editing_order_common(app, shared_data, delivery_service=None):
         """Редактирование заказа"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         random_order = choice(shared_data)
         order_put = app.order.put_order(order_id=random_order, delivery_service=delivery_service, weight=5, length=12,
                                         width=14, height=11, family_name="Иванов", first_name="Петр",
@@ -116,8 +115,7 @@ class CommonOrders:
     @staticmethod
     def test_patch_single_order_common(app, delivery_service, connections, shared_data):
         """Редактирование одноместного заказа"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         patch_single_order = None
         order_id = shared_data.pop()
         single_order = app.order.get_order_id(order_id=order_id)
@@ -171,8 +169,7 @@ class CommonOrders:
     @staticmethod
     def test_patch_add_single_order_from_multi_order_common(app, connections, shared_data):
         """Создание одноместного заказа из многоместного"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         multi_order = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=multi_order, expected_status_code=200)
@@ -188,8 +185,7 @@ class CommonOrders:
     @staticmethod
     def test_patch_multi_order_common(app, connections, shared_data, delivery_service=None):
         """Добавление items в многоместный заказ"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         old_len_order_list, patch_order = app.order.patch_order_add_item(order_id=order_id)
         Checking.check_status_code(response=patch_order, expected_status_code=200)
@@ -213,8 +209,7 @@ class CommonOrders:
     @staticmethod
     def test_editing_order_place_common(app, connections, shared_data):
         """Редактирование грузомест"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = shared_data.pop()
         patch_order = app.order.patch_order(order_id=order_id, name="Пуфик", price=500, count=2, weight=2)
         Checking.check_status_code(response=patch_order, expected_status_code=200)
@@ -236,8 +231,7 @@ class CommonOrders:
     @staticmethod
     def patch_order_recipient_common(app, connections, shared_data, **kwargs):
         """Редактирование информации о получателе в заказе"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = shared_data.pop()
         order_patch = app.order.patch_order_recipient(order_id=order_id, phone_number="+79266967503",
                                                       email="new_test_email@bk.ru", **kwargs)
@@ -268,8 +262,7 @@ class CommonOrders:
     @staticmethod
     def test_patch_order_weight_common(app, connections, shared_data, delivery_service=None):
         """Редактирование веса в заказе"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = shared_data.pop()
         order_patch = app.order.patch_order_weight(order_id=order_id, weight=4)
         Checking.check_status_code(response=order_patch, expected_status_code=200)
@@ -283,8 +276,7 @@ class CommonOrders:
     @staticmethod
     def test_get_orders_common(app, shared_data):
         """Получение списка заказов"""
-        if not shared_data["order_ids"]:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data, key="order_ids")
         list_orders = app.order.get_orders()
         Checking.check_status_code(response=list_orders, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_orders)
@@ -292,8 +284,7 @@ class CommonOrders:
     @staticmethod
     def test_get_order_by_id_common(app, shared_data):
         """Получение информации о заказе"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = app.order.get_order_id(order_id=choice(shared_data))
         Checking.check_status_code(response=order_id, expected_status_code=200)
         Checking.checking_json_key(response=order_id, expected_value=INFO.entity_order)
@@ -301,8 +292,7 @@ class CommonOrders:
     @staticmethod
     def test_order_details_common(app, shared_data):
         """Получение подробной информации о заказе"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
@@ -311,8 +301,7 @@ class CommonOrders:
     @staticmethod
     def test_order_status_common(app, shared_data):
         """Получение информации об истории изменения статусов заказа"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         order_status = app.order.get_order_statuses(order_id=order_id)
         Checking.check_status_code(response=order_status, expected_status_code=200)
@@ -321,8 +310,7 @@ class CommonOrders:
     @staticmethod
     def test_get_labels_out_of_parcel_common(app, shared_data, labels=None, format_=None):
         """Получения этикеток вне партии"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         if labels:
             label = app.document.get_label(order_id=order_id, type_=labels)
@@ -335,8 +323,7 @@ class CommonOrders:
     @staticmethod
     def test_generate_security_common(app, shared_data):
         """Получение кода выдачи заказа"""
-        if not shared_data:
-            pytest.skip("Список заказов 'shared_data' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data)
         order_id = choice(shared_data)
         security_code = app.order.get_generate_security_code(order_id=order_id)
         Checking.check_status_code(response=security_code, expected_status_code=200)
@@ -345,8 +332,7 @@ class CommonOrders:
     @staticmethod
     def test_delete_order_common(app, connections, shared_data, delivery_service=None):
         """Удаление заказа"""
-        if not shared_data.get("order_ids"):
-            pytest.skip("Список заказов 'order_ids' пуст, невозможно выполнить тест.")
+        check_shared_data(shared_data, key="order_ids")
         random_order_id = shared_data["order_ids"].pop()
         delete_order = app.order.delete_order(order_id=random_order_id)
         Checking.check_status_code(response=delete_order, expected_status_code=204)
