@@ -33,8 +33,8 @@ def test_offers_delivery_point(app, shop_id, warehouse_id, payment_type):
 @allure.description("Создание заказа по CД Halva")
 @pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code",
                          [
-                             # ("Paid", "Courier", None), добавить как выкатим задачу 3445
-                             # ("PayOnDelivery", "Courier", None),
+                             ("Paid", "Courier", None),
+                             ("PayOnDelivery", "Courier", None),
                              ("Paid", "DeliveryPoint", "Халва-6193"),
                              ("PayOnDelivery", "DeliveryPoint", "Халва-6193")])
 def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type,
