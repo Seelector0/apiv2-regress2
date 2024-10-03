@@ -18,10 +18,12 @@ class ApiAuthorization:
     def post_access_token(self, admin: bool = None, timeout: int = 240, retry_interval: int = 5):
         r"""Метод получения bearer-токена с ожиданием.
         :param admin: Параметр для получения bearer-токена для admin API.
-        :param timeout: Максимальное время ожидания в секундах (по умолчанию 2 минуты).
+        :param timeout: Максимальное время ожидания в секундах (по умолчанию 4 минуты).
         :param retry_interval: Интервал между повторными попытками в секундах (по умолчанию 5 секунд).
         """
+        server_error_codes = [200, 503, 504]  # Список кодов ошибок сервера
         start_time = time.time()
+
         while time.time() - start_time < timeout:
             try:
                 self.response = self.session.post(url=f"{ENV_OBJECT.get_base_url()}/auth/access_token",
@@ -29,16 +31,18 @@ class ApiAuthorization:
                                                   headers=Dicts.form_headers())
                 elapsed_time = time.time() - start_time
 
-                if self.response.status_code == 200:
-                    return HttpMethod.return_result(response=self.response)
-                else:
+                if self.response.status_code in server_error_codes:
                     self.logger.error(
-                        f"Ошибка при получении токена: статус-код {self.response.status_code}, "
-                        f"ответ: {self.response.text}. Затраченное время: {elapsed_time:.2f} секунд.")
+                        f"Ошибка при запросе POST к URL: {self.response.url}. Статус-код {self.response.status_code}. "
+                        f"Затраченное время: {elapsed_time:.2f} секунд. Повторная попытка через {retry_interval} секунд.")
+                else:
+                    return HttpMethod.return_result(response=self.response)
+
             except requests.RequestException as e:
                 elapsed_time = time.time() - start_time
                 self.logger.error(
-                    f"Ошибка при получении токена: {e}. Затраченное время: {elapsed_time:.2f} секунд.")
+                    f"Ошибка при запросе токена: {e}. Затраченное время: {elapsed_time:.2f} секунд.")
+
             time.sleep(retry_interval)
 
         raise AssertionError(f"Не удалось получить токен за {timeout} секунд. "
