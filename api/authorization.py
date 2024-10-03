@@ -15,7 +15,7 @@ class ApiAuthorization:
         self.logger = logging.getLogger(__name__)
         self.response = None
 
-    def post_access_token(self, admin: bool = None, timeout: int = 180, retry_interval: int = 5):
+    def post_access_token(self, admin: bool = None, timeout: int = 240, retry_interval: int = 5):
         r"""Метод получения bearer-токена с ожиданием.
         :param admin: Параметр для получения bearer-токена для admin API.
         :param timeout: Максимальное время ожидания в секундах (по умолчанию 2 минуты).
