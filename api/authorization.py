@@ -21,7 +21,7 @@ class ApiAuthorization:
         :param timeout: Максимальное время ожидания в секундах (по умолчанию 4 минуты).
         :param retry_interval: Интервал между повторными попытками в секундах (по умолчанию 5 секунд).
         """
-        server_error_codes = [200, 503, 504]  # Список кодов ошибок сервера
+        server_error_codes = [502, 503, 504]  # Список кодов ошибок сервера
         start_time = time.time()
 
         while time.time() - start_time < timeout:
