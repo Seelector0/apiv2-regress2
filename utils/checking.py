@@ -73,8 +73,8 @@ class Checking:
             for name, resp in responses.items())
         with allure.step(title="Проверка длины списков"):
             condition = len(old_list) + 1 == len(new_list)
-            assert condition, (f"Не совпадает длина списков! Старый список: {len(old_list)}, "
-                               f"Новый список:  {len(new_list)} | {response_info}")
+            assert condition, (f"Длина списков одинаковая! Старый список: {len(old_list)}, "
+                               f"Новый список: {len(new_list)} | {response_info}")
 
     @staticmethod
     def check_date_change(response: Response, calendar_date, number_of_days: int):
