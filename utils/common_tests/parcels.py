@@ -34,11 +34,18 @@ class CommonParcels:
     def test_patch_weight_random_order_in_parcel_common(app, connections, shared_data):
         """Редактирование веса заказа в партии"""
         check_shared_data(shared_data, key="order_ids_in_parcel")
-        order_patch = app.order.patch_order_weight(order_id=choice(shared_data["order_ids_in_parcel"]), weight=4)
-        Checking.check_status_code(response=order_patch, expected_status_code=200)
-        connections.wait_create_order(order_id=order_patch.json()["id"])
-        get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
-        Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+        order_id = choice(shared_data["order_ids_in_parcel"])
+        try:
+            order_patch = app.order.patch_order_weight(order_id=order_id, weight=4)
+            Checking.check_status_code(response=order_patch, expected_status_code=200)
+            connections.wait_create_order(order_id=order_patch.json()["id"])
+            get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
+            Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
+        except AssertionError as e:
+            if order_id in shared_data["order_ids_in_parcel"]:
+                shared_data["order_ids_in_parcel"].remove(order_id)
+            raise
+
 
     @staticmethod
     def test_get_parcels_common(app, shared_data):

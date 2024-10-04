@@ -85,7 +85,7 @@ class CommonOrders:
     def test_editing_order_common(app, shared_data, delivery_service=None):
         """Редактирование заказа"""
         check_shared_data(shared_data)
-        random_order = choice(shared_data)
+        random_order = shared_data.pop()
         order_put = app.order.put_order(order_id=random_order, delivery_service=delivery_service, weight=5, length=12,
                                         width=14, height=11, family_name="Иванов", first_name="Петр",
                                         second_name="Сергеевич", phone_number="+79097859012", email="new_test@mail.ru",
@@ -170,7 +170,7 @@ class CommonOrders:
     def test_patch_add_single_order_from_multi_order_common(app, connections, shared_data):
         """Создание одноместного заказа из многоместного"""
         check_shared_data(shared_data)
-        order_id = choice(shared_data)
+        order_id = shared_data.pop()
         multi_order = app.order.get_order_id(order_id=order_id)
         Checking.check_status_code(response=multi_order, expected_status_code=200)
         patch_multi_order = app.order.patch_order(order_id=order_id, name="Пуфик", price=500, count=2, weight=2,
@@ -186,7 +186,7 @@ class CommonOrders:
     def test_patch_multi_order_common(app, connections, shared_data, delivery_service=None):
         """Добавление items в многоместный заказ"""
         check_shared_data(shared_data)
-        order_id = choice(shared_data)
+        order_id = shared_data.pop()
         old_len_order_list, patch_order = app.order.patch_order_add_item(order_id=order_id)
         Checking.check_status_code(response=patch_order, expected_status_code=200)
         Checking.checking_json_value(response=patch_order, key_name="status", expected_value="created")
