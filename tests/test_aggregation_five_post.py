@@ -31,7 +31,16 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, connectio
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           payment_type=payment_type, delivery_type="DeliveryPoint", service="FivePost",
                                           delivery_point_code="006bf88a-5186-45d9-9911-89d37f1edc86",
-                                          shared_data=shared_data["order_ids"])
+                                          shared_data=shared_data["order_ids_single"])
+
+
+@allure.description("Создание многоместного заказа по CД FivePost")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_multi_order(app, shop_id, warehouse_id, payment_type, connections, shared_data):
+    CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
+                                         payment_type=payment_type, delivery_type="DeliveryPoint", service="FivePost",
+                                         delivery_point_code="006bf88a-5186-45d9-9911-89d37f1edc86",
+                                         shared_data=shared_data["order_ids"])
 
 
 @pytest.mark.flaky(reruns=3, reruns_delay=2)
@@ -40,7 +49,7 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, connectio
 def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, connections, shared_data):
     CommonOrders.test_create_order_from_file_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id,
                                                     connections=connections, code="five_post",
-                                                    shared_data=shared_data["order_ids"],
+                                                    shared_data=shared_data["order_ids_single"],
                                                     file_extension=file_extension)
 
 
@@ -63,18 +72,19 @@ def test_order_status(app, shared_data):
 @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 def test_patch_order_weight(app, connections, shared_data):
     CommonOrders.test_patch_order_weight_common(app=app, connections=connections,
-                                                shared_data=shared_data["order_ids"])
+                                                shared_data=shared_data["order_ids_single"])
 
 
 @allure.description("Редактирование информации о получателе в заказе СД FivePost")
 def test_patch_order_recipient(app, connections, shared_data):
-    CommonOrders.patch_order_recipient_common(app=app, connections=connections, shared_data=shared_data["order_ids"])
+    CommonOrders.patch_order_recipient_common(app=app, connections=connections,
+                                              shared_data=shared_data["order_ids_single"])
 
 
 @allure.description("Редактирование одноместного заказа СД FivePost")
 def test_patch_single_order(app, connections, shared_data):
     CommonOrders.test_patch_single_order_common(app=app, delivery_service="FivePost", connections=connections,
-                                                shared_data=shared_data["order_ids"])
+                                                shared_data=shared_data["order_ids_single"])
 
 
 @allure.description("Получение кода выдачи заказа для СД FivePost")
@@ -100,7 +110,7 @@ def test_order_details(app, shared_data):
 
 @allure.description("Создание партии СД FivePost")
 def test_create_parcel(app, shared_data):
-    CommonParcels.create_parcel_common(app=app, shared_data=shared_data)
+    CommonParcels.create_parcel_common(app=app, shared_data=shared_data, types="order_ids_single")
 
 
 @allure.description("Получение списка партий CД FivePost")
@@ -115,7 +125,8 @@ def test_get_parcel_by_id(app, shared_data):
 
 @allure.description("Редактирование партии СД FivePost (Добавление заказов)")
 def test_add_order_in_parcel(app, connections, shared_data):
-    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_data=shared_data)
+    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_data=shared_data,
+                                             types="order_ids_single")
 
 
 @allure.description("Редактирование веса заказа в партии СД FivePost")

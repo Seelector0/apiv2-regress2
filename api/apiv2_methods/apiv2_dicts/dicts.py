@@ -439,7 +439,7 @@ class Dicts:
         }
 
     @staticmethod
-    def dimension(length: float = randint(10, 30), width: float = randint(10, 30), height: float = randint(10, 30)):
+    def dimension(length: float = randint(1, 4), width: float = randint(1, 4), height: float = randint(1, 4)):
         r"""Габариты товара или грузоместа.
         :param length: Длинна.
         :param width: Ширина.

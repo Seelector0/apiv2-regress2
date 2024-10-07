@@ -32,16 +32,20 @@ class CommonOrders:
 
     @staticmethod
     def test_multi_order_common(app, shop_id, warehouse_id, payment_type, delivery_type, service, connections,
-                                shared_data, tariff=None, delivery_point_code=None, declared_value=500, **kwargs):
+                                shared_data, tariff=None, delivery_point_code=None, declared_value=0, **kwargs):
         """Создание многоместного заказа"""
         barcode_1 = kwargs.pop('barcode_1', f"{randrange(1000000, 9999999)}")
         barcode_2 = kwargs.pop('barcode_2', f"{randrange(1000000, 9999999)}")
+        shop_number_1 = kwargs.pop('barcode_1', f"{randrange(1000000, 9999999)}")
+        shop_number_2 = kwargs.pop('barcode_2', f"{randrange(1000000, 9999999)}")
         new_order = app.order.post_multi_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
                                                type_ds=delivery_type, service=service,
                                                delivery_point_code=delivery_point_code,
                                                tariff=tariff, declared_value=declared_value,
                                                barcode_1=barcode_1,
-                                               barcode_2=barcode_2, **kwargs)
+                                               barcode_2=barcode_2,
+                                               shop_number_1=shop_number_1,
+                                               shop_number_2=shop_number_2, **kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
         Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
         order_id = new_order.json()["id"]

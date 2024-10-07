@@ -24,14 +24,12 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, connection
                                              warehouse_id=warehouse_id,
                                              payment_type=payment_type, delivery_type="Courier", service="LPost",
                                              declared_value=0, delivery_sum=0,
-                                             price_1=0, price_2=0, dimension=app.dicts.dimension(),
-                                             shared_data=shared_data["order_ids"])
+                                             price_1=0, price_2=0, shared_data=shared_data["order_ids"])
     else:
         CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id,
                                              warehouse_id=warehouse_id,
                                              payment_type=payment_type, delivery_type="Courier", service="LPost",
-                                             price_1=500, price_2=500, dimension=app.dicts.dimension(),
-                                             shared_data=shared_data["order_ids"])
+                                             price_1=500, price_2=500, shared_data=shared_data["order_ids"])
 
 
 @allure.description("Создание Courier заказа по СД LPost")

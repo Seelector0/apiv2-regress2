@@ -70,9 +70,9 @@ class ApiOrder:
                          delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
                          price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
                          delivery_sum: float = 100.24, cod: float = None,
-                         shop_number_1: str = f"{randrange(100000, 999999)}", price_2: float = 1000,
+                         shop_number_1: str = None, price_2: float = 1000,
                          weight_2: float = 2, barcode_2: str = None,
-                         shop_number_2: str = f"{randrange(100000, 999999)}", dimension: dict = None):
+                         shop_number_2: str = None):
         r"""Метод создания многоместного заказа.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
@@ -90,7 +90,6 @@ class ApiOrder:
         :param weight_2: Вес первого грузо места.
         :param barcode_2: Штрих-код первого грузоместа.
         :param shop_number_2: Номер в магазине первого грузоместа.
-        :param dimension: Габариты грузо мест.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param delivery_point_code: Идентификатор точки доставки.
@@ -108,10 +107,11 @@ class ApiOrder:
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
                                                                        weight=weight_1, vat="10"),
                                             barcode=barcode_1, shop_number=shop_number_1,
-                                            dimension=dimension, weight=1),
+                                            dimension=self.app.dicts.dimension(), weight=1),
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стул", price=price_2, count=1,
                                                                        weight=weight_2, vat="10"),
-                                            barcode=barcode_2, shop_number=shop_number_2, dimension=dimension, weight=2)
+                                            barcode=barcode_2, shop_number=shop_number_2,
+                                            dimension=self.app.dicts.dimension(), weight=2)
         ]
         result = self.app.http_method.post(link=self.link, json=multi_order)
         return self.app.http_method.return_result(response=result)

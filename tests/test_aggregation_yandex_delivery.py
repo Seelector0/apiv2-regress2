@@ -40,10 +40,7 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type,
                                          service="YandexDelivery", delivery_point_code=delivery_point_code,
-                                         delivery_sum=0, dimension=app.dicts.dimension(length=randint(1, 4),
-                                                                                       width=randint(1, 4),
-                                                                                       height=randint(1, 4)),
-                                         shared_data=shared_data["order_ids"])
+                                         delivery_sum=0, shared_data=shared_data["order_ids"])
 
 
 @allure.description("Создание Courier заказа по CД YandexDelivery")

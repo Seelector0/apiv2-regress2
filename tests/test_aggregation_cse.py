@@ -45,7 +45,7 @@ def test_create_multi_order(app, shop_id, warehouse_without_pickup, payment_type
                                          warehouse_id=warehouse_without_pickup, payment_type=payment_type,
                                          delivery_type=delivery_type, service="Cse", tariff="64",
                                          delivery_point_code=delivery_point_code, date_pickup=str(today),
-                                         dimension=app.dicts.dimension(), shared_data=shared_data["order_ids"])
+                                         shared_data=shared_data["order_ids"])
 
 
 @allure.description("Создание заказа по СД Cse")
