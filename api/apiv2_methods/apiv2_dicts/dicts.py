@@ -507,3 +507,11 @@ class Dicts:
         :return:
         """
         return dict(exclude=tariffs, restrict=None)
+
+    @staticmethod
+    def generate_random_numer():
+        r"""Генерация случайного числа для использования в номерах магазина или штрихкодах.
+        :return: Случайное 7-значное число в виде строки.
+        """
+        random_numer = f"{randrange(1000000, 9999999)}"
+        return random_numer
