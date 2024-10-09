@@ -37,11 +37,11 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, cod, decla
 
 
 @allure.description("Создание Courier заказа по CД Dalli")
-@pytest.mark.parametrize("payment_type, declared_value,  cod", [("Paid", 0, None), ("PayOnDelivery", 3000, 3100.24)])
-def test_create_single_order(app, shop_id, warehouse_id, payment_type, cod, declared_value, connections, shared_data):
+@pytest.mark.parametrize("payment_type,  cod", [("Paid", None), ("PayOnDelivery", 3100.24)])
+def test_create_single_order(app, shop_id, warehouse_id, payment_type, cod, connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
-                                          payment_type=payment_type, declared_value=declared_value, cod=cod,
-                                          delivery_type="Courier", service="Dalli", tariff="1", data=str(tomorrow),
+                                          payment_type=payment_type, cod=cod, delivery_type="Courier", service="Dalli",
+                                          tariff="1", data=str(tomorrow),
                                           delivery_time={"from": "18:00", "to": "22:00"},
                                           shared_data=shared_data["order_ids"])
 

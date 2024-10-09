@@ -11,14 +11,13 @@ class ApiOrder:
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
-    def post_single_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
-                          service: str, shop_barcode: str = None, delivery_sum: float = 100.24, cod: float = None,
-                          length: float = randint(5, 15), width: float = randint(5, 15),
+    def post_single_order(self, shop_id, warehouse_id, payment_type: str,  delivery_type: str, service: str,
+                          declared_value: float = None, shop_barcode: str = None, delivery_sum: float = 100.24,
+                          cod: float = None, length: float = randint(5, 15), width: float = randint(5, 15),
                           height: float = randint(5, 15), tariff: str = None, data: str = None,
                           delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
-                          pickup_time_period: str = None, date_pickup: str = None, routes: list = None,
-                          price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
-                          items_declared_value: int = 1000):
+                          pickup_time_period: str = None, date_pickup: str = None, price_1: float = 1000,
+                          price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000):
         r"""Метод создания одноместного заказа.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
@@ -26,7 +25,7 @@ class ApiOrder:
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
-        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param price_1: Цена первой товарной позиции.
         :param price_2: Цена второй товарной позиции.
@@ -41,19 +40,19 @@ class ApiOrder:
         :param country_code: Код страны назначения.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
-        :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         :param tariff: Тариф создания заказа.
         :param items_declared_value: Цена товарной позиции.
         """
+        if declared_value is None:
+            declared_value = delivery_sum + price_1 + price_2 + price_3
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
                                                  payment_type=payment_type,
-                                                 declared_value=declared_value + price_1 + price_2 + price_3,
+                                                 declared_value=declared_value,
                                                  delivery_sum=delivery_sum, cod=cod, length=length, width=width,
-                                                 height=height, type_ds=type_ds, service=service, tariff=tariff,
-                                                 data=data, delivery_time=delivery_time,
+                                                 height=height, delivery_type=delivery_type, service=service,
+                                                 tariff=tariff, data=data, delivery_time=delivery_time,
                                                  delivery_point_code=delivery_point_code, country_code=country_code,
-                                                 pickup_time_period=pickup_time_period, date_pickup=date_pickup,
-                                                 routes=routes)
+                                                 pickup_time_period=pickup_time_period, date_pickup=date_pickup)
         single_order["places"] = self.app.dicts.places(places=[
             self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
                                  items_declared_value=items_declared_value),
@@ -65,7 +64,7 @@ class ApiOrder:
         result = self.app.http_method.post(link=self.link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
-    def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str,
+    def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_type: str,
                          service: str, tariff: str = None, data: str = None, delivery_time: dict = None,
                          delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
                          price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
@@ -80,7 +79,7 @@ class ApiOrder:
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
-        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param price_1: Цена первого грузоместа.
         :param weight_1: Вес первого грузоместа.
@@ -99,8 +98,8 @@ class ApiOrder:
         """
         multi_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
                                                 declared_value=declared_value + price_1 + price_2,
-                                                delivery_sum=delivery_sum, cod=cod, type_ds=type_ds, service=service,
-                                                tariff=tariff, data=data, delivery_time=delivery_time,
+                                                delivery_sum=delivery_sum, cod=cod, delivery_type=delivery_type,
+                                                service=service, tariff=tariff, data=data, delivery_time=delivery_time,
                                                 delivery_point_code=delivery_point_code, date_pickup=date_pickup,
                                                 pickup_time_period=pickup_time_period)
         multi_order["places"] = [

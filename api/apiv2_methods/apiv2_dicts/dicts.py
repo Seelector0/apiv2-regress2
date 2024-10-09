@@ -225,12 +225,11 @@ class Dicts:
             "countryCode": country_code
         }
 
-    def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, type_ds: str, service: str,
-                   shop_barcode: str = None, cod: float = None, length: float = randint(1, 10),
-                   width: float = randint(1, 10), height: float = randint(1, 10),
-                   weight: float = 3, tariff: str = None, delivery_sum: float = None,
-                   data: str = None, delivery_time: dict = None, delivery_point_code: str = None,
-                   country_code: str = None, pickup_time_period: str = None,
+    def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_type: str,
+                   service: str, shop_barcode: str = None, cod: float = None, length: float = randint(1, 10),
+                   width: float = randint(1, 10), height: float = randint(1, 10), weight: float = 3,
+                   tariff: str = None, delivery_sum: float = None, data: str = None, delivery_time: dict = None,
+                   delivery_point_code: str = None, country_code: str = None, pickup_time_period: str = None,
                    date_pickup: str = None, routes: list = None, ):
         r"""Форма для создания заказов.
         :param shop_id: Id магазина.
@@ -244,7 +243,7 @@ class Dicts:
         :param width: Ширина.
         :param height: Высота.
         :param weight: Вес всего заказа.
-        :param type_ds: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param tariff: Тариф создания заказа.
         :param data: Дата доставки.
@@ -276,7 +275,7 @@ class Dicts:
             "dimension": self.dimension(length=length, width=width, height=height),
             "weight": weight,
             "delivery": {
-                "type": type_ds,
+                "type": delivery_type,
                 "service": service,
                 "tariff": tariff,
                 "date": data,

@@ -17,7 +17,7 @@ def test_aggregation_delivery_services(app, admin, shop_id):
 def test_create_single_order(app, shop_id, warehouse_id, execution_number, connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           payment_type="Paid", delivery_type="Courier", service="YandexGo",
-                                          declared_value=0, delivery_sum=0, shared_data=shared_data["order_ids"])
+                                          delivery_sum=0, shared_data=shared_data["order_ids"])
 
 
 @allure.description("Получение списка заказов CД YandexGo")

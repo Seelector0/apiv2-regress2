@@ -8,13 +8,14 @@ from utils.checking import Checking
 class CommonOrders:
 
     @staticmethod
-    def test_single_order_common(app, shop_id, warehouse_id, payment_type, delivery_type,
-                                 connections, shared_data, service, tariff=None, shared_data_order_type=None,
-                                 declared_value=1000, **kwargs):
-        """Создание одноместного заказа"""
-        new_order = app.order.post_single_order(shop_id=shop_id, warehouse_id=warehouse_id,
-                                                payment_type=payment_type, type_ds=delivery_type, service=service,
-                                                tariff=tariff, declared_value=declared_value, **kwargs)
+    def test_single_order_common(app, connections, shared_data, shared_data_order_type=None, **kwargs):
+        """Создание одноместного заказа
+        :param app: Объект приложения для работы с заказами через API.
+        :param connections: Объект для взаимодействия с базой данных.
+        :param shared_data: Общие тестовые данные, такие как идентификаторы заказов и магазинов.
+        :param shared_data_order_type: Дополнительные данные о типе заказа (по умолчанию None).
+        """
+        new_order = app.order.post_single_order(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
         Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
         order_id = new_order.json()["id"]
@@ -42,7 +43,7 @@ class CommonOrders:
                    Если не передан через kwargs в самом тесте, будет сгенерирован случайный штрихкод.
         """
         new_order = app.order.post_multi_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
-                                               type_ds=delivery_type, service=service,
+                                               delivery_type=delivery_type, service=service,
                                                delivery_point_code=delivery_point_code,
                                                tariff=tariff, declared_value=declared_value,
                                                barcode_1=kwargs.pop('barcode_1', Dicts.generate_random_numer()),
