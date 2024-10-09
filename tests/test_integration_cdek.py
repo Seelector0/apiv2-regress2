@@ -103,7 +103,7 @@ def test_patch_order_weight(app, connections, shared_data):
 @allure.description("Редактирование информации о получателе в заказе СД Cdek")
 def test_patch_order_recipient_cdek(app, connections, shared_data):
     CommonOrders.patch_order_recipient_common(app=app, connections=connections,
-                                              shared_data=shared_data["order_ids_single"],
+                                              shared_data=shared_data["order_ids"],
                                               family_name="Иванов", first_name="Авдотий", second_name="Николаевич",
                                               address={"raw": "119634, г Москва, ул. Лукинская, дом 5, кв. 23",
                                                        "countryCode": None})

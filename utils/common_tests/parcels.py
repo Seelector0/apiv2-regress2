@@ -41,11 +41,10 @@ class CommonParcels:
             connections.wait_create_order(order_id=order_patch.json()["id"])
             get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
             Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
-        except AssertionError as e:
+        except AssertionError:
             if order_id in shared_data["order_ids_in_parcel"]:
                 shared_data["order_ids_in_parcel"].remove(order_id)
             raise
-
 
     @staticmethod
     def test_get_parcels_common(app, shared_data):
@@ -59,9 +58,9 @@ class CommonParcels:
     def test_get_parcel_by_id_common(app, shared_data):
         """Получение информации о партии СД RussianPost"""
         check_shared_data(shared_data, key="parcel_ids")
-        random_parcel = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
-        Checking.check_status_code(response=random_parcel, expected_status_code=200)
-        Checking.checking_json_key(response=random_parcel, expected_value=INFO.entity_parcel)
+        parcel_id = app.parcel.get_parcel_id(parcel_id=choice(shared_data["parcel_ids"]))
+        Checking.check_status_code(response=parcel_id, expected_status_code=200)
+        Checking.checking_json_key(response=parcel_id, expected_value=INFO.entity_parcel)
 
     @staticmethod
     def add_order_in_parcel_common(app, connections, shared_data, types=None):
