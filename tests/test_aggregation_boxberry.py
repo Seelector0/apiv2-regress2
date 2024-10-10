@@ -43,8 +43,7 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
                             connections, shared_data):
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type, service="Boxberry",
-                                         delivery_point_code=delivery_point_code,  barcode_1=None, barcode_2=None,
-                                         shared_data=shared_data["order_ids"])
+                                         delivery_point_code=delivery_point_code, shared_data=shared_data["order_ids"])
 
 
 @allure.description("Создание заказа по CД Boxberry")

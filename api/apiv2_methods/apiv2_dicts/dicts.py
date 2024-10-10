@@ -1,9 +1,10 @@
 from utils.global_enums import INFO
 from utils.environment import ENV_OBJECT
-from random import randrange, randint, choice
+from random import randrange, randint, choice, random
 import datetime
 import allure
 import uuid
+import random
 
 
 class Dicts:
@@ -225,34 +226,30 @@ class Dicts:
             "countryCode": country_code
         }
 
-    def form_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_type: str,
-                   service: str, shop_barcode: str = None, cod: float = None, length: float = randint(1, 10),
-                   width: float = randint(1, 10), height: float = randint(1, 10), weight: float = 3,
-                   tariff: str = None, delivery_sum: float = None, data: str = None, delivery_time: dict = None,
-                   delivery_point_code: str = None, country_code: str = None, pickup_time_period: str = None,
-                   date_pickup: str = None, routes: list = None, ):
+    @staticmethod
+    def form_order(shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_sum: float,  cod: float,
+                   dimension: dict,  weight:  float, delivery_type: str, service: str, tariff: str,
+                   delivery_point_code: str,  data: str, delivery_time: dict, pickup_time_period: str, date_pickup: str,
+                   shop_barcode: str = None, country_code: str = None):
         r"""Форма для создания заказов.
         :param shop_id: Id магазина.
-        :param warehouse_id: Id склада.
         :param shop_barcode: Штрих код заказа.
+        :param warehouse_id: Id склада.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
-        :param length: Длинна.
-        :param width: Ширина.
-        :param height: Высота.
-        :param weight: Вес всего заказа.
+        :param dimension: Габариты заказа.
+        :param weight: Общий все заказа.
         :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param tariff: Тариф создания заказа.
+        :param delivery_point_code: Идентификатор точки доставки.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param country_code: Код страны назначения.
-        :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
-        :param routes: Поле обязательное для создания заказа в СД DostavkaGuru.
         """
         address_raw = "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
         if country_code == "KZ":
@@ -272,7 +269,7 @@ class Dicts:
                 "deliverySum": delivery_sum,
                 "cod": cod
             },
-            "dimension": self.dimension(length=length, width=width, height=height),
+            "dimension": dimension,
             "weight": weight,
             "delivery": {
                 "type": delivery_type,
@@ -295,8 +292,7 @@ class Dicts:
             },
             "comment": "",
             "pickupTimePeriod": pickup_time_period,
-            "datePickup": date_pickup,
-            "routes": routes
+            "datePickup": date_pickup
         }
 
     @staticmethod
@@ -438,13 +434,17 @@ class Dicts:
         }
 
     @staticmethod
-    def dimension(length: float = randint(1, 4), width: float = randint(1, 4), height: float = randint(1, 4)):
+    def dimension(length: float = None, width: float = None, height: float = None):
         r"""Габариты товара или грузоместа.
-        :param length: Длинна.
-        :param width: Ширина.
-        :param height: Высота.
+        :param length: Длина. Если None, генерируется случайное значение.
+        :param width: Ширина. Если None, генерируется случайное значение.
+        :param height: Высота. Если None, генерируется случайное значение.
         """
-        return dict(length=length, width=width, height=height)
+        length = length if length is not None else random.randint(5, 60)
+        width = width if width is not None else random.randint(5, 40)
+        height = height if height is not None else random.randint(5, 40)
+
+        return {'length': length, 'width': width, 'height': height}
 
     @staticmethod
     def recipient(family_name: str, first_name: str, second_name: str, phone_number: str, email: str, address: str):

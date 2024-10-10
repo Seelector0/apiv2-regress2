@@ -1,6 +1,6 @@
 import pytest
 import allure
-from random import randrange, randint
+from random import randrange
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 from utils.environment import ENV_OBJECT
 
@@ -50,8 +50,7 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_
                                           shop_barcode=f"{randrange(100000000, 999999999)}",
                                           payment_type=payment_type, delivery_type=delivery_type,
                                           service="YandexDelivery", delivery_point_code=delivery_point_code,
-                                          delivery_sum=0, length=randint(1, 4), width=randint(1, 4),
-                                          height=randint(1, 4), shared_data=shared_data["order_ids"])
+                                          delivery_sum=0, shared_data=shared_data["order_ids"])
 
 
 @allure.description("Получение списка заказов CД YandexDelivery")

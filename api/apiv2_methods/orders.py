@@ -1,4 +1,6 @@
-from random import randrange, randint
+from random import randrange
+
+from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.global_enums import INFO
 from random import choice
 
@@ -11,45 +13,44 @@ class ApiOrder:
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
-    def post_single_order(self, shop_id, warehouse_id, payment_type: str,  delivery_type: str, service: str,
-                          declared_value: float = None, shop_barcode: str = None, delivery_sum: float = 100.24,
-                          cod: float = None, length: float = randint(5, 15), width: float = randint(5, 15),
-                          height: float = randint(5, 15), tariff: str = None, data: str = None,
-                          delivery_time: dict = None, delivery_point_code: str = None, country_code: str = None,
-                          pickup_time_period: str = None, date_pickup: str = None, price_1: float = 1000,
-                          price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000):
+    def post_single_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
+                          shop_barcode: str = None, declared_value: float = None, delivery_sum: float = 100.24,
+                          cod: float = None, weight: float = 3, tariff: str = None, delivery_point_code: str = None,
+                          data: str = None, delivery_time: dict = None, country_code: str = None, price_1: float = 1000,
+                          price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000,
+                          pickup_time_period: str = None, date_pickup: str = None):
         r"""Метод создания одноместного заказа.
         :param shop_id: Id магазина.
+        :param shop_barcode: Штрих код заказа.
         :param warehouse_id: Id склада.
         :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
+        :param weight: Общий все заказа.
         :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
+        :param tariff: Тариф создания заказа.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param country_code: Код страны назначения.
         :param price_1: Цена первой товарной позиции.
         :param price_2: Цена второй товарной позиции.
         :param price_3: Цена третий товарной позиции.
-        :param shop_barcode: Штрих код заказа.
-        :param data: Дата доставки.
-        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
-        :param length: Длинна.
-        :param width: Ширина.
-        :param height: Высота.
-        :param delivery_point_code: Идентификатор точки доставки.
-        :param country_code: Код страны назначения.
+        :param items_declared_value: Цена товарной позиции.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
-        :param tariff: Тариф создания заказа.
-        :param items_declared_value: Цена товарной позиции.
         """
-        if declared_value is None:
-            declared_value = delivery_sum + price_1 + price_2 + price_3
+        declared_value = declared_value or (delivery_sum + price_1 + price_2 + price_3)
+        if service == "FivePost":
+            declared_value = price_1 + price_2
+
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
-                                                 payment_type=payment_type,
-                                                 declared_value=declared_value,
-                                                 delivery_sum=delivery_sum, cod=cod, length=length, width=width,
-                                                 height=height, delivery_type=delivery_type, service=service,
+                                                 payment_type=payment_type, declared_value=declared_value,
+                                                 delivery_sum=delivery_sum, cod=cod,
+                                                 dimension=self.app.dicts.dimension(), weight=weight,
+                                                 delivery_type=delivery_type, service=service,
                                                  tariff=tariff, data=data, delivery_time=delivery_time,
                                                  delivery_point_code=delivery_point_code, country_code=country_code,
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup)
@@ -64,14 +65,12 @@ class ApiOrder:
         result = self.app.http_method.post(link=self.link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
-    def post_multi_order(self, shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_type: str,
-                         service: str, tariff: str = None, data: str = None, delivery_time: dict = None,
-                         delivery_point_code: str = None, date_pickup: str = None, pickup_time_period: str = None,
-                         price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
-                         delivery_sum: float = 100.24, cod: float = None,
-                         shop_number_1: str = None, price_2: float = 1000,
-                         weight_2: float = 2, barcode_2: str = None,
-                         shop_number_2: str = None):
+    def post_multi_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str,
+                         service: str, declared_value: float = None, delivery_sum: float = 100.24, cod: float = None,
+                         weight: float = 3, tariff: str = None, delivery_point_code: str = None, data: str = None,
+                         delivery_time: dict = None, price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
+                         shop_number_1: str = None, price_2: float = 1000, weight_2: float = 2, barcode_2: str = None,
+                         shop_number_2: str = None, pickup_time_period: str = None, date_pickup: str = None):
         r"""Метод создания многоместного заказа.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
@@ -79,8 +78,13 @@ class ApiOrder:
         :param declared_value: Объявленная стоимость.
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
+        :param weight: Общий все заказа.
         :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
+        :param tariff: Тариф создания заказа.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param price_1: Цена первого грузоместа.
         :param weight_1: Вес первого грузоместа.
         :param barcode_1: Штрих-код первого грузоместа.
@@ -89,28 +93,39 @@ class ApiOrder:
         :param weight_2: Вес первого грузо места.
         :param barcode_2: Штрих-код первого грузоместа.
         :param shop_number_2: Номер в магазине первого грузоместа.
-        :param data: Дата доставки.
-        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
-        :param delivery_point_code: Идентификатор точки доставки.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
-        :param tariff: Тариф создания заказа.
         """
+        declared_value = declared_value or (delivery_sum + price_1 + price_2)
+        if service == "FivePost":
+            declared_value = price_1 + price_2
+        if service != "Boxberry":
+            barcode_1 = barcode_1 or Dicts.generate_random_numer()
+            barcode_2 = barcode_2 or Dicts.generate_random_numer()
+            shop_number_1 = shop_number_1 or Dicts.generate_random_numer()
+            shop_number_2 = shop_number_2 or Dicts.generate_random_numer()
+        dimension_1 = self.app.dicts.dimension()
+        dimension_2 = self.app.dicts.dimension()
+        dimension = {'length': dimension_1['length'] + dimension_2['length'],
+                     'width': dimension_1['width'] + dimension_2['width'],
+                     'height': dimension_1['height'] + dimension_2['height']}
+
         multi_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
-                                                declared_value=declared_value + price_1 + price_2,
-                                                delivery_sum=delivery_sum, cod=cod, delivery_type=delivery_type,
-                                                service=service, tariff=tariff, data=data, delivery_time=delivery_time,
-                                                delivery_point_code=delivery_point_code, date_pickup=date_pickup,
-                                                pickup_time_period=pickup_time_period)
+                                                declared_value=declared_value,
+                                                delivery_sum=delivery_sum, cod=cod,
+                                                dimension=dimension, weight=weight,
+                                                delivery_type=delivery_type, service=service, tariff=tariff, data=data,
+                                                delivery_time=delivery_time, delivery_point_code=delivery_point_code,
+                                                date_pickup=date_pickup, pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
                                                                        weight=weight_1, vat="10"),
                                             barcode=barcode_1, shop_number=shop_number_1,
-                                            dimension=self.app.dicts.dimension(), weight=1),
+                                            dimension=dimension_1, weight=1),
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стул", price=price_2, count=1,
                                                                        weight=weight_2, vat="10"),
                                             barcode=barcode_2, shop_number=shop_number_2,
-                                            dimension=self.app.dicts.dimension(), weight=2)
+                                            dimension=dimension_2, weight=2)
         ]
         result = self.app.http_method.post(link=self.link, json=multi_order)
         return self.app.http_method.return_result(response=result)

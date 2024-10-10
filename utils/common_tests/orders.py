@@ -1,4 +1,3 @@
-from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.utils import check_shared_data
 from random import choice, randrange
 from utils.global_enums import INFO
@@ -33,23 +32,9 @@ class CommonOrders:
             shared_data_order_type.append(order_id)
 
     @staticmethod
-    def test_multi_order_common(app, shop_id, warehouse_id, payment_type, delivery_type, service, connections,
-                                shared_data, tariff=None, delivery_point_code=None, declared_value=0, **kwargs):
-        """Создание многоместного заказа
-         Описание параметров:
-        barcode_1: Штрихкод первого грузоместа заказа.
-                   Если не передан через kwargs в самом тесте, будет сгенерирован случайный штрихкод.
-        barcode_2: Штрихкод второго грузоместа заказа.
-                   Если не передан через kwargs в самом тесте, будет сгенерирован случайный штрихкод.
-        """
-        new_order = app.order.post_multi_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
-                                               delivery_type=delivery_type, service=service,
-                                               delivery_point_code=delivery_point_code,
-                                               tariff=tariff, declared_value=declared_value,
-                                               barcode_1=kwargs.pop('barcode_1', Dicts.generate_random_numer()),
-                                               barcode_2=kwargs.pop('barcode_2', Dicts.generate_random_numer()),
-                                               shop_number_1=Dicts.generate_random_numer(),
-                                               shop_number_2=Dicts.generate_random_numer(), **kwargs)
+    def test_multi_order_common(app, connections, shared_data, **kwargs):
+        """Создание многоместного заказа"""
+        new_order = app.order.post_multi_order(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
         Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
         order_id = new_order.json()["id"]

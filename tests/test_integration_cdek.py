@@ -37,8 +37,8 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
                             connections, shared_data):
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type, service="Cdek",
-                                         tariff=choice(tariff),
-                                         delivery_point_code=delivery_point_code, shared_data=shared_data["order_ids"])
+                                         tariff=choice(tariff), delivery_point_code=delivery_point_code,
+                                         shared_data=shared_data["order_ids"])
 
 
 @allure.description("Добавление items в многоместный заказ СД Cdek")
