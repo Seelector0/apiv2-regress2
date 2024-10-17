@@ -440,9 +440,9 @@ class Dicts:
         :param width: Ширина. Если None, генерируется случайное значение.
         :param height: Высота. Если None, генерируется случайное значение.
         """
-        length = length if length is not None else random.randint(5, 60)
-        width = width if width is not None else random.randint(5, 40)
-        height = height if height is not None else random.randint(5, 40)
+        length = length if length is not None else random.randint(5, 30)
+        width = width if width is not None else random.randint(5, 30)
+        height = height if height is not None else random.randint(5, 30)
 
         return {'length': length, 'width': width, 'height': height}
 
@@ -508,9 +508,9 @@ class Dicts:
         return dict(exclude=tariffs, restrict=None)
 
     @staticmethod
-    def generate_random_numer():
+    def generate_random_number():
         r"""Генерация случайного числа для использования в номерах магазина или штрихкодах.
         :return: Случайное 7-значное число в виде строки.
         """
-        random_numer = f"{randrange(1000000, 9999999)}"
-        return random_numer
+        random_number = f"{randrange(1000000, 9999999)}"
+        return random_number

@@ -1,6 +1,4 @@
 from random import randrange
-
-from api.apiv2_methods.apiv2_dicts.dicts import Dicts
 from utils.global_enums import INFO
 from random import choice
 
@@ -12,6 +10,33 @@ class ApiOrder:
         self.link = "orders"
         self.method_xls = "application/vnd.ms-excel"
         self.method_xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+    @staticmethod
+    def calculate_declared_value(service, declared_value, delivery_sum, *prices):
+        """Вычисление объявленной стоимости или возвращение переданной в тесте."""
+        if service == "FivePost":
+            return sum(prices)
+        return declared_value if declared_value is not None else (delivery_sum + sum(prices))
+
+    def generate_barcodes_and_shop_numbers(self, service, barcode_1, barcode_2, shop_number_1, shop_number_2):
+        """Генерация или использование переданных штрих-кодов и номеров магазинов."""
+        if service != "Boxberry":
+            shop_number_1 = shop_number_1 or self.app.dicts.generate_random_number()
+            shop_number_2 = shop_number_2 or self.app.dicts.generate_random_number()
+            barcode_1 = barcode_1 or self.app.dicts.generate_random_number()
+            barcode_2 = barcode_2 or self.app.dicts.generate_random_number()
+        return shop_number_1, shop_number_2, barcode_1, barcode_2
+
+    def generate_calculate_dimensions(self, dimension_1=None, dimension_2=None, total_dimensions=None):
+        """Вычисляет два размера и их сумму. Если размеры не переданы, генерирует их."""
+        dimension_1 = dimension_1 or self.app.dicts.dimension()
+        dimension_2 = dimension_2 or self.app.dicts.dimension()
+        total_dimensions = total_dimensions or {
+                'length': dimension_1['length'] + dimension_2['length'],
+                'width': dimension_1['width'] + dimension_2['width'],
+                'height': dimension_1['height'] + dimension_2['height']
+            }
+        return dimension_1, dimension_2, total_dimensions
 
     def post_single_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
                           shop_barcode: str = None, declared_value: float = None, delivery_sum: float = 100.24,
@@ -42,12 +67,10 @@ class ApiOrder:
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
         """
-        declared_value = declared_value or (delivery_sum + price_1 + price_2 + price_3)
-        if service == "FivePost":
-            declared_value = price_1 + price_2
-
+        declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
+                                                              price_1, price_2, price_3)
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
-                                                 payment_type=payment_type, declared_value=declared_value,
+                                                 payment_type=payment_type, declared_value=declared_value_result,
                                                  delivery_sum=delivery_sum, cod=cod,
                                                  dimension=self.app.dicts.dimension(), weight=weight,
                                                  delivery_type=delivery_type, service=service,
@@ -67,10 +90,12 @@ class ApiOrder:
 
     def post_multi_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str,
                          service: str, declared_value: float = None, delivery_sum: float = 100.24, cod: float = None,
-                         weight: float = 3, tariff: str = None, delivery_point_code: str = None, data: str = None,
-                         delivery_time: dict = None, price_1: float = 1000, weight_1: float = 1, barcode_1: str = None,
-                         shop_number_1: str = None, price_2: float = 1000, weight_2: float = 2, barcode_2: str = None,
-                         shop_number_2: str = None, pickup_time_period: str = None, date_pickup: str = None):
+                         weight: float = 3, total_dimension: dict = None, tariff: str = None,
+                         delivery_point_code: str = None, data: str = None, delivery_time: dict = None,
+                         price_1: float = 1000, weight_1: float = 1, barcode_1: str = None, shop_number_1: str = None,
+                         dimension_1: dict = None, price_2: float = 1000, weight_2: float = 2, barcode_2: str = None,
+                         shop_number_2: str = None, dimension_2: dict = None, pickup_time_period: str = None,
+                         date_pickup: str = None):
         r"""Метод создания многоместного заказа.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
@@ -79,6 +104,7 @@ class ApiOrder:
         :param delivery_sum: Стоимость доставки.
         :param cod: Наложенный платеж, руб.
         :param weight: Общий все заказа.
+        :param total_dimension: Габариты заказа.
         :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
         :param service: Код СД.
         :param tariff: Тариф создания заказа.
@@ -89,31 +115,28 @@ class ApiOrder:
         :param weight_1: Вес первого грузоместа.
         :param barcode_1: Штрих-код первого грузоместа.
         :param shop_number_1: Номер в магазине первого грузоместа.
+        :param dimension_1: Габариты грузоместа.
         :param price_2: Цена первого грузо места.
         :param weight_2: Вес первого грузо места.
         :param barcode_2: Штрих-код первого грузоместа.
         :param shop_number_2: Номер в магазине первого грузоместа.
+        :param dimension_2: Габариты грузоместа.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
         """
-        declared_value = declared_value or (delivery_sum + price_1 + price_2)
-        if service == "FivePost":
-            declared_value = price_1 + price_2
-        if service != "Boxberry":
-            barcode_1 = barcode_1 or Dicts.generate_random_numer()
-            barcode_2 = barcode_2 or Dicts.generate_random_numer()
-            shop_number_1 = shop_number_1 or Dicts.generate_random_numer()
-            shop_number_2 = shop_number_2 or Dicts.generate_random_numer()
-        dimension_1 = self.app.dicts.dimension()
-        dimension_2 = self.app.dicts.dimension()
-        dimension = {'length': dimension_1['length'] + dimension_2['length'],
-                     'width': dimension_1['width'] + dimension_2['width'],
-                     'height': dimension_1['height'] + dimension_2['height']}
-
+        declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
+                                                              price_1, price_2)
+        shop_number_1, shop_number_2, barcode_1, barcode_2, = (self.generate_barcodes_and_shop_numbers(service,
+                                                                                                       shop_number_1,
+                                                                                                       shop_number_2,
+                                                                                                       barcode_1,
+                                                                                                       barcode_2))
+        dimension_1, dimension_2, total_dimension = self.generate_calculate_dimensions(dimension_1, dimension_2,
+                                                                                       total_dimension)
         multi_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
-                                                declared_value=declared_value,
+                                                declared_value=declared_value_result,
                                                 delivery_sum=delivery_sum, cod=cod,
-                                                dimension=dimension, weight=weight,
+                                                dimension=total_dimension, weight=weight,
                                                 delivery_type=delivery_type, service=service, tariff=tariff, data=data,
                                                 delivery_time=delivery_time, delivery_point_code=delivery_point_code,
                                                 date_pickup=date_pickup, pickup_time_period=pickup_time_period)

@@ -119,7 +119,8 @@ class HttpMethod:
         try:
             with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
                 return response
-        except simplejson.errors.JSONDecodeError:
-            raise AssertionError(f"Ошибка API метода\nКод статуса ответа: {response.status_code}")
-        except requests.exceptions.JSONDecodeError:
-            raise AssertionError(f"Ошибка API метода\nКод статуса ответа: {response.status_code}")
+        except (simplejson.errors.JSONDecodeError, requests.exceptions.JSONDecodeError):
+            trace_id = response.request.headers.get('x-trace-id', 'No x-trace-id')
+            raise AssertionError(
+                f"Ошибка API метода\nКод статуса ответа: {response.status_code}\nx-trace-id: {trace_id}"
+            )
