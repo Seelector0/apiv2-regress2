@@ -593,6 +593,14 @@ class OtherInfo:
 
     boxberry_services = [
         {
+            "name": "dress-fitting",
+            "title": "Имеется возможность примерки",
+            "description": "Имеется возможность примерки",
+            "options": {
+                "hasParameter": False
+            }
+        },
+        {
             "name": "not-open",
             "title": "Не вскрывать до получения оплаты с клиента",
             "description": "Не вскрывать до получения оплаты с клиента",
@@ -642,6 +650,14 @@ class OtherInfo:
     ]
 
     cse_services = [
+        {
+            "name": "fragile",
+            "title": "Хрупкое",
+            "description": "Хрупкое",
+            "options": {
+                "hasParameter": False
+            }
+        },
         {
             "name": "partial-sale",
             "title": "Частичная реализация",
