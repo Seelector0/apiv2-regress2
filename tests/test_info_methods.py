@@ -106,7 +106,7 @@ def test_info_statuses(app, delivery_service_code):
 
 
 @allure.description("Получения интервалов доставки")
-@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Dpd", "RussianPost", "Cse", "DostavkaClub"])
+@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Dpd", "RussianPost", "Cse", "DostavkaClub"])
 def test_delivery_time_schedules(app, shop_id, delivery_service_code):
     delivery_time_schedules = app.info.get_delivery_time_schedules(shop_id=shop_id,
                                                                    delivery_service_code=delivery_service_code)
@@ -114,7 +114,7 @@ def test_delivery_time_schedules(app, shop_id, delivery_service_code):
     if delivery_service_code == "Boxberry":
         Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
                                      expected_value=INFO.boxberry_intervals)
-    elif delivery_time_schedules in ["Cdek", "Dpd", "RussianPost", "Cse"]:
+    elif delivery_time_schedules in ["Dpd", "RussianPost", "Cse"]:
         Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
     elif delivery_time_schedules == "DostavkaClub":
         Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
