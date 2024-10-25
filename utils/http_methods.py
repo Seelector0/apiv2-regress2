@@ -53,7 +53,7 @@ class HttpMethod:
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, timeout: int = 180, retry_interval: int = 5, **kwargs):
+              admin: bool = None, timeout: int = 300, retry_interval: int = 5, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
