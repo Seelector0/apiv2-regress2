@@ -6,25 +6,25 @@ class OtherInfo:
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
                         "dpdPickupNum", "lPostWarehouseId", "yandexWarehouseId", "comment"]
 
-    entity_order = ['id', 'number', 'addressTo', 'data', 'parcel', 'status', 'statusReason', 'state', 'stateMessage',
-                    'created', 'configurationType']
+    entity_order = ["id", "number", "addressTo", "data", "parcel", "status", "statusReason", "state", "stateMessage",
+                    "created", "configurationType"]
 
-    entity_parcel = ['id', 'number', 'shop', 'deliveryServiceCode', 'data', 'created', 'deleted', 'state', 'stateTime']
+    entity_parcel = ["id", "number", "shop", "deliveryServiceCode", "data", "created", "deleted", "state", "stateTime"]
 
-    entity_intake = ['id', 'number', 'deliveryServiceId', 'status', 'createdAt', 'request']
+    entity_intake = ["id", "number", "deliveryServiceId", "status", "createdAt", "request"]
 
-    created_entity_widget = ['id', 'customerId', 'shopId', 'token', 'createdAt', 'updatedAt']
+    created_entity_widget = ["id", "customerId", "shopId", "token", "createdAt", "updatedAt"]
 
-    entity_widget = ['id', 'customerId', 'shopId', 'token', 'script', 'createdAt', 'updatedAt']
+    entity_widget = ["id", "customerId", "shopId", "token", "script", "createdAt", "updatedAt"]
 
-    entity_moderation = ['id', 'connectionId', 'agreementId', 'customerAgreementId', 'credential', 'notified',
-                         'expired']
+    entity_moderation = ["id", "connectionId", "agreementId", "customerAgreementId", "credential", "notified",
+                         "expired"]
 
-    entity_webhook = ['id', 'shopId', 'url', 'name', 'secret', 'eventType', 'active', 'createdAt', 'updatedAt']
+    entity_webhook = ["id", "shopId", "url", "name", "secret", "eventType", "active", "createdAt", "updatedAt"]
 
-    entity_forms_parcels_labels = ['id', 'state', 'type', 'data', 'artifacts', 'createdAt', 'stateTime', 'message']
+    entity_forms_parcels_labels = ["id", "state", "type", "data", "artifacts", "createdAt", "stateTime", "message"]
 
-    entity_connections_id = ['id', 'shopId', 'deliveryService', 'data']
+    entity_connections_id = ["id", "shopId", "deliveryService", "data"]
 
     old_work_time_warehouse = {
         "timezone": "+03:00",
@@ -535,30 +535,37 @@ class OtherInfo:
 
     boxberry_intervals = [
         {
+            "date": None,
             "from": "09:00",
             "to": "13:00"
         },
         {
+            "date": None,
             "from": "12:00",
             "to": "15:00"
         },
         {
+            "date": None,
             "from": "15:00",
             "to": "18:00"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "15:00"
         },
         {
+            "date": None,
             "from": "15:00",
             "to": "22:00"
         }
@@ -857,7 +864,7 @@ class OtherInfo:
         }
     ]
 
-    dpd_ds_tariffs = ["NDY", "CUR", "ECN", "CSM", "PCL",  "MXO"]
+    dpd_ds_tariffs = ["NDY", "CUR", "ECN", "CSM", "PCL", "MXO"]
 
     five_post_vats = [
         {
@@ -1064,136 +1071,163 @@ class OtherInfo:
 
     dalli_intervals_1 = [
         {
+            "date": None,
             "from": "09:00",
             "to": "13:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "13:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "13:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "4"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "16:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "17:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "17:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "17:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "4"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "11:00",
             "to": "15:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "11:00",
             "to": "15:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "11:00",
             "to": "15:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "12:00",
             "to": "22:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "14:00",
             "to": "18:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "14:00",
             "to": "18:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "14:00",
             "to": "18:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00",
             "zone": "2"
@@ -1202,10 +1236,12 @@ class OtherInfo:
 
     dalli_intervals_2 = [
         {
+            "date": None,
             "from": "15:00",
             "to": "18:00"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00"
         }
@@ -1213,76 +1249,91 @@ class OtherInfo:
 
     dalli_intervals_11 = [
         {
+            "date": None,
             "from": "09:00",
             "to": "13:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "4"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "18:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "22:00",
             "zone": "3"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "22:00",
             "zone": "4"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "22:00",
             "zone": "1"
         },
         {
+            "date": None,
             "from": "09:00",
             "to": "22:00",
             "zone": "2"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "17:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "10:00",
             "to": "22:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "11:00",
             "to": "15:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "14:00",
             "to": "18:00",
             "zone": "0"
         },
         {
+            "date": None,
             "from": "18:00",
             "to": "22:00",
             "zone": "0"
