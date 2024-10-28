@@ -295,9 +295,9 @@ class CommonOrders:
             raise
 
     @staticmethod
-    def test_get_orders_common(app, shared_data):
+    def test_get_orders_common(app, shared_data, shared_delivery_service):
         """Получение списка заказов"""
-        check_shared_data(shared_data, key="order_ids")
+        check_shared_data(shared_data[shared_delivery_service], key="order_ids")
         list_orders = app.order.get_orders()
         Checking.check_status_code(response=list_orders, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_orders)
@@ -351,10 +351,10 @@ class CommonOrders:
         Checking.checking_json_key(response=security_code, expected_value=["code"])
 
     @staticmethod
-    def test_delete_order_common(app, connections, shared_data, delivery_service=None):
+    def test_delete_order_common(app, connections, shared_data, shared_delivery_service, delivery_service=None):
         """Удаление заказа"""
-        check_shared_data(shared_data, key="order_ids")
-        order_id = shared_data["order_ids"].pop()
+        check_shared_data(shared_data[shared_delivery_service], key="order_ids")
+        order_id = shared_data[shared_delivery_service]["order_ids"].pop()
         delete_order = app.order.delete_order(order_id=order_id)
         Checking.check_status_code(response=delete_order, expected_status_code=204)
         Checking.check_value_comparison(responses={"DELETE v2/order/{id}": delete_order},
@@ -364,8 +364,8 @@ class CommonOrders:
         if delivery_service == "RussianPost":
             lists_to_check = ["orders_courier", "orders_delivery_point", "orders_post_office", "orders_terminal"]
             for list_name in lists_to_check:
-                if order_id in shared_data[list_name]:
-                    shared_data[list_name].remove(order_id)
+                if order_id in shared_data[shared_delivery_service][list_name]:
+                    shared_data[shared_delivery_service][list_name].remove(order_id)
 
     @staticmethod
     def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections):

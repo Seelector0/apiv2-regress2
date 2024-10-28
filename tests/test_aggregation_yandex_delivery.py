@@ -5,6 +5,11 @@ from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, Comm
 from utils.environment import ENV_OBJECT
 
 
+@pytest.fixture(scope='module')
+def shop_id(app, shared_data):
+    return app.tests_shop.post_shop(shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД YandexDelivery")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
@@ -40,7 +45,7 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                          payment_type=payment_type, delivery_type=delivery_type,
                                          service="YandexDelivery", delivery_point_code=delivery_point_code,
-                                         delivery_sum=0, shared_data=shared_data["order_ids"])
+                                         delivery_sum=0, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Создание Courier заказа по CД YandexDelivery")
@@ -57,65 +62,67 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_
                                           shop_barcode=f"{randrange(100000000, 999999999)}",
                                           payment_type=payment_type, delivery_type=delivery_type,
                                           service="YandexDelivery", delivery_point_code=delivery_point_code,
-                                          delivery_sum=0, shared_data=shared_data["order_ids"])
+                                          delivery_sum=0, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД YandexDelivery")
 def test_get_orders(app, shared_data):
-    CommonOrders.test_get_orders_common(app=app, shared_data=shared_data)
+    CommonOrders.test_get_orders_common(app=app, shared_delivery_service="yandex_delivery_a", shared_data=shared_data)
 
 
 @allure.description("Получение информации о заказе CД YandexDelivery")
 def test_get_order_by_id(app, shared_data):
-    CommonOrders.test_get_order_by_id_common(app=app, shared_data=shared_data["order_ids"])
+    CommonOrders.test_get_order_by_id_common(app=app, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Получение информации об истории изменения статусов заказа СД YandexDelivery")
 def test_order_status(app, shared_data):
-    CommonOrders.test_order_status_common(app=app, shared_data=shared_data["order_ids"])
+    CommonOrders.test_order_status_common(app=app, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Получения этикеток CД YandexDelivery вне партии")
 def test_get_labels_out_of_parcel(app, shared_data):
-    CommonOrders.test_get_labels_out_of_parcel_common(app=app, shared_data=shared_data["order_ids"])
+    CommonOrders.test_get_labels_out_of_parcel_common(app=app, 
+                                                      shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Получение подробной информации о заказе СД YandexDelivery")
 def test_order_status(app, shared_data):
-    CommonOrders.test_order_status_common(app=app, shared_data=shared_data["order_ids"])
+    CommonOrders.test_order_status_common(app=app, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Создание партии CД YandexDelivery")
 def test_create_parcel(app, shared_data):
-    CommonParcels.create_parcel_common(app=app, shared_data=shared_data)
+    CommonParcels.create_parcel_common(app=app, shared_delivery_service="yandex_delivery_a", shared_data=shared_data)
 
 
 @allure.description("Получение списка партий CД YandexDelivery")
 def test_get_parcels(app, shared_data):
-    CommonParcels.test_get_parcels_common(app=app, shared_data=shared_data)
+    CommonParcels.test_get_parcels_common(app=app, shared_delivery_service="yandex_delivery_a", shared_data=shared_data)
 
 
 @allure.description("Получение информации о партии CД YandexDelivery")
 def test_get_parcel_by_id(app, shared_data):
-    CommonParcels.test_get_parcel_by_id_common(app=app, shared_data=shared_data)
+    CommonParcels.test_get_parcel_by_id_common(app=app, shared_data=shared_data["yandex_delivery_a"]["parcel_ids"])
 
 
 @allure.description("Получение этикеток СД YandexDelivery")
-def test_get_label(app, shared_data):
-    CommonParcels.test_get_label_common(app=app, shared_data=shared_data)
+def test_get_labels(app, shared_data):
+    CommonParcels.test_get_label_common(app=app,
+                                        shared_data=shared_data["yandex_delivery_a"]["order_ids_in_parcel"])
 
 
 @allure.description("Получение АПП CД YandexDelivery")
 def test_get_app(app, shared_data):
-    CommonParcels.test_get_app_common(app=app, shared_data=shared_data)
+    CommonParcels.test_get_app_common(app=app, shared_data=shared_data["yandex_delivery_a"]["parcel_ids"])
 
 
 @allure.description("Получение документов CД YandexDelivery")
 def test_get_documents(app, shared_data):
-    CommonParcels.test_get_documents_common(app=app, shared_data=shared_data)
+    CommonParcels.test_get_documents_common(app=app, shared_data=shared_data["yandex_delivery_a"]["parcel_ids"])
 
 
 @allure.description("Создание формы с этикетками партии СД YandexDelivery")
 @pytest.mark.not_parallel
 def test_forms_parcels_labels(app, shared_data):
-    CommonParcels.test_forms_parcels_labels_common(app=app, shared_data=shared_data)
+    CommonParcels.test_forms_parcels_labels_common(app=app, shared_data=shared_data["yandex_delivery_a"]["parcel_ids"])

@@ -1,9 +1,15 @@
 import allure
+import pytest
+
+
+@pytest.fixture(scope='module')
+def shop_id(app, shared_data):
+    return app.tests_shop.post_shop(shared_data=shared_data)
 
 
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, shop_id):
-    app.tests_shop.get_shop_by_id(shop_id=shop_id),
+    app.tests_shop.get_shop_by_id(shop_id=shop_id)
 
 
 @allure.description("Получение списка магазинов")

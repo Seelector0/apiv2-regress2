@@ -6,6 +6,11 @@ from utils.global_enums import INFO
 from utils.checking import Checking
 
 
+@pytest.fixture(scope='module')
+def shop_id(app, shared_data):
+    return app.tests_shop.post_shop(shared_data=shared_data)
+
+
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "Dpd",
                                                    "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",

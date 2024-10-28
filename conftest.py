@@ -2,7 +2,6 @@ from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
 from databases.tracking_api import DataBaseTrackingApi
 from databases.widget_api import DataBaseWidgetApi
-from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from fixture.application import Application
 from fixture.admin import Admin
@@ -75,9 +74,11 @@ def stop(request, connections, shared_data):
                         shared_data["warehouse_id_kz"]]:
                 if id_:
                     connections.delete_list_warehouses_for_id(warehouse_id=id_)
-            for id_ in shared_data["parcel_ids"]:
-                connections.delete_list_parcels_for_id(id_)
-                connections.delete_order_parcel(id_)
+            for service_data in shared_data.values():
+                if isinstance(service_data, dict) and "parcel_ids" in service_data:
+                    for parcel_id in service_data["parcel_ids"]:
+                        connections.delete_list_parcels_for_id(parcel_id)
+                        connections.delete_order_parcel(parcel_id)
         except Exception as e:
             print(f"Ошибка при очистке данных: {e}")
 
@@ -87,19 +88,49 @@ def stop(request, connections, shared_data):
 @pytest.fixture(scope="module")
 def shared_data():
     """Фикстура для хранения тестовых данных"""
+
+    def delivery_service_template():
+        return {"order_ids": [], "order_ids_single": [], "parcel_ids": [], "order_ids_in_parcel": []}
+
+    def russian_post_template():
+        return {"order_ids": [], "orders_courier": [], "orders_post_office": [], "orders_delivery_point": [],
+                "orders_terminal": [], "parcel_ids": [], "parcel_ids_courier": [], "order_ids_in_parcel": [],
+                "parcel_ids_post_office": [], "parcel_ids_delivery_point": [], "parcel_ids_terminal": []}
+
     data = {
-        "order_ids": [],
-        "order_ids_single": [],
-        "orders_courier": [],
-        "orders_post_office": [],
-        "orders_delivery_point": [],
-        "orders_terminal": [],
-        "order_ids_in_parcel": [],
-        "parcel_ids": [],
-        "parcel_ids_courier": [],
-        "parcel_ids_post_office": [],
-        "parcel_ids_delivery_point": [],
-        "parcel_ids_terminal": [],
+        "alemtat_a": delivery_service_template(),
+        "alemtat_i": delivery_service_template(),
+        "boxberry_a": delivery_service_template(),
+        "boxberry_i": delivery_service_template(),
+        "cdek_a": delivery_service_template(),
+        "cdek_i": delivery_service_template(),
+        "cse_a": delivery_service_template(),
+        "cse_i": delivery_service_template(),
+        "dalli_a": delivery_service_template(),
+        "dalli_i": delivery_service_template(),
+        "dpd_a": delivery_service_template(),
+        "dpd_i": delivery_service_template(),
+        "halva_a": delivery_service_template(),
+        "halva_i": delivery_service_template(),
+        "l_post_i": delivery_service_template(),
+        "metaship_a": delivery_service_template(),
+        "kaz_post_a": delivery_service_template(),
+        "kaz_post_i": delivery_service_template(),
+        "five_post_a": delivery_service_template(),
+        "five_post_i": delivery_service_template(),
+        "russian_post_a": russian_post_template(),
+        "russian_post_i": russian_post_template(),
+        "top_delivery_a": delivery_service_template(),
+        "top_delivery_i": delivery_service_template(),
+        "pecom_a": delivery_service_template(),
+        "pecom_i": delivery_service_template(),
+        "pony_express_a": delivery_service_template(),
+        "pony_express_i": delivery_service_template(),
+        "yandex_delivery_a": delivery_service_template(),
+        "yandex_delivery_i": delivery_service_template(),
+        "yandex_go_a": delivery_service_template(),
+        "yandex_go_i": delivery_service_template(),
+
         "shop_id": None,
         "shop_id_metaship": None,
         "warehouse_id": None,
@@ -107,24 +138,6 @@ def shared_data():
         "warehouse_id_kz": None
     }
     return data
-
-
-@pytest.fixture(scope='module')
-def shop_id(app, shared_data):
-    """Фикстура создания магазина"""
-    tests_shop = TestsShop(app)
-    shop_id = tests_shop.post_shop()
-    shared_data["shop_id"] = shop_id
-    return shop_id
-
-
-@pytest.fixture(scope='module')
-def shop_id_metaship(app, shared_data):
-    """Фикстура создания магазина для сд меташип"""
-    tests_shop = TestsShop(app)
-    shop_id_metaship = tests_shop.post_shop()
-    shared_data["shop_id_metaship"] = shop_id_metaship
-    return shop_id_metaship
 
 
 @pytest.fixture(scope='module')

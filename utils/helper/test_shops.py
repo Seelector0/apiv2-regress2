@@ -9,13 +9,14 @@ class TestsShop:
         self.app = app
 
     @allure.description("Создание магазина")
-    def post_shop(self):
+    def post_shop(self, shared_data, shop_type="shop_id"):
         """Создает магазин и возвращает его ID."""
         try:
             new_shop = self.app.shop.post_shop()
             Checking.check_status_code(response=new_shop, expected_status_code=201)
             Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
             shop_id = new_shop.json().get('id')
+            shared_data[shop_type] = shop_id
             return shop_id
         except Exception as e:
             raise AssertionError(f"Ошибка при создании магазина: {e}")
