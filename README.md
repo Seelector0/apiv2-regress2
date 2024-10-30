@@ -3,8 +3,7 @@
 
 Для его работы должен быть установлен Python3.10 и пакет allure
 
-Установка:
-
+**Установка:**
 1. Клонировать проект в любую удобную директорию
 2. Скопировать содержимое файла .env.example в .env
 3. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
@@ -15,8 +14,7 @@
 2. В консоль ввести 'echo $ENV' - для для Linux и Мac OS, 'echo %ENV%' - для OS Windows. local - local стенд, dev - develop стенд
 3. pytest -k "not test and not Test" - сколько всего тестов в проекте.
 
-Запуск тестов:
-
+**Запуск тестов:**
 1. Запустить тесты с помощью команды pytest tests/ 
 2. Запуск тестов в параллельном режиме pytest -c pytest_parallel.ini tests/
 3. Формирование отчёта командой allure serve result
