@@ -1,7 +1,7 @@
 import pytest
 import allure
-from utils.dates import today, tomorrow
-from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonInfo, CommonParcels
+from utils.dates import tomorrow
+from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 from utils.environment import ENV_OBJECT
 
 
@@ -14,13 +14,6 @@ def shop_id(app, shared_data):
 def test_integration_delivery_services(app, shop_id):
     CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id,
                                                           connection_settings=app.settings.dalli())
-
-
-@allure.description("Получения сроков доставки по СД Dalli")
-@pytest.mark.parametrize("data, tariff_id", [(tomorrow, "1"), (today, "2"), (tomorrow, "11")])
-def test_delivery_time_schedules(app, shop_id, data, tariff_id):
-    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id, delivery_service_code="Dalli", data=data,
-                                                   tariff_id=tariff_id)
 
 
 @allure.description("Получение Courier оферов по СД Dalli")

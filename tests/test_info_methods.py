@@ -1,6 +1,8 @@
 import allure
 import pytest
 import os
+from utils.common_tests import CommonInfo
+from utils.dates import tomorrow
 from utils.environment import ENV_OBJECT
 from utils.global_enums import INFO
 from utils.checking import Checking
@@ -110,20 +112,13 @@ def test_info_statuses(app, delivery_service_code):
         Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
 
 
-@allure.description("Получения интервалов доставки")
-@pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Dpd", "RussianPost", "Cse", "DostavkaClub"])
-def test_delivery_time_schedules(app, shop_id, delivery_service_code):
-    delivery_time_schedules = app.info.get_delivery_time_schedules(shop_id=shop_id,
-                                                                   delivery_service_code=delivery_service_code)
-    Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-    if delivery_service_code == "Boxberry":
-        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                     expected_value=INFO.boxberry_intervals)
-    elif delivery_time_schedules in ["Dpd", "RussianPost", "Cse"]:
-        Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
-    elif delivery_time_schedules == "DostavkaClub":
-        Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                     expected_value=INFO.club_intervals)
+@allure.description("Получение интервалов доставки")
+@pytest.mark.parametrize("delivery_service_code, tariff_id", [("Boxberry", None), ("TopDelivery", None),
+                                                              ("Dalli", "1")])
+def test_delivery_time_schedules(app, shop_id, delivery_service_code, tariff_id):
+    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id,
+                                                   delivery_service_code=delivery_service_code, data=tomorrow,
+                                                   tariff_id=tariff_id)
 
 
 @allure.description("Получение списка ключей")

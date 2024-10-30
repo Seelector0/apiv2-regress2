@@ -66,6 +66,18 @@ class Checking:
                                                     f"Фактическое значение {element[key_name]}")
 
     @staticmethod
+    def check_keys_present_in_list_items(response: Response, key_names, list_key):
+        """Проверяет, что в каждом объекте списка под ключом `list_key` есть указанные ключи."""
+        with allure.step(
+                title=f"Проверка, что в каждом объекте списка '{list_key}' есть значения для ключей {key_names}"):
+            items_list = response.json()[list_key]
+            for element in items_list:
+                for key in key_names:
+                    Checking._assert_with_trace(response=response, condition=key in element,
+                                                message=f"Значение для ключа '{key}' "
+                                                        f"отсутствует или равно None в объекте {element}!")
+
+    @staticmethod
     def checking_sum_len_lists(responses: dict, old_list: list, new_list: list):
         """Проверяет увеличение длины списка при переходе от старого списка к новому."""
         response_info = ', '.join(

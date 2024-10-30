@@ -2,7 +2,7 @@ import pytest
 import allure
 from random import choice
 from utils.global_enums import INFO
-from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
+from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels, CommonInfo
 
 
 @pytest.fixture(scope='module')
@@ -36,8 +36,8 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
 @pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code, tariff",
                          [("Paid", "Courier", None, INFO.cdek_courier_tariffs),
                           ("PayOnDelivery", "Courier", None, INFO.cdek_courier_tariffs),
-                          ("Paid", "DeliveryPoint", "VNG2", INFO.cdek_ds_tariffs),
-                          ("PayOnDelivery", "DeliveryPoint", "VNG2", INFO.cdek_ds_tariffs)])
+                          ("Paid", "DeliveryPoint", "MSK207", INFO.cdek_ds_tariffs),
+                          ("PayOnDelivery", "DeliveryPoint", "MSK207", INFO.cdek_ds_tariffs)])
 def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_type, tariff, delivery_point_code,
                             connections, shared_data):
     CommonOrders.test_multi_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
@@ -56,8 +56,8 @@ def test_patch_multi_order(app, connections, shared_data):
 @pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code, tariff",
                          [("Paid", "Courier", None, INFO.cdek_courier_tariffs),
                           ("PayOnDelivery", "Courier", None, INFO.cdek_courier_tariffs),
-                          ("Paid", "DeliveryPoint", "VNG2", INFO.cdek_ds_tariffs),
-                          ("PayOnDelivery", "DeliveryPoint", "VNG2", INFO.cdek_ds_tariffs)])
+                          ("Paid", "DeliveryPoint", "MSK207", INFO.cdek_ds_tariffs),
+                          ("PayOnDelivery", "DeliveryPoint", "MSK207", INFO.cdek_ds_tariffs)])
 def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, tariff, delivery_point_code,
                              connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
@@ -82,6 +82,12 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
                                                     connections=connections, code="cdek",
                                                     shared_data=shared_data["cdek_i"]["order_ids_single"],
                                                     file_extension=file_extension)
+
+
+@allure.description("Получения сроков доставки по СД Cdek")
+def test_delivery_time_schedules(app, shop_id, shared_data):
+    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id, delivery_service_code="Cdek",
+                                                   shared_data=shared_data["cdek_i"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД Cdek")

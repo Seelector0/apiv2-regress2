@@ -6,12 +6,14 @@ class ApiInfo:
     def __init__(self, app):
         self.app = app
 
-    def get_delivery_time_schedules(self, shop_id, delivery_service_code: str, tariff_id: str = None, data: str = None):
+    def get_delivery_time_schedules(self, shop_id, delivery_service_code: str, tariff_id: str = None, data: str = None,
+                                    order_id: str = None):
         r"""Получение интервалов доставки конкретной СД.
         :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
         :param tariff_id: Атрибут указывающий тип доставки, в котором доступен интервал только для СД Dalli.
         :param data: Желаемая дата доставки.
+        :param order_id: Номер заказа, только для СД CDEK.
         """
         if delivery_service_code == "Dalli":
             params = self.app.dicts.form_info_body(shop_id, delivery_service_code=delivery_service_code, data=data)
@@ -20,6 +22,9 @@ class ApiInfo:
             tomorrow = datetime.date.today() + datetime.timedelta(days=1)
             params = self.app.dicts.form_info_body(shop_id, delivery_service_code=delivery_service_code, data=tomorrow)
             params["postalCode"] = "119633"
+        elif delivery_service_code == "Cdek":
+            params = self.app.dicts.form_delivery_service_code(delivery_service_code=delivery_service_code)
+            params["orderId"] = order_id
         else:
             params = self.app.dicts.form_delivery_service_code(delivery_service_code=delivery_service_code)
         result = self.app.http_method.get(link="info/delivery_time_schedules", params=params)

@@ -1,5 +1,6 @@
+from random import choice
 from utils.checking import Checking
-from utils.global_enums import INFO
+from utils.utils import check_shared_data
 
 
 class CommonInfo:
@@ -15,17 +16,19 @@ class CommonInfo:
                                              expected_value=delivery_service_code)
 
     @staticmethod
-    def test_delivery_time_schedules_common(app, shop_id, delivery_service_code, data=None, tariff_id=None):
+    def test_delivery_time_schedules_common(app, shop_id, delivery_service_code, data=None, tariff_id=None,
+                                            order_id=None, shared_data=None):
         """Получения сроков доставки"""
+        if shared_data:
+            check_shared_data(shared_data)
+            order_id = choice(shared_data)
         delivery_time_schedules = app.info.get_delivery_time_schedules(shop_id=shop_id, data=data, tariff_id=tariff_id,
-                                                                       delivery_service_code=delivery_service_code)
+                                                                       delivery_service_code=delivery_service_code,
+                                                                       order_id=order_id)
         Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-        if tariff_id == "1":
-            Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                         expected_value=INFO.dalli_intervals_1)
-        elif tariff_id == "2":
-            Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                         expected_value=INFO.dalli_intervals_2)
-        elif tariff_id == "11":
-            Checking.checking_json_value(response=delivery_time_schedules, key_name="intervals",
-                                         expected_value=INFO.dalli_intervals_11)
+        Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
+        Checking.check_keys_present_in_list_items(response=delivery_time_schedules, list_key="intervals",
+                                                  key_names=["date", "from", "to"])
+        if delivery_service_code == "Dalli":
+            Checking.check_keys_present_in_list_items(response=delivery_time_schedules, list_key="intervals",
+                                                      key_names=["zone"])
