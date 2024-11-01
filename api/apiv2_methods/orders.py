@@ -32,10 +32,10 @@ class ApiOrder:
         dimension_1 = dimension_1 or self.app.dicts.dimension()
         dimension_2 = dimension_2 or self.app.dicts.dimension()
         total_dimensions = total_dimensions or {
-                'length': dimension_1['length'] + dimension_2['length'],
-                'width': dimension_1['width'] + dimension_2['width'],
-                'height': dimension_1['height'] + dimension_2['height']
-            }
+            'length': max(dimension_1['length'], dimension_2['length']),
+            'width': max(dimension_1['width'], dimension_2['width']),
+            'height': dimension_1['height'] + dimension_2['height']
+        }
         return dimension_1, dimension_2, total_dimensions
 
     def post_single_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,

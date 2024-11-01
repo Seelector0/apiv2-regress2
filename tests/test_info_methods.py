@@ -21,33 +21,33 @@ def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
     if delivery_service_code == "Boxberry":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.boxberry_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.boxberry_vats)
     elif delivery_service_code == "Cdek":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.cdek_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.cdek_vats)
     elif delivery_service_code == "Cse":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.cse_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.cse_vats)
     elif delivery_service_code == "Dalli":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.dalli_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.dalli_vats)
     elif delivery_service_code == "DostavkaClub":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.club_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.club_vats)
     elif delivery_service_code == "Dpd":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.dpd_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.dpd_vats)
     elif delivery_service_code == "FivePost":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.five_post_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.five_post_vats)
     elif delivery_service_code == "LPost":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.l_post_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.l_post_vats)
     elif delivery_service_code == "RussianPost":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.rp_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.rp_vats)
     elif delivery_service_code == "TopDelivery":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.topdelivery_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.topdelivery_vats)
     elif delivery_service_code == "YandexGo":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_go_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.ya_go_vats)
     elif delivery_service_code == "YandexDelivery":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.ya_delivery_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.ya_delivery_vats)
     elif delivery_service_code == "Halva":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.halva_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.halva_vats)
     elif delivery_service_code == "Pecom":
-        Checking.checking_json_key(response=info_vats, expected_value=INFO.pecom_vats)
+        Checking.checking_json_contains(response=info_vats, expected_values=INFO.pecom_vats)
 
 
 @allure.description("Получение списка точек сдачи СД")
@@ -66,9 +66,9 @@ def tests_tariffs(app, code):
     list_tariffs = app.info.get_tariffs(code=code)
     Checking.check_status_code(response=list_tariffs, expected_status_code=200)
     if code == "RussianPost":
-        Checking.checking_json_key(response=list_tariffs, expected_value=INFO.rp_list_tariffs)
+        Checking.checking_json_contains(response=list_tariffs, expected_values=INFO.rp_list_tariffs)
     elif code == "Cdek":
-        Checking.checking_json_key(response=list_tariffs, expected_value=INFO.cdek_list_tariffs)
+        Checking.checking_json_contains(response=list_tariffs, expected_values=INFO.cdek_list_tariffs)
 
 
 @allure.description("Получение информации о дополнительных услугах поддерживаемых СД")
@@ -79,37 +79,43 @@ def test_info_statuses(app, delivery_service_code):
     info_delivery_service_services = app.info.get_info_delivery_service_services(code=delivery_service_code)
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
     if delivery_service_code == "Boxberry":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.boxberry_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.boxberry_services)
     elif delivery_service_code == "Cdek":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cdek_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.cdek_services)
     elif delivery_service_code == "Cse":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.cse_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.cse_services)
     elif delivery_service_code == "Dalli":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dalli_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.dalli_services)
     elif delivery_service_code == "DostavkaClub":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.club_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.club_services)
     elif delivery_service_code == "Dpd":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.dpd_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.dpd_services)
     elif delivery_service_code == "FivePost":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.five_post_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.five_post_services)
     elif delivery_service_code == "LPost":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.l_post_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.l_post_services)
     elif delivery_service_code == "RussianPost":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.rp_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.rp_services)
     elif delivery_service_code == "TopDelivery":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.topdelivery_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.topdelivery_services)
     elif delivery_service_code == "YandexGo":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_go_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.ya_go_services)
     elif delivery_service_code == "YandexDelivery":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ya_delivery_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.ya_delivery_services)
     elif delivery_service_code == "Pecom":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.pecom_services)
+        Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.pecom_services)
     elif delivery_service_code == "KazPost":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.ds_kazakhstan_services)
     elif delivery_service_code == "AlemTat":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.ds_kazakhstan_services)
     elif delivery_service_code == "PonyExpress":
-        Checking.checking_json_key(response=info_delivery_service_services, expected_value=INFO.ds_kazakhstan_services)
+        Checking.checking_json_contains(response=info_delivery_service_services,
+                                        expected_values=INFO.ds_kazakhstan_services)
 
 
 @allure.description("Получение интервалов доставки")

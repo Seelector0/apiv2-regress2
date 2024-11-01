@@ -8,8 +8,7 @@
 2. Скопировать содержимое файла .env.example в .env
 3. Установить нужные пакеты и библиотеки командой pip install -r requirements.txt
 
-Смена тестового стенда (По умолчанию dev стенд):
-
+**Смена тестового стенда (По умолчанию dev стенд):**
 1. В консоль ввести 'export ENV=local' или 'export ENV=dev' - для Linux и Мac OS, set ENV=local или set ENV=dev - для OS Windows
 2. В консоль ввести 'echo $ENV' - для для Linux и Мac OS, 'echo %ENV%' - для OS Windows. local - local стенд, dev - develop стенд
 3. pytest -k "not test and not Test" - сколько всего тестов в проекте.

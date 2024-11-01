@@ -1,3 +1,5 @@
+from typing import List, Dict, Any
+
 from requests import Response
 import datetime
 import allure
@@ -27,6 +29,16 @@ class Checking:
             Checking._assert_with_trace(response=response, condition=list(json.loads(response.text)) == expected_value,
                                         message=f"Не ожидаемые ключи! Ожидаемые {expected_value}. "
                                                 f"Фактические {list(json.loads(response.text))}")
+
+    @staticmethod
+    def checking_json_contains(response: Response, expected_values: List[Dict[str, Any]]):
+        """Проверяет наличие обязательных элементов в JSON-ответе."""
+        with allure.step(f"Проверка, что JSON-ответ содержит все ожидаемые элементы: {expected_values}"):
+            response_data = response.json()
+            missing_elements = [item for item in expected_values if item not in response_data]
+            Checking._assert_with_trace(response=response, condition=len(missing_elements) == 0,
+                                        message=f"Не найдены ожидаемые элементы: {missing_elements}. "
+                                                f"Фактический ответ: {response_data}")
 
     @staticmethod
     def checking_json_value(response: Response, key_name: str, expected_value, field=None):
