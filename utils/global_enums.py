@@ -620,6 +620,14 @@ class OtherInfo:
 
     cse_services = [
         {
+            "name": "dress-fitting",
+            "title": "Имеется возможность примерки",
+            "description": "Имеется возможность примерки",
+            "options": {
+                "hasParameter": False
+            }
+        },
+        {
             "name": "fragile",
             "title": "Хрупкое",
             "description": "Хрупкое",
