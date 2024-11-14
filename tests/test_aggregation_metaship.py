@@ -1,5 +1,6 @@
 import pytest
 import allure
+from utils.environment import ENV_OBJECT
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
 
@@ -29,6 +30,7 @@ def test_aggregation_delivery_services_metaship(app, admin, shop_id, shop_id_met
                                                           moderation_settings=admin.moderation.metaship)
 
 
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 @allure.description("Получение Courier оферов по СД MetaShip")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_courier(app, shop_id_metaship, warehouse_id, payment_type):
@@ -66,7 +68,7 @@ def test_patch_order_weight(app, connections, shared_data):
 
 @allure.description("Удаление заказа CД MetaShip")
 def test_delete_order(app, connections, shared_data):
-    CommonOrders.test_delete_order_common(app=app, connections=connections, shared_delivery_service="metaship_a", 
+    CommonOrders.test_delete_order_common(app=app, connections=connections, shared_delivery_service="metaship_a",
                                           shared_data=shared_data)
 
 
@@ -107,7 +109,7 @@ def test_get_label(app, shared_data):
 
 @allure.description("Получение этикеток заказов из партии СД MetaShip")
 def test_get_labels_from_parcel(app, shared_data):
-    CommonParcels.test_get_labels_from_parcel_common(app=app, shared_delivery_service="metaship_a", 
+    CommonParcels.test_get_labels_from_parcel_common(app=app, shared_delivery_service="metaship_a",
                                                      shared_data=shared_data)
 
 
