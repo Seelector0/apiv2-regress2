@@ -1,5 +1,3 @@
-
-
 class ApiDeliveryServices:
 
     def __init__(self, app):
@@ -26,25 +24,39 @@ class ApiDeliveryServices:
         result = self.app.http_method.get(link=f"{self.link_delivery_services(shop_id=shop_id)}/{code}")
         return self.app.http_method.return_result(response=result)
 
-    def patch_delivery_services_tariffs(self, shop_id, code: str, tariffs):
-        r"""Метод редактирования тарифов СД.
-        :param shop_id: Id магазина.
-        :param code: Код СД.
-        :param tariffs: Тарифы СД.
+    def patch_delivery_service(self, shop_id, code: str, tariffs: list, visibility: bool):
         """
-        patch = self.app.dicts.form_patch_body(op="replace", path="settings.tariffs",
-                                               value=self.app.dicts.settings_tariffs(tariffs=tariffs))
-        result = self.app.http_method.patch(link=f"{self.link_delivery_services(shop_id=shop_id)}/{code}", json=patch)
+        Метод для обновления тарифов и настроек видимости службы доставки.
+
+        :param shop_id: Id магазина.
+        :param code: Код службы доставки.
+        :param tariffs: Тарифы службы доставки (если указано, будут обновлены тарифы).
+        :param visibility: Видимость службы доставки (если указано, будет обновлена видимость).
+        """
+        tariffs_patch = self.app.dicts.form_patch_body(
+            op="replace",
+            path="settings.tariffs",
+            value=self.app.dicts.settings_tariffs(tariffs=tariffs)
+        )
+        visibility_patch = self.app.dicts.form_patch_body(
+            op="replace",
+            path="visibility",
+            value=visibility
+        )
+        result = self.app.http_method.patch(
+            link=f"{self.link_delivery_services(shop_id=shop_id)}/{code}",
+            json=[*visibility_patch, *tariffs_patch]
+        )
         return self.app.http_method.return_result(response=result)
 
-    def patch_delivery_services(self, shop_id, code: str, value: bool = True):
-        r"""Метод редактирования полей настройки подключения к СД.
+    def put_delivery_service(self, shop_id, code: str, connection_settings: dict):
+        r"""Активация настроек подключения к СД по id магазина.
         :param shop_id: Id магазина.
         :param code: Код СД.
-        :param value: Скрытие СД из ЛК при False.
+        :param connection_settings: данные подключения СД.
         """
-        patch = self.app.dicts.form_patch_body(op="replace", path="visibility", value=value)
-        result = self.app.http_method.patch(link=f"{self.link_delivery_services(shop_id=shop_id)}/{code}", json=patch)
+        result = self.app.http_method.put(f"{self.link_delivery_services(shop_id=shop_id)}/{code}",
+                                          json=connection_settings)
         return self.app.http_method.return_result(response=result)
 
     def post_activate_delivery_service(self, shop_id, code: str):

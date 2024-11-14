@@ -117,7 +117,10 @@ class HttpMethod:
         :param response: Результат ответа.
         """
         try:
-            with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
+            if response.status_code != 204:
+                with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
+                    return response
+            else:
                 return response
         except (simplejson.errors.JSONDecodeError, requests.exceptions.JSONDecodeError):
             trace_id = response.request.headers.get('x-trace-id', 'No x-trace-id')

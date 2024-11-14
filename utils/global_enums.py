@@ -26,6 +26,8 @@ class OtherInfo:
 
     entity_connections_id = ["id", "shopId", "deliveryService", "data"]
 
+    get_entity_connections_id = ["code", "name", "hasAggregation", "credentials"]
+
     old_work_time_warehouse = {
         "timezone": "+03:00",
         "monday": {

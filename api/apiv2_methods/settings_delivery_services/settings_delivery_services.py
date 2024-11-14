@@ -1,7 +1,6 @@
 from dotenv import load_dotenv, find_dotenv
 import os
 
-
 load_dotenv(find_dotenv())
 
 
@@ -238,3 +237,25 @@ class SettingsDeliveryServices:
             pecom = self.app.dicts.form_connection_type(delivery_service_code="Pecom", aggregation=True)
             pecom["data"]["metashipInform"] = self.inform
         return pecom
+
+    def get_connection_settings_and_data(self, code):
+        """Настраивает данные и параметры подключения в зависимости от кода службы доставки."""
+        connection_settings = None
+        data = None
+        if code == "RussianPost":
+            connection_settings = self.russian_post()
+            connection_settings["data"]["token"] = "test_put_token"
+            connection_settings["data"]["secret"] = "test_put_secret"
+            data = {
+                "token": "test_put_token",
+                "secret": "test_put_secret"
+            }
+        elif code == "Cdek":
+            connection_settings = self.cdek()
+            connection_settings["data"]["account"] = "test_put_account"
+            connection_settings["data"]["password"] = "test_put_password"
+            data = {
+                "account": "test_put_account",
+                "password": "test_put_password"
+            }
+        return connection_settings, data

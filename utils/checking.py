@@ -69,6 +69,35 @@ class Checking:
                                                     f"фактическое значение {expected_value}")
 
     @staticmethod
+    def checking_json_key_value(response: Response, key_path: List[str], expected_value: Any):
+        """Проверяет значение по заданному пути ключей в JSON-ответе."""
+        with allure.step(title=f"Проверка значения {expected_value} в ключе {'.'.join(key_path)}"):
+            json_data = response.json()
+            for key in key_path:
+                if key in json_data:
+                    json_data = json_data[key]
+                else:
+                    raise KeyError(f"Ключ '{key}' не найден в ответе.")
+            Checking._assert_with_trace(response=response,
+                                        condition=json_data == expected_value,
+                                        message=f"Не совпадает значение для ключа '{'.'.join(key_path)}'! "
+                                                f"Ожидаемое значение: {expected_value}, "
+                                                f"фактическое значение: {json_data}")
+
+    @staticmethod
+    def check_response_key_values(response, key_values):
+        """
+        Проверяет несколько пар ключ-значение в JSON-ответе.
+
+        Аргументы:
+            response: API-ответ, который необходимо проверить.
+            key_values (dict): Словарь, где ключи представляют собой пути в JSON (в виде кортежей),
+                               а значения — это ожидаемые значения для проверки.
+        """
+        for key_path, expected_value in key_values.items():
+            Checking.checking_json_key_value(response=response, key_path=key_path, expected_value=expected_value)
+
+    @staticmethod
     def checking_in_list_json_value(response: Response, key_name, expected_value):
         """Проверяет наличие значения в списке объектов JSON-ответа."""
         with allure.step(title=f"Проверка что в списке есть значение {expected_value}"):
