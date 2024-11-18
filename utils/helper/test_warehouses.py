@@ -10,12 +10,13 @@ class TestsWarehouse:
         self.connections = connections
 
     @allure.description("Создание склада")
-    def post_warehouse(self, country_code: str = None, pickup: bool = None):
+    def post_warehouse(self, shared_data, warehouse_type="warehouse_id", country_code: str = None, pickup: bool = None):
         try:
             new_warehouse = self.app.warehouse.post_warehouse(country_code=country_code, pickup=pickup)
             Checking.check_status_code(response=new_warehouse, expected_status_code=201)
             Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
             warehouse_id = new_warehouse.json().get('id')
+            shared_data[warehouse_type] = warehouse_id
             return warehouse_id
         except Exception as e:
             raise AssertionError(f"Ошибка при создании склада: {e}")

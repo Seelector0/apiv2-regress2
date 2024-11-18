@@ -18,6 +18,12 @@ def param_shop_id(request):
     return request.getfixturevalue(request.param)
 
 
+@pytest.fixture(scope='module')
+def warehouse_id(app, connections, shared_data):
+    """Фикстура создания склада"""
+    return app.tests_warehouse.post_warehouse(shared_data=shared_data)
+
+
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, shop_id):
     app.tests_shop.get_shop_by_id(shop_id=shop_id)

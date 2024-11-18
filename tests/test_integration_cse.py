@@ -9,6 +9,13 @@ def shop_id(app, shared_data):
     return app.tests_shop.post_shop(shared_data=shared_data)
 
 
+@pytest.fixture(scope='module')
+def warehouse_without_pickup(app, connections, shared_data):
+    """Фикстура создания склада"""
+    return app.tests_warehouse.post_warehouse(pickup=False, warehouse_type="warehouse_without_pickup",
+                                              shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД Cse")
 def test_integration_delivery_services(app, shop_id):
     CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id,
@@ -87,7 +94,7 @@ def test_delete_order(app, connections, shared_data):
 @allure.description("Получения этикеток CД Cse вне партии")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels_out_of_parcel(app, labels, shared_data):
-    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels=labels, 
+    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels=labels,
                                                       shared_data=shared_data["cse_i"]["order_ids"])
 
 
@@ -113,14 +120,14 @@ def test_get_parcel_by_id(app, shared_data):
 
 @allure.description("Редактирование партии СД Cse (Добавление заказов)")
 def test_add_order_in_parcel(app, connections, shared_data):
-    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_delivery_service="cse_i", 
+    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_delivery_service="cse_i",
                                              shared_data=shared_data)
 
 
 @allure.description("Получение этикеток СД Cse")
 @pytest.mark.parametrize("labels", ["original", "termo"])
 def test_get_labels(app, labels, shared_data):
-    CommonParcels.test_get_label_common(app=app, labels=labels, 
+    CommonParcels.test_get_label_common(app=app, labels=labels,
                                         shared_data=shared_data["cse_i"]["order_ids_in_parcel"])
 
 

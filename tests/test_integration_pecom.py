@@ -9,6 +9,13 @@ def shop_id(app, shared_data):
     return app.tests_shop.post_shop(shared_data=shared_data)
 
 
+@pytest.fixture(scope='module')
+def warehouse_without_pickup(app, connections, shared_data):
+    """Фикстура создания склада"""
+    return app.tests_warehouse.post_warehouse(pickup=False, warehouse_type="warehouse_without_pickup",
+                                              shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД Pecom")
 def test_integration_delivery_services(app, shop_id):
     CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id,

@@ -2,7 +2,6 @@ from databases.connections import DataBaseConnections
 from databases.customer_api import DataBaseCustomerApi
 from databases.tracking_api import DataBaseTrackingApi
 from databases.widget_api import DataBaseWidgetApi
-from utils.helper.test_warehouses import TestsWarehouse
 from fixture.application import Application
 from fixture.admin import Admin
 import pytest
@@ -136,30 +135,3 @@ def shared_data():
         "warehouse_id_kz": None
     }
     return data
-
-
-@pytest.fixture(scope='module')
-def warehouse_id(app, connections, shared_data):
-    """Фикстура создания склада"""
-    tests_warehouse = TestsWarehouse(app, connections)
-    warehouse_id = tests_warehouse.post_warehouse(pickup=True)
-    shared_data["warehouse_id"] = warehouse_id
-    return warehouse_id
-
-
-@pytest.fixture(scope='module')
-def warehouse_without_pickup(app, connections, shared_data):
-    """Фикстура создания склада"""
-    tests_warehouse = TestsWarehouse(app, connections)
-    warehouse_without_pickup = tests_warehouse.post_warehouse(pickup=False)
-    shared_data["warehouse_without_pickup"] = warehouse_without_pickup
-    return warehouse_without_pickup
-
-
-@pytest.fixture(scope='module')
-def warehouse_id_kz(app, connections, shared_data):
-    """Фикстура создания склада для Казахстана"""
-    tests_warehouse = TestsWarehouse(app, connections)
-    warehouse_id_kz = tests_warehouse.post_warehouse(country_code="KZ", pickup=True)
-    shared_data["warehouse_id_kz"] = warehouse_id_kz
-    return warehouse_id_kz

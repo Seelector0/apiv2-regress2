@@ -8,6 +8,13 @@ def shop_id(app, shared_data):
     return app.tests_shop.post_shop(shared_data=shared_data)
 
 
+@pytest.fixture(scope='module')
+def warehouse_id_kz(app, connections, shared_data):
+    """Фикстура создания склада для Казахстана"""
+    return app.tests_warehouse.post_warehouse(country_code="KZ", pickup=True,  warehouse_type="warehouse_id",
+                                              shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД KazPost")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,

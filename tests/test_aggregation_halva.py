@@ -8,6 +8,12 @@ def shop_id(app, shared_data):
     return app.tests_shop.post_shop(shared_data=shared_data)
 
 
+@pytest.fixture(scope='module')
+def warehouse_id(app, connections, shared_data):
+    """Фикстура создания склада"""
+    return app.tests_warehouse.post_warehouse(shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД Halva")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
@@ -67,7 +73,7 @@ def test_get_order_by_id(app, shared_data):
 
 @allure.description("Получения этикетки Halva вне партии")
 def test_get_labels_out_of_parcel(app, shared_data):
-    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels="termo", 
+    CommonOrders.test_get_labels_out_of_parcel_common(app=app, labels="termo",
                                                       shared_data=shared_data["halva_a"]["order_ids"])
 
 
@@ -98,13 +104,13 @@ def test_get_parcel_by_id(app, shared_data):
 
 @allure.description("Редактирование партии СД Halva (Добавление заказов)")
 def test_add_order_in_parcel(app, connections, shared_data):
-    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_delivery_service="halva_a", 
+    CommonParcels.add_order_in_parcel_common(app=app, connections=connections, shared_delivery_service="halva_a",
                                              shared_data=shared_data)
 
 
 @allure.description("Получение этикеток СД Halva")
 def test_get_label(app, shared_data):
-    CommonParcels.test_get_label_common(app=app, labels="termo", 
+    CommonParcels.test_get_label_common(app=app, labels="termo",
                                         shared_data=shared_data["halva_a"]["order_ids_in_parcel"])
 
 

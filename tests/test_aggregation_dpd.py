@@ -11,6 +11,12 @@ def shop_id(app, shared_data):
     return app.tests_shop.post_shop(shared_data=shared_data)
 
 
+@pytest.fixture(scope='module')
+def warehouse_id(app, connections, shared_data):
+    """Фикстура создания склада"""
+    return app.tests_warehouse.post_warehouse(shared_data=shared_data)
+
+
 @allure.description("Подключение настроек службы доставки СД Dpd")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
