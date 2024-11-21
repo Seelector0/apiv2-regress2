@@ -202,6 +202,19 @@ class DataBaseConnections:
             if str(*value) in ["succeeded", "failed"]:
                 break
 
+    def wait_cancelled_order(self, order_id: str):
+        r"""Метод ждёт загрузки заказа по его id.
+        :param order_id: ID заказа.
+        """
+        value = self.get_list_order_value(order_id=order_id, value="state")
+        counter = 0
+        while str(*value) != "cancelled" and counter < 50:
+            time.sleep(1)
+            value = self.get_list_order_value(order_id=order_id, value="state")
+            counter += 1
+            if str(*value) in ["cancelled", "failed"]:
+                break
+
     def delete_list_orders(self):
         """Метод чистит таблицу order."""
         cursor = self.database.connection.cursor()

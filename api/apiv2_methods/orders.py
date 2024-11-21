@@ -382,6 +382,15 @@ class ApiOrder:
         result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=path_order)
         return self.app.http_method.return_result(response=result)
 
+    def patch_order_cancelled(self, order_id: str, headers: dict = None):
+        r"""Метод отмены заказа.
+        :param order_id: Идентификатор заказа.
+        :param headers: Пользовательские заголовки.
+        """
+        patch_cancelled = self.app.dicts.form_patch_body(op="replace", path="state", value="cancelled")
+        result = self.app.http_method.patch(link=f"{self.link}/{order_id}", json=patch_cancelled, headers=headers)
+        return self.app.http_method.return_result(response=result)
+
     def delete_order(self, order_id: str):
         r"""Метод удаления заказа.
         :param order_id: Идентификатор заказа.

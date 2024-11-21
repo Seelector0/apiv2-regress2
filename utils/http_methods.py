@@ -53,7 +53,7 @@ class HttpMethod:
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, timeout: int = 300, retry_interval: int = 5, **kwargs):
+              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
@@ -63,6 +63,7 @@ class HttpMethod:
         :param admin: Для использования admin URL.
         :param timeout: Максимальное время ожидания в секундах.
         :param retry_interval: Интервал между попытками.
+        :param headers: Пользовательские заголовки для запроса.
         """
         start_time = time.time()
         server_error_codes = {502, 503, 504}
@@ -73,6 +74,9 @@ class HttpMethod:
         else:
             token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
             url = f"{ENV_OBJECT.get_base_url()}/v2/{url}"
+
+        if headers:
+            token.update(headers)
 
         while time.time() - start_time < timeout:
             try:

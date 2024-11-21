@@ -351,6 +351,26 @@ class CommonOrders:
         Checking.checking_json_key(response=security_code, expected_value=["code"])
 
     @staticmethod
+    def test_patch_order_cancelled_common(app, connections, shared_data, delivery_service=None):
+        """Редактирование веса в заказе"""
+        check_shared_data(shared_data)
+        order_id = shared_data.pop()
+        try:
+            custom_headers = {"x-trace-id": "cancelled"} if delivery_service == "Cdek" else None
+            order_patch = app.order.patch_order_cancelled(order_id=order_id, headers=custom_headers)
+            Checking.check_status_code(response=order_patch, expected_status_code=200)
+            if delivery_service == "Cdek":
+                connections.wait_cancelled_order(order_id=order_id)
+                get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
+                Checking.checking_json_value(response=get_order_by_id, key_name="state", expected_value="cancelled")
+            if delivery_service is None:
+                Checking.checking_json_value(response=order_patch, key_name="state", expected_value="cancelled")
+        except AssertionError:
+            if order_id in shared_data:
+                shared_data.remove(order_id)
+            raise
+
+    @staticmethod
     def test_delete_order_common(app, connections, shared_data, shared_delivery_service, delivery_service=None):
         """Удаление заказа"""
         check_shared_data(shared_data[shared_delivery_service], key="order_ids")
