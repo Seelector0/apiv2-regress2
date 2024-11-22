@@ -87,6 +87,12 @@ def test_order_details(app, shared_data):
     CommonOrders.test_order_details_common(app=app, shared_data=shared_data["halva_a"]["order_ids"])
 
 
+@allure.description("Отмена заказа СД Halva")
+def test_patch_order_cancelled(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, connections=connections,
+                                                   shared_data=shared_data["halva_a"]["order_ids"])
+
+
 @allure.description("Создание партии СД Halva")
 def test_create_parcel(app, shared_data):
     CommonParcels.create_parcel_common(app=app, shared_delivery_service="halva_a", shared_data=shared_data)

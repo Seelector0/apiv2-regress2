@@ -132,7 +132,7 @@ def test_order_status(app, shared_data):
     CommonOrders.test_order_status_common(app=app, shared_data=shared_data["cdek_i"]["order_ids"])
 
 
-@allure.description("Отмена заказа СД Cse")
+@allure.description("Отмена заказа СД Cdek")
 def test_patch_order_cancelled(app, connections, shared_data):
     CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="Cdek",  connections=connections,
                                                    shared_data=shared_data["cdek_i"]["order_ids"])
