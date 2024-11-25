@@ -128,7 +128,7 @@ class HttpMethod:
 
                 elapsed_time = time.time() - start_time
 
-                if ENV_OBJECT.db_connections() == "metaship":
+                if ENV_OBJECT.db_connections() == "connections":
                     if response.status_code == 500:
                         retries_500 += 1
                         self.logger.warning(f"Получен статус 500 при запросе {method} к {url}. "
