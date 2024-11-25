@@ -13,6 +13,11 @@ class HttpMethod:
         self.app = app
         self.admin = admin
         self.logger = logging.getLogger(__name__)
+        self.dependent_services = [
+            "http://develop.address-service.metaship.ppdev.ru/health/check",
+            "http://deliverypoint-api.metaship.ppdev.ru/health/check",
+            "https://develop.customer-api.metaship.ppdev.ru/health/check",
+        ]
 
     def get(self, link: str, params: dict = None, admin: bool = None, **kwargs):
         r"""GET запрос.
@@ -52,8 +57,33 @@ class HttpMethod:
         """
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
+    def _check_dependent_services(self, timeout=120, interval=5):
+        """Метод проверяет доступность зависимых сервисов."""
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            all_services_healthy = True
+            for service in self.dependent_services:
+                try:
+                    response = requests.get(service, timeout=10)
+                    if response.status_code != 200:
+                        all_services_healthy = False
+                        self.logger.error(f"Сервис {service} недоступен, статус: {response.status_code}")
+                except requests.RequestException as e:
+                    all_services_healthy = False
+                    self.logger.error(f"Ошибка при проверке {service}: {e}")
+
+            if all_services_healthy:
+                self.logger.info("Все зависимые сервисы доступны.")
+                return True
+
+            self.logger.info("Ожидание восстановления зависимых сервисов...")
+            time.sleep(interval)
+
+        raise AssertionError("Не удалось дождаться доступности зависимых сервисов за отведенное время.")
+
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, **kwargs):
+              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, retries_500=0,
+              max_retries_on_500: int = 1, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
@@ -97,6 +127,17 @@ class HttpMethod:
                         pass
 
                 elapsed_time = time.time() - start_time
+
+                if ENV_OBJECT.db_connections() == "metaship":
+                    if response.status_code == 500:
+                        retries_500 += 1
+                        self.logger.warning(f"Получен статус 500 при запросе {method} к {url}. "
+                                            f"Проверяем зависимые сервисы...")
+                        self._check_dependent_services()
+                        if retries_500 > max_retries_on_500:
+                            return response
+                        self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
+                        continue
 
                 if response.status_code in server_error_codes:
                     self.logger.error(
