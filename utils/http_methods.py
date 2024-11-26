@@ -52,6 +52,42 @@ class HttpMethod:
         """
         return self._send(method="DELETE", url=link, admin=admin, **kwargs)
 
+    def _prepare_url_and_headers(self, url: str, admin: bool, headers: dict) -> tuple:
+        """Подготавливает URL и заголовки для запроса."""
+        if admin:
+            token = Dicts.form_token(authorization=self.admin.authorization.response.json()["access_token"])
+            url = f"{ENV_OBJECT.get_base_url()}/admin/v2/{url}"
+        else:
+            token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
+            url = f"{ENV_OBJECT.get_base_url()}/v2/{url}"
+
+        if headers:
+            token.update(headers)
+
+        return url, token
+
+    @staticmethod
+    def _perform_request_with_logging(method: str, url: str, params: dict, json: dict, data: dict, headers: dict,
+                                      **kwargs):
+        """Выполняет запрос и логирует детали запроса для Allure."""
+        with allure.step(title=f"{method} request to URL: {url}"):
+            if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+                response = requests.request(method=method, url=url, params=params, json=json, data=data,
+                                            headers=headers, **kwargs)
+            else:
+                raise Exception(f"Получен неверный HTTP метод '{method}'")
+        if params:
+            with allure.step(title=f"""Request: {str(params).replace("'", '"')}"""):
+                pass
+        elif data:
+            with allure.step(title=f"""Request: {str(data).replace("'", '"')}"""):
+                pass
+        else:
+            with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
+                pass
+
+        return response
+
     def _check_dependent_services(self, timeout=120, interval=5):
         """Метод проверяет доступность зависимых сервисов."""
         start_time = time.time()
@@ -93,34 +129,13 @@ class HttpMethod:
         """
         start_time = time.time()
         server_error_codes = {502, 503, 504}
+        response = None
 
-        if admin:
-            token = Dicts.form_token(authorization=self.admin.authorization.response.json()["access_token"])
-            url = f"{ENV_OBJECT.get_base_url()}/admin/v2/{url}"
-        else:
-            token = Dicts.form_token(authorization=self.app.authorization.response.json()["access_token"])
-            url = f"{ENV_OBJECT.get_base_url()}/v2/{url}"
-
-        if headers:
-            token.update(headers)
-
+        url, token = self._prepare_url_and_headers(url=url, admin=admin, headers=headers)
         while time.time() - start_time < timeout:
             try:
-                with allure.step(title=f"{method} request to URL: {url}"):
-                    if method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-                        response = requests.request(method=method, url=url, params=params, json=json, data=data,
-                                                    headers=token, **kwargs)
-                    else:
-                        raise Exception(f"Получен неверный HTTP метод '{method}'")
-                if params:
-                    with allure.step(title=f"""Request: {str(params).replace("'", '"')}"""):
-                        pass
-                elif data:
-                    with allure.step(title=f"""Request: {str(data).replace("'", '"')}"""):
-                        pass
-                else:
-                    with allure.step(title=f"""Request: {str(json).replace("'", '"')}"""):
-                        pass
+                response = self._perform_request_with_logging(method=method, url=url, params=params, json=json,
+                                                              data=data, headers=token, **kwargs)
 
                 elapsed_time = time.time() - start_time
 
