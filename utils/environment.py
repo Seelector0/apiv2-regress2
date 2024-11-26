@@ -1,12 +1,11 @@
-from dotenv import load_dotenv, find_dotenv
 import os
-
+import json
+from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
 
 class Environment:
-
     LOCAL = "local"
     DEVELOP = "dev"
 
@@ -63,6 +62,10 @@ class Environment:
     CUSTOMERS_AGREEMENTS_IDS = {
         LOCAL: os.getenv("CUSTOMER_AGREEMENT_ID_LOCAL"),
         DEVELOP: os.getenv("CUSTOMER_AGREEMENT_ID")
+    }
+    DEPENDENT_SERVICES_IDS = {
+        LOCAL: json.loads(os.getenv('DEPENDENT_SERVICES_LOCAL', '[]')),
+        DEVELOP: json.loads(os.getenv('DEPENDENT_SERVICES', '[]'))
     }
 
     error_massage = "Неизвестное значение переменной ENV:"
@@ -147,6 +150,13 @@ class Environment:
         """Метод для определения customer_agreements_id для работы за определённым стендом"""
         if self.env in self.CUSTOMERS_AGREEMENTS_IDS:
             return self.CUSTOMERS_AGREEMENTS_IDS[self.env]
+        else:
+            raise Exception(f"{Environment.error_massage} {self.env}")
+
+    def dependent_services(self):
+        """Метод для определения зависимых сервисов для работы за определённым стендом"""
+        if self.env in self.DEPENDENT_SERVICES_IDS:
+            return self.DEPENDENT_SERVICES_IDS[self.env]
         else:
             raise Exception(f"{Environment.error_massage} {self.env}")
 

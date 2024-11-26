@@ -13,11 +13,6 @@ class HttpMethod:
         self.app = app
         self.admin = admin
         self.logger = logging.getLogger(__name__)
-        self.dependent_services = [
-            "http://develop.address-service.metaship.ppdev.ru/health/check",
-            "http://deliverypoint-api.metaship.ppdev.ru/health/check",
-            "https://develop.customer-api.metaship.ppdev.ru/health/check",
-        ]
 
     def get(self, link: str, params: dict = None, admin: bool = None, **kwargs):
         r"""GET запрос.
@@ -62,7 +57,7 @@ class HttpMethod:
         start_time = time.time()
         while time.time() - start_time < timeout:
             all_services_healthy = True
-            for service in self.dependent_services:
+            for service in ENV_OBJECT.dependent_services():
                 try:
                     response = requests.get(service, timeout=10)
                     if response.status_code != 200:
@@ -74,6 +69,7 @@ class HttpMethod:
 
             if all_services_healthy:
                 self.logger.info("Все зависимые сервисы доступны.")
+                time.sleep(10)
                 return True
 
             self.logger.info("Ожидание восстановления зависимых сервисов...")
@@ -128,16 +124,15 @@ class HttpMethod:
 
                 elapsed_time = time.time() - start_time
 
-                if ENV_OBJECT.db_connections() == "connections":
-                    if response.status_code == 500:
-                        retries_500 += 1
-                        self.logger.warning(f"Получен статус 500 при запросе {method} к {url}. "
-                                            f"Проверяем зависимые сервисы...")
-                        self._check_dependent_services()
-                        if retries_500 > max_retries_on_500:
-                            return response
-                        self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
-                        continue
+                if response.status_code == 500:
+                    retries_500 += 1
+                    self.logger.warning(f"Получен статус 500 при запросе {method} к {url}. "
+                                        f"Проверяем зависимые сервисы...")
+                    self._check_dependent_services()
+                    if retries_500 > max_retries_on_500:
+                        return response
+                    self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
+                    continue
 
                 if response.status_code in server_error_codes:
                     self.logger.error(
