@@ -58,7 +58,7 @@ class SettingsDeliveryServices:
         cdek["data"]["metashipInform"] = self.inform
         if aggregation:
             cdek = self.app.dicts.form_connection_type(delivery_service_code="Cdek", aggregation=True)
-        cdek["data"]["shipmentPointCode"] = "AKHT1"
+        cdek["data"]["shipmentPointCode"] = "MSK114"
         cdek["data"]["metashipInform"] = self.inform
         return cdek
 
