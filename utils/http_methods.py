@@ -126,6 +126,8 @@ class HttpMethod:
         :param timeout: Максимальное время ожидания в секундах.
         :param retry_interval: Интервал между попытками.
         :param headers: Пользовательские заголовки для запроса.
+        :param retries: Текущий счётчик повторных попыток
+        :param max_retries: Максимальное количество повторных попыток.
         """
         start_time = time.time()
         server_error_codes = {502, 503, 504}
