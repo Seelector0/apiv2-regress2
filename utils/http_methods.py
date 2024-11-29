@@ -114,8 +114,8 @@ class HttpMethod:
         raise AssertionError("Не удалось дождаться доступности зависимых сервисов за отведенное время.")
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, retries_500=0,
-              max_retries_on_500: int = 1, **kwargs):
+              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, retries=0,
+              max_retries: int = 1, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
@@ -129,6 +129,7 @@ class HttpMethod:
         """
         start_time = time.time()
         server_error_codes = {502, 503, 504}
+        dependency_error_codes = {500, 409}
         response = None
 
         url, token = self._prepare_url_and_headers(url=url, admin=admin, headers=headers)
@@ -139,12 +140,12 @@ class HttpMethod:
 
                 elapsed_time = time.time() - start_time
 
-                if response.status_code == 500:
-                    retries_500 += 1
-                    self.logger.warning(f"Получен статус 500 при запросе {method} к {url}. "
+                if response.status_code in dependency_error_codes:
+                    retries += 1
+                    self.logger.warning(f"Ошибка при запросе {method} к {url}. "
                                         f"Проверяем зависимые сервисы...")
                     self._check_dependent_services()
-                    if retries_500 > max_retries_on_500:
+                    if retries > max_retries:
                         return response
                     self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
                     continue
