@@ -135,6 +135,7 @@ def shared_data():
         "shop_id_metaship": None,
         "warehouse_id": None,
         "warehouse_without_pickup": None,
-        "warehouse_id_kz": None
+        "warehouse_id_kz": None,
+        "webhook_id": None
     }
     return data

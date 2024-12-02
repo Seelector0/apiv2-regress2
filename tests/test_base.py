@@ -119,3 +119,23 @@ def test_patch_warehouse(app, warehouse_id):
 @allure.description("Удаление склада")
 def test_delete_warehouse(app, warehouse_id):
     app.tests_warehouse.delete_warehouse(warehouse_id=warehouse_id)
+
+
+@allure.description("Создание веб-хука")
+def test_post_webhook(app, shop_id, shared_data):
+    app.tests_webhook.post_webhook(shop_id=shop_id, shared_data=shared_data)
+
+
+@allure.description("Получения списка веб-хуков")
+def test_get_webhooks(app):
+    app.tests_webhook.get_webhooks()
+
+
+@allure.description("Получения веб-хука по id")
+def test_get_webhook_by_id(app, shared_data):
+    app.tests_webhook.get_webhook_by_id(shared_data=shared_data)
+
+
+@allure.description("Удаление веб-хука")
+def test_delete_webhook(app, shared_data):
+    app.tests_webhook.delete_webhook(shared_data=shared_data)

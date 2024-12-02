@@ -16,6 +16,7 @@ from api.apiv2_methods.info import ApiInfo
 from api.apiv2_methods.forms import Forms
 from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
+from utils.helper.test_webhook import TestsWebHook
 from utils.http_methods import HttpMethod
 
 
@@ -41,3 +42,4 @@ class Application:
         self.settings = SettingsDeliveryServices(app=self)
         self.tests_shop = TestsShop(app=self)
         self.tests_warehouse = TestsWarehouse(app=self, connections=connections)
+        self.tests_webhook = TestsWebHook(app=self)

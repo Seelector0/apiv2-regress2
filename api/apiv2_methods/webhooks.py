@@ -23,3 +23,10 @@ class ApiWebhook:
         """
         result = self.app.http_method.get(link=f"{self.link}/{webhook_id}")
         return self.app.http_method.return_result(response=result)
+
+    def delete_webhook(self, webhook_id: str):
+        r"""Удаление веб-хука.
+        :param webhook_id: Идентификатор веб-хука.
+        """
+        result = self.app.http_method.delete(link=f"{self.link}/{webhook_id}")
+        return self.app.http_method.return_result(response=result)

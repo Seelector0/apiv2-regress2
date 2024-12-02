@@ -335,6 +335,16 @@ class DataBaseConnections:
         finally:
             cursor.close()
 
+    def delete_webhook(self):
+        """Метод чистит таблицу 'webhook.webhook'."""
+        cursor = self.database.connection.cursor()
+        try:
+            cursor.execute(query=f"""delete from {ENV_OBJECT.db_connections()}.webhook.webhook """
+                                 f"""where webhook.user_id = '{ENV_OBJECT.user_id()}'""")
+            cursor.connection.commit()
+        finally:
+            cursor.close()
+
     def delete_all_setting(self):
         """Метод чистит все таблицы."""
         self.delete_cabinet_settings()
@@ -351,3 +361,4 @@ class DataBaseConnections:
         self.delete_list_parcels()
         self.delete_failed_parcel()
         self.delete_intakes()
+        self.delete_webhook()
