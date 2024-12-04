@@ -14,6 +14,7 @@ from api.apiv2_methods.orders import ApiOrder
 from api.apiv2_methods.shops import ApiShop
 from api.apiv2_methods.info import ApiInfo
 from api.apiv2_methods.forms import Forms
+from utils.common_tests import CommonInfo
 from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from utils.helper.test_webhook import TestsWebHook
@@ -43,3 +44,4 @@ class Application:
         self.tests_shop = TestsShop(app=self)
         self.tests_warehouse = TestsWarehouse(app=self, connections=connections)
         self.tests_webhook = TestsWebHook(app=self)
+        self.tests_info = CommonInfo(app=self)

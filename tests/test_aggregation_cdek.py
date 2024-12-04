@@ -2,7 +2,7 @@ import pytest
 import allure
 from random import choice
 from utils.global_enums import INFO
-from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, CommonOrders, CommonParcels
+from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
 
 @pytest.fixture(scope='module')
@@ -25,7 +25,7 @@ def test_aggregation_delivery_services(app, admin, shop_id):
 
 @allure.description("Получение списка ПВЗ СД Cdek")
 def test_delivery_service_points(app, shop_id):
-    CommonInfo.test_delivery_service_points_common(app=app, shop_id=shop_id, delivery_service_code="Cdek")
+    app.tests_info.test_delivery_service_points_common(shop_id=shop_id, delivery_service_code="Cdek")
 
 
 @allure.description("Получение оферов в формате 'widget'")
@@ -98,8 +98,8 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
 
 @allure.description("Получения сроков доставки по СД Cdek")
 def test_delivery_time_schedules(app, shop_id, shared_data):
-    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id, delivery_service_code="Cdek",
-                                                   shared_data=shared_data["cdek_a"]["order_ids"])
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Cdek",
+                                                       shared_data=shared_data["cdek_a"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД Cdek")

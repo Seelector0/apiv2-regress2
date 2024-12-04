@@ -2,7 +2,7 @@ import pytest
 import allure
 from random import choice
 from utils.global_enums import INFO
-from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels, CommonInfo
+from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
 
 @pytest.fixture(scope='module')
@@ -92,8 +92,8 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
 
 @allure.description("Получения сроков доставки по СД Cdek")
 def test_delivery_time_schedules(app, shop_id, shared_data):
-    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id, delivery_service_code="Cdek",
-                                                   shared_data=shared_data["cdek_i"]["order_ids"])
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Cdek",
+                                                       shared_data=shared_data["cdek_i"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД Cdek")
@@ -134,7 +134,7 @@ def test_order_status(app, shared_data):
 
 @allure.description("Отмена заказа СД Cdek")
 def test_patch_order_cancelled(app, connections, shared_data):
-    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="Cdek",  connections=connections,
+    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="Cdek", connections=connections,
                                                    shared_data=shared_data["cdek_i"]["order_ids"])
 
 

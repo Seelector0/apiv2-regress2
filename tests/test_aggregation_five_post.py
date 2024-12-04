@@ -1,7 +1,7 @@
 import pytest
 import allure
 from utils.environment import ENV_OBJECT
-from utils.common_tests import CommonConnections, CommonInfo, CommonOffers, CommonOrders, CommonParcels
+from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
 
 @pytest.fixture(scope='module')
@@ -24,7 +24,7 @@ def test_aggregation_delivery_services(app, admin, shop_id):
 
 @allure.description("Получение списка ПВЗ СД FivePost")
 def test_delivery_service_points(app, shop_id):
-    CommonInfo.test_delivery_service_points_common(app=app, shop_id=shop_id, delivery_service_code="FivePost")
+    app.tests_info.test_delivery_service_points_common(shop_id=shop_id, delivery_service_code="FivePost")
 
 
 @allure.description("Получение DeliveryPoint оферов по СД FivePost")

@@ -1,7 +1,6 @@
 import allure
 import pytest
 import os
-from utils.common_tests import CommonInfo
 from utils.dates import tomorrow
 from utils.environment import ENV_OBJECT
 from utils.global_enums import INFO
@@ -122,9 +121,8 @@ def test_info_statuses(app, delivery_service_code):
 @pytest.mark.parametrize("delivery_service_code, tariff_id", [("Boxberry", None), ("TopDelivery", None),
                                                               ("Dalli", "1")])
 def test_delivery_time_schedules(app, shop_id, delivery_service_code, tariff_id):
-    CommonInfo.test_delivery_time_schedules_common(app=app, shop_id=shop_id,
-                                                   delivery_service_code=delivery_service_code, data=tomorrow,
-                                                   tariff_id=tariff_id)
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code=delivery_service_code,
+                                                       data=tomorrow, tariff_id=tariff_id)
 
 
 @allure.description("Получение списка ключей")
