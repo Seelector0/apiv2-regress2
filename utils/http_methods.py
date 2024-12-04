@@ -144,7 +144,7 @@ class HttpMethod:
 
                 if response.status_code in dependency_error_codes:
                     retries += 1
-                    self.logger.warning(f"Ошибка при запросе {method} к {url}. "
+                    self.logger.warning(f"Ошибка при запросе {method} к {url}. Статус-код {response.status_code}. "
                                         f"Проверяем зависимые сервисы...")
                     self._check_dependent_services()
                     if retries > max_retries:
