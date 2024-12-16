@@ -80,7 +80,6 @@ def test_patch_order_weight(app, connections, shared_data):
                                                 shared_data=shared_data["russian_post_i"]["order_ids"])
 
 
-@pytest.mark.flaky(reruns=3, reruns_delay=2)
 @allure.description("Создание заказа из файла")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, connections, shared_data):
@@ -90,7 +89,6 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
                                                     file_extension=file_extension)
 
 
-@pytest.mark.flaky(reruns=3, reruns_delay=2)
 @allure.description("Создание заказа из файла формата СД RussianPost")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file_format_russian_post(app, shop_id, warehouse_id, file_extension,

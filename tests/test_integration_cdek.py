@@ -80,7 +80,6 @@ def test_patch_single_order(app, connections, shared_data):
                                                 delivery_service="Cdek")
 
 
-@pytest.mark.flaky(reruns=3, reruns_delay=2)
 @allure.description("Создание заказа из файла СД Cdek")
 @pytest.mark.parametrize("file_extension", ["xls", "xlsx"])
 def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, connections, shared_data):

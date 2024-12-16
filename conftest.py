@@ -8,11 +8,21 @@ import pytest
 import logging
 
 logger = logging.getLogger(__name__)
+RERUN_PATTERNS = ["patch", "edit", "remove_order_in_parcel", "add_order_in_parcel", "change_shipment_date", "from_file",
+                  "offers"]
 
 
 @pytest.fixture(scope="session", autouse=True)
 def configure_logging():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", force=True)
+
+
+def pytest_collection_modifyitems(items):
+    """Автоматически добавляем рераны для тестов из RERUN_PATTERNS используется название теста."""
+    for item in items:
+        for pattern in RERUN_PATTERNS:
+            if pattern in item.name:
+                item.add_marker(pytest.mark.flaky(reruns=1, reruns_delay=2))
 
 
 @pytest.fixture(scope="module")
