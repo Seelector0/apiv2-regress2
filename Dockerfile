@@ -5,7 +5,8 @@ COPY ./ /app
 
 RUN cd /app && \
     mv .env.example .env && \
-    mkdir logs
+    mkdir logs && \
+    mkdir -p reports
 
 RUN pip install -r requirements.txt
 
