@@ -156,6 +156,12 @@ def test_forms_parcels_labels(app, shared_data):
     CommonParcels.test_forms_parcels_labels_common(app=app, shared_data=shared_data["boxberry_i"]["parcel_ids"])
 
 
+@allure.description("Отмена заказа СД Boxberry из партии")
+def test_patch_order_cancelled_from_parcel(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="Cdek", connections=connections,
+                                                   shared_data=shared_data["boxberry_i"]["order_ids_in_parcel"])
+
+
 @allure.description("Создание забора СД Boxberry")
 def test_create_intake(app, shop_id, warehouse_id, connections):
     CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
