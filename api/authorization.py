@@ -32,7 +32,7 @@ class ApiAuthorization:
                 elapsed_time = time.time() - start_time
 
                 if self.response.status_code in server_error_codes:
-                    self.logger.error(
+                    self.logger.warning(
                         f"Ошибка при запросе POST к URL: {self.response.url}. Статус-код {self.response.status_code}. "
                         f"Затраченное время: {elapsed_time:.2f} секунд. Повторная попытка через {retry_interval} секунд.")
                 else:
