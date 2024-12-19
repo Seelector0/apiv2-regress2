@@ -119,7 +119,7 @@ class CommonParcels:
         labels_from_parcel = app.document.post_labels(
             parcel_id=choice(shared_data[shared_delivery_service]["parcel_ids"]),
             order_ids=shared_data[shared_delivery_service]["order_ids_in_parcel"])
-        Checking.check_status_code(response=labels_from_parcel, expected_status_code=200)
+        Checking.check_status_code(response=labels_from_parcel, expected_status_code=202)
 
     @staticmethod
     def test_get_app_common(app, shared_data):
