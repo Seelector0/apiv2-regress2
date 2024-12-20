@@ -187,6 +187,7 @@ class DataBaseConnections:
                 db_list_order_id.append(*row)
         finally:
             cursor.close()
+        print(db_list_order_id)
         return db_list_order_id
 
     def wait_create_order(self, order_id: str):
@@ -195,7 +196,7 @@ class DataBaseConnections:
         """
         value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
-        while str(*value) != "succeeded" and counter < 50:
+        while str(*value) != "succeeded" and counter < 60:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
@@ -208,7 +209,7 @@ class DataBaseConnections:
         """
         value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
-        while str(*value) != "cancelled" and counter < 50:
+        while str(*value) != "cancelled" and counter < 60:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
