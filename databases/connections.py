@@ -187,7 +187,6 @@ class DataBaseConnections:
                 db_list_order_id.append(*row)
         finally:
             cursor.close()
-        print(db_list_order_id)
         return db_list_order_id
 
     def wait_create_order(self, order_id: str):
