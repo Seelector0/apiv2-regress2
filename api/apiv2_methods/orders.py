@@ -43,7 +43,8 @@ class ApiOrder:
                           cod: float = None, weight: float = 3, tariff: str = None, delivery_point_code: str = None,
                           data: str = None, delivery_time: dict = None, country_code: str = None, price_1: float = 1000,
                           price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000,
-                          pickup_time_period: str = None, date_pickup: str = None):
+                          pickup_time_period: str = None, date_pickup: str = None, type_order: str = None,
+                          intake_point_code: str = None):
         r"""Метод создания одноместного заказа.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
@@ -66,6 +67,8 @@ class ApiOrder:
         :param items_declared_value: Цена товарной позиции.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
+        :param type_order: Тип заказа.
+        :param intake_point_code: Идентификатор точки сдачи возврата.
         """
         declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
                                                               price_1, price_2, price_3)
@@ -76,7 +79,8 @@ class ApiOrder:
                                                  delivery_type=delivery_type, service=service,
                                                  tariff=tariff, data=data, delivery_time=delivery_time,
                                                  delivery_point_code=delivery_point_code, country_code=country_code,
-                                                 pickup_time_period=pickup_time_period, date_pickup=date_pickup)
+                                                 pickup_time_period=pickup_time_period, date_pickup=date_pickup,
+                                                 type_order=type_order, intake_point_code=intake_point_code)
         single_order["places"] = self.app.dicts.places(places=[
             self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
                                  items_declared_value=items_declared_value),

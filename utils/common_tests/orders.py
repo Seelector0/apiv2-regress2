@@ -7,7 +7,7 @@ from utils.checking import Checking
 class CommonOrders:
 
     @staticmethod
-    def test_single_order_common(app, connections, shared_data, shared_data_order_type=None, **kwargs):
+    def test_single_order_common(app, connections, shared_data=None, shared_data_order_type=None, **kwargs):
         """Создание одноместного заказа
         :param app: Объект приложения для работы с заказами через API.
         :param connections: Объект для взаимодействия с базой данных.
@@ -27,7 +27,8 @@ class CommonOrders:
                                         one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
                                                                                    value="state"),
                                         two_value=["succeeded"])
-        shared_data.append(order_id)
+        if shared_data is not None:
+            shared_data.append(order_id)
         if shared_data_order_type is not None:
             shared_data_order_type.append(order_id)
 

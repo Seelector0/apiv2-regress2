@@ -68,6 +68,14 @@ def test_create_order_post_office(app, shop_id, warehouse_id, payment_type, conn
                                           shared_data_order_type=shared_data["russian_post_i"]["orders_post_office"])
 
 
+@allure.description("Создание возвратного заказа по СД RussianPost")
+def test_create_return_order(app, shop_id, warehouse_id, connections, shared_data):
+    CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
+                                          payment_type="Paid", delivery_type="Courier", service="RussianPost",
+                                          tariff=choice(INFO.rp_courier_tariffs), type_order="return",
+                                          intake_point_code="917695")
+
+
 @allure.description("Редактирование заказа СД RussianPost")
 def test_editing_order(app, shared_data):
     CommonOrders.test_editing_order_common(app=app, delivery_service="RussianPost",
