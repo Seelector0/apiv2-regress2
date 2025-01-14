@@ -7,9 +7,7 @@ from fixture.admin import Admin
 import pytest
 import logging
 
-logger = logging.getLogger(__name__)
-RERUN_PATTERNS = ["patch", "edit", "remove_order_in_parcel", "add_order_in_parcel", "change_shipment_date", "from_file",
-                  "offers"]
+RERUN_PATTERNS = ["patch", "edit", "remove_order_in_parcel", "add_order_in_parcel", "change_shipment_date", "from_file"]
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -84,7 +82,6 @@ def stop(request, connections, shared_data):
             for id_ in [shared_data["warehouse_id"], shared_data["warehouse_without_pickup"],
                         shared_data["warehouse_id_kz"]]:
                 if id_:
-                    logger.info(f"Удаление склада с ID: {id_}")
                     connections.delete_list_warehouses_for_id(warehouse_id=id_)
             for service_data in shared_data.values():
                 if isinstance(service_data, dict) and "parcel_ids" in service_data:
