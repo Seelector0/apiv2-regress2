@@ -11,7 +11,7 @@ def shop_id(app, shared_data):
 
 
 @pytest.fixture(scope='module')
-def warehouse_id(app, connections, shared_data):
+def warehouse_id(app, shared_data):
     """Фикстура создания склада"""
     return app.tests_warehouse.post_warehouse(shared_data=shared_data)
 

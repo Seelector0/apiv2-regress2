@@ -33,6 +33,32 @@ class CommonOrders:
             shared_data_order_type.append(order_id)
 
     @staticmethod
+    def test_single_order_minimal_common(app, connections, shared_data=None, shared_data_order_type=None, **kwargs):
+        """Создание одноместного заказа с минимальным набором атрибутов
+        :param app: Объект приложения для работы с заказами через API.
+        :param connections: Объект для взаимодействия с базой данных.
+        :param shared_data: Общие тестовые данные, такие как идентификаторы заказов и магазинов.
+        :param shared_data_order_type: Дополнительные данные о типе заказа (по умолчанию None).
+        """
+        new_order = app.order.post_single_order_minimal(**kwargs)
+        Checking.check_status_code(response=new_order, expected_status_code=201)
+        Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+        order_id = new_order.json()["id"]
+        connections.wait_create_order(order_id=order_id)
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=order_id,
+                                                                                   value="status"),
+                                        two_value=["created"])
+        Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
+                                        one_value=connections.get_list_order_value(order_id=new_order.json()["id"],
+                                                                                   value="state"),
+                                        two_value=["succeeded"])
+        if shared_data is not None:
+            shared_data.append(order_id)
+        if shared_data_order_type is not None:
+            shared_data_order_type.append(order_id)
+
+    @staticmethod
     def test_multi_order_common(app, connections, shared_data, **kwargs):
         """Создание многоместного заказа"""
         new_order = app.order.post_multi_order(**kwargs)

@@ -38,6 +38,17 @@ def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
                                     expected_value=[f"{offer_type}"])
 
 
+@allure.description("Создание Courier заказа по СД RussianPost с минимальным набором атрибутов")
+def test_create_order_minimal_courier(app, shop_id, warehouse_id, connections, shared_data):
+    CommonOrders.test_single_order_minimal_common(app=app, connections=connections, shop_id=shop_id,
+                                                  warehouse_id=warehouse_id,
+                                                  payment_type="Paid", delivery_type="Courier", service="RussianPost",
+                                                  tariff=choice(INFO.rp_courier_tariffs),
+                                                  shared_data=shared_data["russian_post_a"]["order_ids"],
+                                                  shared_data_order_type=shared_data["russian_post_a"][
+                                                      "orders_courier"])
+
+
 @allure.description("Создание Courier заказа по СД RussianPost")
 def test_create_order_courier(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,

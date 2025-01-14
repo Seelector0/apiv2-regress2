@@ -41,11 +41,71 @@ class ApiOrder:
     def post_single_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
                           shop_barcode: str = None, declared_value: float = None, delivery_sum: float = 100.24,
                           cod: float = None, weight: float = 3, tariff: str = None, delivery_point_code: str = None,
-                          data: str = None, delivery_time: dict = None, country_code: str = None, price_1: float = 1000,
+                          data: str = None, delivery_time: dict = None, email: str = "test@mail.ru",
+                          comment: str = "Тестовый комментарий", country_code: str = None, price_1: float = 1000,
                           price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000,
                           pickup_time_period: str = None, date_pickup: str = None, type_order: str = None,
                           intake_point_code: str = None):
         r"""Метод создания одноместного заказа.
+        :param shop_id: Id магазина.
+        :param shop_barcode: Штрих код заказа.
+        :param warehouse_id: Id склада.
+        :param payment_type: Тип оплаты 'Paid' - Полная предоплата, 'PayOnDelivery' - Оплата при получении.
+        :param declared_value: Объявленная стоимость.
+        :param delivery_sum: Стоимость доставки.
+        :param cod: Наложенный платеж, руб.
+        :param weight: Общий все заказа.
+        :param delivery_type: Тип доставки 'Courier', 'DeliveryPoint', 'PostOffice'.
+        :param service: Код СД.
+        :param tariff: Тариф создания заказа.
+        :param delivery_point_code: Идентификатор точки доставки.
+        :param data: Дата доставки.
+        :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param country_code: Код страны назначения.
+        :param email: Электронная почта получателя.
+        :param comment: Комментарий к заказу.
+        :param price_1: Цена первой товарной позиции.
+        :param price_2: Цена второй товарной позиции.
+        :param price_3: Цена третий товарной позиции.
+        :param items_declared_value: Цена товарной позиции.
+        :param pickup_time_period: Дата привоза на склад.
+        :param date_pickup: Временной интервал.
+        :param type_order: Тип заказа.
+        :param intake_point_code: Идентификатор точки сдачи возврата.
+        """
+        declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
+                                                              price_1, price_2, price_3)
+        single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
+                                                 payment_type=payment_type, declared_value=declared_value_result,
+                                                 delivery_sum=delivery_sum, cod=cod,
+                                                 dimension=self.app.dicts.dimension(), weight=weight,
+                                                 delivery_type=delivery_type, service=service,
+                                                 tariff=tariff, data=data, delivery_time=delivery_time,
+                                                 delivery_point_code=delivery_point_code, comment=comment, email=email,
+                                                 country_code=country_code, pickup_time_period=pickup_time_period,
+                                                 date_pickup=date_pickup, type_order=type_order,
+                                                 intake_point_code=intake_point_code)
+        single_order["places"] = self.app.dicts.places(places=[
+            self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="5",
+                                 items_declared_value=items_declared_value),
+            self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="7",
+                                 items_declared_value=items_declared_value),
+            self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
+                                 items_declared_value=items_declared_value)
+        ])
+        result = self.app.http_method.post(link=self.link, json=single_order)
+        return self.app.http_method.return_result(response=result)
+
+    def post_single_order_minimal(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
+                                  shop_barcode: str = None, declared_value: float = None, delivery_sum: float = 100.24,
+                                  cod: float = None, weight: float = 3, tariff: str = None,
+                                  delivery_point_code: str = None,
+                                  data: str = None, delivery_time: dict = None, country_code: str = None,
+                                  price_1: float = 1000,
+                                  price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000,
+                                  pickup_time_period: str = None, date_pickup: str = None, type_order: str = None,
+                                  intake_point_code: str = None):
+        r"""Метод создания одноместного заказа с минимальным набором атрибутов.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
         :param warehouse_id: Id склада.
@@ -70,25 +130,29 @@ class ApiOrder:
         :param type_order: Тип заказа.
         :param intake_point_code: Идентификатор точки сдачи возврата.
         """
+        dimension = None
         declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
                                                               price_1, price_2, price_3)
+        if service != "RussianPost":
+            dimension = self.app.dicts.dimension()
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
                                                  payment_type=payment_type, declared_value=declared_value_result,
                                                  delivery_sum=delivery_sum, cod=cod,
-                                                 dimension=self.app.dicts.dimension(), weight=weight,
+                                                 dimension=dimension, weight=weight,
                                                  delivery_type=delivery_type, service=service,
                                                  tariff=tariff, data=data, delivery_time=delivery_time,
                                                  delivery_point_code=delivery_point_code, country_code=country_code,
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup,
                                                  type_order=type_order, intake_point_code=intake_point_code)
-        single_order["places"] = self.app.dicts.places(places=[
-            self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
-                                 items_declared_value=items_declared_value),
-            self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="10",
-                                 items_declared_value=items_declared_value),
-            self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
-                                 items_declared_value=items_declared_value)
-        ])
+        if service != "RussianPost":
+            single_order["places"] = self.app.dicts.places(places=[
+                self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
+                                     items_declared_value=items_declared_value),
+                self.app.dicts.items(name="Стул", price=price_2, count=1, weight=1, vat="10",
+                                     items_declared_value=items_declared_value),
+                self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
+                                     items_declared_value=items_declared_value)
+            ])
         result = self.app.http_method.post(link=self.link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
@@ -96,7 +160,8 @@ class ApiOrder:
                          service: str, declared_value: float = None, delivery_sum: float = 100.24, cod: float = None,
                          weight: float = 3, total_dimension: dict = None, tariff: str = None,
                          delivery_point_code: str = None, data: str = None, delivery_time: dict = None,
-                         price_1: float = 1000, weight_1: float = 1, barcode_1: str = None, shop_number_1: str = None,
+                         email: str = "test@mail.ru", comment: str = "Тестовый комментарий", price_1: float = 1000,
+                         weight_1: float = 1, barcode_1: str = None, shop_number_1: str = None,
                          dimension_1: dict = None, price_2: float = 1000, weight_2: float = 2, barcode_2: str = None,
                          shop_number_2: str = None, dimension_2: dict = None, pickup_time_period: str = None,
                          date_pickup: str = None):
@@ -115,6 +180,8 @@ class ApiOrder:
         :param delivery_point_code: Идентификатор точки доставки.
         :param data: Дата доставки.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
+        :param email: Электронная почта получателя.
+        :param comment: Комментарий к заказу.
         :param price_1: Цена первого грузоместа.
         :param weight_1: Вес первого грузоместа.
         :param barcode_1: Штрих-код первого грузоместа.
@@ -143,7 +210,8 @@ class ApiOrder:
                                                 dimension=total_dimension, weight=weight,
                                                 delivery_type=delivery_type, service=service, tariff=tariff, data=data,
                                                 delivery_time=delivery_time, delivery_point_code=delivery_point_code,
-                                                date_pickup=date_pickup, pickup_time_period=pickup_time_period)
+                                                comment=comment, email=email, date_pickup=date_pickup,
+                                                pickup_time_period=pickup_time_period)
         multi_order["places"] = [
             self.app.dicts.form_cargo_items(items=self.app.dicts.items(name="Стол", price=price_1, count=1,
                                                                        weight=weight_1, vat="10"),

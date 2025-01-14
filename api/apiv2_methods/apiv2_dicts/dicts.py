@@ -230,8 +230,8 @@ class Dicts:
     def form_order(shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_sum: float,  cod: float,
                    dimension: dict,  weight:  float, delivery_type: str, service: str, tariff: str,
                    delivery_point_code: str,  data: str, delivery_time: dict, pickup_time_period: str, date_pickup: str,
-                   shop_barcode: str = None, country_code: str = None, type_order: str = None,
-                   intake_point_code: str = None):
+                   second_name: str = None, comment: str = None, email: str = None, shop_barcode: str = None,
+                   country_code: str = None, type_order: str = None, intake_point_code: str = None):
         r"""Форма для создания заказов.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
@@ -251,6 +251,9 @@ class Dicts:
         :param country_code: Код страны назначения.
         :param pickup_time_period: Дата привоза на склад.
         :param date_pickup: Временной интервал.
+        :param second_name: Отчество получателя.
+        :param email: Электронная почта получателя.
+        :param comment: Комментарий к заказу.
         :param type_order: Тип заказа.
         :param intake_point_code: Идентификатор точки сдачи возврата.
         """
@@ -286,8 +289,8 @@ class Dicts:
             "recipient": {
                 "familyName": "Филипенко",
                 "firstName": "Юрий",
-                "secondName": "Павлович",
-                "email": "test@mail.ru",
+                "secondName": second_name,
+                "email": email,
                 "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
                 "address": {
                     "raw": address_raw,
@@ -295,7 +298,7 @@ class Dicts:
                 }
             },
             "type": type_order,
-            "comment": "Тестовый комментарий",
+            "comment": comment,
             "pickupTimePeriod": pickup_time_period,
             "datePickup": date_pickup
         }

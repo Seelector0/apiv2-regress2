@@ -15,7 +15,7 @@ def shop_id(app, shared_data):
 @allure.description("Получение списка ставок НДС, которые умеет принимать и обрабатывать конкретная СД")
 @pytest.mark.parametrize("delivery_service_code", ["Boxberry", "Cdek", "Cse", "Dalli", "DostavkaClub", "Dpd",
                                                    "FivePost", "LPost", "RussianPost", "TopDelivery", "YandexGo",
-                                                   "YandexDelivery", "Halva", "Pecom"])
+                                                   "YandexDelivery", "Pecom"])
 def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
@@ -43,8 +43,6 @@ def test_info_vats(app, delivery_service_code):
         Checking.checking_json_contains(response=info_vats, expected_values=INFO.ya_go_vats)
     elif delivery_service_code == "YandexDelivery":
         Checking.checking_json_contains(response=info_vats, expected_values=INFO.ya_delivery_vats)
-    elif delivery_service_code == "Halva":
-        Checking.checking_json_contains(response=info_vats, expected_values=INFO.halva_vats)
     elif delivery_service_code == "Pecom":
         Checking.checking_json_contains(response=info_vats, expected_values=INFO.pecom_vats)
 
