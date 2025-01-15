@@ -36,10 +36,7 @@ def test_create_order_minimal_courier(app, shop_id, warehouse_id, connections, s
     CommonOrders.test_single_order_minimal_common(app=app, connections=connections, shop_id=shop_id,
                                                   warehouse_id=warehouse_id,
                                                   payment_type="Paid", delivery_type="Courier", service="RussianPost",
-                                                  tariff=choice(INFO.rp_courier_tariffs),
-                                                  shared_data=shared_data["russian_post_i"]["order_ids"],
-                                                  shared_data_order_type=shared_data["russian_post_i"][
-                                                      "orders_courier"])
+                                                  tariff=choice(INFO.rp_courier_tariffs))
 
 
 @allure.description("Создание Courier заказа по СД RussianPost")

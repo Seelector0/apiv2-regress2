@@ -9,9 +9,8 @@ import random
 
 class Dicts:
 
-    def __init__(self, app, connections):
+    def __init__(self, app):
         self.app = app
-        self.connections = connections
 
     @staticmethod
     def form_authorization(admin: bool = None):
@@ -390,28 +389,29 @@ class Dicts:
             "secret": "string"
         }
 
-    def form_reports(self):
-        """Форма для создания отчёта по заказам."""
-        return {
-            "filter": {
-                "created": {
-                    "dateTime": {
-                        "from": "2020-07-20 13:00:00",
-                        "to": "2020-07-20 14:00:00"
-                    }
-                },
-                "shops": [
-                    {
-                        "id": self.connections.get_list_shops()[0]
-                    }
-                ],
-                "parcels": [
-                    {
-                        "id": self.connections.get_list_parcels()[0]
-                    }
-                ]
-            }
-        }
+    # Убрал так как не используется в тестах, но грузит подключение к бд
+    # def form_reports(self):
+    #     """Форма для создания отчёта по заказам."""
+    #     return {
+    #         "filter": {
+    #             "created": {
+    #                 "dateTime": {
+    #                     "from": "2020-07-20 13:00:00",
+    #                     "to": "2020-07-20 14:00:00"
+    #                 }
+    #             },
+    #             "shops": [
+    #                 {
+    #                     "id": self.connections.get_list_shops()[0]
+    #                 }
+    #             ],
+    #             "parcels": [
+    #                 {
+    #                     "id": self.connections.get_list_parcels()[0]
+    #                 }
+    #             ]
+    #         }
+    #     }
 
     @staticmethod
     def places(places: list):

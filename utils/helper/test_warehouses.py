@@ -5,9 +5,8 @@ import allure
 
 class TestsWarehouse:
 
-    def __init__(self, app, connections):
+    def __init__(self, app):
         self.app = app
-        self.connections = connections
 
     @allure.description("Создание склада")
     def post_warehouse(self, shared_data, warehouse_type="warehouse_id", country_code: str = None, pickup: bool = None):
@@ -85,6 +84,6 @@ class TestsWarehouse:
     def delete_warehouse(self, warehouse_id):
         delete_warehouse = self.app.warehouse.delete_warehouse(warehouse_id=warehouse_id)
         Checking.check_status_code(response=delete_warehouse, expected_status_code=204)
-        Checking.check_value_comparison(responses={"DELETE v2/customer/warehouses/{id}": delete_warehouse},
-                                        one_value=self.connections.get_list_warehouses_value
-                                        (warehouse_id=warehouse_id, value="deleted"), two_value=[True])
+        get_warehouses = self.app.warehouse.get_warehouse_id(warehouse_id=warehouse_id)
+        Checking.check_status_code(response=get_warehouses, expected_status_code=404)
+

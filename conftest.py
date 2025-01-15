@@ -24,9 +24,9 @@ def pytest_collection_modifyitems(items):
 
 
 @pytest.fixture(scope="module")
-def app(connections):
+def app():
     """Фикстура для открытия сессии по Apiv2 metaship."""
-    apiv2 = Application(connections=connections)
+    apiv2 = Application()
     apiv2.authorization.post_access_token()
     yield apiv2
     apiv2.authorization.session.close()

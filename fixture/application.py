@@ -23,9 +23,9 @@ from utils.http_methods import HttpMethod
 
 class Application:
 
-    def __init__(self, connections):
+    def __init__(self):
         self.http_method = HttpMethod(app=self, admin=self)
-        self.dicts = Dicts(app=self, connections=connections)
+        self.dicts = Dicts(app=self)
         self.authorization = ApiAuthorization(app=self, admin=self)
         self.shop = ApiShop(app=self)
         self.warehouse = ApiWarehouse(app=self)
@@ -42,6 +42,6 @@ class Application:
         self.forms = Forms(app=self)
         self.settings = SettingsDeliveryServices(app=self)
         self.tests_shop = TestsShop(app=self)
-        self.tests_warehouse = TestsWarehouse(app=self, connections=connections)
+        self.tests_warehouse = TestsWarehouse(app=self)
         self.tests_webhook = TestsWebHook(app=self)
         self.tests_info = CommonInfo(app=self)

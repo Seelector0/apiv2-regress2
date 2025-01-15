@@ -175,7 +175,7 @@ class HttpMethod:
         :param response: Результат ответа.
         """
         try:
-            if response.status_code != 204:
+            if response.status_code not in {204, 404}:
                 with allure.step(title=f"""Response: {str(response.json()).replace("'", '"')}"""):
                     return response
             else:
