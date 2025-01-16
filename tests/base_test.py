@@ -49,7 +49,7 @@ def test_patch_shop(app, shop_id):
                          [("RussianPost", lambda app: app.settings.russian_post()),
                           ("Cdek", lambda app: app.settings.cdek())])
 def test_integration_delivery_services(app, shop_id, code, connection_settings):
-    CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id, code="RussianPost",
+    CommonConnections.connecting_delivery_services_common(app=app, shop_id=shop_id, code=code,
                                                           connection_settings=connection_settings(app))
 
 

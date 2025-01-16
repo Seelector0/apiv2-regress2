@@ -89,7 +89,7 @@ def stop(request, connections, shared_data):
                         connections.delete_list_parcels_for_id(parcel_id)
                         connections.delete_order_parcel(parcel_id)
         except Exception as e:
-            print(f"Ошибка при очистке данных: {e}")
+            logging.error(f"Ошибка при очистке данных: {e}")
 
     request.addfinalizer(finalizer=fin)
 
