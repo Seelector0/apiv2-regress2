@@ -6,8 +6,8 @@ class OtherInfo:
     entity_warehouse = ["id", "number", "name", "visibility", "address", "contact", "workingTime", "pickup",
                         "dpdPickupNum", "lPostWarehouseId", "yandexWarehouseId", "comment"]
 
-    entity_order = ["id", "number", "addressTo", "data", "parcel", "status", "statusReason", "state", "stateMessage",
-                    "created", "configurationType"]
+    entity_order = ['id', 'number', 'addressTo', 'data', 'parcel', 'status', 'statusTime', 'statusReason', 'state',
+                    'stateTime', 'stateMessage', 'created', 'configurationType']
 
     entity_parcel = ["id", "number", "shop", "deliveryServiceCode", "data", "created", "deleted", "state", "stateTime"]
 
