@@ -1,3 +1,4 @@
+from utils.response_schemas import SCHEMAS
 from utils.utils import check_shared_data
 from random import choice, randrange
 from utils.global_enums import INFO
@@ -16,7 +17,7 @@ class CommonOrders:
         """
         new_order = app.order.post_single_order(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
-        Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+        Checking.check_json_schema(response=new_order, schema=SCHEMAS.create_order)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
         Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
@@ -42,7 +43,7 @@ class CommonOrders:
         """
         new_order = app.order.post_single_order_minimal(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
-        Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+        Checking.check_json_schema(response=new_order, schema=SCHEMAS.create_order)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
         Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
@@ -63,7 +64,7 @@ class CommonOrders:
         """Создание многоместного заказа"""
         new_order = app.order.post_multi_order(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
-        Checking.checking_json_key(response=new_order, expected_value=INFO.created_entity)
+        Checking.check_json_schema(response=new_order, schema=SCHEMAS.create_order)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
         Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
@@ -88,6 +89,7 @@ class CommonOrders:
                                                                          file_extension=file_extension)
 
         Checking.check_status_code(response=new_orders, expected_status_code=200)
+        Checking.check_json_schema(response=new_orders, schema=SCHEMAS.create_order_from_file)
         for order in new_orders.json().values():
             order_id = order["id"]
             connections.wait_create_order(order_id=order_id)
@@ -344,7 +346,7 @@ class CommonOrders:
         order_id = choice(shared_data)
         order_details = app.order.get_order_details(order_id=order_id)
         Checking.check_status_code(response=order_details, expected_status_code=200)
-        Checking.checking_json_key(response=order_details, expected_value=INFO.details)
+        Checking.check_json_schema(response=order_details, schema=SCHEMAS.get_order_details)
 
     @staticmethod
     def test_order_status_common(app, shared_data):
@@ -420,7 +422,7 @@ class CommonOrders:
         new_intake = app.intakes.post_intakes(shop_id=shop_id, warehouse_id=warehouse_id,
                                               delivery_service=delivery_service)
         Checking.check_status_code(response=new_intake, expected_status_code=201)
-        Checking.checking_json_key(response=new_intake, expected_value=INFO.created_entity)
+        Checking.check_json_schema(response=new_intake, schema=SCHEMAS.create_intake)
         status = connections.get_list_intakes_value(intake_id=new_intake.json()["id"], value="status")
         if delivery_service == "Cdek":
             expected_status = ["pending"]

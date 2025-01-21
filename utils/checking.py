@@ -1,9 +1,10 @@
-from typing import List, Dict, Any
-
-from requests import Response
 import datetime
-import allure
 import json
+import allure
+import pytest
+from requests import Response
+from jsonschema import validate, ValidationError
+from typing import List, Dict, Any
 
 
 class Checking:
@@ -21,6 +22,18 @@ class Checking:
             Checking._assert_with_trace(response=response, condition=response.status_code == expected_status_code,
                                         message=f"Не ожидаемый статус код! Ожидаемый: {expected_status_code}. "
                                                 f"Фактический: {response.status_code}")
+
+    @staticmethod
+    def check_json_schema(response: Response, schema: dict):
+        """Проверяет соответствие ответа схеме JSON."""
+        with allure.step(title=f"Проверка что JSON соответствует ожидаемой схеме"):
+            try:
+                validate(instance=response.json(), schema=schema)
+            except ValidationError as e:
+                error_details = f"{e.message} | Путь к ошибке: {e.path}"
+                Checking._assert_with_trace(response=response, condition=False,
+                                            message=f"Ошибка валидации схемы JSON: {error_details}")
+                pytest.fail()
 
     @staticmethod
     def checking_json_key(response: Response, expected_value: list):
