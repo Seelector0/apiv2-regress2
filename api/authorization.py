@@ -15,7 +15,7 @@ class ApiAuthorization:
         self.logger = logging.getLogger(__name__)
         self.response = None
 
-    def post_access_token(self, admin: bool = None, timeout: int = 360, retry_interval: int = 5):
+    def post_access_token(self, admin: bool = None, timeout: int = 240, retry_interval: int = 5):
         r"""Метод получения bearer-токена с ожиданием.
         :param admin: Параметр для получения bearer-токена для admin API.
         :param timeout: Максимальное время ожидания в секундах (по умолчанию 4 минуты).
@@ -34,7 +34,8 @@ class ApiAuthorization:
                 if self.response.status_code in server_error_codes:
                     self.logger.warning(
                         f"Ошибка при запросе POST к URL: {self.response.url}. Статус-код {self.response.status_code}. "
-                        f"Затраченное время: {elapsed_time:.2f} секунд. Повторная попытка через {retry_interval} секунд.")
+                        f"Затраченное время: {elapsed_time:.2f} секунд. Повторная попытка через {retry_interval} "
+                        f"секунд.")
                 else:
                     return HttpMethod.return_result(response=self.response)
 
@@ -44,6 +45,7 @@ class ApiAuthorization:
                     f"Ошибка при запросе токена: {e}. Затраченное время: {elapsed_time:.2f} секунд.")
 
             time.sleep(retry_interval)
+            retry_interval = min(retry_interval * 2, 60)
 
         raise AssertionError(f"Не удалось получить токен за {timeout} секунд. "
                              f"Ошибка: статус код {self.response.status_code} - {self.response.text}")

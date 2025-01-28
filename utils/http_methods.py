@@ -114,7 +114,7 @@ class HttpMethod:
         raise AssertionError("Не удалось дождаться доступности зависимых сервисов за отведенное время.")
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
-              admin: bool = None, timeout: int = 300, retry_interval: int = 5, headers: dict = None, retries=0,
+              admin: bool = None, timeout: int = 240, retry_interval: int = 5, headers: dict = None, retries=0,
               max_retries: int = 1, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
@@ -132,6 +132,7 @@ class HttpMethod:
         start_time = time.time()
         server_error_codes = {502, 503, 504}
         dependency_error_codes = {500, 409}
+        backoff_interval = min(retry_interval * 2, 60)
         response = None
 
         url, token = self._prepare_url_and_headers(url=url, admin=admin, headers=headers)
@@ -147,6 +148,8 @@ class HttpMethod:
                     self.logger.warning(f"Ошибка при запросе {method} к {url}. Статус-код {response.status_code}. "
                                         f"Проверяем зависимые сервисы...")
                     self._check_dependent_services()
+                    time.sleep(retry_interval)
+                    retry_interval = backoff_interval
                     if retries > max_retries:
                         return response
                     self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
@@ -165,6 +168,7 @@ class HttpMethod:
                     f"Ошибка при запросе {method} to URL: {url}. {e}. Затраченное время: {elapsed_time:.2f} секунд.")
 
             time.sleep(retry_interval)
+            retry_interval = backoff_interval
 
         raise AssertionError(f"Не удалось выполнить {method} запрос на {url} за {timeout} секунд. "
                              f"Статус код {response.status_code}")
