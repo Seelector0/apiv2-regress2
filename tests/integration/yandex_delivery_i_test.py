@@ -91,6 +91,19 @@ def test_order_status(app, shared_data):
     CommonOrders.test_order_status_common(app=app, shared_data=shared_data["yandex_delivery_i"]["order_ids"])
 
 
+@allure.description("Отмена заказа СД YandexDelivery")
+def test_patch_order_cancelled(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="yandex_delivery_i",
+                                                   connections=connections,
+                                                   shared_data=shared_data["yandex_delivery_i"]["order_ids"])
+
+
+@allure.description("Удаление заказа СД YandexDelivery")
+def test_delete_order(app, connections, shared_data):
+    CommonOrders.test_delete_order_common(app=app, connections=connections,
+                                          shared_delivery_service="yandex_delivery_i", shared_data=shared_data)
+
+
 @allure.description("Создание партии CД YandexDelivery")
 def test_create_parcel(app, shared_data):
     CommonParcels.create_parcel_common(app=app, shared_delivery_service="yandex_delivery_i", shared_data=shared_data)
