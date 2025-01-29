@@ -46,7 +46,7 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, cod, conn
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           payment_type=payment_type, cod=cod, delivery_type="Courier", service="Dalli",
                                           tariff="1", data=str(tomorrow),
-                                          delivery_time={"from": "09:00", "to": "16:00"},
+                                          delivery_time={"from": "18:00", "to": "22:00"},
                                           shared_data=shared_data["dalli_i"]["order_ids"])
 
 
