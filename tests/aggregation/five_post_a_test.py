@@ -103,12 +103,6 @@ def test_generate_security_code(app, shared_data):
     CommonOrders.test_generate_security_common(app=app, shared_data=shared_data["five_post_a"]["order_ids"])
 
 
-@allure.description("Удаление заказа СД FivePost")
-def test_delete_order(app, connections, shared_data):
-    CommonOrders.test_delete_order_common(app=app, connections=connections, shared_delivery_service="five_post_a",
-                                          shared_data=shared_data)
-
-
 @allure.description("Получения этикетки СД FivePost вне партии")
 def test_get_labels_out_of_parcel(app, shared_data):
     CommonOrders.test_get_labels_out_of_parcel_common(app=app, shared_data=shared_data["five_post_a"]["order_ids"])
@@ -117,6 +111,19 @@ def test_get_labels_out_of_parcel(app, shared_data):
 @allure.description("Получение подробной информации о заказе СД FivePost")
 def test_order_details(app, shared_data):
     CommonOrders.test_order_details_common(app=app, shared_data=shared_data["five_post_a"]["order_ids"])
+
+
+@allure.description("Отмена заказа СД FivePost")
+def test_patch_order_cancelled(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="five_post_a",
+                                                   connections=connections,
+                                                   shared_data=shared_data["five_post_a"]["order_ids"])
+
+
+@allure.description("Удаление заказа СД FivePost")
+def test_delete_order(app, connections, shared_data):
+    CommonOrders.test_delete_order_common(app=app, connections=connections, shared_delivery_service="five_post_a",
+                                          shared_data=shared_data)
 
 
 @allure.description("Создание партии СД FivePost")
