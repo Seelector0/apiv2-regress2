@@ -337,7 +337,7 @@ class CommonOrders:
         check_shared_data(shared_data)
         order_id = app.order.get_order_id(order_id=choice(shared_data))
         Checking.check_status_code(response=order_id, expected_status_code=200)
-        Checking.checking_json_key(response=order_id, expected_value=INFO.entity_order)
+        Checking.check_json_schema(response=order_id, schema=SCHEMAS.get_order_by_id)
 
     @staticmethod
     def test_order_details_common(app, shared_data):
