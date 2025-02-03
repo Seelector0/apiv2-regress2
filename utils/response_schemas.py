@@ -1,5 +1,5 @@
-class SchemaInfo:
-    create_order = {
+class OrderSchema:
+    order_create = {
         "type": "object",
         "properties": {
             "id": {
@@ -25,7 +25,38 @@ class SchemaInfo:
         "additionalProperties": False
     }
 
-    get_order_by_id = {
+    order_create_from_file = {
+        "type": "object",
+        "patternProperties": {
+            "^\\d+$": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор созданного заказа в системе MetaShip"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["Order"],
+                        "description": "Тип созданного объекта: всегда order"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Ссылка для получения информации о созданном объекте"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP-статус ответа"
+                    }
+                },
+                "required": ["id", "type", "url", "status"],
+                "additionalProperties": False
+            }
+        }
+    }
+
+    order_get_by_id_or_editing = {
         "type": "object",
         "properties": {
             "id": {
@@ -398,8 +429,15 @@ class SchemaInfo:
                 "required": ["request", "deliveryService"]
             },
             "parcel": {
-                "type": ["string", "null"],
-                "description": "Идентификатор партии"
+                "type": ["object", "null"],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор партии"
+                    }
+                },
+                "required": ["id"],
+                "description": "Информация о партии"
             },
             "status": {
                 "type": "string",
@@ -438,7 +476,68 @@ class SchemaInfo:
 
     }
 
-    get_order_details = {
+    order_get_patches = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Идентификатор изменения"
+                },
+                "orderId": {
+                    "type": "string",
+                    "description": "Идентификатор заказа"
+                },
+                "userId": {
+                    "type": "string",
+                    "description": "Идентификатор пользователя"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Дата и время создания изменения"
+                },
+                "state": {
+                    "type": "string",
+                    "enum": ["succeeded", "failed", "external-processing"],
+                    "description": "Состояние изменения"
+                },
+                "stateTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Дата и время изменения состояния"
+                },
+                "message": {
+                    "type": ["string", "null"],
+                    "description": "Сообщение к изменению"
+                }
+            },
+            "required": ["id", "orderId", "userId", "createdAt", "state", "stateTime", "message"]
+        }
+    }
+
+    order_get_statuses = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": ["created"],
+                    "description": "Кодовое наименование статуса заказа"
+                },
+                "statusTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Дата и время установки статуса"
+                }
+            },
+            "required": ["status", "statusTime"]
+        }
+    }
+
+    order_get_details = {
         "type": "object",
         "properties": {
             "returnItems": {
@@ -478,38 +577,20 @@ class SchemaInfo:
         "additionalProperties": False
     }
 
-    create_order_from_file = {
+    order_generate_security_code = {
         "type": "object",
-        "patternProperties": {
-            "^\\d+$": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "Идентификатор созданного заказа в системе MetaShip"
-                    },
-                    "type": {
-                        "type": "string",
-                        "enum": ["Order"],
-                        "description": "Тип созданного объекта: всегда order"
-                    },
-                    "url": {
-                        "type": "string",
-                        "format": "uri",
-                        "description": "Ссылка для получения информации о созданном объекте"
-                    },
-                    "status": {
-                        "type": "integer",
-                        "description": "HTTP-статус ответа"
-                    }
-                },
-                "required": ["id", "type", "url", "status"],
-                "additionalProperties": False
+        "properties": {
+            "code": {
+                "type": "string",
+                "description": "Код выдачи"
             }
-        }
+        },
+        "required": ["code"]
     }
 
-    create_intake = {
+
+class IntakeSchema:
+    intake_create = {
         "type": "object",
         "properties": {
             "id": {
@@ -534,6 +615,12 @@ class SchemaInfo:
         "required": ["id", "type", "url", "status"],
         "additionalProperties": False
     }
+
+
+class SchemaInfo:
+    order = OrderSchema()
+    intake = IntakeSchema()
+    # parcel = ParcelSchema()
 
 
 SCHEMAS = SchemaInfo()

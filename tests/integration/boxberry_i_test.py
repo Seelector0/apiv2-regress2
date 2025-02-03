@@ -158,7 +158,7 @@ def test_forms_parcels_labels(app, shared_data):
 
 @allure.description("Отмена заказа СД Boxberry из партии")
 def test_patch_order_cancelled_from_parcel(app, connections, shared_data):
-    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="Cdek", connections=connections,
+    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="boxberry", connections=connections,
                                                    shared_data=shared_data["boxberry_i"]["order_ids_in_parcel"])
 
 
