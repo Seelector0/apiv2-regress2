@@ -1,6 +1,7 @@
 from random import choice
 from utils.checking import Checking
 from utils.global_enums import INFO
+from utils.response_schemas import SCHEMAS
 from utils.utils import check_shared_data
 
 
@@ -17,7 +18,7 @@ class CommonParcels:
             order = shared_data[shared_delivery_service]["order_ids"].pop()
         create_parcel = app.parcel.post_parcel(value=order, **kwargs)
         Checking.check_status_code(response=create_parcel, expected_status_code=207)
-        Checking.checking_in_list_json_value(response=create_parcel, key_name="type", expected_value="Parcel")
+        Checking.check_json_schema(response=create_parcel, schema=SCHEMAS.parcel.parcels_create)
         parcel_id = create_parcel.json()[0]["id"]
         shared_data[shared_delivery_service]["parcel_ids"].append(parcel_id)
         shared_data[shared_delivery_service]["order_ids_in_parcel"].append(order)
@@ -53,6 +54,7 @@ class CommonParcels:
         list_parcel = app.parcel.get_parcels()
         Checking.check_status_code(response=list_parcel, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_parcel)
+        Checking.check_json_schema(response=list_parcel, schema=SCHEMAS.parcel.parcels_get)
 
     @staticmethod
     def test_get_parcel_by_id_common(app, shared_data):

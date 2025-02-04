@@ -589,6 +589,196 @@ class OrderSchema:
     }
 
 
+class ParcelSchema:
+    parcels_create = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Идентификатор созданного объекта"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["Parcel"],
+                    "description": "Тип созданного объекта: всегда parcel"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Ссылка для получения информации о созданном объекте"
+                },
+                "status": {
+                    "type": "integer",
+                    "description": "HTTP-статус ответа"
+                }
+            },
+            "required": ["id", "type", "url", "status"],
+            "additionalProperties": False
+        }
+    }
+
+    parcels_get = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Идентификатор партии"
+                },
+                "number": {
+                    "type": "string",
+                    "description": "Номер партии"
+                },
+                "shop": {
+                    "type": ["object", "null"],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "description": "Идентификатор магазина"
+                        },
+                        "number": {
+                            "type": "string",
+                            "description": "Номер магазина"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Наименование магазина"
+                        },
+                        "uri": {
+                            "type": "string",
+                            "description": "Ссылка на сайт"
+                        },
+                        "phone": {
+                            "type": "string",
+                            "description": "Номер телефона"
+                        },
+                        "sender": {
+                            "type": "string",
+                            "description": "Контактное лицо"
+                        },
+                        "trackingTag": {
+                            "type": "string",
+                            "description": "Используемое для обращения к внешнему Трекинг сервису"
+                        },
+                        "visibility": {
+                            "type": "boolean",
+                            "description": "Признак того, что магазин не удален из кабинета"
+                        }
+                    },
+                    "required": ["id", "number", "name", "uri", "phone", "sender", "trackingTag", "visibility"]
+                },
+                "deliveryServiceCode": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "type": "string",
+                            "description": "Код службы доставки"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Название службы доставки"
+                        },
+                        "hasAggregation": {
+                            "type": "boolean",
+                            "description": "Наличие агрегации"
+                        }
+                    },
+                    "required": ["code", "name", "hasAggregation"]
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "request": {
+                            "type": "object",
+                            "properties": {
+                                "orderIds": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "Идентификатор заказа"
+                                    },
+                                    "description": "Список заказов"
+                                },
+                                "shipmentDate": {
+                                    "type": "string",
+                                    "format": "date",
+                                    "description": "Дата отгрузки"
+                                },
+                                "printedDate": {
+                                    "type": ["string", "null"],
+                                    "format": "date",
+                                    "description": "Дата сдачи"
+                                }
+                            },
+                            "required": ["orderIds", "shipmentDate", "printedDate"]
+                        },
+                        "deliveryService": {
+                            "type": "object",
+                            "properties": {
+                                "orders": {
+                                    "type": ["array", "null"],
+                                    "items": {
+                                        "type": "string",
+                                        "description": "Идентификатор заказа"
+                                    },
+                                    "description": "Список заказов для доставки"
+                                },
+                                "orderIds": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "Идентификатор заказа"
+                                    },
+                                    "description": "Список идентификаторов заказов"
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "description": "Идентификатор службы доставки"
+                                },
+                                "f103": {
+                                    "type": "object",
+                                    "properties": {
+                                        "number": {
+                                            "type": ["string", "null"],
+                                            "description": "Номер f103"
+                                        }
+                                    }
+                                }
+                            },
+                            "required": ["orderIds", "id"]
+                        }
+                    },
+                    "required": ["request", "deliveryService"]
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Дата создания партии"
+                },
+                "deleted": {
+                    "type": ["string", "null"],
+                    "format": "date-time",
+                    "description": "Дата удаления партии"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "Состояние партии"
+                },
+                "stateTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Время изменения состояния"
+                }
+            },
+            "required": ["id", "number", "shop", "deliveryServiceCode", "data", "created", "deleted", "state",
+                         "stateTime"]
+        }
+    }
+
+
 class IntakeSchema:
     intake_create = {
         "type": "object",
@@ -620,7 +810,7 @@ class IntakeSchema:
 class SchemaInfo:
     order = OrderSchema()
     intake = IntakeSchema()
-    # parcel = ParcelSchema()
+    parcel = ParcelSchema()
 
 
 SCHEMAS = SchemaInfo()
