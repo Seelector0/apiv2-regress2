@@ -338,6 +338,7 @@ class CommonOrders:
         check_shared_data(shared_data[shared_delivery_service], key="order_ids")
         list_orders = app.order.get_orders()
         Checking.check_status_code(response=list_orders, expected_status_code=200)
+        Checking.check_json_schema(response=list_orders, schema=SCHEMAS.order.order_get)
         Checking.check_response_is_not_empty(response=list_orders)
 
     @staticmethod

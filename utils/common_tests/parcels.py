@@ -39,6 +39,7 @@ class CommonParcels:
         try:
             order_patch = app.order.patch_order_weight(order_id=order_id, weight=4)
             Checking.check_status_code(response=order_patch, expected_status_code=200)
+            Checking.check_json_schema(response=order_patch, schema=SCHEMAS.order.order_get_by_id_or_editing)
             connections.wait_create_order(order_id=order_patch.json()["id"])
             get_order_by_id = app.order.get_order_id(order_id=order_patch.json()["id"])
             Checking.checking_big_json(response=get_order_by_id, key_name="weight", expected_value=4)
@@ -62,7 +63,7 @@ class CommonParcels:
         check_shared_data(shared_data)
         parcel_id = app.parcel.get_parcel_id(parcel_id=choice(shared_data))
         Checking.check_status_code(response=parcel_id, expected_status_code=200)
-        Checking.checking_json_key(response=parcel_id, expected_value=INFO.entity_parcel)
+        Checking.check_json_schema(response=parcel_id, schema=SCHEMAS.parcel.parcels_get_id_or_editing)
 
     @staticmethod
     def add_order_in_parcel_common(app, connections, shared_data, shared_delivery_service, types=None):
@@ -88,6 +89,7 @@ class CommonParcels:
             parcel_id = choice(shared_data[shared_delivery_service]["parcel_ids"])
         parcel_add = app.parcel.patch_parcel(order_id=order, parcel_id=parcel_id, op="add")
         Checking.check_status_code(response=parcel_add, expected_status_code=200)
+        Checking.check_json_schema(response=parcel_add, schema=SCHEMAS.parcel.parcels_get_id_or_editing)
         shared_data[shared_delivery_service]["order_ids_in_parcel"].append(order)
         assert order in connections.get_list_all_orders_in_parcel_for_parcel_id(parcel_id=parcel_id)
 
@@ -98,6 +100,7 @@ class CommonParcels:
         parcel_id = choice(shared_data)
         shipment_date = app.parcel.patch_parcel_shipment_date(parcel_id=parcel_id, day=5)
         Checking.check_status_code(response=shipment_date, expected_status_code=200)
+        Checking.check_json_schema(response=shipment_date, schema=SCHEMAS.parcel.parcels_get_id_or_editing)
         new_date = shipment_date.json()["data"]["request"]["shipmentDate"]
         Checking.check_date_change(response=shipment_date, calendar_date=new_date, number_of_days=5)
 
@@ -154,4 +157,5 @@ class CommonParcels:
                                                order_id=choice
                                                (shared_data[shared_delivery_service]["order_ids_in_parcel"]))
         Checking.check_status_code(response=remove_order, expected_status_code=200)
+        Checking.check_json_schema(response=remove_order, schema=SCHEMAS.parcel.parcels_get_id_or_editing)
         assert remove_order is not connections.get_list_all_orders_in_parcel()
