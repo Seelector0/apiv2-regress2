@@ -1,5 +1,6 @@
 from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.response_schemas import SCHEMAS
 import allure
 
 
@@ -14,7 +15,7 @@ class TestsShop:
         try:
             new_shop = self.app.shop.post_shop()
             Checking.check_status_code(response=new_shop, expected_status_code=201)
-            Checking.checking_json_key(response=new_shop, expected_value=INFO.created_entity)
+            Checking.check_json_schema(response=new_shop, schema=SCHEMAS.shop.shop_create)
             shop_id = new_shop.json().get('id')
             shared_data[shop_type] = shop_id
             return shop_id
@@ -25,13 +26,14 @@ class TestsShop:
     def get_shop(self):
         list_shops = self.app.shop.get_shops()
         Checking.check_status_code(response=list_shops, expected_status_code=200)
+        Checking.check_json_schema(response=list_shops, schema=SCHEMAS.shop.shop_get)
         Checking.check_response_is_not_empty(response=list_shops)
 
     @allure.description("Получение магазина по его id")
     def get_shop_by_id(self, shop_id):
         shop = self.app.shop.get_shop_id(shop_id=shop_id)
         Checking.check_status_code(response=shop, expected_status_code=200)
-        Checking.checking_json_key(response=shop, expected_value=INFO.entity_shops)
+        Checking.check_json_schema(response=shop, schema=SCHEMAS.shop.shop_get_by_id_or_editing)
 
     @allure.description("Обновление магазина")
     def put_shop(self, shop_id):
@@ -52,4 +54,10 @@ class TestsShop:
     def patch_shop(self, shop_id):
         patch_shop = self.app.shop.patch_shop(shop_id=shop_id, value=False)
         Checking.check_status_code(response=patch_shop, expected_status_code=200)
+        Checking.check_json_schema(response=patch_shop, schema=SCHEMAS.shop.shop_get_by_id_or_editing)
         Checking.checking_json_value(response=patch_shop, key_name="visibility", expected_value=False)
+
+    @allure.description("Попытка удалить магазин и ожидание ошибки с кодом 409")
+    def delete_shop(self, shop_id):
+        delete_shop = self.app.shop.delete_shop(shop_id=shop_id)
+        Checking.check_status_code(response=delete_shop, expected_status_code=409)

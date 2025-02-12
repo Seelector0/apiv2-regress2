@@ -144,12 +144,30 @@ class HttpMethod:
                 elapsed_time = time.time() - start_time
 
                 if response.status_code in dependency_error_codes:
-                    retries += 1
-                    self.logger.warning(f"Ошибка при запросе {method} к {url}. Статус-код {response.status_code}. "
-                                        f"Проверяем зависимые сервисы...")
+                    try:
+                        response_json = response.json()
+                    except ValueError:
+                        response_json = None
+
+                    if response_json:
+                        error_message = response_json.get('title', '')
+                        if response.status_code == 409 and "Невозможно выполнить операцию!" in error_message:
+                            retries += 1
+                            self.logger.warning(
+                                f"Ошибка 409: {error_message} при запросе {method} к {url}. "
+                                f"Статус-код {response.status_code}. Проверяем зависимые сервисы.")
+                    elif response.status_code == 500:
+                        retries += 1
+                        self.logger.warning(
+                            f"Ошибка 500 при запросе {method} к {url}. Статус-код {response.status_code}. "
+                            f"Проблемы с сервисами... Проверяем зависимые сервисы.")
+                    else:
+                        return response
+
                     self._check_dependent_services()
                     if retries > max_retries:
                         return response
+
                     self.logger.info("Зависимые сервисы восстановлены. Повтор запроса...")
                     continue
 

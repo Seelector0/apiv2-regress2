@@ -47,3 +47,9 @@ class ApiShop:
         patch_shop = self.app.dicts.form_patch_body(op="replace", path="visibility", value=value)
         result = self.app.http_method.patch(link=f"{self.link}/{shop_id}", json=patch_shop)
         return self.app.http_method.return_result(response=result)
+
+    def delete_shop(self, shop_id: str):
+        r"""Метод удаления магазина.
+        :param shop_id: Идентификатор склада.
+        """
+        return self.app.http_method.delete(link=f"{self.link}/{shop_id}")

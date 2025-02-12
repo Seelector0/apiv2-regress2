@@ -18,6 +18,7 @@ class OrderSchema:
             },
             "status": {
                 "type": "integer",
+                "enum": [201],
                 "description": "HTTP-статус ответа"
             }
         },

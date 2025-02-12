@@ -44,6 +44,11 @@ def test_patch_shop(app, shop_id):
     app.tests_shop.patch_shop(shop_id=shop_id)
 
 
+@allure.description("Попытка удалить магазин и ожидание ошибки с кодом 409")
+def test_delete_shop(app, shop_id):
+    app.tests_shop.delete_shop(shop_id=shop_id)
+
+
 @allure.description("Подключение настроек службы доставки интеграция")
 @pytest.mark.parametrize("code, connection_settings",
                          [("RussianPost", lambda app: app.settings.russian_post()),
