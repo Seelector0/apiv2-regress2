@@ -1,5 +1,6 @@
 from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.response_schemas import SCHEMAS
 import allure
 
 
@@ -13,7 +14,7 @@ class TestsWarehouse:
         try:
             new_warehouse = self.app.warehouse.post_warehouse(country_code=country_code, pickup=pickup)
             Checking.check_status_code(response=new_warehouse, expected_status_code=201)
-            Checking.checking_json_key(response=new_warehouse, expected_value=INFO.created_entity)
+            Checking.check_json_schema(response=new_warehouse, schema=SCHEMAS.warehouses.warehouses_create)
             warehouse_id = new_warehouse.json().get('id')
             shared_data[warehouse_type] = warehouse_id
             return warehouse_id
@@ -25,12 +26,13 @@ class TestsWarehouse:
         list_warehouses = self.app.warehouse.get_warehouses()
         Checking.check_status_code(response=list_warehouses, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_warehouses)
+        Checking.check_json_schema(response=list_warehouses, schema=SCHEMAS.warehouses.warehouses_get)
 
     @allure.description("Получение склада по его id")
     def warehouse_by_id(self, warehouse_id):
         warehouse = self.app.warehouse.get_warehouse_id(warehouse_id=warehouse_id)
         Checking.check_status_code(response=warehouse, expected_status_code=200)
-        Checking.checking_json_key(response=warehouse, expected_value=INFO.entity_warehouse)
+        Checking.check_json_schema(response=warehouse, schema=SCHEMAS.warehouses.warehouses_get_by_id_or_editing)
 
     @allure.description("Обновление склада")
     def put_warehouse(self, warehouse_id):
@@ -66,6 +68,7 @@ class TestsWarehouse:
         working_time = INFO.new_work_time_warehouse
         patch_warehouse = self.app.warehouse.patch_warehouse(warehouse_id=warehouse_id)
         Checking.check_status_code(response=patch_warehouse, expected_status_code=200)
+        Checking.check_json_schema(response=patch_warehouse, schema=SCHEMAS.warehouses.warehouses_get_by_id_or_editing)
         Checking.checking_json_value(response=patch_warehouse, key_name="visibility", expected_value=False)
         Checking.checking_json_value(response=patch_warehouse, key_name="comment",
                                      expected_value="здесь могла быть ваша реклама")
@@ -86,4 +89,3 @@ class TestsWarehouse:
         Checking.check_status_code(response=delete_warehouse, expected_status_code=204)
         get_warehouses = self.app.warehouse.get_warehouse_id(warehouse_id=warehouse_id)
         Checking.check_status_code(response=get_warehouses, expected_status_code=404)
-
