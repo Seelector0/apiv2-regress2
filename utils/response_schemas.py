@@ -4,6 +4,7 @@ from utils.schemas.order_schemas import OrderSchema
 from utils.schemas.parcel_schemas import ParcelSchema
 from utils.schemas.shop_schemas import ShopSchema
 from utils.schemas.warehouses_schemas import WarehousesSchema
+from utils.schemas.webhook_schemas import WebhookSchema
 
 
 class SchemaInfo:
@@ -13,6 +14,7 @@ class SchemaInfo:
     intake = IntakeSchema()
     parcel = ParcelSchema()
     warehouses = WarehousesSchema()
+    webhook = WebhookSchema()
 
 
 SCHEMAS = SchemaInfo()

@@ -1,8 +1,9 @@
 from utils.checking import Checking
-from utils.global_enums import INFO
 import allure
 
-    
+from utils.response_schemas import SCHEMAS
+
+
 class TestsWebHook:
 
     def __init__(self, app):
@@ -14,19 +15,20 @@ class TestsWebHook:
         webhook_id = webhooks.json().get('id')
         shared_data["webhook_id"] = webhook_id
         Checking.check_status_code(response=webhooks, expected_status_code=200)
-        Checking.checking_json_key(response=webhooks, expected_value=INFO.entity_webhook)
+        Checking.check_json_schema(response=webhooks, schema=SCHEMAS.webhook.webhook_create_or_get_by_id)
 
     @allure.description("Получение списка веб-хуков")
     def get_webhooks(self):
         list_webhooks = self.app.webhook.get_webhooks()
         Checking.check_status_code(response=list_webhooks, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_webhooks)
+        Checking.check_json_schema(response=list_webhooks, schema=SCHEMAS.webhook.webhook_get)
 
     @allure.description("Получение веб-хука по его Id")
     def get_webhook_by_id(self, shared_data):
         webhook_id = self.app.webhook.get_webhook_id(webhook_id=shared_data["webhook_id"])
         Checking.check_status_code(response=webhook_id, expected_status_code=200)
-        Checking.checking_json_key(response=webhook_id, expected_value=INFO.entity_webhook)
+        Checking.check_json_schema(response=webhook_id, schema=SCHEMAS.webhook.webhook_create_or_get_by_id)
 
     @allure.description("Удаление веб-хука")
     def delete_webhook(self, shared_data):
