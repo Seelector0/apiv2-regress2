@@ -1,3 +1,4 @@
+from utils.schemas.connections_schemas import ConnectionsSchema
 from utils.schemas.intake_schemas import IntakeSchema
 from utils.schemas.offer_schemas import OfferSchema
 from utils.schemas.order_schemas import OrderSchema
@@ -15,6 +16,7 @@ class SchemaInfo:
     parcel = ParcelSchema()
     warehouses = WarehousesSchema()
     webhook = WebhookSchema()
+    connections = ConnectionsSchema()
 
 
 SCHEMAS = SchemaInfo()

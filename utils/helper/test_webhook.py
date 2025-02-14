@@ -1,7 +1,6 @@
 from utils.checking import Checking
-import allure
-
 from utils.response_schemas import SCHEMAS
+import allure
 
 
 class TestsWebHook:

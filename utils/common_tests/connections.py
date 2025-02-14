@@ -1,6 +1,7 @@
 import allure
 from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.response_schemas import SCHEMAS
 
 
 class CommonConnections:
@@ -11,10 +12,11 @@ class CommonConnections:
             response = app.service.post_delivery_service(shop_id=shop_id,
                                                          delivery_service=connection_settings)
             Checking.check_status_code(response=response, expected_status_code=201)
-            Checking.checking_json_key(response=response, expected_value=INFO.created_entity)
+            Checking.check_json_schema(response=response, schema=SCHEMAS.connections.connection_create)
             if code:
                 get_connection = app.service.get_delivery_services_code(shop_id=shop_id, code=code)
-                Checking.checking_json_key(response=get_connection, expected_value=INFO.get_entity_connections_id)
+                Checking.check_json_schema(response=get_connection,
+                                           schema=SCHEMAS.connections.connection_get_by_id_or_editing)
                 Checking.check_response_key_values(response=get_connection, key_values={
                     ("credentials", "active"): True,
                     ("credentials", "visibility"): True,
@@ -76,13 +78,15 @@ class CommonConnections:
     def test_get_delivery_services_common(app, shop_id):
         response = app.service.get_delivery_services(shop_id=shop_id)
         Checking.check_status_code(response=response, expected_status_code=200)
+        Checking.check_json_schema(response=response, schema=SCHEMAS.connections.connection_get)
 
     @staticmethod
     def test_patch_delivery_service_common(app, shop_id, code):
         response = app.service.patch_delivery_service(shop_id=shop_id, code=code, tariffs=["14", "25"],
                                                       visibility=False)
         Checking.check_status_code(response=response, expected_status_code=200)
-        Checking.checking_json_key(response=response, expected_value=INFO.get_entity_connections_id)
+        Checking.check_json_schema(response=response,
+                                   schema=SCHEMAS.connections.connection_get_by_id_or_editing)
         Checking.check_response_key_values(response=response, key_values={
             ("credentials", "active"): True,
             ("credentials", "visibility"): False,
@@ -98,7 +102,8 @@ class CommonConnections:
         else:
             Checking.check_status_code(response=response, expected_status_code=204)
             get_connection_response = app.service.get_delivery_services_code(shop_id=shop_id, code=code)
-            Checking.checking_json_key(response=get_connection_response, expected_value=INFO.get_entity_connections_id)
+            Checking.check_json_schema(response=get_connection_response,
+                                       schema=SCHEMAS.connections.connection_get_by_id_or_editing)
             for key, expected_value in data.items():
                 Checking.checking_json_key_value(response=get_connection_response,
                                                  key_path=["credentials", "data", key], expected_value=expected_value)
@@ -108,7 +113,8 @@ class CommonConnections:
         response = app.service.post_deactivate_delivery_service(shop_id=shop_id, code=code)
         Checking.check_status_code(response=response, expected_status_code=204)
         get_connection_response = app.service.get_delivery_services_code(shop_id=shop_id, code=code)
-        Checking.checking_json_key(response=get_connection_response, expected_value=INFO.get_entity_connections_id)
+        Checking.check_json_schema(response=get_connection_response,
+                                   schema=SCHEMAS.connections.connection_get_by_id_or_editing)
         Checking.checking_json_key_value(response=get_connection_response, key_path=["credentials", "active"],
                                          expected_value=False)
 
@@ -117,6 +123,7 @@ class CommonConnections:
         response = app.service.post_activate_delivery_service(shop_id=shop_id, code=code)
         Checking.check_status_code(response=response, expected_status_code=204)
         get_connection_response = app.service.get_delivery_services_code(shop_id=shop_id, code=code)
-        Checking.checking_json_key(response=get_connection_response, expected_value=INFO.get_entity_connections_id)
+        Checking.check_json_schema(response=get_connection_response,
+                                   schema=SCHEMAS.connections.connection_get_by_id_or_editing)
         Checking.checking_json_key_value(response=get_connection_response, key_path=["credentials", "active"],
                                          expected_value=True)
