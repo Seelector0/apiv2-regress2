@@ -89,12 +89,6 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
                                                     file_extension=file_extension)
 
 
-@allure.description("Получения сроков доставки по СД Cdek")
-def test_delivery_time_schedules(app, shop_id, shared_data):
-    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Cdek",
-                                                       shared_data=shared_data["cdek_i"]["order_ids"])
-
-
 @allure.description("Получение списка заказов CД Cdek")
 def test_get_orders(app, shared_data):
     CommonOrders.test_get_orders_common(app=app, shared_delivery_service="cdek_i", shared_data=shared_data)

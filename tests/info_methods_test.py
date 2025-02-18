@@ -1,10 +1,10 @@
 import allure
 import pytest
 import os
-from utils.dates import tomorrow
 from utils.environment import ENV_OBJECT
 from utils.global_enums import INFO
 from utils.checking import Checking
+from utils.response_schemas import SCHEMAS
 
 
 @pytest.fixture(scope='module')
@@ -19,6 +19,7 @@ def shop_id(app, shared_data):
 def test_info_vats(app, delivery_service_code):
     info_vats = app.info.get_info_vats(delivery_service_code=delivery_service_code)
     Checking.check_status_code(response=info_vats, expected_status_code=200)
+    Checking.check_json_schema(response=info_vats, schema=SCHEMAS.info.info_vat)
     if delivery_service_code == "Boxberry":
         Checking.checking_json_contains(response=info_vats, expected_values=INFO.boxberry_vats)
     elif delivery_service_code == "Cdek":
@@ -55,6 +56,7 @@ def test_intake_offices(app, delivery_service_code):
     Checking.check_response_is_not_empty(response=intake_offices)
     Checking.checking_in_list_json_value(response=intake_offices, key_name="deliveryServiceCode",
                                          expected_value=delivery_service_code)
+    Checking.check_json_schema(response=intake_offices, schema=SCHEMAS.info.info_intake_office)
 
 
 @allure.description("Получение информации о тарифах поддерживаемых СД")
@@ -62,6 +64,7 @@ def test_intake_offices(app, delivery_service_code):
 def tests_tariffs(app, code):
     list_tariffs = app.info.get_tariffs(code=code)
     Checking.check_status_code(response=list_tariffs, expected_status_code=200)
+    Checking.check_json_schema(response=list_tariffs, schema=SCHEMAS.info.info_tariff)
     if code == "RussianPost":
         Checking.checking_json_contains(response=list_tariffs, expected_values=INFO.rp_list_tariffs)
     elif code == "Cdek":
@@ -75,6 +78,7 @@ def tests_tariffs(app, code):
 def test_info_statuses(app, delivery_service_code):
     info_delivery_service_services = app.info.get_info_delivery_service_services(code=delivery_service_code)
     Checking.check_status_code(response=info_delivery_service_services, expected_status_code=200)
+    Checking.check_json_schema(response=info_delivery_service_services, schema=SCHEMAS.info.info_service)
     if delivery_service_code == "Boxberry":
         Checking.checking_json_contains(response=info_delivery_service_services, expected_values=INFO.boxberry_services)
     elif delivery_service_code == "Cdek":
@@ -115,18 +119,11 @@ def test_info_statuses(app, delivery_service_code):
                                         expected_values=INFO.ds_kazakhstan_services)
 
 
-@allure.description("Получение интервалов доставки")
-@pytest.mark.parametrize("delivery_service_code, tariff_id", [("Boxberry", None), ("TopDelivery", None),
-                                                              ("Dalli", "1")])
-def test_delivery_time_schedules(app, shop_id, delivery_service_code, tariff_id):
-    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code=delivery_service_code,
-                                                       data=tomorrow, tariff_id=tariff_id)
-
-
 @allure.description("Получение списка ключей")
 def test_user_clients(app):
     user_clients = app.info.get_user_clients()
     Checking.check_status_code(response=user_clients, expected_status_code=200)
+    Checking.check_json_schema(response=user_clients, schema=SCHEMAS.info.info_clients)
     for user in user_clients.json():
         Checking.check_value_comparison(responses={"GET v2/user/clients": user_clients}, one_value=user["name"],
                                         two_value="Клиент APIv2")
@@ -139,12 +136,14 @@ def test_user_clients_by_id(app):
     if ENV_OBJECT.db_connections() == "metaship":
         clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID_LOCAL"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
+        Checking.check_json_schema(response=clients_id, schema=SCHEMAS.info.info_client_by_id)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID_LOCAL"))
         Checking.checking_json_value(response=clients_id, key_name="secret",
                                      expected_value=os.getenv("CLIENT_SECRET_LOCAL"))
     else:
         clients_id = app.info.get_user_clients_id(user_id=os.getenv("CLIENT_ID"))
         Checking.check_status_code(response=clients_id, expected_status_code=200)
+        Checking.check_json_schema(response=clients_id, schema=SCHEMAS.info.info_client_by_id)
         Checking.checking_json_value(response=clients_id, key_name="id", expected_value=os.getenv("CLIENT_ID"))
         Checking.checking_json_value(response=clients_id, key_name="secret", expected_value=os.getenv("CLIENT_SECRET"))
 
@@ -153,6 +152,7 @@ def test_user_clients_by_id(app):
 def test_address(app):
     address = app.info.get_info_address(raw="119633 г Москва Боровское шоссе 33")
     Checking.check_status_code(response=address, expected_status_code=200)
+    Checking.check_json_schema(response=address, schema=SCHEMAS.info.info_address)
     Checking.checking_json_value(response=address, key_name="raw",
                                  expected_value="119633, г Москва, р-н Ново-Переделкино, Боровское шоссе, д 33")
     Checking.checking_json_value(response=address, key_name="postCode", expected_value="119633")

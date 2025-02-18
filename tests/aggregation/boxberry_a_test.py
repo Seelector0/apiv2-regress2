@@ -1,6 +1,7 @@
 import pytest
 import allure
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
+from utils.dates import tomorrow
 
 
 @pytest.fixture(scope='module')
@@ -170,3 +171,9 @@ def test_patch_order_cancelled_from_parcel(app, connections, shared_data):
 def test_create_intake(app, shop_id, warehouse_id, connections):
     CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
                                            delivery_service="Boxberry")
+
+
+@allure.description("Получение интервалов доставки")
+def test_delivery_time_schedules(app, shop_id):
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Boxberry",
+                                                       data=tomorrow)

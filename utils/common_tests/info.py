@@ -1,5 +1,6 @@
 from random import choice
 from utils.checking import Checking
+from utils.response_schemas import SCHEMAS
 from utils.utils import check_shared_data
 
 
@@ -13,6 +14,7 @@ class CommonInfo:
         delivery_service_points = self.app.info.get_delivery_service_points(shop_id=shop_id,
                                                                             delivery_service_code=delivery_service_code)
         Checking.check_status_code(response=delivery_service_points, expected_status_code=200)
+        Checking.check_json_schema(response=delivery_service_points, schema=SCHEMAS.info.info_delivery_service_point)
         Checking.check_response_is_not_empty(response=delivery_service_points)
         Checking.checking_in_list_json_value(response=delivery_service_points, key_name="deliveryServiceCode",
                                              expected_value=delivery_service_code)
@@ -28,9 +30,5 @@ class CommonInfo:
                                                                             delivery_service_code=delivery_service_code,
                                                                             order_id=order_id)
         Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
-        Checking.checking_json_key(response=delivery_time_schedules, expected_value=["schedule", "intervals"])
-        Checking.check_keys_present_in_list_items(response=delivery_time_schedules, list_key="intervals",
-                                                  key_names=["date", "from", "to"])
-        if delivery_service_code == "Dalli":
-            Checking.check_keys_present_in_list_items(response=delivery_time_schedules, list_key="intervals",
-                                                      key_names=["zone"])
+        Checking.check_json_schema(response=delivery_time_schedules, schema=SCHEMAS.info.info_schedule)
+

@@ -2,6 +2,7 @@ import pytest
 import allure
 from conftest import shared_data
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
+from utils.dates import tomorrow
 
 
 @pytest.fixture(scope='module')
@@ -153,3 +154,9 @@ def test_get_documents(app, shared_data):
 @pytest.mark.not_parallel
 def test_forms_parcels_labels(app, shared_data):
     CommonParcels.test_forms_parcels_labels_common(app=app, shared_data=shared_data["top_delivery_a"]["parcel_ids"])
+
+
+@allure.description("Получение интервалов доставки")
+def test_delivery_time_schedules(app, shop_id):
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="TopDelivery",
+                                                       data=tomorrow)

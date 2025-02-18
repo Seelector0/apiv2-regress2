@@ -21,7 +21,7 @@ class ApiInfo:
         elif delivery_service_code == "TopDelivery":
             tomorrow = datetime.date.today() + datetime.timedelta(days=1)
             params = self.app.dicts.form_info_body(shop_id, delivery_service_code=delivery_service_code, data=tomorrow)
-            params["postalCode"] = "119633"
+            params["postalCode"] = "129110"
         elif delivery_service_code == "Cdek":
             params = self.app.dicts.form_delivery_service_code(delivery_service_code=delivery_service_code)
             params["orderId"] = order_id
