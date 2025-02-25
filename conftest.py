@@ -143,6 +143,7 @@ def shared_data():
         "warehouse_id": None,
         "warehouse_without_pickup": None,
         "warehouse_id_kz": None,
-        "webhook_id": None
+        "webhook_id": None,
+        "widget_id": None
     }
     return data

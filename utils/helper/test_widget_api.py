@@ -7,14 +7,14 @@ class TestsWidget:
 
     def __init__(self, app):
         self.app = app
-        # self.db_connections = DataBaseConnections()
-        # self.db_widget_api = DataBaseWidgetApi()
 
     @allure.description("Создание токена для виджета")
-    def post_token_for_widget(self, shop_id: str):
+    def post_token_for_widget(self, shop_id: str, shared_data):
         token = self.app.widget.post_widget_tokens(shop_id=shop_id)
         Checking.check_status_code(response=token, expected_status_code=201)
         Checking.checking_json_key(response=token, expected_value=INFO.created_entity_widget)
+        widget_id = token.json().get('id')
+        shared_data["widget_id"] = widget_id
 
     @allure.description("Получение списка токенов")
     def get_tokens(self):
@@ -22,10 +22,8 @@ class TestsWidget:
         Checking.check_status_code(response=list_tokens, expected_status_code=200)
         Checking.check_response_is_not_empty(response=list_tokens)
 
-    # В тестах не используется, но грузит подключение к БД db_connections, если будут добавлены тесты вернуть
-    # @allure.description("Получение токена по его Id")
-    # def get_token_by_id(self):
-    #     widget_id = choice(self.db_widget_api.get_widgets_id(shop_id=self.db_connections.get_list_shops()[0]))
-    #     token_id = self.app.widget.get_widget_tokens_id(widget_id=widget_id)
-    #     Checking.check_status_code(response=token_id, expected_status_code=200)
-    #     Checking.checking_json_key(response=token_id, expected_value=INFO.entity_widget)
+    @allure.description("Получение токена по его Id")
+    def get_token_by_id(self, shared_data):
+        token_id = self.app.widget.get_widget_tokens_id(widget_id=shared_data["widget_id"])
+        Checking.check_status_code(response=token_id, expected_status_code=200)
+        Checking.checking_json_key(response=token_id, expected_value=INFO.entity_widget)

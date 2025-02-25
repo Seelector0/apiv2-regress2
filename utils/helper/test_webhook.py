@@ -11,10 +11,10 @@ class TestsWebHook:
     @allure.description("Создание веб-хука")
     def post_webhook(self, shop_id: str, shared_data):
         webhooks = self.app.webhook.post_webhook(shop_id=shop_id)
-        webhook_id = webhooks.json().get('id')
-        shared_data["webhook_id"] = webhook_id
         Checking.check_status_code(response=webhooks, expected_status_code=200)
         Checking.check_json_schema(response=webhooks, schema=SCHEMAS.webhook.webhook_create_or_get_by_id)
+        webhook_id = webhooks.json().get('id')
+        shared_data["webhook_id"] = webhook_id
 
     @allure.description("Получение списка веб-хуков")
     def get_webhooks(self):

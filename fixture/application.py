@@ -18,6 +18,7 @@ from utils.common_tests import CommonInfo
 from utils.helper.test_shops import TestsShop
 from utils.helper.test_warehouses import TestsWarehouse
 from utils.helper.test_webhook import TestsWebHook
+from utils.helper.test_widget_api import TestsWidget
 from utils.http_methods import HttpMethod
 
 
@@ -45,3 +46,4 @@ class Application:
         self.tests_warehouse = TestsWarehouse(app=self)
         self.tests_webhook = TestsWebHook(app=self)
         self.tests_info = CommonInfo(app=self)
+        self.tests_widget = TestsWidget(app=self)

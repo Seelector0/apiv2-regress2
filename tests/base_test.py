@@ -24,6 +24,21 @@ def warehouse_id(app, connections, shared_data):
     return app.tests_warehouse.post_warehouse(shared_data=shared_data)
 
 
+@allure.description("Создание токена для виджета")
+def test_post_token_for_widget(app, shop_id, shared_data):
+    app.tests_widget.post_token_for_widget(shop_id=shop_id, shared_data=shared_data)
+
+
+@allure.description("Получение списка токенов")
+def test_get_tokens(app):
+    app.tests_widget.get_tokens()
+
+
+@allure.description("Получение токена по его Id")
+def test_get_token_by_id(app, shared_data):
+    app.tests_widget.get_token_by_id(shared_data=shared_data)
+
+
 @allure.description("Получение магазина по его id")
 def test_get_shop_by_id(app, shop_id):
     app.tests_shop.get_shop_by_id(shop_id=shop_id)
