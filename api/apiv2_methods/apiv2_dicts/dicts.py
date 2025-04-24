@@ -229,8 +229,9 @@ class Dicts:
     def form_order(shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_sum: float,  cod: float,
                    dimension: dict,  weight:  float, delivery_type: str, service: str, tariff: str,
                    delivery_point_code: str,  data: str, delivery_time: dict, pickup_time_period: str, date_pickup: str,
-                   second_name: str = None, comment: str = None, email: str = None, shop_barcode: str = None,
-                   country_code: str = None, type_order: str = None, intake_point_code: str = None):
+                   company_name: str = None, second_name: str = None, comment: str = None, email: str = None,
+                   shop_barcode: str = None, country_code: str = None, type_order: str = None,
+                   intake_point_code: str = None):
         r"""Форма для создания заказов.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
@@ -246,6 +247,7 @@ class Dicts:
         :param tariff: Тариф создания заказа.
         :param delivery_point_code: Идентификатор точки доставки.
         :param data: Дата доставки.
+        :param company_name: Наименование компании для возвратных заказов.
         :param delivery_time: Если указанна поле 'data', то delivery_time обязателен для курьерского заказа
         :param country_code: Код страны назначения.
         :param pickup_time_period: Дата привоза на склад.
@@ -291,6 +293,9 @@ class Dicts:
                 "secondName": second_name,
                 "email": email,
                 "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
+                "company": {
+                    "name": company_name
+                },
                 "address": {
                     "raw": address_raw,
                     "countryCode": country_code,
