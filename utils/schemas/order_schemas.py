@@ -71,7 +71,7 @@ class OrderSchema:
                     "description": "Номер заказа "
                 },
                 "addressTo": {
-                    "type": "object",
+                    "type": ["object", "null"],
                     "properties": {
                         "raw": {
                             "type": "string",
@@ -993,10 +993,14 @@ class OrderSchema:
                 "type": ["string", "null"],
                 "format": "date-time",
                 "description": "Срок хранения заказов"
+            },
+            "returnOrderTrackingNumber": {
+                "type": ["string", "null"],
+                "description": "Трек-номер возврата"
             }
         },
         "required": ["returnItems", "returnReason", "delayReason", "paymentType", "pickupDate", "declaredDeliveryDate",
-                     "storageDateEnd"],
+                     "storageDateEnd", "returnOrderTrackingNumber"],
         "additionalProperties": False
     }
 

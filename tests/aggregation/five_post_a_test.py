@@ -63,6 +63,13 @@ def test_create_order_from_file(app, shop_id, warehouse_id, file_extension, conn
                                                     file_extension=file_extension)
 
 
+@allure.description("Создание возвратного заказа по СД FivePost")
+def test_create_return_order(app, shop_id, warehouse_id, connections, shared_data):
+    CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
+                                          payment_type="Paid", delivery_type="DeliveryPoint", service="FivePost",
+                                          type_order="return", intake_point_code="006bf88a-5186-45d9-9911-89d37f1edc86")
+
+
 @allure.description("Получение списка заказов CД FivePost")
 def test_get_orders(app, shared_data):
     CommonOrders.test_get_orders_common(app=app, shared_delivery_service="five_post_a", shared_data=shared_data)
