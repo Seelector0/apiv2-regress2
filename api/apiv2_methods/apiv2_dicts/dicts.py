@@ -261,6 +261,11 @@ class Dicts:
         address_raw = "129110, г Москва, Мещанский р-н, пр-кт Мира, д 33 к 1"
         if country_code == "KZ":
             address_raw = "Астана, Сарыарка, улица Өрнек, строение 1/1 блок 1"
+        company_names = None
+        if company_name is not None:
+            company_names = {
+                "name": company_name
+            }
         return {
             "warehouse": {
                 "id": warehouse_id,
@@ -293,9 +298,7 @@ class Dicts:
                 "secondName": second_name,
                 "email": email,
                 "phoneNumber": f"+7909{randrange(1000000, 9999999)}",
-                "company": {
-                    "name": company_name
-                },
+                "company": company_names,
                 "address": {
                     "raw": address_raw,
                     "countryCode": country_code,
@@ -527,3 +530,16 @@ class Dicts:
         """
         random_number = f"{randrange(1000000, 9999999)}"
         return random_number
+
+    @staticmethod
+    def form_intake_time_schedules(shop_id, warehouse_id, delivery_service_code):
+        r"""Форма для получения офферов.
+        :param shop_id: Идентификатор магазина.
+        :param warehouse_id: Идентификатор склада.
+        :param delivery_service_code: Идентификатор СД.
+        """
+        return {
+            "deliveryServiceCode": delivery_service_code,
+            "shopId": shop_id,
+            "warehouseToId": warehouse_id,
+        }
