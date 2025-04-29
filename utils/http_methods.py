@@ -116,7 +116,7 @@ class HttpMethod:
 
     def _send(self, method: str, url: str, params: dict = None, json: dict = None, data: dict = None,
               admin: bool = None, timeout: int = 240, retry_interval: int = 5, headers: dict = None, retries=0,
-              max_retries: int = 1, **kwargs):
+              max_retries: int = 2, **kwargs):
         r"""Метод для определения запросов с повторной попыткой при ошибках и логированием в Allure.
         :param method: Метод запроса.
         :param url: URL запроса.
