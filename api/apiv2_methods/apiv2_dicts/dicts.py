@@ -1,7 +1,7 @@
+from utils.dates import tomorrow, today
 from utils.global_enums import INFO
 from utils.environment import ENV_OBJECT
 from random import randrange, randint, choice, random
-import datetime
 import allure
 import uuid
 import random
@@ -179,7 +179,7 @@ class Dicts:
         """
         return dict(deliveryServiceCode=delivery_service_code)
 
-    def form_info_body(self, shop_id, delivery_service_code: str, data: str = f"{datetime.date.today()}"):
+    def form_info_body(self, shop_id, delivery_service_code: str, data: str = f"{today}"):
         r"""Форма для Info methods.
           :param shop_id: Id магазина.
         :param delivery_service_code: Код СД.
@@ -353,20 +353,32 @@ class Dicts:
         """
         return dict(orderIds=orders_ids, shipmentDate=data)
 
-    def form_intakes(self, shop_id, warehouse_id, delivery_service: str):
+    def form_intakes(self, shop_id, warehouse_id, delivery_service: str, date: str = None,
+                     intake_external_id: str = None, parcel_id: str = None):
         r"""Форма для создания забора.
         :param shop_id: Id магазина.
         :param warehouse_id: Id склада.
         :param delivery_service: Код СД.
+        :param date: Дата забора.
+        :param intake_external_id: Внешний идентификатор интервала.
+        :param parcel_id: Номер партии.
         """
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        parcels_id = None
+        if parcel_id is not None:
+            parcels_id = [parcel_id]
+        if date is None:
+            date = str(tomorrow)
         return {
             "deliveryService": delivery_service,
-            "date": str(tomorrow),
+            "date": date,
             "shop": {
                 "id": shop_id,
                 "number": f"intake{randrange(1000000, 9999999)}"
             },
+            "contact": {
+                "name": "Иван Иванов",
+                "phone": "+79111234567"
+              },
             "comment": "Позвонить за 3 часа до забора!",
             "from": {
                 "warehouseId": warehouse_id
@@ -377,6 +389,8 @@ class Dicts:
             "dimension": self.dimension(),
             "weight": randint(1, 5),
             "countCargoPlace": 1,
+            "externalTimeIntervalId": intake_external_id,
+            "parcelIds": parcels_id,
             "time": {
                 "from": "12:00",
                 "to": "15:00"
@@ -508,7 +522,7 @@ class Dicts:
             "type": "Courier",
             "service": "Cdek",
             "tariff": tariff,
-            "date": str(datetime.date.today()),
+            "date": str(today),
             "time": {
                 "from": time_from,
                 "to": time_to

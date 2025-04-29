@@ -144,6 +144,8 @@ def shared_data():
         "warehouse_without_pickup": None,
         "warehouse_id_kz": None,
         "webhook_id": None,
-        "widget_id": None
+        "widget_id": None,
+        "intake_date": None,
+        "intake_external_id": None
     }
     return data

@@ -203,3 +203,17 @@ def test_forms_parcels_labels(app, shared_data):
 def test_remove_order_in_parcel(app, connections, shared_data):
     CommonParcels.test_remove_order_in_parcel_common(app=app, connections=connections, shared_data=shared_data,
                                                      shared_delivery_service="russian_post_a")
+
+
+@allure.description("Получение интервалов забора СД RussianPost")
+def test_intake_time_schedules(app, shared_data, shop_id, warehouse_id):
+    CommonOrders.test_intake_time_schedules_common(app=app, shop_id=shop_id, shared_data=shared_data,
+                                                   warehouse_id=warehouse_id, delivery_service_code="RussianPost")
+
+
+@allure.description("Создание забора СД RussianPost")
+def test_create_intake(app, shared_data, shop_id, warehouse_id, connections):
+    CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
+                                           delivery_service="RussianPost", date=shared_data["intake_date"],
+                                           intake_external_id=shared_data["intake_external_id"],
+                                           parcel_id=shared_data["russian_post_a"]["parcel_ids_courier"][0])

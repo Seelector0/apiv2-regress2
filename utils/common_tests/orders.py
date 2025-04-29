@@ -428,10 +428,12 @@ class CommonOrders:
                     shared_data[shared_delivery_service][list_name].remove(order_id)
 
     @staticmethod
-    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections):
+    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections, date=None,
+                                  intake_external_id=None, parcel_id=None):
         """Создание забора"""
         new_intake = app.intakes.post_intakes(shop_id=shop_id, warehouse_id=warehouse_id,
-                                              delivery_service=delivery_service)
+                                              delivery_service=delivery_service, date=date,
+                                              intake_external_id=intake_external_id, parcel_id=parcel_id)
         Checking.check_status_code(response=new_intake, expected_status_code=201)
         Checking.check_json_schema(response=new_intake, schema=SCHEMAS.intake.intake_create)
         status = connections.get_list_intakes_value(intake_id=new_intake.json()["id"], value="status")
@@ -441,3 +443,18 @@ class CommonOrders:
             expected_status = ["created"]
         Checking.check_value_comparison(responses={"POST v2/intakes": new_intake},
                                         one_value=status, two_value=expected_status)
+
+    @staticmethod
+    def test_intake_time_schedules_common(app, shared_data, shop_id, warehouse_id, delivery_service_code):
+        intake_time_schedules = app.intakes.intake_time_schedules(shop_id=shop_id, warehouse_id=warehouse_id,
+                                                                  delivery_service_code=delivery_service_code)
+        Checking.check_status_code(response=intake_time_schedules, expected_status_code=200)
+        Checking.check_json_schema(response=intake_time_schedules, schema=SCHEMAS.intake.intake_time_schedules)
+
+        data = intake_time_schedules.json()
+        intervals = data.get("intervals", [])
+        if not intervals:
+            raise AssertionError("Не найдено ни одного интервала для забора")
+        first_interval = intervals[0]
+        shared_data["intake_date"] = first_interval["date"]
+        shared_data["intake_external_id"] = first_interval["externalTimeIntervalId"]
