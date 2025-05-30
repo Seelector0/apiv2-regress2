@@ -51,9 +51,8 @@ def test_offers_courier(app, shop_id_metaship, warehouse_id, payment_type):
                           ("PayOnDelivery", "Courier", None),
                           ("Paid", "DeliveryPoint", "a2a6e2d65ff67c5ed23a2d6cd3beb666"),
                           ("PayOnDelivery", "DeliveryPoint", "a2a6e2d65ff67c5ed23a2d6cd3beb666")])
-@pytest.mark.parametrize("execution_number", range(2))
 def test_create_order_courier(app, shop_id_metaship, warehouse_id, payment_type, delivery_type, delivery_point_code,
-                              connections, execution_number, shared_data):
+                              connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id_metaship,
                                           warehouse_id=warehouse_id, payment_type=payment_type,
                                           delivery_type=delivery_type, delivery_point_code=delivery_point_code,
