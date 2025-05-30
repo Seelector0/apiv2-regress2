@@ -46,14 +46,18 @@ def test_offers_courier(app, shop_id_metaship, warehouse_id, payment_type):
 
 
 @allure.description("Создание Courier заказа по CД MetaShip")
-@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code",
+                         [("Paid", "Courier", None),
+                          ("PayOnDelivery", "Courier", None),
+                          ("Paid", "DeliveryPoint", "a2a6e2d65ff67c5ed23a2d6cd3beb666"),
+                          ("PayOnDelivery", "DeliveryPoint", "a2a6e2d65ff67c5ed23a2d6cd3beb666")])
 @pytest.mark.parametrize("execution_number", range(2))
-def test_create_order_courier(app, shop_id_metaship, warehouse_id, payment_type, connections, execution_number,
-                              shared_data):
+def test_create_order_courier(app, shop_id_metaship, warehouse_id, payment_type, delivery_type, delivery_point_code,
+                              connections, execution_number, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id_metaship,
                                           warehouse_id=warehouse_id, payment_type=payment_type,
-                                          delivery_type="Courier", service="MetaShip",
-                                          shared_data=shared_data["metaship_a"]["order_ids"])
+                                          delivery_type=delivery_type, delivery_point_code=delivery_point_code,
+                                          service="MetaShip", shared_data=shared_data["metaship_a"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД MetaShip")
