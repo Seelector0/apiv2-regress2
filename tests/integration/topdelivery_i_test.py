@@ -112,6 +112,12 @@ def test_order_details(app, shared_data):
     CommonOrders.test_order_details_common(app=app, shared_data=shared_data["top_delivery_i"]["order_ids"])
 
 
+@allure.description("Отмена заказа СД TopDelivery")
+def test_patch_order_cancelled(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, connections=connections,
+                                                   shared_data=shared_data["top_delivery_i"]["order_ids"])
+
+
 @allure.description("Создание партии СД TopDelivery")
 def test_create_parcel(app, shared_data):
     CommonParcels.create_parcel_common(app=app,  shared_delivery_service="top_delivery_i", shared_data=shared_data)
