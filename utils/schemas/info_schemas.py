@@ -238,6 +238,10 @@ class InfoSchema:
                     "type": ["string", "null"],
                     "description": "Внешний код доставки"
                 },
+                "externalDeliveryServiceNumber": {
+                    "type": ["string", "null"],
+                    "description": "Оригинальный код ПВЗ СД"
+                },
                 "deliveryServiceNumber": {
                     "type": "string",
                     "description": "Код ПВЗ"
@@ -442,7 +446,8 @@ class InfoSchema:
                     "description": "Срок хранения"
                 }
             },
-            "required": ["deliveryServiceCode", "externalDeliveryCode", "deliveryServiceNumber", "type", "workTime",
+            "required": ["deliveryServiceCode", "externalDeliveryCode", "externalDeliveryServiceNumber",
+                         "deliveryServiceNumber", "type", "workTime",
                          "isOnlyPrepaid", "isCashAllowed", "isAcquiringAvailable", "name", "comment", "phone",
                          "address", "issues", "extraType", "services", "restrictions", "photos",
                          "deliveryServiceFields", "shelfLifeDays"],
