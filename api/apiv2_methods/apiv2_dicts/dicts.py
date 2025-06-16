@@ -166,7 +166,7 @@ class Dicts:
             "yandexWarehouseId": "fbed3aa1-2cc6-4370-ab4d-59c5cc9bb924",
             "pickup": pickup,
             "contact": {
-                "fullName": "Виктор Викторович",
+                "fullName": "Викторов Виктор Викторович",
                 "phone": f"+7910{randrange(1000000, 9999999)}",
                 "email": "test@email.ru"
             }

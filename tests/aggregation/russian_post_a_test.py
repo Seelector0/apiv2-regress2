@@ -128,6 +128,12 @@ def test_delete_order(app, connections, shared_data):
                                           shared_delivery_service="russian_post_a", shared_data=shared_data)
 
 
+@allure.description("Отмена заказа СД RussianPost из партии")
+def test_patch_order_cancelled(app, connections, shared_data):
+    CommonOrders.test_patch_order_cancelled_common(app=app, connections=connections,
+                                                   shared_data=shared_data["russian_post_a"]["order_ids"])
+
+
 @allure.description("Получение списка заказов CД RussianPost")
 def test_get_orders(app, shared_data):
     CommonOrders.test_get_orders_common(app=app, shared_delivery_service="russian_post_a", shared_data=shared_data)
