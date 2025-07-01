@@ -32,9 +32,10 @@ class OfferSchema:
                         "properties": {
                             "code": {
                                 "type": "string",
-                                "enum": ["RussianPost", "TopDelivery", "Cdek", "Boxberry", "Dpd", "Cse", "FivePost",
-                                         "YandexGo", "YandexDelivery", "DostavkaClub", "Dalli", "LPost", "Halva",
-                                         "Pecom", "PonyExpress", "AlemTat", "KazPost", "MetaShip"],
+                                "enum": ["RussianPost", "RussianPostMarketPlace", "TopDelivery", "Cdek", "Boxberry",
+                                         "Dpd", "Cse", "FivePost", "YandexGo", "YandexDelivery", "DostavkaClub",
+                                         "Dalli", "LPost", "Halva", "Pecom", "PonyExpress", "AlemTat", "KazPost",
+                                         "MetaShip"],
                                 "description": "Код службы доставки"
                             },
                             "name": {

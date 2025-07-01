@@ -134,7 +134,7 @@ class ApiOrder:
         dimension = None
         declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
                                                               price_1, price_2, price_3)
-        if service != "RussianPost":
+        if service not in ["RussianPost", "RussianPostMarketPlace"]:
             dimension = self.app.dicts.dimension()
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
                                                  payment_type=payment_type, declared_value=declared_value_result,
@@ -145,7 +145,7 @@ class ApiOrder:
                                                  delivery_point_code=delivery_point_code, country_code=country_code,
                                                  pickup_time_period=pickup_time_period, date_pickup=date_pickup,
                                                  type_order=type_order, intake_point_code=intake_point_code)
-        if service != "RussianPost":
+        if service not in ["RussianPost", "RussianPostMarketPlace"]:
             single_order["places"] = self.app.dicts.places(places=[
                 self.app.dicts.items(name="Стол", price=price_1, count=1, weight=1, vat="10",
                                      items_declared_value=items_declared_value),

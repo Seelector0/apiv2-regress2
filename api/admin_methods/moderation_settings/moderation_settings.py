@@ -10,12 +10,20 @@ class SettingsModeration:
         self.admin = admin
 
     def russian_post(self, shop_id):
-        """Модерация СД RussianPost."""
+        """Модерация СД RussianPos."""
         russian_post = self.admin.dicts.form_connections_delivery_services(shop_id=shop_id,
                                                                            delivery_service_code="RussianPost")
         russian_post["credential"]["token"] = os.getenv("RP_TOKEN")
         russian_post["credential"]["secret"] = os.getenv("RP_SECRET")
         return russian_post
+
+    def russian_post_market_place(self, shop_id):
+        """Модерация СД RussianPostMarketPlace."""
+        russian_post_mp = (self.admin.dicts.form_connections_delivery_services
+                           (shop_id=shop_id, delivery_service_code="RussianPostMarketPlace"))
+        russian_post_mp["credential"]["token"] = os.getenv("RPMP_TOKEN")
+        russian_post_mp["credential"]["secret"] = os.getenv("RPMP_SECRET")
+        return russian_post_mp
 
     def topdelivery(self, shop_id):
         """Модерация СД TopDelivery."""

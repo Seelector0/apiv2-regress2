@@ -23,6 +23,20 @@ class SettingsDeliveryServices:
         russian_post["data"]["metashipInform"] = self.inform
         return russian_post
 
+    def russian_post_market_place(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки RussianPostMarketPlace к магазину.
+        :param aggregation: Тип подключения СД по агрегации."""
+        russian_post_mp = self.app.dicts.form_connection_type(delivery_service_code="RussianPostMarketPlace")
+        russian_post_mp["data"]["token"] = os.getenv("RPMP_TOKEN")
+        russian_post_mp["data"]["secret"] = os.getenv("RPMP_SECRET")
+        russian_post_mp["data"]["metashipInform"] = self.inform
+        if aggregation:
+            russian_post_mp = (self.app.dicts.form_connection_type
+                               (delivery_service_code="RussianPostMarketPlace", aggregation=True))
+        russian_post_mp["data"]["intakePostOfficeCode"] = "101000"
+        russian_post_mp["data"]["metashipInform"] = self.inform
+        return russian_post_mp
+
     def topdelivery(self, aggregation: bool = None):
         r"""Настройки подключения службы доставки TopDelivery к магазину.
         :param aggregation: Тип подключения СД по агрегации."""
