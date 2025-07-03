@@ -1,3 +1,5 @@
+import os
+
 from utils.dates import tomorrow, today
 from utils.global_enums import INFO
 from utils.environment import ENV_OBJECT
@@ -33,13 +35,19 @@ class Dicts:
 
     @staticmethod
     def form_token(authorization: str):
-        r"""Форма для получения токена.
-        :param authorization: Токен для авторизации.
-        """
-        x_trace_id = str(uuid.uuid4())
+        """Форма для получения токена."""
+        ci_job_id = os.getenv("CI_JOB_ID")
+        trace_suffix = str(uuid.uuid4())
+        if ci_job_id:
+            x_trace_id = f"ci-{ci_job_id}req-{trace_suffix}"
+        else:
+            x_trace_id = trace_suffix
+
         with allure.step(title=f"x-trace-id: {x_trace_id}"):
-            body_token = dict(Authorization=f"Bearer {authorization}")
-            body_token["x-trace-id"] = x_trace_id
+            body_token = {
+                "Authorization": f"Bearer {authorization}",
+                "x-trace-id": x_trace_id
+            }
             return body_token
 
     @staticmethod
