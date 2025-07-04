@@ -77,8 +77,7 @@ class OrderSchema:
                             "type": "string",
                             "description": "Адрес одной строкой"
                         }
-                    },
-                    "required": ["raw"]
+                    }
                 },
                 "data": {
                     "type": "object",
