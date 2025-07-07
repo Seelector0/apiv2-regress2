@@ -76,7 +76,7 @@ class InfoSchema:
                              "open-test", "partial-sale", "pay-by-card", "reverse", "shelf-life-days", "sms",
                              "strapping", "temperature-restrictions", "weekend-delivery", "weekend-pickup",
                              "on-demand", "safe-deal", "return-documents", "crate", "with-packaging",
-                             "label-print-barcode"],
+                             "label-print-barcode", "autosend"],
                     "description": "Название услуги"
                 },
                 "title": {
