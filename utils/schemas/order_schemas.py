@@ -74,7 +74,7 @@ class OrderSchema:
                     "type": ["object", "null"],
                     "properties": {
                         "raw": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "Адрес одной строкой"
                         }
                     }
