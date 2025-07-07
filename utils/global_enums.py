@@ -1012,6 +1012,14 @@ class OtherInfo:
             "options": {
                 "hasParameter": False
             }
+        },
+        {
+            "name": "autosend",
+            "title": "Создание заказа без формирования партии",
+            "description": "Создание заказа без формирования партии",
+            "options": {
+                "hasParameter": False
+            }
         }
     ]
 
