@@ -195,7 +195,7 @@ class DataBaseConnections:
         """
         value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
-        while str(*value) != "succeeded" and counter < 60:
+        while str(*value) != "succeeded" and counter < 90:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
@@ -203,12 +203,12 @@ class DataBaseConnections:
                 break
 
     def wait_cancelled_order(self, order_id: str):
-        r"""Метод ждёт загрузки заказа по его id.
+        r"""Метод ждёт загрузки state отмененного заказа по его id.
         :param order_id: ID заказа.
         """
         value = self.get_list_order_value(order_id=order_id, value="state")
         counter = 0
-        while str(*value) != "cancelled" and counter < 60:
+        while str(*value) != "cancelled" and counter < 90:
             time.sleep(1)
             value = self.get_list_order_value(order_id=order_id, value="state")
             counter += 1
