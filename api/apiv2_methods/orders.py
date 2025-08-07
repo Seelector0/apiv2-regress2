@@ -45,8 +45,9 @@ class ApiOrder:
                           company_name: str = None, comment: str = "Тестовый комментарий", country_code: str = None,
                           price_1: float = 1000, price_2: float = 1000, price_3: float = 1000,
                           items_declared_value: int = 1000, pickup_time_period: str = None, date_pickup: str = None,
-                          type_order: str = None, intake_point_code: str = None):
+                          type_order: str = None, intake_point_code: str = None, link=None):
         r"""Метод создания одноместного заказа.
+        :param link: Ручка метода.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
         :param warehouse_id: Id склада.
@@ -74,6 +75,7 @@ class ApiOrder:
         :param type_order: Тип заказа.
         :param intake_point_code: Идентификатор точки сдачи возврата.
         """
+        link = link or self.link
         declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
                                                               price_1, price_2, price_3)
         single_order = self.app.dicts.form_order(shop_id=shop_id, warehouse_id=warehouse_id, shop_barcode=shop_barcode,
@@ -94,10 +96,10 @@ class ApiOrder:
             self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
                                  items_declared_value=items_declared_value)
         ])
-        result = self.app.http_method.post(link=self.link, json=single_order)
+        result = self.app.http_method.post(link=link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
-    def post_single_order_minimal(self, shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
+    def post_single_order_minimal(self,  shop_id, warehouse_id, payment_type: str, delivery_type: str, service: str,
                                   shop_barcode: str = None, declared_value: float = None, delivery_sum: float = 100.24,
                                   cod: float = None, weight: float = 3, tariff: str = None,
                                   delivery_point_code: str = None,
@@ -105,8 +107,9 @@ class ApiOrder:
                                   price_1: float = 1000,
                                   price_2: float = 1000, price_3: float = 1000, items_declared_value: int = 1000,
                                   pickup_time_period: str = None, date_pickup: str = None, type_order: str = None,
-                                  intake_point_code: str = None):
+                                  intake_point_code: str = None, link=None):
         r"""Метод создания одноместного заказа с минимальным набором атрибутов.
+        :param link: Ручка метода.
         :param shop_id: Id магазина.
         :param shop_barcode: Штрих код заказа.
         :param warehouse_id: Id склада.
@@ -131,6 +134,7 @@ class ApiOrder:
         :param type_order: Тип заказа.
         :param intake_point_code: Идентификатор точки сдачи возврата.
         """
+        link = link or self.link
         dimension = None
         declared_value_result = self.calculate_declared_value(service, declared_value, delivery_sum,
                                                               price_1, price_2, price_3)
@@ -154,7 +158,7 @@ class ApiOrder:
                 self.app.dicts.items(name="Пуфик", price=price_3, count=1, weight=1, vat="10",
                                      items_declared_value=items_declared_value)
             ])
-        result = self.app.http_method.post(link=self.link, json=single_order)
+        result = self.app.http_method.post(link=link, json=single_order)
         return self.app.http_method.return_result(response=result)
 
     def post_multi_order(self, shop_id, warehouse_id, payment_type: str, delivery_type: str,

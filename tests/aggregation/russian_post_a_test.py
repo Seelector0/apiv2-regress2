@@ -83,6 +83,25 @@ def test_create_order_post_office(app, shop_id, warehouse_id, payment_type, conn
                                           shared_data_order_type=shared_data["russian_post_a"]["orders_post_office"])
 
 
+@allure.description("Создание синхронного Courier заказа по СД RussianPost с минимальным набором атрибутов")
+def test_create_order_minimal_courier_sync(app, shop_id, warehouse_id, connections, shared_data):
+    CommonOrders.test_single_order_minimal_common(app=app, connections=connections, link="orders/sync", shop_id=shop_id,
+                                                  warehouse_id=warehouse_id, payment_type="Paid",
+                                                  delivery_type="Courier", service="RussianPost",
+                                                  tariff=choice(INFO.rp_courier_tariffs))
+
+
+@allure.description("Создание синхронного PostOffice заказа по СД RussianPost")
+@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
+def test_create_order_post_office_sync(app, shop_id, warehouse_id, payment_type, connections, shared_data):
+    CommonOrders.test_single_order_common(app=app, connections=connections, link="orders/sync", shop_id=shop_id,
+                                          warehouse_id=warehouse_id, payment_type=payment_type,
+                                          delivery_type="PostOffice", service="RussianPost",
+                                          tariff=choice(INFO.rp_po_tariffs),
+                                          shared_data=shared_data["russian_post_a"]["order_ids"],
+                                          shared_data_order_type=shared_data["russian_post_a"]["orders_post_office"])
+
+
 @allure.description("Создание возвратного заказа по СД RussianPost")
 def test_create_return_order(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,

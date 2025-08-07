@@ -14,9 +14,13 @@ class CommonOrders:
         :param shared_data: Общие тестовые данные, такие как идентификаторы заказов и магазинов.
         :param shared_data_order_type: Дополнительные данные о типе заказа (по умолчанию None).
         """
+        link = kwargs.get("link")
         new_order = app.order.post_single_order(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
-        Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_create)
+        if link:
+            Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_get_by_id_or_editing)
+        else:
+            Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_create)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
         Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
@@ -40,9 +44,13 @@ class CommonOrders:
         :param shared_data: Общие тестовые данные, такие как идентификаторы заказов и магазинов.
         :param shared_data_order_type: Дополнительные данные о типе заказа (по умолчанию None).
         """
+        link = kwargs.get("link")
         new_order = app.order.post_single_order_minimal(**kwargs)
         Checking.check_status_code(response=new_order, expected_status_code=201)
-        Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_create)
+        if link:
+            Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_get_by_id_or_editing)
+        else:
+            Checking.check_json_schema(response=new_order, schema=SCHEMAS.order.order_create)
         order_id = new_order.json()["id"]
         connections.wait_create_order(order_id=order_id)
         Checking.check_value_comparison(responses={"POST v2/order/{id}": new_order},
@@ -338,7 +346,7 @@ class CommonOrders:
         check_shared_data(shared_data[shared_delivery_service], key="order_ids")
         list_orders = app.order.get_orders()
         Checking.check_status_code(response=list_orders, expected_status_code=200)
-        Checking.check_json_schema(response=list_orders, schema=SCHEMAS.order.order_get)
+        Checking.check_json_schema(response=list_orders, schema=SCHEMAS.order.orders_get)
         Checking.check_response_is_not_empty(response=list_orders)
 
     @staticmethod

@@ -57,7 +57,7 @@ class OrderSchema:
         }
     }
 
-    order_get = {
+    orders_get = {
         "type": "array",
         "items": {
             "type": "object",
@@ -490,7 +490,7 @@ class OrderSchema:
                 "description": "Номер заказа "
             },
             "addressTo": {
-                "type": "object",
+                "type": ["object", "null"],
                 "properties": {
                     "raw": {
                         "type": "string",
