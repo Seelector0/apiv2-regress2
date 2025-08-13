@@ -436,7 +436,7 @@ class CommonOrders:
                     shared_data[shared_delivery_service][list_name].remove(order_id)
 
     @staticmethod
-    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections, date=None,
+    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections, shared_data, date=None,
                                   intake_external_id=None, parcel_id=None):
         """Создание забора"""
         new_intake = app.intakes.post_intakes(shop_id=shop_id, warehouse_id=warehouse_id,
@@ -444,12 +444,24 @@ class CommonOrders:
                                               intake_external_id=intake_external_id, parcel_id=parcel_id)
         Checking.check_status_code(response=new_intake, expected_status_code=201)
         Checking.check_json_schema(response=new_intake, schema=SCHEMAS.intake.intake_create)
-        status = connections.get_list_intakes_value(intake_id=new_intake.json()["id"], value="status")
+        intake_id = new_intake.json()["id"]
+        status = connections.get_list_intakes_value(intake_id=intake_id, value="status")
         if delivery_service == "Cdek":
             expected_status = ["pending"]
         else:
             expected_status = ["created"]
         Checking.check_value_comparison(responses={"POST v2/intakes": new_intake},
+                                        one_value=status, two_value=expected_status)
+        shared_data["intake_id"] = intake_id
+
+    @staticmethod
+    def test_patch_intake_common(app, connections, expected_status, **kwargs):
+        """Редактирование забора"""
+        patch_intake = app.intakes.patch_intakes(**kwargs)
+        Checking.check_status_code(response=patch_intake, expected_status_code=200)
+        Checking.check_json_schema(response=patch_intake, schema=SCHEMAS.intake.intake_get_by_id_or_patch)
+        status = connections.get_list_intakes_value(intake_id=patch_intake.json()["id"], value="status")
+        Checking.check_value_comparison(responses={"POST v2/intakes": patch_intake},
                                         one_value=status, two_value=expected_status)
 
     @staticmethod

@@ -1,6 +1,8 @@
 import pytest
 import allure
 from random import choice
+
+from utils.environment import ENV_OBJECT
 from utils.global_enums import INFO
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
@@ -237,6 +239,13 @@ def test_remove_order_in_parcel(app, connections, shared_data):
 
 
 @allure.description("Создание забора СД Cdek")
-def test_create_intake(app, shop_id, warehouse_id, connections):
+def test_create_intake(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
-                                           delivery_service="Cdek")
+                                           delivery_service="Cdek",  shared_data=shared_data)
+
+
+@allure.description("Отмена забора СД Cdek")
+@pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
+def test_delete_intake(app, connections, shared_data):
+    CommonOrders.test_patch_intake_common(app=app, connections=connections, intake_id=shared_data["intake_id"],
+                                          op="replace", path="status", value="cancelled", expected_status=["cancelled"])

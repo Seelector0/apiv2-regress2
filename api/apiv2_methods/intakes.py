@@ -25,11 +25,11 @@ class ApiIntakes:
         result = self.app.http_method.get(link=self.link)
         return self.app.http_method.return_result(response=result)
 
-    def get_intakes_id(self, intakes_id: str):
+    def get_intakes_id(self, intake_id: str):
         r"""Получения информации о заборе по его id.
-        :param intakes_id: Идентификатор забора.
+        :param intake_id: Идентификатор забора.
         """
-        result = self.app.http_method.get(link=f"{self.link}/{intakes_id}")
+        result = self.app.http_method.get(link=f"{self.link}/{intake_id}")
         return self.app.http_method.return_result(response=result)
 
     def intake_time_schedules(self, shop_id, warehouse_id, delivery_service_code: str):
@@ -41,4 +41,15 @@ class ApiIntakes:
         params = self.app.dicts.form_intake_time_schedules(delivery_service_code=delivery_service_code, shop_id=shop_id,
                                                            warehouse_id=warehouse_id)
         result = self.app.http_method.get(link=f"info/intake_time_schedules", params=params)
+        return self.app.http_method.return_result(response=result)
+
+    def patch_intakes(self, intake_id: str, op, path, value):
+        r"""Метод редактирования забора.
+        :param intake_id: Идентификатор забора.
+        :param op: Тип операции.
+        :param path: Изменяемое поле.
+        :param value: Значение.
+        """
+        intake = self.app.dicts.form_patch_body(op=op, path=path, value=value)
+        result = self.app.http_method.patch(link=f"{self.link}/{intake_id}", json=intake)
         return self.app.http_method.return_result(response=result)

@@ -234,9 +234,9 @@ class Dicts:
         }
 
     @staticmethod
-    def form_order(shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_sum: float,  cod: float,
-                   dimension: dict,  weight:  float, delivery_type: str, service: str, tariff: str,
-                   delivery_point_code: str,  data: str, delivery_time: dict, pickup_time_period: str, date_pickup: str,
+    def form_order(shop_id, warehouse_id, payment_type: str, declared_value: float, delivery_sum: float, cod: float,
+                   dimension: dict, weight: float, delivery_type: str, service: str, tariff: str,
+                   delivery_point_code: str, data: str, delivery_time: dict, pickup_time_period: str, date_pickup: str,
                    company_name: str = None, second_name: str = None, comment: str = None, email: str = None,
                    shop_barcode: str = None, country_code: str = None, type_order: str = None,
                    intake_point_code: str = None):
@@ -386,7 +386,7 @@ class Dicts:
             "contact": {
                 "name": "Иван Иванов",
                 "phone": "+79111234567"
-              },
+            },
             "comment": "Позвонить за 3 часа до забора!",
             "from": {
                 "warehouseId": warehouse_id
