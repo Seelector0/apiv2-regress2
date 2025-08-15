@@ -241,4 +241,11 @@ def test_create_intake(app, shared_data, shop_id, warehouse_id, connections):
     CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
                                            delivery_service="RussianPost", date=shared_data["intake_date"],
                                            intake_external_id=shared_data["intake_external_id"],
-                                           parcel_id=shared_data["russian_post_a"]["parcel_ids_courier"][0])
+                                           parcel_id=shared_data["russian_post_a"]["parcel_ids_courier"][0],
+                                           shared_data=shared_data)
+
+
+@allure.description("Отмена забора СД RussianPost")
+def test_delete_intake(app, connections, shared_data):
+    CommonOrders.test_patch_intake_common(app=app, connections=connections, intake_id=shared_data["intake_id"],
+                                          op="replace", path="status", value="cancelled", expected_status=["cancelled"])
