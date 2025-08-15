@@ -103,6 +103,14 @@ def test_delivery_time_schedules(app, shop_id, shared_data):
                                                        shared_data=shared_data["cdek_a"]["order_ids"])
 
 
+@allure.description("Создание возвратного заказа по СД Cdek")
+def test_create_return_order(app, shop_id, warehouse_id, connections, shared_data):
+    CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
+                                          payment_type="Paid", delivery_type="DeliveryPoint", service="Cdek",
+                                          tariff="136", type_order="return", delivery_point_code="MSK207",
+                                          intake_point_code="MSK207")
+
+
 @allure.description("Получение списка заказов CД Cdek")
 def test_get_orders(app, shared_data):
     CommonOrders.test_get_orders_common(app=app, shared_delivery_service="cdek_a", shared_data=shared_data)
