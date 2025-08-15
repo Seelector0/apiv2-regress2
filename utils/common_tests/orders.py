@@ -436,8 +436,8 @@ class CommonOrders:
                     shared_data[shared_delivery_service][list_name].remove(order_id)
 
     @staticmethod
-    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections, shared_data, date=None,
-                                  intake_external_id=None, parcel_id=None):
+    def test_create_intake_common(app, shop_id, warehouse_id, delivery_service, connections, shared_data=None,
+                                  date=None, intake_external_id=None, parcel_id=None):
         """Создание забора"""
         new_intake = app.intakes.post_intakes(shop_id=shop_id, warehouse_id=warehouse_id,
                                               delivery_service=delivery_service, date=date,
@@ -452,7 +452,8 @@ class CommonOrders:
             expected_status = ["created"]
         Checking.check_value_comparison(responses={"POST v2/intakes": new_intake},
                                         one_value=status, two_value=expected_status)
-        shared_data["intake_id"] = intake_id
+        if shared_data is not None:
+            shared_data["intake_id"] = intake_id
 
     @staticmethod
     def test_patch_intake_common(app, connections, expected_status, **kwargs):
