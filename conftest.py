@@ -102,7 +102,7 @@ def shared_data():
         return {"order_ids": [], "order_ids_single": [], "orders_courier": [], "orders_post_office": [],
                 "orders_delivery_point": [], "orders_terminal": [], "parcel_ids": [], "parcel_ids_courier": [],
                 "order_ids_in_parcel": [], "parcel_ids_post_office": [], "parcel_ids_delivery_point": [],
-                "parcel_ids_terminal": []}
+                "parcel_ids_terminal": [], "intake_id": None}
 
     data = {
         "alemtat_a": delivery_template(),
@@ -145,7 +145,6 @@ def shared_data():
         "warehouse_id_kz": None,
         "webhook_id": None,
         "widget_id": None,
-        "intake_id": None,
         "intake_date": None,
         "intake_external_id": None
     }
