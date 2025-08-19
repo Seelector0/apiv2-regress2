@@ -70,8 +70,14 @@ class AdminDicts:
             "data": [
                 {
                     "deliveryService": "Boxberry",
-                    "tariff": "_default",
                     "shopId": shop_id
+                }
+            ],
+            "deliveryPointMapping": [
+                {
+                    "deliveryService": "Boxberry",
+                    "tariff": "_default",
+                    "gridCode": None
                 }
             ]
         }
