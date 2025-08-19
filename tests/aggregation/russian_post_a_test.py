@@ -19,8 +19,10 @@ def warehouse_id(app, connections, shared_data):
 @allure.description("Подключение настроек службы доставки СД RussianPost")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
+                                                          delivery_service="RussianPost",
                                                           connection_settings=app.settings.russian_post(
                                                               aggregation=True),
+                                                          update_settings=admin.dicts.form_settings_ds_russian_post(),
                                                           moderation_settings=admin.moderation.russian_post)
 
 

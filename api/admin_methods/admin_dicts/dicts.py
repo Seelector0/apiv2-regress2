@@ -81,3 +81,10 @@ class AdminDicts:
                 }
             ]
         }
+
+    @staticmethod
+    def form_settings_ds_russian_post():
+        return {
+            "intakePostOfficeCode": "101000",
+            "offlineTarifficatorClientV2": False
+        }
