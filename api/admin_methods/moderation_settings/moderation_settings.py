@@ -136,3 +136,12 @@ class SettingsModeration:
         pecom["credential"]["apiKey"] = os.getenv("PECOM_API_KEY")
         pecom["credential"]["senderWarehouseId"] = os.getenv("PECOM_SENDER_WAREHOUSE_ID")
         return pecom
+
+    def magnit_post(self, shop_id):
+        """Модерация СД MagnitPost."""
+        magnit_post = self.admin.dicts.form_connections_delivery_services(shop_id=shop_id,
+                                                                          delivery_service_code="MagnitPost")
+        magnit_post["credential"]["clientId"] = os.getenv("MAGNIT_CLIENT_ID")
+        magnit_post["credential"]["clientSecret"] = os.getenv("MAGNIT_CLIENT_SECRET")
+        return magnit_post
+

@@ -54,6 +54,14 @@ class AdminDicts:
         }
 
     @staticmethod
+    def form_settings_ds_magnit_post():
+        """Фома обновления подключения для СД AlemTat."""
+        return {
+            "clientId": os.getenv("MAGNIT_CLIENT_ID"),
+            "clientSecret": os.getenv("MAGNIT_CLIENT_SECRET"),
+        }
+
+    @staticmethod
     def form_settings_ds_pecom():
         """Фома обновления подключения для СД AlemTat."""
         return {

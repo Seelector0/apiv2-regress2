@@ -137,6 +137,7 @@ def shared_data():
         "yandex_delivery_i": delivery_template(),
         "yandex_go_a": delivery_template(),
         "yandex_go_i": delivery_template(),
+        "magnitpost_a": delivery_template(),
 
         "shop_id": None,
         "shop_id_metaship": None,

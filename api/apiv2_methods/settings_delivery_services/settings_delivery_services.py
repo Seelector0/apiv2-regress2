@@ -252,6 +252,12 @@ class SettingsDeliveryServices:
             pecom["data"]["metashipInform"] = self.inform
         return pecom
 
+    def magnit_post(self):
+        """Настройки подключения службы доставки MagnitPost к магазину."""
+        magnit_post = self.app.dicts.form_connection_type(delivery_service_code="MagnitPost", aggregation=True)
+        magnit_post["data"]["metashipInform"] = self.inform
+        return magnit_post
+
     def get_connection_settings_and_data(self, code):
         """Настраивает данные и параметры подключения в зависимости от кода службы доставки."""
         connection_settings = None
