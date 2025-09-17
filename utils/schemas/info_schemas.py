@@ -114,7 +114,7 @@ class InfoSchema:
             },
             "intervals": {
                 "type": "array",
-                "minItems": 2,
+                "minItems": 1,
                 "items": {
                     "type": "object",
                     "properties": {

@@ -20,7 +20,8 @@ class CommonInfo:
                                              expected_value=delivery_service_code)
 
     def test_delivery_time_schedules_common(self, shop_id, delivery_service_code, data=None, tariff_id=None,
-                                            order_id=None, shared_data=None):
+                                            order_id=None, shared_data=None, intake_date=None, warehouse_id=None,
+                                            fias_id=None):
         """Получения сроков доставки"""
         if shared_data:
             check_shared_data(shared_data)
@@ -28,7 +29,9 @@ class CommonInfo:
         delivery_time_schedules = self.app.info.get_delivery_time_schedules(shop_id=shop_id, data=data,
                                                                             tariff_id=tariff_id,
                                                                             delivery_service_code=delivery_service_code,
-                                                                            order_id=order_id)
+                                                                            order_id=order_id, intake_date=intake_date,
+                                                                            warehouse_id=warehouse_id, fias_id=fias_id)
         Checking.check_status_code(response=delivery_time_schedules, expected_status_code=200)
         Checking.check_json_schema(response=delivery_time_schedules, schema=SCHEMAS.info.info_schedule)
+
 

@@ -1,6 +1,6 @@
 import pytest
 import allure
-from utils.dates import today
+from utils.dates import today, tomorrow
 from utils.common_tests import CommonConnections, CommonOffers, CommonOrders, CommonParcels
 
 
@@ -166,3 +166,11 @@ def test_create_intake(app, shop_id, warehouse_without_pickup, connections):
     CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_without_pickup,
                                            connections=connections,
                                            delivery_service="Cse")
+
+
+@allure.description("Получение интервалов доставки")
+def test_delivery_time_schedules(app, shop_id, warehouse_without_pickup):
+    app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Cse",
+                                                       intake_date=tomorrow, tariff_id="64",
+                                                       warehouse_id=warehouse_without_pickup,
+                                                       fias_id="9e6600ab-1ca2-4ca6-a8b0-9f9cf8e7b69c")
