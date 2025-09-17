@@ -30,12 +30,15 @@ def test_delivery_service_points(app, shop_id):
 
 
 @allure.description("Получение оферов по СД YandexDelivery")
-@pytest.mark.parametrize("offer_type, payment_type", [("Courier", "Paid"), ("Courier", "PayOnDelivery"),
-                                                      ("DeliveryPoint", "Paid"), ("DeliveryPoint", "PayOnDelivery")])
-def test_offers(app, shop_id, warehouse_id, offer_type, payment_type):
+@pytest.mark.parametrize("offer_type, payment_type, intake_point_number",
+                         [("Courier", "Paid", "6fd48c50-b666-4756-aece-6c11cc34f58b"),
+                          ("Courier", "PayOnDelivery", None),
+                          ("DeliveryPoint", "Paid", None),
+                          ("DeliveryPoint", "PayOnDelivery", "6fd48c50-b666-4756-aece-6c11cc34f58b")])
+def test_offers(app, shop_id, warehouse_id, offer_type, payment_type, intake_point_number):
     CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,
                                     types=offer_type, delivery_service_code="YandexDelivery",
-                                    expected_value=[f"{offer_type}"])
+                                    intake_point_number=intake_point_number, expected_value=[f"{offer_type}"])
 
 
 @allure.description("Создание многоместного заказа по CД YandexDelivery")
@@ -54,21 +57,23 @@ def test_create_multi_order(app, shop_id, warehouse_id, payment_type, delivery_t
                                          delivery_sum=0, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
-@allure.description("Создание Courier заказа по CД YandexDelivery")
-@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code",
-                         [("Paid", "Courier", None),
-                          ("PayOnDelivery", "Courier", None),
-                          ("Paid", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16"),
-                          ("PayOnDelivery", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16")])
+@allure.description("Создание заказа по CД YandexDelivery")
+@pytest.mark.parametrize("payment_type, delivery_type, delivery_point_code, intake_point_code",
+                         [("Paid", "Courier", None, "6fd48c50-b666-4756-aece-6c11cc34f58b"),
+                          ("PayOnDelivery", "Courier", None, None),
+                          ("Paid", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16", None),
+                          ("PayOnDelivery", "DeliveryPoint", "6d93897c-9e8b-4284-8eef-32cd23a94b16",
+                           "6fd48c50-b666-4756-aece-6c11cc34f58b")])
 def test_create_single_order(app, shop_id, warehouse_id, payment_type, delivery_type, delivery_point_code,
-                             connections, shared_data):
+                             intake_point_code, connections, shared_data):
     if payment_type == "PayOnDelivery" and delivery_type == "Courier" and ENV_OBJECT.db_connections() == "metaship":
         pytest.xfail("Тест только для dev стенда")
     CommonOrders.test_single_order_common(app=app, connections=connections, shop_id=shop_id, warehouse_id=warehouse_id,
                                           shop_barcode=f"{randrange(100000000, 999999999)}",
                                           payment_type=payment_type, delivery_type=delivery_type,
                                           service="YandexDelivery", delivery_point_code=delivery_point_code,
-                                          delivery_sum=0, shared_data=shared_data["yandex_delivery_a"]["order_ids"])
+                                          intake_point_code=intake_point_code, delivery_sum=0,
+                                          shared_data=shared_data["yandex_delivery_a"]["order_ids"])
 
 
 @allure.description("Получение списка заказов CД YandexDelivery")
