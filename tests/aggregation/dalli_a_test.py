@@ -137,3 +137,9 @@ def test_forms_parcels_labels(app, shared_data):
 def test_delivery_time_schedules(app, shop_id):
     app.tests_info.test_delivery_time_schedules_common(shop_id=shop_id, delivery_service_code="Dalli",
                                                        data=tomorrow, tariff_id="1")
+
+
+@allure.description("Создание забора СД Dalli")
+def test_create_intake(app, shop_id, warehouse_id, connections):
+    CommonOrders.test_create_intake_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, connections=connections,
+                                           delivery_service="Dalli")

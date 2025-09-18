@@ -172,6 +172,7 @@ class Dicts:
             },
             "lPostWarehouseId": "20537",
             "yandexWarehouseId": "fbed3aa1-2cc6-4370-ab4d-59c5cc9bb924",
+            "intakeDalliCode": "1234",
             "pickup": pickup,
             "contact": {
                 "fullName": "Викторов Виктор Викторович",
