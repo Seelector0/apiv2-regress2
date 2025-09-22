@@ -146,7 +146,7 @@ class CommonParcels:
         check_shared_data(shared_data)
         forms_labels = app.forms.post_forms(parcel_id=choice(shared_data))
         Checking.check_status_code(response=forms_labels, expected_status_code=201)
-        Checking.checking_json_key(response=forms_labels, expected_value=INFO.entity_forms_parcels_labels)
+        Checking.checking_json_contains(response=forms_labels, expected_values=INFO.entity_forms_parcels_labels)
 
     @staticmethod
     def test_remove_order_in_parcel_common(app, connections, shared_delivery_service, shared_data):

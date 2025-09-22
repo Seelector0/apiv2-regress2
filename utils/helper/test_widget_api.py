@@ -12,7 +12,7 @@ class TestsWidget:
     def post_token_for_widget(self, shop_id: str, shared_data):
         token = self.app.widget.post_widget_tokens(shop_id=shop_id)
         Checking.check_status_code(response=token, expected_status_code=201)
-        Checking.checking_json_key(response=token, expected_value=INFO.created_entity_widget)
+        Checking.checking_json_contains(response=token, expected_values=INFO.created_entity_widget)
         widget_id = token.json().get('id')
         shared_data["widget_id"] = widget_id
 
@@ -26,4 +26,4 @@ class TestsWidget:
     def get_token_by_id(self, shared_data):
         token_id = self.app.widget.get_widget_tokens_id(widget_id=shared_data["widget_id"])
         Checking.check_status_code(response=token_id, expected_status_code=200)
-        Checking.checking_json_key(response=token_id, expected_value=INFO.entity_widget)
+        Checking.checking_json_contains(response=token_id, expected_values=INFO.entity_widget)

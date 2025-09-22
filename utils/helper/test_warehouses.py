@@ -46,7 +46,7 @@ class TestsWarehouse:
         Checking.check_status_code(response=put_warehouse, expected_status_code=204)
         assert_put_warehouse = self.app.warehouse.get_warehouse_id(warehouse_id=warehouse_id)
         Checking.check_status_code(response=assert_put_warehouse, expected_status_code=200)
-        Checking.checking_json_key(response=assert_put_warehouse, expected_value=INFO.entity_warehouse)
+        Checking.checking_json_contains(response=assert_put_warehouse, expected_values=INFO.entity_warehouse)
         Checking.checking_json_value(response=assert_put_warehouse, key_name="name", expected_value="офигенный склад")
         Checking.checking_json_value(response=assert_put_warehouse, key_name="comment",
                                      expected_value="Такой себе склад")

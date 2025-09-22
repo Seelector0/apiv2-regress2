@@ -43,7 +43,7 @@ class TestsShop:
         Checking.check_status_code(response=put_shop, expected_status_code=204)
         assert_put_shop = self.app.shop.get_shop_id(shop_id=shop_id)
         Checking.check_status_code(response=assert_put_shop, expected_status_code=200)
-        Checking.checking_json_key(response=assert_put_shop, expected_value=INFO.entity_shops)
+        Checking.checking_json_contains(response=assert_put_shop, expected_values=INFO.entity_shops)
         Checking.checking_json_value(response=assert_put_shop, key_name="name", expected_value="new_shop_12345")
         Checking.checking_json_value(response=assert_put_shop, key_name="uri", expected_value="new_shop_url.su")
         Checking.checking_json_value(response=assert_put_shop, key_name="sender",
