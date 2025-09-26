@@ -96,3 +96,9 @@ class AdminDicts:
             "intakePostOfficeCode": "101000",
             "offlineTarifficatorClientV2": False
         }
+
+    @staticmethod
+    def form_settings_ds_five_post():
+        return {
+            "offlineTarifficatorClientV2": False
+        }
