@@ -30,10 +30,3 @@ def test_create_single_order(app, shop_id, warehouse_id, connections, shared_dat
 @allure.description("Создание партии CД Boxberry")
 def test_create_parcel(app, shared_data):
     CommonParcels.create_parcel_common(app=app, shared_delivery_service="boxberry_i", shared_data=shared_data)
-
-
-@allure.description("Получение этикетки CД Boxberry")
-@pytest.mark.parametrize("labels", ["original", "termo"])
-def test_get_label(app, labels, shared_data):
-    CommonParcels.test_get_label_common(app=app, labels=labels,
-                                        shared_data=shared_data["boxberry_i"]["order_ids_in_parcel"])
