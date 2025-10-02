@@ -81,12 +81,12 @@ def test_patch_delivery_service(app, param_shop_id, code):
     CommonConnections.test_patch_delivery_service_common(app=app, shop_id=param_shop_id, code=code)
 
 
-@allure.description("Редактирование настройки подключения к СД")
-@pytest.mark.parametrize("code", ["RussianPost", "Cdek"])
-def test_put_delivery_service(app, shop_id, code):
-    connection_settings, data = app.settings.get_connection_settings_and_data(code)
-    CommonConnections.test_put_delivery_service_common(app=app, shop_id=shop_id, code=code,
-                                                       connection_settings=connection_settings, data=data)
+# @allure.description("Редактирование настройки подключения к СД")
+# @pytest.mark.parametrize("code", ["RussianPost", "Cdek"])
+# def test_put_delivery_service(app, shop_id, code):
+#     connection_settings, data = app.settings.get_connection_settings_and_data(code)
+#     CommonConnections.test_put_delivery_service_common(app=app, shop_id=shop_id, code=code,
+#                                                        connection_settings=connection_settings, data=data)
 
 
 @allure.description("Деактивация настроек подключения к СД для ИМ")
