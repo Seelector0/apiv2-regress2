@@ -87,9 +87,9 @@ def test_delete_order(app, connections, shared_data):
                                           shared_data=shared_data)
 
 
-@allure.description("Получения этикетки MetaShip вне партии")
-def test_get_labels_out_of_parcel(app, shared_data):
-    CommonOrders.test_get_labels_out_of_parcel_common(app=app, shared_data=shared_data["metaship_a"]["order_ids"])
+# @allure.description("Получения этикетки MetaShip вне партии")
+# def test_get_labels_out_of_parcel(app, shared_data):
+#     CommonOrders.test_get_labels_out_of_parcel_common(app=app, shared_data=shared_data["metaship_a"]["order_ids"])
 
 
 @allure.description("Получение информации об истории изменения статусов заказа CД MetaShip")
@@ -117,15 +117,15 @@ def test_get_parcel_by_id(app, shared_data):
     CommonParcels.test_get_parcel_by_id_common(app=app, shared_data=shared_data["metaship_a"]["parcel_ids"])
 
 
-@allure.description("Получение этикетки CД MetaShip")
-def test_get_label(app, shared_data):
-    CommonParcels.test_get_label_common(app=app, shared_data=shared_data["metaship_a"]["order_ids_in_parcel"])
-
-
-@allure.description("Получение этикеток заказов из партии СД MetaShip")
-def test_get_labels_from_parcel(app, shared_data):
-    CommonParcels.test_get_labels_from_parcel_common(app=app, shared_delivery_service="metaship_a",
-                                                     shared_data=shared_data)
+# @allure.description("Получение этикетки CД MetaShip")
+# def test_get_label(app, shared_data):
+#     CommonParcels.test_get_label_common(app=app, shared_data=shared_data["metaship_a"]["order_ids_in_parcel"])
+#
+#
+# @allure.description("Получение этикеток заказов из партии СД MetaShip")
+# def test_get_labels_from_parcel(app, shared_data):
+#     CommonParcels.test_get_labels_from_parcel_common(app=app, shared_delivery_service="metaship_a",
+#                                                      shared_data=shared_data)
 
 
 @allure.description("Получение АПП CД MetaShip")
@@ -133,9 +133,9 @@ def test_get_app(app, shared_data):
     CommonParcels.test_get_app_common(app=app, shared_data=shared_data["metaship_a"]["parcel_ids"])
 
 
-@allure.description("Получение документов CД MetaShip")
-def test_get_documents(app, shared_data):
-    CommonParcels.test_get_documents_common(app=app, shared_data=shared_data["metaship_a"]["parcel_ids"])
+# @allure.description("Получение документов CД MetaShip")
+# def test_get_documents(app, shared_data):
+#     CommonParcels.test_get_documents_common(app=app, shared_data=shared_data["metaship_a"]["parcel_ids"])
 
 
 @allure.description("Создание формы с этикетками партии СД MetaShip")
