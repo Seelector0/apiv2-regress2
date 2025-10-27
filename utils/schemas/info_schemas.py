@@ -444,7 +444,7 @@ class InfoSchema:
                 "shelfLifeDays": {
                     "type": ["integer", "null"],
                     "description": "Срок хранения"
-фвв                },
+                },
                 "countryCode": {
                     "type": ["string"],
                     "description": "Код страны"
