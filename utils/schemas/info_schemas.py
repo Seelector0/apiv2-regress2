@@ -444,13 +444,17 @@ class InfoSchema:
                 "shelfLifeDays": {
                     "type": ["integer", "null"],
                     "description": "Срок хранения"
+фвв                },
+                "countryCode": {
+                    "type": ["string"],
+                    "description": "Код страны"
                 }
             },
             "required": ["deliveryServiceCode", "externalDeliveryCode", "externalDeliveryServiceNumber",
                          "deliveryServiceNumber", "type", "workTime",
                          "isOnlyPrepaid", "isCashAllowed", "isAcquiringAvailable", "name", "comment", "phone",
                          "address", "issues", "extraType", "services", "restrictions", "photos",
-                         "deliveryServiceFields", "shelfLifeDays"],
+                         "deliveryServiceFields", "shelfLifeDays", "countryCode"],
             "additionalProperties": False
         }
     }
