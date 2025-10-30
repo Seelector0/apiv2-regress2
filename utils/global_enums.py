@@ -248,6 +248,14 @@ class OtherInfo:
             }
         },
         {
+            "name": "label-print-barcode",
+            "title": "Печатать штрих-код заказа",
+            "description": "Печатать штрих-код заказа",
+            "options": {
+                "hasParameter": False
+            }
+        },
+        {
             "name": "lifting-elevator",
             "title": "Подъем на этаж (лифт)",
             "description": "Подъем на этаж (лифт)",
@@ -272,6 +280,14 @@ class OtherInfo:
             }
         },
         {
+            "name": "load-at-the-recipient",
+            "title": "Погрузо-разгрузочные работы у получателя",
+            "description": "Погрузо-разгрузочные работы у получателя",
+            "options": {
+                "hasParameter": False
+            }
+        },
+        {
             "name": "no-autocall",
             "title": "Отключение автоматического звонка клиенту",
             "description": "Отключение автоматического звонка клиенту",
@@ -280,8 +296,8 @@ class OtherInfo:
             }
         },
         {
-            "name": "not-open", "title":
-            "Не вскрывать до получения оплаты с клиента",
+            "name": "not-open",
+            "title": "Не вскрывать до получения оплаты с клиента",
             "description": "Не вскрывать до получения оплаты с клиента",
             "options": {
                 "hasParameter": False
@@ -296,19 +312,19 @@ class OtherInfo:
             }
         },
         {
-            "name": "reverse",
-            "title": "Обратный заказ на доставку от получателя до отправителя",
-            "description": "Обратный заказ на доставку от получателя до отправителя",
-            "options": {
-                "hasParameter": False
-            }
-        },
-        {
             "name": "sms",
             "title": "SMS информирование",
             "description": "SMS уведомление получателя",
             "options": {
                 "hasParameter": False
+            }
+        },
+        {
+            "name": "with-packaging",
+            "title": "Упаковка",
+            "description": "Упаковка",
+            "options": {
+                "hasParameter": True
             }
         }
     ]
