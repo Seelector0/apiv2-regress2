@@ -77,13 +77,13 @@ class AdminDicts:
         return {
             "data": [
                 {
-                    "deliveryService": "Boxberry",
+                    "deliveryService": "Cdek",
                     "shopId": shop_id
                 }
             ],
             "deliveryPointMapping": [
                 {
-                    "deliveryService": "Boxberry",
+                    "deliveryService": "Cdek",
                     "tariff": "_default",
                     "gridCode": None
                 }
@@ -91,14 +91,14 @@ class AdminDicts:
         }
 
     @staticmethod
-    def form_settings_ds_russian_post():
+    def form_settings_ds_russian_post(pim_tariff_v2: bool = False):
         return {
             "intakePostOfficeCode": "101000",
-            "offlineTarifficatorClientV2": False
+            "offlineTarifficatorClientV2": pim_tariff_v2
         }
 
     @staticmethod
-    def form_settings_ds_five_post():
+    def form_settings_ds_five_post(pim_tariff_v2: bool = False):
         return {
-            "offlineTarifficatorClientV2": False
+            "offlineTarifficatorClientV2": pim_tariff_v2
         }
