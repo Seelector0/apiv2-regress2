@@ -29,16 +29,24 @@ def test_offers(app, shop_id, warehouse_id):
 
 
 @allure.description("Создание Courier заказа по СД RussianPostMarketPlace")
-def test_create_order_courier(app, shop_id, warehouse_id, connections):
+def test_create_order_courier(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_single_order_minimal_common(app=app, connections=connections, shop_id=shop_id,
                                                   warehouse_id=warehouse_id,
                                                   payment_type="Paid", delivery_type="Courier",
-                                                  service="RussianPostMarketPlace")
+                                                  service="RussianPostMarketPlace",
+                                                  shared_data=shared_data["russian_post_mp_a"]["order_ids"])
 
 
 @allure.description("Создание PostOffice заказа по СД RussianPostMarketPlace")
-def test_create_order_post_office(app, shop_id, warehouse_id, connections):
+def test_create_order_post_office(app, shop_id, warehouse_id, connections, shared_data):
     CommonOrders.test_single_order_minimal_common(app=app, connections=connections, shop_id=shop_id,
                                                   warehouse_id=warehouse_id,
                                                   payment_type="Paid", delivery_type="PostOffice",
-                                                  service="RussianPostMarketPlace")
+                                                  service="RussianPostMarketPlace",
+                                                  shared_data=shared_data["russian_post_mp_a"]["order_ids"])
+
+
+@allure.description("Удаление заказа СД RussianPostMarketPlace")
+def test_delete_order(app, connections, shared_data):
+    CommonOrders.test_delete_order_common(app=app, connections=connections,
+                                          shared_delivery_service="russian_post_mp_a", shared_data=shared_data)

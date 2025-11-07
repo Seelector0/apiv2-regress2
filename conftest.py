@@ -127,6 +127,7 @@ def shared_data():
         "five_post_i": delivery_template(),
         "russian_post_a": delivery_template(),
         "russian_post_i": delivery_template(),
+        "russian_post_mp_a": delivery_template(),
         "top_delivery_a": delivery_template(),
         "top_delivery_i": delivery_template(),
         "pecom_a": delivery_template(),
