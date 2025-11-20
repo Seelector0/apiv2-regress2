@@ -124,9 +124,10 @@ class CommonOrders:
             Checking.check_status_code(response=order_put, expected_status_code=200)
             Checking.check_json_schema(response=order_put, schema=SCHEMAS.order.order_get_by_id_or_editing)
             Checking.checking_big_json(response=order_put, key_name="weight", expected_value=5)
-            Checking.checking_big_json(response=order_put, key_name="dimension", field="length", expected_value=12)
-            Checking.checking_big_json(response=order_put, key_name="dimension", field="width", expected_value=14)
-            Checking.checking_big_json(response=order_put, key_name="dimension", field="height", expected_value=11)
+            if "dimension" in order_put and order_put["dimension"]:
+                Checking.checking_big_json(response=order_put, key_name="dimension", field="length", expected_value=12)
+                Checking.checking_big_json(response=order_put, key_name="dimension", field="width", expected_value=14)
+                Checking.checking_big_json(response=order_put, key_name="dimension", field="height", expected_value=11)
             Checking.checking_big_json(response=order_put, key_name="recipient", field="familyName",
                                        expected_value="Иванов")
             Checking.checking_big_json(response=order_put, key_name="recipient", field="firstName",

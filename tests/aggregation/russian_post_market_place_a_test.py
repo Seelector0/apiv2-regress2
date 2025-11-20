@@ -46,6 +46,12 @@ def test_create_order_post_office(app, shop_id, warehouse_id, connections, share
                                                   shared_data=shared_data["russian_post_mp_a"]["order_ids"])
 
 
+@allure.description("Редактирование заказа СД RussianPost")
+def test_editing_order(app, shared_data):
+    CommonOrders.test_editing_order_common(app=app, delivery_service="RussianPostMarketPlace",
+                                           shared_data=shared_data["russian_post_mp_a"]["order_ids"])
+
+
 @allure.description("Удаление заказа СД RussianPostMarketPlace")
 def test_delete_order(app, connections, shared_data):
     CommonOrders.test_delete_order_common(app=app, connections=connections,

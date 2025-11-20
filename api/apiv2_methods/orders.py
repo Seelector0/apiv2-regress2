@@ -315,9 +315,10 @@ class ApiOrder:
         result_get_order_by_id = self.get_order_id(order_id=order_id)
         put_order = result_get_order_by_id.json()["data"]["request"]
         put_order["weight"] = weight
-        put_order["dimension"]["length"] = length
-        put_order["dimension"]["width"] = width
-        put_order["dimension"]["height"] = height
+        if "dimension" in put_order and put_order["dimension"]:
+            put_order["dimension"]["length"] = length
+            put_order["dimension"]["width"] = width
+            put_order["dimension"]["height"] = height
         put_order["recipient"]["familyName"] = family_name
         put_order["recipient"]["firstName"] = first_name
         put_order["recipient"]["secondName"] = second_name
