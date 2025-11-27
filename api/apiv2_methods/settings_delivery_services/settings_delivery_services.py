@@ -258,6 +258,19 @@ class SettingsDeliveryServices:
         magnit_post["data"]["metashipInform"] = self.inform
         return magnit_post
 
+    def psb_logistics(self, aggregation: bool = None):
+        r"""Настройки подключения службы доставки PsbLogistics к магазину.
+        :param aggregation: Тип подключения СД по агрегации."""
+        psb_logistics = self.app.dicts.form_connection_type(delivery_service_code="PsbLogistics")
+        psb_logistics["data"]["login"] = os.getenv("PSB_LOGIN")
+        psb_logistics["data"]["password"] = os.getenv("PSB_PASSWORD")
+        psb_logistics["data"]["metashipInform"] = self.inform
+        if aggregation:
+            psb_logistics = (self.app.dicts.form_connection_type
+                             (delivery_service_code="PsbLogistics", aggregation=True))
+        psb_logistics["data"]["metashipInform"] = self.inform
+        return psb_logistics
+
     def get_connection_settings_and_data(self, code):
         """Настраивает данные и параметры подключения в зависимости от кода службы доставки."""
         connection_settings = None

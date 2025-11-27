@@ -145,3 +145,10 @@ class SettingsModeration:
         magnit_post["credential"]["clientSecret"] = os.getenv("MAGNIT_CLIENT_SECRET")
         return magnit_post
 
+    def psb_logistics(self, shop_id):
+        """Модерация СД PsbLogistics."""
+        psb_logistics = (self.admin.dicts.form_connections_delivery_services
+                         (shop_id=shop_id, delivery_service_code="PsbLogistics"))
+        psb_logistics["credential"]["login"] = os.getenv("PSB_LOGIN")
+        psb_logistics["credential"]["password"] = os.getenv("PSB_PASSWORD")
+        return psb_logistics

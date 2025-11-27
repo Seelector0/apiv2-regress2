@@ -35,7 +35,7 @@ class OfferSchema:
                                 "enum": ["RussianPost", "RussianPostMarketPlace", "TopDelivery", "Cdek", "Boxberry",
                                          "Dpd", "Cse", "FivePost", "YandexGo", "YandexDelivery", "DostavkaClub",
                                          "Dalli", "LPost", "Halva", "Pecom", "PonyExpress", "AlemTat", "KazPost",
-                                         "MetaShip"],
+                                         "MetaShip", "PsbLogistics"],
                                 "description": "Код службы доставки"
                             },
                             "name": {
