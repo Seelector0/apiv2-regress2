@@ -38,11 +38,11 @@ def test_aggregation_delivery_services_metaship(app, admin, shop_id, shop_id_met
 
 @pytest.mark.skipif(condition=ENV_OBJECT.db_connections() == "metaship", reason="Тест только для dev стенда")
 @allure.description("Получение Courier оферов по СД MetaShip")
-@pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
-def test_offers_courier(app, shop_id_metaship, warehouse_id, payment_type):
+@pytest.mark.parametrize("payment_type, delivery_type", [("Paid", "Courier"), ("PayOnDelivery", "DeliveryPoint")])
+def test_offers_courier(app, shop_id_metaship, warehouse_id, payment_type, delivery_type):
     CommonOffers.test_offers_common(app=app, shop_id=shop_id_metaship, warehouse_id=warehouse_id,
-                                    payment_type=payment_type, types="Courier", delivery_service_code="MetaShip",
-                                    expected_value=["Courier"])
+                                    payment_type=payment_type, types=delivery_type, delivery_service_code="MetaShip",
+                                    expected_value=[f"{delivery_type}"])
 
 
 @allure.description("Создание заказа по CД MetaShip")
