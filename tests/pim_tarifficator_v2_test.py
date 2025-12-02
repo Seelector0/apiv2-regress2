@@ -37,6 +37,7 @@ def test_aggregation_delivery_services_five_post(app, admin, shop_id):
                                                           moderation_settings=admin.moderation.five_post)
 
 
+@allure.description("Получение оферов по СД RussianPost")
 @pytest.mark.parametrize("offer_type, payment_type", [("Courier", "Paid"), ("Courier", "PayOnDelivery"),
                                                       ("PostOffice", "Paid"), ("PostOffice", "PayOnDelivery")])
 def test_offers_russian_post(app, shop_id, warehouse_id, offer_type, payment_type):
@@ -45,7 +46,7 @@ def test_offers_russian_post(app, shop_id, warehouse_id, offer_type, payment_typ
                                     expected_value=[f"{offer_type}"])
 
 
-@allure.description("Получение DeliveryPoint оферов по СД FivePost")
+@allure.description("Получение оферов по СД FivePost")
 @pytest.mark.parametrize("payment_type", ["Paid", "PayOnDelivery"])
 def test_offers_five_post(app, shop_id, warehouse_id, payment_type):
     CommonOffers.test_offers_common(app=app, shop_id=shop_id, warehouse_id=warehouse_id, payment_type=payment_type,

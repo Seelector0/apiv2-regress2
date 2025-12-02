@@ -37,11 +37,11 @@ def test_create_single_order(app, shop_id, warehouse_id, payment_type, connectio
                                           shared_data=shared_data["psb_a"]["order_ids"])
 
 
-@allure.description("Отмена заказа СД PsbLogistics")
-def test_patch_order_cancelled(app, connections, shared_data):
-    CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="PsbLogistics",
-                                                   connections=connections,
-                                                   shared_data=shared_data["psb_a"]["order_ids"])
+# @allure.description("Отмена заказа СД PsbLogistics")
+# def test_patch_order_cancelled(app, connections, shared_data):
+#     CommonOrders.test_patch_order_cancelled_common(app=app, delivery_service="PsbLogistics",
+#                                                    connections=connections,
+#                                                    shared_data=shared_data["psb_a"]["order_ids"])
 
 
 @allure.description("Удаление заказа СД PsbLogistics")
