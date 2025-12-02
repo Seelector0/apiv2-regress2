@@ -63,9 +63,16 @@ class AdminDicts:
 
     @staticmethod
     def form_settings_ds_pecom():
-        """Фома обновления подключения для СД AlemTat."""
+        """Фома обновления подключения для СД Pecom."""
         return {
             "senderWarehouseId": os.getenv("PECOM_SENDER_WAREHOUSE_ID"),
+        }
+
+    @staticmethod
+    def form_settings_ds_yd():
+        """Фома обновления подключения для СД YandexDelivery."""
+        return {
+            "intakePointCode": os.getenv("YA_DELIVERY_INTAKE_POINT_CODE"),
         }
 
     @staticmethod

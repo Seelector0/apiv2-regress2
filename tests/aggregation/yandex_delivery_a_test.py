@@ -19,8 +19,10 @@ def warehouse_id(app, connections, shared_data):
 @allure.description("Подключение настроек службы доставки СД YandexDelivery")
 def test_aggregation_delivery_services(app, admin, shop_id):
     CommonConnections.connect_aggregation_services_common(app=app, admin=admin, shop_id=shop_id,
+                                                          delivery_service="YandexDelivery",
                                                           connection_settings=app.settings.yandex_delivery(
                                                               aggregation=True),
+                                                          update_settings=admin.dicts.form_settings_ds_yd(),
                                                           moderation_settings=admin.moderation.yandex_delivery)
 
 
